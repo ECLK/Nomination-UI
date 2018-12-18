@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import withRoot from '../withRoot';
+import withRoot from 'withRoot';
 import Loadable from 'react-loadable';
-import Progress from '../app/components/Shared/Progress';
-import Login from '../app/components/Login/Login';
+import Progress from 'components/Progress/Progress';
+import Login from 'pages/Login/Login';
 
 const styles = theme => ({
   root: {

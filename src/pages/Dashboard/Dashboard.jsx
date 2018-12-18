@@ -14,7 +14,9 @@ import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { mainListItems, secondaryListItems } from './ListItems';
+//import { mainListItems, secondaryListItems } from './ListItems';
+import Menu from 'components/Menu/Menu';
+//import Sidebar from 'components/Sidebar/sidebar';
 
 
 const drawerWidth = 240;
@@ -109,39 +111,9 @@ class Dashboard extends React.Component {
         return (
             <div className={classes.root}>
                 <CssBaseline />
-                <AppBar
-                    position="absolute"
-                    className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
-                >
-                    <Toolbar disableGutters={!this.state.open} className={classes.toolbar}>
-                        <IconButton
-                            color="inherit"
-                            aria-label="Open drawer"
-                            onClick={this.handleDrawerOpen}
-                            className={classNames(
-                                classes.menuButton,
-                                this.state.open && classes.menuButtonHidden,
-                            )}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography
-                            component="h1"
-                            variant="h6"
-                            color="inherit"
-                            noWrap
-                            className={classes.title}
-                        >
-                            Election Commision of Sri Lanka
-                        </Typography>
-                        <IconButton color="inherit">
-                            <Badge badgeContent={4} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>
-                <Drawer
+                <Menu title="Election Commission of Sri Lanka"></Menu>
+                {/* <Sidebar></Sidebar> */}
+                {/* <Drawer
                     variant="permanent"
                     classes={{
                         paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
@@ -154,17 +126,9 @@ class Dashboard extends React.Component {
                         </IconButton>
                     </div>
                     <Divider />
-                    <List>{mainListItems}</List>
-                    <Divider />
-                    <List>{secondaryListItems}</List>
-                </Drawer>
-                <main className={classes.content}>
-                    <div className={classes.appBarSpacer} />
-                    <Typography variant="h4" gutterBottom component="h2">
-                       Election dash
-                    </Typography>
-
-                </main>
+                    
+                </Drawer> */}
+                
             </div>
         );
     }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import Dashboard from './components/Dashboard/Dashboard';
+import Dashboard from '../pages/Dashboard/Dashboard';
 
 export default class Protected extends Component {
     render() {

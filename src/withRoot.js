@@ -36,8 +36,6 @@ function withRoot(Component) {
     // JssProvider allows customizing the JSS styling solution.
     return (
       <JssProvider jss={jss} generateClassName={generateClassName}>
-        {/* MuiThemeProvider makes the theme available down the React tree
-          thanks to React context. */}
         <MuiThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
