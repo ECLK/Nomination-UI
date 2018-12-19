@@ -1,23 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-//import { mainListItems, secondaryListItems } from './ListItems';
-import Menu from 'components/Menu/Menu';
-//import Sidebar from 'components/Sidebar/sidebar';
+import Header from 'components/Header/Header';
 
+import axios from 'axios';
 
 const drawerWidth = 240;
 
@@ -95,7 +82,18 @@ const styles = theme => ({
 class Dashboard extends React.Component {
     state = {
         open: true,
+        persons: []
+
     };
+    
+    
+      componentDidMount() {
+        axios.get(`http://192.168.8.104:9001/ec-election/elections/43680f3e-97ac-4257-b27a-5f3b452da2e6/teams/5eedb70e-a4da-48e0-b971-e06cd19ecc70/nominations/approve`)
+          .then(res => {
+            const persons = res.data;
+            this.setState({ persons });
+          })
+      }
 
     handleDrawerOpen = () => {
         this.setState({ open: true });
@@ -111,24 +109,10 @@ class Dashboard extends React.Component {
         return (
             <div className={classes.root}>
                 <CssBaseline />
-                <Menu title="Election Commission of Sri Lanka"></Menu>
-                {/* <Sidebar></Sidebar> */}
-                {/* <Drawer
-                    variant="permanent"
-                    classes={{
-                        paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
-                    }}
-                    open={this.state.open}
-                >
-                    <div className={classes.toolbarIcon}>
-                        <IconButton onClick={this.handleDrawerClose}>
-                            <ChevronLeftIcon />
-                        </IconButton>
-                    </div>
-                    <Divider />
-                    
-                </Drawer> */}
-                
+                <Header title="Elections Commission of Sri Lanka"></Header>
+                <ul>
+                    { this.state.persons.map(person => <li>{person.id}</li>)}
+                </ul>
             </div>
         );
     }
@@ -139,3 +123,8 @@ Dashboard.propTypes = {
 };
 
 export default withStyles(styles)(Dashboard);
+
+
+
+
+

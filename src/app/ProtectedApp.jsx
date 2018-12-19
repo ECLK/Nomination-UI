@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import Dashboard from '../pages/Dashboard/Dashboard';
+import Dashboard from 'pages/Dashboard/Dashboard';
+import Login from 'pages/Login/Login';
+import test from 'pages/test/test';
 
 export default class Protected extends Component {
     render() {
@@ -10,6 +12,9 @@ export default class Protected extends Component {
                 <Switch>
                     <Redirect exact from='/' to='/dashboard' />
                     <Route path='/dashboard' component={Dashboard} />
+                    <Route path='/login' component={Login} />
+                    <Route path='/test' component={test} />
+                    
                 </Switch>
             </div>
         );

@@ -7,6 +7,7 @@
     "@material-ui/icons": "latest",
     "jss": "latest",
     "npm": "^6.4.1",
+    "axios": "^0.18.0",
     "prop-types": "latest",
     "react": "latest",
     "react-dom": "latest",
