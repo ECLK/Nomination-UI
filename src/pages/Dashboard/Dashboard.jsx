@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Header from 'components/Header/Header';
+import InfoBanner from 'components/InfoBanner/InfoBanner';
+import Grid from '@material-ui/core/Grid';
 
 const drawerWidth = 240;
 
@@ -93,11 +95,39 @@ class Dashboard extends React.Component {
 
     render() {
         const { classes } = this.props;
+        const electionData = {
+            "id": "43680f3e-97ac-4257-b27a-5f3b452da2e6",
+            "name": "Parliamentary Election 2019",
+            "moduleId": "455cd89e-269b-4b69-96ce-8d7c7bf44ac2",
+            "electionTimeLine": [
+                {
+                    "key": "nomination_start_date",
+                    "value": 1546713528
+                },
+                {
+                    "key": "objection_end_date",
+                    "value": 1550255928
+                },
+                {
+                    "key": "objection_start_date",
+                    "value": 1549046328
+                },
+                {
+                    "key": "nomination_end_date",
+                    "value": 1548873528
+                }
+            ]
+        };        
 
         return (
             <div className={classes.root}>
                 <CssBaseline />
                 <Header title="Elections Commission of Sri Lanka"></Header>
+                <Grid container spacing={24}>
+                    <Grid item xs={12}>
+                        <InfoBanner election={electionData}></InfoBanner>
+                    </Grid>
+                </Grid>
             </div>
         );
     }

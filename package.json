@@ -11,9 +11,10 @@
     "react": "latest",
     "react-dom": "latest",
     "react-jss": "latest",
-    "react-scripts": "latest",
-    "react-router-dom": "^4.3.1",
     "react-loadable": "latest",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "latest",
+    "react-timestamp": "^4.4.0",
     "update": "^0.7.4"
   },
   "scripts": {
