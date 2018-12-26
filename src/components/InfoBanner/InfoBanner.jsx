@@ -14,25 +14,32 @@ const styles = theme => ({
 	},
 });
 
-function PaperSheet(props) {
-	const { classes } = props;
+class InfoBanner extends React.Component {
 
-	return (
-		<div>
-			<Paper className={classes.root} elevation={1}>
-				<Typography component="h2" variant="headline" gutterBottom>
-					{props.election.name}
-				</Typography>
-				<Typography variant="subheading" gutterBottom>
-					<b>Nomination Start Date:</b> <Timestamp time={props.election.electionTimeLine[0].value} format='full' /> --- <b>Nomination End Date:</b> <Timestamp time={props.election.electionTimeLine[3].value} format='full' />
-				</Typography>
-			</Paper>
-		</div>
-	);
+	constructor(props){
+		super(props);
+	}
+
+	render() {
+		const { classes } = this.props;
+
+		return (
+			<div>
+				<Paper className={classes.root} elevation={1}>
+					<Typography component="h2" variant="headline" gutterBottom>
+						{this.props.election.name}
+					</Typography>
+					<Typography variant="subheading" gutterBottom>
+						<b>Nomination Start Date:</b> <Timestamp time={this.props.election.electionTimeLine[0].value} format='full' /> --- <b>Nomination End Date:</b> <Timestamp time={this.props.election.electionTimeLine[0].value} format='full' />
+					</Typography>
+				</Paper>
+			</div>
+		);
+	}
 }
 
-PaperSheet.propTypes = {
+InfoBanner.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PaperSheet);
+export default withStyles(styles)(InfoBanner);
