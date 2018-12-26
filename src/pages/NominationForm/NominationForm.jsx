@@ -4,8 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Header from 'components/Header/Header';
 import NominationForm from 'components/NominationForm/NominationForm';
-
-
 import axios from 'axios';
 
 const drawerWidth = 240;
@@ -84,16 +82,16 @@ const styles = theme => ({
 class Dashboard extends React.Component {
     state = {
         open: true,
-        persons: []
+        nominations: []
 
     };
     
     
       componentDidMount() {
-        axios.get(`http://192.168.8.104:9001/ec-election/elections/43680f3e-97ac-4257-b27a-5f3b452da2e6/teams/5eedb70e-a4da-48e0-b971-e06cd19ecc70/nominations/approve`)
+        axios.get(`http://localhost:9001/ec-election/nominations/1/candidates`)
           .then(res => {
-            const persons = res.data;
-            this.setState({ persons });
+            const nominations = res.data;
+            this.setState({ nominations });
           })
       }
 
@@ -112,10 +110,8 @@ class Dashboard extends React.Component {
             <div className={classes.root}>
                 <CssBaseline />
                 <Header title="Elections Commission of Sri Lanka"></Header>
+                <NominationForm title="Elections Commission of Sri Lanka"></NominationForm>
 
-                <ul>
-                    { this.state.persons.map(person => <li>{person.id}</li>)}
-                </ul>
             </div>
         );
     }
@@ -126,6 +122,7 @@ Dashboard.propTypes = {
 };
 
 export default withStyles(styles)(Dashboard);
+
 
 
 
