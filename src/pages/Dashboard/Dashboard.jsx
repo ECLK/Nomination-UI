@@ -101,7 +101,7 @@ class Dashboard extends React.Component {
             .then(res => {
                 const election = res.data;
                 this.setState({ election });
-                console.log(this.state);
+                // console.log(this.state);
             });
     }
 
