@@ -3,9 +3,19 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import MainMenu from 'components/MainMenu/MainMenu';
+import InfoBanner from 'components/InfoBanner/InfoBanner';
+import Axios from 'axios';
 
+const drawerWidth = 240;
 
-const styles = () => ({});
+const styles = theme => ({
+    content: {
+        [theme.breakpoints.up('sm')]: {
+            paddingLeft: drawerWidth,
+            flexShrink: 0,
+        },
+    }
+});
 
 class Home extends React.Component {
     state = {
@@ -38,12 +48,10 @@ class Home extends React.Component {
         return (
             <div className={classes.root}>
                 <CssBaseline />
-                <MainMenu title="Elections Commission of Sri Lanka" ></MainMenu>
-                <Grid container spacing={24}>
-                    <Grid item xs={12}>
-                        <InfoBanner election={this.state.election}></InfoBanner>
-                    </Grid>
-                </Grid>
+                <MainMenu title="Election Commission of Sri Lanka" ></MainMenu>
+                <div className={classes.content}>
+                    <InfoBanner election={this.state.election}></InfoBanner>
+                </div>
             </div>
         );
     }

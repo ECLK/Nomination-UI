@@ -7,11 +7,13 @@ import Loadable from 'react-loadable';
 import Progress from 'components/Progress/Progress';
 import Login from 'pages/Login/Login';
 
+const drawerWidth = 240;
+
 const styles = theme => ({
   root: {
     textAlign: 'center',
-    paddingTop: theme.spacing.unit * 20,
-  },
+    paddingTop: theme.spacing.unit * 10,
+  }
 });
 
 const LoadableProtectedApp = Loadable({
