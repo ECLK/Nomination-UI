@@ -4,15 +4,17 @@ import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import MainMenu from 'components/MainMenu/MainMenu';
 import InfoBanner from 'components/InfoBanner/InfoBanner';
+import NominationPanel from 'components/NominationExpansionPanel/NominationList';
 import Axios from 'axios';
+import Grid from '@material-ui/core/Grid';
+import Divider from '@material-ui/core/Divider';
+import Typography from '@material-ui/core/Typography';
 
-
-const drawerWidth = 240;
 
 const styles = theme => ({
     content: {
         [theme.breakpoints.up('sm')]: {
-            paddingLeft: drawerWidth,
+            paddingLeft: theme.drawer.width,
             flexShrink: 0,
         },
     },
@@ -41,12 +43,14 @@ class Home extends React.Component {
 
     componentDidMount(){
 
+        // get election details
         Axios.get(`${process.env.REACT_APP_API_DOMAIN}/ec-election/elections/${this.state.election_id}`)
         .then(res => {
             const election = res.data;
             this.setState({ election });
             // console.log(this.state);
         });
+
     }
 
     render() {
@@ -61,7 +65,20 @@ class Home extends React.Component {
                 {/* all the content should go in this.. */}
 
                     <InfoBanner election={this.state.election}></InfoBanner>
-                    
+                    <div className={classes.root}>
+                        <Grid container spacing={24}>
+                            <Grid item sm={6}>
+                                <Typography variant="h4" gutterBottom>
+                                    Nominations
+                                </Typography>
+                                <Divider variant="middle" className={classes.topBottomSpace} />
+                                <NominationPanel></NominationPanel>
+                            </Grid>
+                            <Grid item sm={6}>
+                                {/* <Paper className={classes.paper}>xs=6</Paper> */}
+                            </Grid>
+                        </Grid>
+                    </div>
                 </div>
 
 

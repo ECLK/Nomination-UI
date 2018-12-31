@@ -7,8 +7,6 @@ import Loadable from 'react-loadable';
 import Progress from 'components/Progress/Progress';
 import Login from 'pages/Login/Login';
 
-const drawerWidth = 240;
-
 const styles = theme => ({
   root: {
     textAlign: 'center',
