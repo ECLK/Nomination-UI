@@ -57,21 +57,21 @@ class ControlledExpansionPanels extends React.Component {
 		return (
 			<div className={classes.root}>
 				{
-					this.state.division.map((division) =>
-						<ExpansionPanel key={division.id} expanded={expanded === 'panel' + division.code} onChange={this.handleChange('panel' + division.code)}>
+					this.state.division.map((division, index) =>
+						<ExpansionPanel key={index} expanded={expanded === 'panel' + division.code} onChange={this.handleChange('panel' + division.code)}>
 							<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
 								<Typography className={classes.heading}>{division.name}</Typography>
 								<Typography className={classes.secondaryHeading}>[{division.code}]</Typography>
 							</ExpansionPanelSummary>
 							<ExpansionPanelDetails>
 								<List>
-									<ListItem className={classes.list} key={division.id}>
+									<ListItem className={classes.list} key={index}>
 										<ListItemText primary="No of Candidates" />
 										<Typography>{division.noOfCandidates}</Typography>
 									</ListItem>
 									{
-										division.nomination.map((nomination) =>
-											<ListItem className={classes.list} key={division.id}>
+										division.nomination.map((nomination, index) =>
+											<ListItem className={classes.list} key={index}>
 												<ListItemText primary="Status" />
 												<Typography>{nomination.status}</Typography>
 											</ListItem>
