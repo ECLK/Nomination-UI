@@ -12,12 +12,12 @@ export default class Protected extends Component {
             /* app level routers needs to handle here*/
             <div>
                 <Switch>
-                    <Redirect exact from='/' to='/Home' />
-                    <Route path='/Home' component={Home} />
-                    <Route path='/Login' component={Login} />
-                    <Route path='/Nomination' component={Nomination} />
-                    <Route path='/Objection' component={Objection} />
-                    <Route path='/Profile' component={Profile} />
+                    <Redirect exact from='/' to='/home' />
+                    <Route path='/home' component={Home} />
+                    <Route path='/login' component={Login} />
+                    <Route path='/nomination' component={Nomination} />
+                    <Route path='/objection' component={Objection} />
+                    <Route path='/profile' component={Profile} />
                 </Switch>
             </div>
         );
