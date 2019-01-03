@@ -10,6 +10,7 @@ import axios from 'axios';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
 	root: {
@@ -26,6 +27,10 @@ const styles = theme => ({
 	},
 	list: {
 		padding: 0,
+	},
+	button: {
+		margin: theme.spacing.unit,
+		width: '100%',
 	}
 });
 
@@ -50,6 +55,10 @@ class ControlledExpansionPanels extends React.Component {
 			});
 	}
 
+	redirectToTarget = () => {
+		this.context.router.history.push(`/nomination`);
+	}
+
 	render() {
 		const { classes } = this.props;
 		const { expanded } = this.state;
@@ -64,6 +73,8 @@ class ControlledExpansionPanels extends React.Component {
 								<Typography className={classes.secondaryHeading}>[{division.code}]</Typography>
 							</ExpansionPanelSummary>
 							<ExpansionPanelDetails>
+
+								{/* details in a list format */}
 								<List>
 									<ListItem className={classes.list} key={index}>
 										<ListItemText primary="No of Candidates" />
@@ -77,7 +88,19 @@ class ControlledExpansionPanels extends React.Component {
 											</ListItem>
 										)
 									}
+									<ListItem className={classes.list}>
+									{
+										division.nomination.length < 1 &&
+										<Button variant="contained" color="primary" className={classes.button} onClick={this.redirectToTarget}>Create</Button>
+									}
+									{
+										division.nomination.length > 0 &&
+										<Button variant="contained" color="primary" className={classes.button} onClick={this.redirectToTarget}>View / Edit</Button>
+									}
+										
+									</ListItem>
 								</List>
+								
 							</ExpansionPanelDetails>
 						</ExpansionPanel>
 					)
