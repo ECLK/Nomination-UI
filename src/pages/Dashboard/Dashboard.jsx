@@ -84,6 +84,7 @@ const styles = theme => ({
 class Dashboard extends React.Component {
     state = {
         open: true,
+<<<<<<< HEAD
         persons: []
 
     };
@@ -96,6 +97,10 @@ class Dashboard extends React.Component {
             this.setState({ persons });
           })
       }
+=======
+
+    };
+>>>>>>> 95ff10378fdd0047c94da27864ea075131a09349
 
     handleDrawerOpen = () => {
         this.setState({ open: true });
@@ -112,10 +117,13 @@ class Dashboard extends React.Component {
             <div className={classes.root}>
                 <CssBaseline />
                 <Header title="Elections Commission of Sri Lanka"></Header>
+<<<<<<< HEAD
 
                 <ul>
                     { this.state.persons.map(person => <li>{person.id}</li>)}
                 </ul>
+=======
+>>>>>>> 95ff10378fdd0047c94da27864ea075131a09349
             </div>
         );
     }
@@ -125,9 +133,13 @@ Dashboard.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
+<<<<<<< HEAD
 export default withStyles(styles)(Dashboard);
 
 
 
 
 
+=======
+export default withStyles(styles)(Dashboard);
+>>>>>>> 95ff10378fdd0047c94da27864ea075131a09349
