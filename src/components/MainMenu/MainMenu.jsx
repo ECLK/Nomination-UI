@@ -6,16 +6,20 @@ import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import {Link} from 'react-router-dom';
+
+import HomeIcon from '@material-ui/icons/Home';
+import ProfileIcon from '@material-ui/icons/AccountBox';
+import NominationIcon from '@material-ui/icons/Description';
+import ObjectionIcon from '@material-ui/icons/PanTool';
 
 const drawerWidth = 240;
 
@@ -61,28 +65,33 @@ class ResponsiveDrawer extends React.Component {
   };
 
   render() {
-    const { classes, theme , title } = this.props;
+    const { classes, theme } = this.props;
 
     const drawer = (
       <div>
         <div className={classes.toolbar} />
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
+            <ListItem button key="Home" component={Link} to='/home' selected={this.props.page === "Home"} >
+              <ListItemIcon><HomeIcon /></ListItemIcon>
+              <ListItemText primary="Home" />
             </ListItem>
-          ))}
+            <ListItem button key="Nomination" component={Link} to='/nomination' selected={this.props.page === "Nomination"} >
+              <ListItemIcon><NominationIcon /></ListItemIcon>
+              <ListItemText primary="Nomination" />
+            </ListItem>
+            <ListItem button key="Objection" component={Link} to='/objection'>
+              <ListItemIcon><ObjectionIcon /></ListItemIcon>
+              <ListItemText primary="Objection" />
+            </ListItem>
         </List>
         <Divider />
         <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
+            <ListItem button key="Profile" component={Link} to='/profile'>
+              <ListItemIcon><ProfileIcon /></ListItemIcon>
+              <ListItemText primary="Profile" />
             </ListItem>
-          ))}
+          
         </List>
       </div>
     );
