@@ -21,6 +21,9 @@ const theme = createMuiTheme({
   typography: {
     useNextVariants: true,
   },
+  drawer: {
+    width: 240,
+  }
 });
 
 // Create a JSS instance with the default preset of plugins.

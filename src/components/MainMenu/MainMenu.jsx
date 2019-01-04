@@ -65,29 +65,29 @@ class ResponsiveDrawer extends React.Component {
   };
 
   render() {
-    const { classes, theme ,page} = this.props;
+    const { classes, theme } = this.props;
 
     const drawer = (
       <div>
         <div className={classes.toolbar} />
         <Divider />
         <List>
-            <ListItem button key="Home" component={Link} to='/Home' selected={this.props.page === "Home"} >
+            <ListItem button key="Home" component={Link} to='/home' selected={this.props.page === "Home"} >
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="Home" />
             </ListItem>
-            <ListItem button key="Nomination" component={Link} to='/Nomination' selected={this.props.page === "Nomination"} >
+            <ListItem button key="Nomination" component={Link} to='/nomination' selected={this.props.page === "Nomination"} >
               <ListItemIcon><NominationIcon /></ListItemIcon>
               <ListItemText primary="Nomination" />
             </ListItem>
-            <ListItem button key="Objection" component={Link} to='/Objection'>
+            <ListItem button key="Objection" component={Link} to='/objection'>
               <ListItemIcon><ObjectionIcon /></ListItemIcon>
               <ListItemText primary="Objection" />
             </ListItem>
         </List>
         <Divider />
         <List>
-            <ListItem button key="Profile" component={Link} to='/Profile'>
+            <ListItem button key="Profile" component={Link} to='/profile'>
               <ListItemIcon><ProfileIcon /></ListItemIcon>
               <ListItemText primary="Profile" />
             </ListItem>

@@ -5,15 +5,18 @@
   "dependencies": {
     "@material-ui/core": "latest",
     "@material-ui/icons": "latest",
+    "axios": "^0.15.3",
     "jss": "latest",
     "npm": "^6.4.1",
     "prop-types": "latest",
     "react": "latest",
+    "react-axios": "^2.0.3",
     "react-dom": "latest",
     "react-jss": "latest",
-    "react-scripts": "latest",
-    "react-router-dom": "^4.3.1",
     "react-loadable": "latest",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "latest",
+    "react-timestamp": "^4.4.0",
     "update": "^0.7.4"
   },
   "scripts": {

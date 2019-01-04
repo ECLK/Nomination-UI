@@ -9,3 +9,6 @@ ReactDOM.render(<Index />, document.getElementById('root'));
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister();
+
+// Save data to sessionStorage
+sessionStorage.setItem('election_id', '43680f3e-97ac-4257-b27a-5f3b452da2e6');

@@ -10,8 +10,8 @@ import Login from 'pages/Login/Login';
 const styles = theme => ({
   root: {
     textAlign: 'center',
-    paddingTop: theme.spacing.unit * 20,
-  },
+    paddingTop: theme.spacing.unit * 10,
+  }
 });
 
 const LoadableProtectedApp = Loadable({
