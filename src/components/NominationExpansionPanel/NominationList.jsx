@@ -47,7 +47,7 @@ class ControlledExpansionPanels extends React.Component {
 	};
 
 	componentWillMount() {
-		axios.get(`http://localhost:9001/ec-election/elections/43680f3e-97ac-4257-b27a-5f3b452da2e6/teams/5eedb70e-a4da-48e0-b971-e06cd19ecc70/divisions`)
+		axios.get(`http://localhost:9001/ec-election/elections/${sessionStorage.getItem('election_id')}/teams/5eedb70e-a4da-48e0-b971-e06cd19ecc70/divisions`)
 			.then(res => {
 				const division = res.data;
 				this.setState({ division });
