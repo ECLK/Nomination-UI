@@ -9,6 +9,7 @@ import Axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
+import ObjectionPanel from 'components/Objection/ObjectionList';
 
 
 const styles = theme => ({
@@ -28,7 +29,7 @@ class Home extends React.Component {
     state = {
         open: true,
         election_id: '43680f3e-97ac-4257-b27a-5f3b452da2e6',
-        election: { 
+        election: {
             electionTimeLine: new Array(4).fill(0),
         },
     };
@@ -41,15 +42,14 @@ class Home extends React.Component {
         this.setState({ open: false });
     };
 
-    componentDidMount(){
+    componentDidMount() {
 
         // get election details
         Axios.get(`${process.env.REACT_APP_API_DOMAIN}/ec-election/elections/${this.state.election_id}`)
-        .then(res => {
-            const election = res.data;
-            this.setState({ election });
-            // console.log(this.state);
-        });
+            .then(res => {
+                const election = res.data;
+                this.setState({ election });
+            });
 
     }
 
@@ -62,20 +62,20 @@ class Home extends React.Component {
                 <MainMenu title="Election Commission of Sri Lanka" ></MainMenu>
 
                 <div className={classes.content}>
-                {/* all the content should go in this.. */}
+                    {/* all the content should go in this.. */}
 
                     <InfoBanner election={this.state.election}></InfoBanner>
                     <div className={classes.root}>
                         <Grid container spacing={24}>
-                            <Grid item sm={6}>
-                                <Typography variant="h4" gutterBottom>
-                                    Nominations
-                                </Typography>
+                            <Grid item xs={12} sm={6}>
+                                <Typography variant="h4" gutterBottom>Nominations</Typography>
                                 <Divider variant="middle" className={classes.topBottomSpace} />
                                 <NominationPanel></NominationPanel>
                             </Grid>
-                            <Grid item sm={6}>
-                                {/* <Paper className={classes.paper}>xs=6</Paper> */}
+                            <Grid item xs={12} sm={6}>
+                                <Typography variant="h4" gutterBottom>Objections</Typography>
+                                <Divider variant="middle" className={classes.topBottomSpace} />
+                                {/* <ObjectionPanel></ObjectionPanel> */}
                             </Grid>
                         </Grid>
                     </div>
