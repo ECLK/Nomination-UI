@@ -38,6 +38,10 @@ const styles = theme => ({
 
 const gender = [
     {
+        value: '',
+        label: '-- Select --',
+    },
+    {
         value: 'MALE',
         label: 'MALE',
     },
@@ -48,6 +52,10 @@ const gender = [
 
 ];
 const electoralDivisionNames = [
+    {
+        value: '',
+        label: '-- Select --',
+    },
     {
         value: 'Kaluthara',
         label: 'Kaluthara',
@@ -67,6 +75,10 @@ const electoralDivisionNames = [
 
 ];
 const electoralDivisionCodes = [
+    {
+        value: '',
+        label: '-- Select --',
+    },
     {
         value: 'K001',
         label: 'K001',
@@ -94,9 +106,13 @@ class TextFields extends React.Component {
         preferredName: '',
         nominationId: '',
         dateOfBirth: '',
-        gender: '',
+        gender: 'Select',
         occupation:'',
         address:'',
+        electoralDivisionName: 'Select',
+        electoralDivisionCode: 'Select',
+        counsilName: 'cb',
+
     };
 
     componentDidMount() {
@@ -121,9 +137,24 @@ class TextFields extends React.Component {
 
         axios({
             method: 'post',
-            url: 'http://localhost:9001/ec-election/nominations/candidates',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            url: 'nominations/candidates',
             data: this.state
-        });
+        })
+        .then(function (response) {
+            // return response.json();
+            // console.log("ffff",response.json());
+            // resultElement.innerHTML = generateSuccessHTMLOutput(response);
+            alert("sucsess",response);
+            // this.onCloseModal();
+          })
+          .catch(function (error) {
+              alert("error",error);
+            // resultElement.innerHTML = generateErrorHTMLOutput(error);
+          });
     };
 
     render() {
@@ -210,7 +241,7 @@ class TextFields extends React.Component {
                             select
                             label="Gender"
                             className={classes.textField}
-                            value={this.state.electoralDivisionName}
+                            value={this.state.gender}
 
                             onChange={this.handleChange('gender')}
 
@@ -251,11 +282,22 @@ class TextFields extends React.Component {
                     <Grid item lg={4}>
                         <TextField
                             id="standard-multiline-flexible"
-                            label="Address  "
+                            label="Address"
                             multiline
                             rowsMax="4"
                             value={this.state.address}
                             onChange={this.handleChange('address')}
+                            className={classes.textField}
+                            margin="normal"
+                        />
+                        <TextField
+                            hidden
+                            id="standard-multiline-flexible"
+                            label="Counsil Name  "
+                            multiline
+                            rowsMax="4"
+                            value={this.state.counsilName}
+                            onChange={this.handleChange('counsilName')}
                             className={classes.textField}
                             margin="normal"
                         />

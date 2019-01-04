@@ -77,7 +77,7 @@ class TextFields extends React.Component {
     componentDidMount() {
         console.log(this)
         var candidateCount = localStorage.getItem('candidate');
-      axios.get(`http://localhost:9001/ec-election/nominations/1/payments`)
+      axios.get(`nominations/1/payments`)
         .then(res => {
           const payments = res.data;
           const depositor=res.data.depositor;

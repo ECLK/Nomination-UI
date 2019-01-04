@@ -8,7 +8,9 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import NominationStep1 from '../NominationStep1/NominationStep1';
 import NominationStep2 from '../NominationStep2/NominationStep2';
-import CandidateTabContainer from '../CandidateTabContainer/CandidateTabContainer';
+import NominationStep3 from '../NominationStep3/NominationStep3';
+
+// import CandidateTabContainer from '../CandidateTabContainer/CandidateTabContainer';
 
 
 
@@ -43,7 +45,7 @@ function getStepContent(step,props) {
     case 1:
       return <NominationStep2/>;
     case 2:
-      return <CandidateTabContainer/>;
+      return <NominationStep3/>;
     default:
       return 'Unknown step';
   }

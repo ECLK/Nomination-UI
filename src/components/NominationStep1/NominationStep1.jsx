@@ -53,7 +53,7 @@ class CustomizedTable extends React.Component {
   
     componentDidMount() {
       console.log(this)
-      axios.get(`http://localhost:9001/ec-election/nominations/1/candidates`)
+      axios.get(`nominations/1/candidates`)
         .then(res => {
           const nominations = res.data;
           const candidateCount = res.data.length;
