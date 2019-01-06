@@ -32,7 +32,7 @@ export default class Protected extends Component {
                 <Switch>
                     <Redirect exact from='/' to='/home' />
                     <Route path='/home' component={Home} />
-                    <Route path='/login' component={(this.state.isLoggedIn) ? Home : Login} />
+                    <Route path='/login' component={Login} />
                     <Route path='/nomination' component={(this.state.isLoggedIn) ? Nomination : Login}/>
                     <Route path='/objection' component={(this.state.isLoggedIn) ? Objection : Login} />
                     <Route path='/profile' component={(this.state.isLoggedIn) ? Profile : Login} />

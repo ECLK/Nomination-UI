@@ -42,14 +42,12 @@ class Home extends React.Component {
     };
 
     componentDidMount() {
-
         // get election details
         Axios.get(`${process.env.REACT_APP_API_DOMAIN}/ec-election/elections/${this.state.election_id}`)
             .then(res => {
                 const election = res.data;
                 this.setState({ election });
             });
-
     }
 
     render() {
@@ -61,7 +59,7 @@ class Home extends React.Component {
                 <MainMenu title="Election Commission of Sri Lanka" ></MainMenu>
 
                 <div className={classes.content}>
-                    {/* all the content should go in this.. */}
+                    {/* all the content should go here.. */}
 
                     <InfoBanner election={this.state.election}></InfoBanner>
                     <div className={classes.root}>

@@ -15,7 +15,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import {Link} from 'react-router-dom';
-
 import HomeIcon from '@material-ui/icons/Home';
 import ProfileIcon from '@material-ui/icons/AccountBox';
 import NominationIcon from '@material-ui/icons/Description';

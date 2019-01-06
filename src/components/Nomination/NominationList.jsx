@@ -51,7 +51,6 @@ const styles = theme => ({
 				.then(res => {
 					const division = res.data;
 					this.setState({ division });
-				// console.log(this.state.division);
 			});
 	}
 
