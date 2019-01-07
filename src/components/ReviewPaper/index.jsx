@@ -11,8 +11,6 @@ const styles = theme => ({
     paddingBottom: theme.spacing.unit,
     width: theme.spacing.unit * 198,
     margin: theme.spacing.unit * 2,
-
-
   },
 });
 

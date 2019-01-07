@@ -47,7 +47,7 @@ const styles = theme => ({
 
 
 
-class Login extends Component {
+class Login extends React.Component {
 
     constructor(props) {
         super(props);
@@ -65,14 +65,20 @@ class Login extends Component {
         this.setState({ validate: true });
         const { username, password } = this.state;
 
-        if (!username || !password) {
-            // Alert.error('Please fill both username and password fields');
-            return;
+
+        // following is written to manage dummy login for usernames with 'user' or 'admin'
+        if (username.length > 0){
+            if (username.includes("user")) {
+                sessionStorage.setItem('role', 'user');
+            } else if (username.includes("admin")) {
+                sessionStorage.setItem('role', 'admin');
+            }
         }
 
-        
-
+        // realod to get proper view of the url
+        window.location.reload(); 
     };
+
 
     handleInputChange = (event) => {
         const { target } = event;
@@ -100,8 +106,8 @@ class Login extends Component {
                     </Typography>
                     <form className={classes.form} onSubmit={this.handleSubmit}>
                         <FormControl margin="normal" required fullWidth>
-                            <InputLabel htmlFor="email">Email Address</InputLabel>
-                            <Input id="email" name="email" autoComplete="email" autoFocus
+                            <InputLabel htmlFor="username">Email Address</InputLabel>
+                            <Input id="username" name="username" autoComplete="username" autoFocus
                                    onChange={this.handleInputChange}
                             />
                         </FormControl>

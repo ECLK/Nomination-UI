@@ -32,26 +32,25 @@ const styles = theme => ({
 		margin: theme.spacing.unit,
 		width: '100%',
 	}
-});
+	});
 
-class ControlledExpansionPanels extends React.Component {
-	state = {
-		expanded: null,
-		division: [],
-	};
+	class ControlledExpansionPanels extends React.Component {
+		state = {
+			expanded: null,
+			division: [],
+		};
 
-	handleChange = panel => (event, expanded) => {
-		this.setState({
-			expanded: expanded ? panel : false,
-		});
-	};
+		handleChange = panel => (event, expanded) => {
+			this.setState({
+				expanded: expanded ? panel : false,
+			});
+		};
 
-	componentWillMount() {
-		axios.get(`http://localhost:9001/ec-election/elections/${sessionStorage.getItem('election_id')}/teams/5eedb70e-a4da-48e0-b971-e06cd19ecc70/divisions`)
-			.then(res => {
-				const division = res.data;
-				this.setState({ division });
-				// console.log(this.state.division);
+		componentWillMount() {
+			axios.get(`elections/${sessionStorage.getItem('election_id')}/teams/5eedb70e-a4da-48e0-b971-e06cd19ecc70/divisions`)
+				.then(res => {
+					const division = res.data;
+					this.setState({ division });
 			});
 	}
 
