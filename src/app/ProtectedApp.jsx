@@ -7,6 +7,8 @@ import Nomination from 'pages/USER/Nomination/Nomination'
 import Objection from 'pages/USER/Objection/Objection'
 import Profile from 'pages/USER/Profile/Profile'
 
+import Admin_home from 'pages/ADMIN/Home/Home'
+
 export default class Protected extends Component {
     render() {
         return (
@@ -20,6 +22,9 @@ export default class Protected extends Component {
                     <Route path='/objection' component={Objection} />
                     <Route path='/profile' component={Profile} />
                     <Route path='/candidate' component={NominationForm} />
+                    
+                    <Redirect exact from='/admin' to='/admin/home' />
+                    <Route path='/admin/home' component={Admin_home} />
 
                 </Switch>
             </div>
