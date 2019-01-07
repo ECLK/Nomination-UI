@@ -9,6 +9,7 @@ import Axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
+import ObjectionPanel from 'components/Objection/SubmittedObjectionList';
 
 
 const styles = theme => ({
@@ -72,7 +73,7 @@ class Home extends React.Component {
                             <Grid item xs={12} sm={6}>
                                 <Typography variant="h4" gutterBottom>Objections</Typography>
                                 <Divider variant="middle" className={classes.topBottomSpace} />
-                                {/* <ObjectionPanel></ObjectionPanel> */}
+                                <ObjectionPanel></ObjectionPanel>
                             </Grid>
                         </Grid>
                     </div>
