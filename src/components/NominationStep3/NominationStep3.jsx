@@ -127,13 +127,13 @@ class TextFields extends React.Component {
                                                 <FormGroup className={classes.FormGroup} row>
                                                     <FormLabel component="legend">Upload {name} Down Below :</FormLabel>
                                                     <DropzoneArea onDrop={(files) => this.onDrop(files)}   ></DropzoneArea>
-                                                    <input type="hidden" onChange={ this.fileSelectHandler } name="supportDocConfDataId" value={name} 
-                                                     ref={(input) => { this.actionInput = input }} />
+                                                    {/* <input type="hidden" onChange={ this.fileSelectHandler } name="supportDocConfDataId" value={name} 
+                                                     ref={(input) => { this.actionInput = input }} /> */}
                                                 </FormGroup>
                                              </Grid>
                                              <Grid container spacing={8}>
                                                 <Grid className={classes.label}  item lg={3}>
-                                                    <Button  variant="contained" type="submit" value="Submit" color="secondary" className={classes.submit}>
+                                                    <Button onClick={(event) => this.handleClick(event)}  variant="contained" type="submit" value="Submit" color="secondary" className={classes.submit}>
                                                         Upload
                                                     </Button>
                                                 </Grid>
@@ -141,8 +141,8 @@ class TextFields extends React.Component {
                                              </form>
                                             </div>
                             ))}
-                            <input type="hidden" onChange={ this.fileSelectHandler } name="nominationId" value="1"
-                                                     ref={(input) => { this.actionInput = input }} />
+                            {/* <input type="hidden" onChange={ this.fileSelectHandler } name="nominationId" value="1"
+                                                     ref={(input) => { this.actionInput = input }} /> */}
                     </FormControl>
                 </Grid>
             </form>
