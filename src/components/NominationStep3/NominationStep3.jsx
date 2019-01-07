@@ -76,11 +76,14 @@ class TextFields extends React.Component {
                    filesToBeSent:[],
           }
       }
+      
       onDrop(acceptedFiles, rejectedFiles) {
           console.log('Accepted files: ', acceptedFiles);
           var filesToBeSent=this.state.filesToBeSent;
           filesToBeSent.push(acceptedFiles);
           this.setState({filesToBeSent}); 
+          console.log('filesToBeSent : ', this.state);
+
       }
 
       handleUpload(ev) {

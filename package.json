@@ -5,37 +5,24 @@
   "dependencies": {
     "@material-ui/core": "latest",
     "@material-ui/icons": "latest",
-<<<<<<< HEAD
     "axios": "^0.18.0",
-=======
-    "axios": "^0.15.3",
->>>>>>> 15fab5b445775df764c9ce020e8f9ce457243ff2
     "jss": "latest",
     "material-ui-dropzone": "^2.0.0",
     "mui-datatables": "^2.0.0-beta-42",
     "npm": "^6.4.1",
     "prop-types": "latest",
     "react": "latest",
-<<<<<<< HEAD
     "react-datepicker": "^2.0.0",
-=======
-    "react-axios": "^2.0.3",
->>>>>>> 15fab5b445775df764c9ce020e8f9ce457243ff2
     "react-dom": "latest",
     "react-dropzone": "^8.0.3",
     "react-jss": "latest",
     "react-loadable": "latest",
-<<<<<<< HEAD
     "react-popup": "^0.9.3",
     "react-responsive-modal": "^3.5.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "latest",
-=======
-    "react-router-dom": "^4.3.1",
-    "react-scripts": "latest",
-    "react-timestamp": "^4.4.0",
->>>>>>> 15fab5b445775df764c9ce020e8f9ce457243ff2
-    "update": "^0.7.4"
+    "update": "^0.7.4",
+    "react-timestamp": "^4.4.0"
   },
   "scripts": {
     "start": "react-scripts start",

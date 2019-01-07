@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Header from 'components/Header/Header';
+import MainMenu from 'components/MainMenu/MainMenu';
 import NominationForm from 'components/NominationForm/NominationForm';
 import axios from 'axios';
 
@@ -109,7 +109,7 @@ class Dashboard extends React.Component {
         return (
             <div className={classes.root}>
                 <CssBaseline />
-                <Header title="Elections Commission of Sri Lanka"></Header>
+                <MainMenu title="Elections Commission of Sri Lanka"></MainMenu>
                 <NominationForm title="Elections Commission of Sri Lanka"></NominationForm>
 
             </div>

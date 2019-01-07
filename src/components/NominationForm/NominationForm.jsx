@@ -19,7 +19,7 @@ import NominationStep3 from '../NominationStep3/NominationStep3';
 const styles = theme => ({
   root: {
     width: '90%',
-    marginTop:-80,
+    marginTop:10,
 
   },
   button: {
