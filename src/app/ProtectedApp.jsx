@@ -6,7 +6,8 @@ import Home from 'pages/Home/Home';
 import Nomination from 'pages/Nomination/Nomination'
 import Objection from 'pages/Objection/Objection'
 import Profile from 'pages/Profile/Profile'
-
+import ElectionHome from 'pages/Admin/ElectionHome/ElectionHome.jsx';
+import test_supun from 'pages/test-supun/test-supun'
 export default class Protected extends Component {
     render() {
         return (
@@ -20,6 +21,9 @@ export default class Protected extends Component {
                     <Route path='/objection' component={Objection} />
                     <Route path='/profile' component={Profile} />
                     <Route path='/candidate' component={NominationForm} />
+
+                    <Route path='/election' component={ElectionHome} />
+                    <Route path='/test' component={test_supun} />
 
                 </Switch>
             </div>
