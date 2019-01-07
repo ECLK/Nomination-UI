@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import Home from 'pages/Home/Home';
 import Login from 'pages/Login/Login';
-import Nomination from 'pages/Nomination/Nomination'
+import NominationForm from 'pages/NominationForm/NominationForm';
+import Home from 'pages/Home/Home';
 import Objection from 'pages/Objection/Objection'
 import Profile from 'pages/Profile/Profile'
 
@@ -33,7 +33,7 @@ export default class Protected extends Component {
                     <Redirect exact from='/' to='/home' />
                     <Route path='/home' component={Home} />
                     <Route path='/login' component={Login} />
-                    <Route path='/nomination' component={(this.state.isLoggedIn) ? Nomination : Login}/>
+                    <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login}/>
                     <Route path='/objection' component={(this.state.isLoggedIn) ? Objection : Login} />
                     <Route path='/profile' component={(this.state.isLoggedIn) ? Profile : Login} />
                 </Switch>

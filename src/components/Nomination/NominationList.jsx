@@ -47,7 +47,7 @@ const styles = theme => ({
 		};
 
 		componentWillMount() {
-			axios.get(`http://localhost:9001/ec-election/elections/${sessionStorage.getItem('election_id')}/teams/5eedb70e-a4da-48e0-b971-e06cd19ecc70/divisions`)
+			axios.get(`elections/${sessionStorage.getItem('election_id')}/teams/5eedb70e-a4da-48e0-b971-e06cd19ecc70/divisions`)
 				.then(res => {
 					const division = res.data;
 					this.setState({ division });

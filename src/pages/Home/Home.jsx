@@ -28,7 +28,6 @@ class Home extends React.Component {
 
     state = {
         open: true,
-        election_id: '43680f3e-97ac-4257-b27a-5f3b452da2e6',
         election: {
             electionTimeLine: new Array(4).fill(0),
         },
@@ -44,11 +43,11 @@ class Home extends React.Component {
 
     componentDidMount() {
         // get election details
-        Axios.get(`${process.env.REACT_APP_API_DOMAIN}/ec-election/elections/${this.state.election_id}`)
-            .then(res => {
-                const election = res.data;
-                this.setState({ election });
-            });
+        Axios.get(`elections/${sessionStorage.getItem('election_id')}`)
+        .then(res => {
+            const election = res.data;
+            this.setState({ election });
+        });
     }
 
     render() {
