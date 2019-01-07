@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import Home from 'pages/Home/Home';
 import Login from 'pages/Login/Login';
+import NominationForm from 'pages/NominationForm/NominationForm';
+import Home from 'pages/Home/Home';
 import Nomination from 'pages/Nomination/Nomination'
 import Objection from 'pages/Objection/Objection'
 import Profile from 'pages/Profile/Profile'
@@ -18,6 +19,8 @@ export default class Protected extends Component {
                     <Route path='/nomination' component={Nomination} />
                     <Route path='/objection' component={Objection} />
                     <Route path='/profile' component={Profile} />
+                    <Route path='/candidate' component={NominationForm} />
+
                 </Switch>
             </div>
         );
