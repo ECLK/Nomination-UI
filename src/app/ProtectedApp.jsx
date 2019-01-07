@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Login from 'pages/Login/Login';
-import NominationForm from 'pages/NominationForm/NominationForm';
-import Home from 'pages/Home/Home';
-import Nomination from 'pages/Nomination/Nomination'
-import Objection from 'pages/Objection/Objection'
-import Profile from 'pages/Profile/Profile'
+import NominationForm from 'pages/USER/NominationForm/NominationForm';
+import Home from 'pages/USER/Home/Home';
+import Nomination from 'pages/USER/Nomination/Nomination'
+import Objection from 'pages/USER/Objection/Objection'
+import Profile from 'pages/USER/Profile/Profile'
 
 export default class Protected extends Component {
     render() {
