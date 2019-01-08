@@ -71,18 +71,18 @@ class TextFields extends React.Component {
       }
       
       onDrop(acceptedFiles, rejectedFiles) {
-          console.log('Accepted files: ', acceptedFiles);
+        //   console.log('Accepted files: ', acceptedFiles);
           var filesToBeSent=this.state.filesToBeSent;
           filesToBeSent.push(acceptedFiles);
           this.setState({filesToBeSent}); 
-          console.log('filesToBeSent : ', this.state);
+        //   console.log('filesToBeSent : ', this.state);
 
       }
 
       handleUpload(ev) {
         ev.preventDefault();
     
-        console.log("gfffffffffffffffff",this.state);
+        // console.log("gfffffffffffffffff",this.state);
         const data = new FormData();
 
 
@@ -94,7 +94,7 @@ class TextFields extends React.Component {
         // this.setState({ imageURL: `http://localhost:9001/${body.file}`, uploadStatus: true });
           })
           .catch(function (error) {
-            console.log(error);
+            // console.log(error);
           });
       }
 

@@ -52,7 +52,6 @@ class CustomizedTable extends React.Component {
   
   
     componentDidMount() {
-      console.log(this)
       axios.get(`nominations/1/candidates`)
         .then(res => {
           const nominations = res.data;
@@ -142,8 +141,6 @@ class CustomizedTable extends React.Component {
     ]
 
 const outputData = rows.map( Object.values );
-console.log("output",outputData);
-
       const data = outputData;
       const options = {
         filterType: "dropdown",

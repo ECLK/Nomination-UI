@@ -131,8 +131,6 @@ class TextFields extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log('send data');
-        console.log("=========",this.state);
 
         axios({
             method: 'post',
