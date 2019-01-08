@@ -43,8 +43,8 @@ const ElectionModule = [
 
 class FilledTextFields extends React.Component {
     state = {
-        ModuleName: 'Parliamentary ',
-
+        electionName: 'Parliamentary 2018',
+        ElectionModule: 'Parliamentary',
     };
 
     handleChange = name => event => {
@@ -57,29 +57,51 @@ class FilledTextFields extends React.Component {
         const {classes} = this.props;
 
         return (
-
             <Card className={classes.card}>
                 <CardContent>
                     <Typography variant="h5" component="h2">
-                        Create Election
+                        Call Election
                     </Typography>
                     <form className={classes.container} noValidate autoComplete="off">
                         <TextField
                             id="filled-name"
-                            label="Module Name "
+                            label="Election Name "
                             className={classes.textField}
-                            value={this.state.ModuleName}
-                            onChange={this.handleChange('ModuleName')}
+                            value={this.state.electionName}
+                            onChange={this.handleChange('electionName')}
                             margin="normal"
                             variant="filled"
                         />
 
+                        <TextField
+                            id="filled-select-currency-native"
+                            select
+                            label="Election Module"
+
+                            className={classes.textField}
+                            value={this.state.currency}
+                            onChange={this.handleChange('ElectionModule')}
+                            SelectProps={{
+                                native: true,
+                                MenuProps: {
+                                    className: classes.menu,
+                                },
+                            }}
+
+                            helperText="Please select your Election Module"
+                            margin="normal"
+                            variant="filled"
+                        >
+                            {ElectionModule.map(option => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </TextField>
 
                     </form>
-
                     <Typography className={classes.textCallElection} component="p">
-                        <br />
-                         Module ID :PA1112
+                        Election ID :EL2018111112
 
                     </Typography>
                 </CardContent>
