@@ -13,7 +13,6 @@ const styles = theme => ({
 class Home extends React.Component {
     state = {
         open: true,
-
     };
 
     handleDrawerOpen = () => {
