@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Login from 'pages/Login/Login';
+
 import NominationForm from 'pages/USER/NominationForm/NominationForm';
 import Home from 'pages/USER/Home/Home';
 import Nomination from 'pages/USER/Nomination/Nomination'
@@ -12,6 +13,8 @@ import Admin_CallElection from 'pages/ADMIN/Call-election/Call-election'
 import Admin_CandidateConfig from 'pages/ADMIN/Candidate-config/Candidate-config'
 import Admin_ElectionConfig from 'pages/ADMIN/Election-config/Election-config'
 import Admin_NominationProcessConfig from 'pages/ADMIN/NominationProcess-config/NominationProcess-config'
+import ActiveElectionForm from 'pages/ADMIN/ActiveElectionForm/ActiveElectionForm';
+
 
 export default class Protected extends Component {
 
@@ -40,10 +43,11 @@ export default class Protected extends Component {
                     <Redirect exact from='/' to='/home' />
                     <Route path='/home' component={Home} />
                     <Route path='/login' component={Login} />
-                    <Route path='/nomination' component={Nomination} />
+                    {/* <Route path='/nomination' component={Nomination} /> */}
                     <Route path='/objection' component={Objection} />
                     <Route path='/profile' component={Profile} />
-                    <Route path='/candidate' component={NominationForm} />
+
+                    <Route path='/nomination' component={NominationForm} />
                     
                     <Redirect exact from='/admin' to='/admin/home' />
                     <Route path='/admin/home' component={Admin_home} />
@@ -51,6 +55,8 @@ export default class Protected extends Component {
                     <Route path='/admin/candidate-config' component={Admin_CandidateConfig} />
                     <Route path='/admin/election-config' component={Admin_ElectionConfig} />
                     <Route path='/admin/NominationProcess-config' component={Admin_NominationProcessConfig} />
+                    <Route path='/admin/active-election' component={ActiveElectionForm} />
+
 
 
                     {/* <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login}/>
