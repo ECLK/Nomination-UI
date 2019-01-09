@@ -1,12 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
-import Typography from '@material-ui/core/Typography';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControl from '@material-ui/core/FormControl';
 import {DropzoneArea} from 'material-ui-dropzone'
@@ -73,38 +70,81 @@ class TextFields extends React.Component {
     constructor(props){
         super(props);
         this.state={
-                   filesToBeSent:[],
+                //    filesToBeSent:[],
+                   files: []
           }
       }
       
-      onDrop(acceptedFiles, rejectedFiles) {
-          console.log('Accepted files: ', acceptedFiles);
-          var filesToBeSent=this.state.filesToBeSent;
-          filesToBeSent.push(acceptedFiles);
-          this.setState({filesToBeSent}); 
-          console.log('filesToBeSent : ', this.state);
+    //   onDrop(acceptedFiles, rejectedFiles) {
+    //       console.log('Accepted files: ', acceptedFiles);
+    //       var filesToBeSent=this.state.filesToBeSent;
+    //       filesToBeSent.push({acceptedFiles});
+    //       this.setState(acceptedFiles); 
+    //       console.log('filesToBeSent : ', this.state);
 
+    //   }
+      handleChange(files){
+        this.setState({
+          files: files
+        });
+        console.log("==========",this.state)
       }
 
-      handleUpload(ev) {
-        ev.preventDefault();
+//       handleClick(event){
+//   // console.log("handleClick",event);
+//   var self = this;
+//   if(this.state.filesToBeSent.length>0){
+//     var filesArray = this.state.filesToBeSent;
+//     var req = request.post('upload'+'fileupload');
     
-        console.log("gfffffffffffffffff",this.state);
-        const data = new FormData();
-        const test = this.state;
+//     axios({
+//         method: 'post',
+//         headers: {
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json',
+//         },
+//         url: 'nominations/candidates',
+//         data: this.state
+//     })
+//         req.attach(filesArray[0].name,filesArray[0])
+    
+//     req.end(function(err,res){
+//       if(err){
+//         console.log("error ocurred");
+//       }
+//       console.log("res",res);
+//       alert("File printing completed")
+//     });
+//   }
+//   else{
+//     alert("Please upload some files first");
+//   }
+// }
 
 
-        data.append('file', this.state);
-        // data.append('filename', this.state.filePath);
+
+handleUpload = (event) => {
+    const data = new FormData()
+    const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+    var filesArray = this.state.files;
     
-        axios.post('upload', data)
-          .then(function (response) {
-        // this.setState({ imageURL: `http://localhost:9001/${body.file}`, uploadStatus: true });
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      }
+    console.log("======sddd========",filesArray[0].name);
+    // console.log(data);
+
+    data.append('file', filesArray[0],filesArray[0].name);
+    // console.log("==============", data.get('File'));    
+    axios
+      .post('upload', data, config, {
+        // onUploadProgress: ProgressEvent => {
+        //   this.setState({
+        //     loaded: (ProgressEvent.loaded / ProgressEvent.total*100),
+        //   })
+        // },
+      })
+      .then(res => {
+        console.log(res.statusText)
+      })
+  }
 
     render() {
         const {classes} = this.props;
@@ -126,14 +166,14 @@ class TextFields extends React.Component {
                                              <Grid container spacing={8}>
                                                 <FormGroup className={classes.FormGroup} row>
                                                     <FormLabel component="legend">Upload {name} Down Below :</FormLabel>
-                                                    <DropzoneArea onDrop={(files) => this.onDrop(files)}   ></DropzoneArea>
+                                                    <DropzoneArea  onChange={this.handleChange.bind(this)}  ></DropzoneArea>
                                                     {/* <input type="hidden" onChange={ this.fileSelectHandler } name="supportDocConfDataId" value={name} 
                                                      ref={(input) => { this.actionInput = input }} /> */}
                                                 </FormGroup>
                                              </Grid>
                                              <Grid container spacing={8}>
                                                 <Grid className={classes.label}  item lg={3}>
-                                                    <Button onClick={(event) => this.handleClick(event)}  variant="contained" type="submit" value="Submit" color="secondary" className={classes.submit}>
+                                                    <Button onClick={this.handleUpload}  variant="contained"  value="Submit" color="secondary" className={classes.submit}>
                                                         Upload
                                                     </Button>
                                                 </Grid>
