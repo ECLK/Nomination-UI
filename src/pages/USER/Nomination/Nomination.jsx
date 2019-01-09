@@ -5,7 +5,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import MainMenu from 'components/MainMenu/MainMenu';
 
 
-
 const styles = theme => ({
     
 });

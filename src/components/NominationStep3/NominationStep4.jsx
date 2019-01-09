@@ -14,8 +14,6 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Paper from '../ReviewPaper';
 
 
-
-
 const styles = theme => ({
     container: {
         display: 'flex',

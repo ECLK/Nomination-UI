@@ -15,6 +15,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import {Link} from 'react-router-dom';
+
 import HomeIcon from '@material-ui/icons/Home';
 import ProfileIcon from '@material-ui/icons/AccountBox';
 import NominationIcon from '@material-ui/icons/Description';
@@ -71,18 +72,19 @@ class ResponsiveDrawer extends React.Component {
         <div className={classes.toolbar} />
         <Divider />
         <List>
-            <ListItem button key="Home" component={Link} to='/home' selected={this.props.page === "Home"} >
+            <ListItem button key="Home" component={Link} to='/admin/home' selected={this.props.page === "Home"} >
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="Home" />
             </ListItem>
-            <ListItem button key="Nomination" component={Link} to='/nomination' selected={this.props.page === "Nomination"} >
+            <ListItem button key="Nomination" component={Link} to='#'>
               <ListItemIcon><NominationIcon /></ListItemIcon>
-              <ListItemText primary="Nomination" />
+              <ListItemText primary="Nomination review" />
             </ListItem>
-            <ListItem button key="Objection" component={Link} to='/objection'>
+            <ListItem button key="Objection_review" component={Link} to='#' >
               <ListItemIcon><ObjectionIcon /></ListItemIcon>
-              <ListItemText primary="Objection" />
+              <ListItemText primary="Objection review" />
             </ListItem>
+           
         </List>
         <Divider />
         <List>

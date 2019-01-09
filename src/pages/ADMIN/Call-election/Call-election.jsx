@@ -2,13 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import MainMenu from 'components/MainMenu/MainMenu';
-import InfoBanner from 'components/InfoBanner/InfoBanner';
-import NominationPanel from 'components/NominationExpansionPanel/NominationList';
+import AdminMenu from 'components/AdminMenu/AdminMenu';
 import Axios from 'axios';
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
 
 
 const styles = theme => ({
@@ -23,7 +18,7 @@ const styles = theme => ({
     }
 });
 
-class Home extends React.Component {
+class CallElection extends React.Component {
 
     state = {
         open: true,
@@ -58,25 +53,12 @@ class Home extends React.Component {
         return (
             <div className={classes.root}>
                 <CssBaseline />
-                <MainMenu title="Election Commission of Sri Lanka" ></MainMenu>
+                <AdminMenu title="Election Commission of Sri Lanka - Admin" ></AdminMenu>
 
                 <div className={classes.content}>
-                    {/* all the content should go in this.. */}
-
-                    <InfoBanner election={this.state.election}></InfoBanner>
+                  
                     <div className={classes.root}>
-                        <Grid container spacing={24}>
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="h4" gutterBottom>Nominations</Typography>
-                                <Divider variant="middle" className={classes.topBottomSpace} />
-                                <NominationPanel></NominationPanel>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="h4" gutterBottom>Objections</Typography>
-                                <Divider variant="middle" className={classes.topBottomSpace} />
-                                {/* <ObjectionPanel></ObjectionPanel> */}
-                            </Grid>
-                        </Grid>
+                        
                     </div>
                 </div>
 
@@ -86,8 +68,8 @@ class Home extends React.Component {
     }
 }
 
-Home.propTypes = {
+CallElection.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Home);
+export default withStyles(styles)(CallElection);
