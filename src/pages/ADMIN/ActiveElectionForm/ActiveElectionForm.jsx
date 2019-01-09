@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import MainMenu from 'components/MainMenu/MainMenu';
+import AdminMenu from 'components/AdminMenu/AdminMenu';
 import ActiveElectionForm from 'components/ActiveElectionForm/ActiveElectionForm';
 import axios from 'axios';
+
 
 const drawerWidth = 240;
 
@@ -109,7 +110,7 @@ class Dashboard extends React.Component {
         return (
             <div className={classes.root}>
                 <CssBaseline />
-                <MainMenu title="Elections Commission of Sri Lanka"></MainMenu>
+                <AdminMenu title="Elections Commission of Sri Lanka"></AdminMenu>
                 <ActiveElectionForm title="Elections Commission of Sri Lanka"></ActiveElectionForm>
 
             </div>
