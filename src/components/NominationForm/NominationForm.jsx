@@ -10,11 +10,6 @@ import NominationStep1 from '../NominationStep1/NominationStep1';
 import NominationStep2 from '../NominationStep2/NominationStep2';
 import NominationStep3 from '../NominationStep3/NominationStep3';
 
-// import CandidateTabContainer from '../CandidateTabContainer/CandidateTabContainer';
-
-
-
-
 
 const styles = theme => ({
   root: {

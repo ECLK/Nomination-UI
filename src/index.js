@@ -15,5 +15,5 @@ ReactDOM.render(<Index />, document.getElementById('root'));
 // Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister();
 
-// Save data to sessionStorage
+// Set session data
 sessionStorage.setItem('election_id', '43680f3e-97ac-4257-b27a-5f3b452da2e6');

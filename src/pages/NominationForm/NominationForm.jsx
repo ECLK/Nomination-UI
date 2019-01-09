@@ -87,13 +87,13 @@ class Dashboard extends React.Component {
     };
     
     
-      componentDidMount() {
+    componentDidMount() {
         axios.get(`http://localhost:9001/ec-election/nominations/1/candidates`)
-          .then(res => {
+            .then(res => {
             const nominations = res.data;
             this.setState({ nominations });
-          })
-      }
+            })
+    }
 
     handleDrawerOpen = () => {
         this.setState({ open: true });
@@ -122,9 +122,3 @@ Dashboard.propTypes = {
 };
 
 export default withStyles(styles)(Dashboard);
-
-
-
-
-
-

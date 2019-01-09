@@ -1,19 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
-import Typography from '@material-ui/core/Typography';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControl from '@material-ui/core/FormControl';
 import {DropzoneArea} from 'material-ui-dropzone'
 import FormLabel from '@material-ui/core/FormLabel';
 import Paper from '../ReviewPaper';
-
-
 
 
 const styles = theme => ({
@@ -66,8 +61,6 @@ const styles = theme => ({
 });
 
 
-
-
 class TextFields extends React.Component {
 
     constructor(props){
@@ -91,7 +84,6 @@ class TextFields extends React.Component {
     
         console.log("gfffffffffffffffff",this.state);
         const data = new FormData();
-        const test = this.state;
 
 
         data.append('file', this.state);
