@@ -44,6 +44,11 @@ export default class Protected extends Component {
                     <Redirect exact from='/admin' to='/admin/home' />
                     <Route path='/admin/home' component={Admin_home} />
 
+                    {/* <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login}/>
+                    <Route path='/objection' component={(this.state.isLoggedIn) ? Objection : Login} />
+                    <Route path='/profile' component={(this.state.isLoggedIn) ? Profile : Login} />
+                    <Route path='/election' component={(this.state.isLoggedIn) ? ElectionHome : Login}} /> */}
+
                 </Switch>
             </div>
         );

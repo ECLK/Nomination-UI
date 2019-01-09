@@ -8,8 +8,8 @@
     "axios": "^0.18.0",
     "jss": "latest",
     "material-ui-dropzone": "^2.0.0",
-    "mui-datatables": "^2.0.0-beta-42",
-    "npm": "^6.4.1",
+    "mui-datatables": "^2.0.0-beta-49",
+    "npm": "^6.5.0",
     "prop-types": "latest",
     "react": "latest",
     "react-datepicker": "^2.0.0",
@@ -21,8 +21,8 @@
     "react-responsive-modal": "^3.5.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "latest",
-    "update": "^0.7.4",
-    "react-timestamp": "^4.4.0"
+    "react-timestamp": "^4.4.0",
+    "update": "^0.7.4"
   },
   "scripts": {
     "start": "react-scripts start",
