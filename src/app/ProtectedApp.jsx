@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Login from 'pages/Login/Login';
-import NominationForm from 'pages/NominationForm/NominationForm';
-import Home from 'pages/Home/Home';
-import Objection from 'pages/Objection/Objection'
-import Profile from 'pages/Profile/Profile'
+import NominationForm from 'pages/USER/NominationForm/NominationForm';
+import Home from 'pages/USER/Home/Home';
+import Nomination from 'pages/USER/Nomination/Nomination'
+import Objection from 'pages/USER/Objection/Objection'
+import Profile from 'pages/USER/Profile/Profile'
+
+import Admin_home from 'pages/ADMIN/Home/Home'
 
 export default class Protected extends Component {
 
@@ -33,9 +36,19 @@ export default class Protected extends Component {
                     <Redirect exact from='/' to='/home' />
                     <Route path='/home' component={Home} />
                     <Route path='/login' component={Login} />
-                    <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login}/>
+                    <Route path='/nomination' component={Nomination} />
+                    <Route path='/objection' component={Objection} />
+                    <Route path='/profile' component={Profile} />
+                    <Route path='/candidate' component={NominationForm} />
+                    
+                    <Redirect exact from='/admin' to='/admin/home' />
+                    <Route path='/admin/home' component={Admin_home} />
+
+                    {/* <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login}/>
                     <Route path='/objection' component={(this.state.isLoggedIn) ? Objection : Login} />
                     <Route path='/profile' component={(this.state.isLoggedIn) ? Profile : Login} />
+                    <Route path='/election' component={(this.state.isLoggedIn) ? ElectionHome : Login}} /> */}
+
                 </Switch>
             </div>
         );

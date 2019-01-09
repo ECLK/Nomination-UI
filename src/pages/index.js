@@ -9,7 +9,7 @@ import Login from 'pages/Login/Login';
 
 const styles = theme => ({
   root: {
-    textAlign: 'center',
+    //textAlign: 'center',
     paddingTop: theme.spacing.unit * 10,
   }
 });
