@@ -8,6 +8,10 @@ import Objection from 'pages/USER/Objection/Objection'
 import Profile from 'pages/USER/Profile/Profile'
 
 import Admin_home from 'pages/ADMIN/Home/Home'
+import Admin_CallElection from 'pages/ADMIN/Call-election/Call-election'
+import Admin_CandidateConfig from 'pages/ADMIN/Candidate-config/Candidate-config'
+import Admin_ElectionConfig from 'pages/ADMIN/Election-config/Election-config'
+import Admin_NominationProcessConfig from 'pages/ADMIN/NominationProcess-config/NominationProcess-config'
 
 export default class Protected extends Component {
 
@@ -43,6 +47,11 @@ export default class Protected extends Component {
                     
                     <Redirect exact from='/admin' to='/admin/home' />
                     <Route path='/admin/home' component={Admin_home} />
+                    <Route path='/admin/call-election' component={Admin_CallElection} />
+                    <Route path='/admin/candidate-config' component={Admin_CandidateConfig} />
+                    <Route path='/admin/election-config' component={Admin_ElectionConfig} />
+                    <Route path='/admin/NominationProcess-config' component={Admin_NominationProcessConfig} />
+
 
                     {/* <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login}/>
                     <Route path='/objection' component={(this.state.isLoggedIn) ? Objection : Login} />
