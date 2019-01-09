@@ -1,74 +1,121 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import MainMenu from 'components/MainMenu/MainMenu';
-import InfoBanner from 'components/InfoBanner/InfoBanner';
-import NominationPanel from 'components/NominationExpansionPanel/NominationList';
-import Axios from 'axios';
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
+import {withStyles} from '@material-ui/core/styles';
+
+import AdminMenu from 'components/AdminMenu/AdminMenu';
+import CreateElection from 'components/CreateElection/CreateElection';
+import CallElection from 'components/CallElection/CallElection';
+import ElectionModule from 'components/ElectionModule/ElectionModule';
+import ActiveElection from 'components/ActiveElection/ActiveElection.jsx';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';//---
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';///-
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+import Paper from '@material-ui/core/Paper';
+
+
+
+
+
 
 
 const styles = theme => ({
-    content: {
-        [theme.breakpoints.up('sm')]: {
-            paddingLeft: theme.drawer.width,
-            flexShrink: 0,
-        },
+    container: {
+        marginLeft: theme.spacing.unit * 35,
+        paddingTop: 10,
+    },heading: {
+        fontSize: theme.typography.pxToRem(15),
+        flexBasis: '33.33%',
+        flexShrink: 0,
+
+        fontSize: theme.typography.pxToRem(15),
+        fontWeight: theme.typography.fontWeightRegular,
     },
-    topBottomSpace: {
-        marginBottom: 15
+    secondaryHeading: {
+        fontSize: theme.typography.pxToRem(15),
+        color: theme.palette.text.secondary,
+    },
+    xxxxx:{
+        wide:'full'
     }
+
+
 });
+const h1Style = {
+    marginLeft: '-850px'
+};
 
 class Home extends React.Component {
+        state = {
+            open: true,
+            expanded:null,
+        };
 
-    state = {
-        open: true,
-        election_id: '43680f3e-97ac-4257-b27a-5f3b452da2e6',
-        election: {
-            electionTimeLine: new Array(4).fill(0),
-        },
+    handleChange = panel => (event, expanded) => {
+        this.setState({
+            expanded: expanded ? panel : false,
+        });
     };
 
-    handleDrawerOpen = () => {
-        this.setState({ open: true });
-    };
-
-    handleDrawerClose = () => {
-        this.setState({ open: false });
-    };
-
-    componentDidMount() {
-
-        // get election details
-        Axios.get(`${process.env.REACT_APP_API_DOMAIN}/ec-election/elections/${this.state.election_id}`)
-            .then(res => {
-                const election = res.data;
-                this.setState({ election });
-            });
-
-    }
 
     render() {
-        const { classes } = this.props;
-
+        const {classes} = this.props;
+        const { expanded } = this.state;
         return (
-            <div className={classes.root}>
-                <CssBaseline />
-                <MainMenu title="Election Commission of Sri Lanka - Admin" ></MainMenu>
+            <div>
+                <AdminMenu title="Elections Commission of Sri Lanka"></AdminMenu>
 
-                <div className={classes.content}>
-                  
-                    <div className={classes.root}>
-                        
-                    </div>
+                <div className={classes.container}>
+                    <Typography variant="h5" component="h2">
+                        Election Home
+                    </Typography>
+                    <br />
+                    <Grid container spacing={24}>
+
+                        <Grid item xs={12} sm={6}>
+                            <CreateElection></CreateElection>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <CallElection></CallElection>
+                        </Grid>
+                    </Grid>
+                    <br />
+                    <ExpansionPanel>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                            <Typography className={classes.heading}>Election Module</Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails >
+                            <Grid container spacing={24}>
+                                <Grid item xs={12}>
+                                    <Paper className={classes.paper}> <ElectionModule></ElectionModule></Paper>
+                                </Grid>
+                            </Grid>
+
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                    <ExpansionPanel>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                            <Typography className={classes.heading}>Active Election</Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                            <Grid container spacing={24}>
+                                <Grid item xs={12}>
+                                    <Paper className={classes.paper}><ActiveElection></ActiveElection></Paper>
+                                </Grid>
+                            </Grid>
+
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+
+
+
                 </div>
-
-
             </div>
+
         );
     }
 }
