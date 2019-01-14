@@ -5,6 +5,7 @@ import NominationForm from 'pages/NominationForm/NominationForm';
 import Home from 'pages/Home/Home';
 import Objection from 'pages/Objection/Objection'
 import Profile from 'pages/Profile/Profile'
+import AllowNomination from 'pages/ADMIN/Nomination/AllowNomination';
 
 export default class Protected extends Component {
 
@@ -36,6 +37,7 @@ export default class Protected extends Component {
                     <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login}/>
                     <Route path='/objection' component={(this.state.isLoggedIn) ? Objection : Login} />
                     <Route path='/profile' component={(this.state.isLoggedIn) ? Profile : Login} />
+                    <Route path='/allow-nomination' component={(this.state.isLoggedIn) ? AllowNomination : Login} />
                 </Switch>
             </div>
         );

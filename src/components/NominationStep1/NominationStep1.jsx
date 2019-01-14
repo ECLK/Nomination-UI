@@ -52,11 +52,11 @@ class CustomizedTable extends React.Component {
   
   
     componentDidMount() {
-      axios.get(`nominations/1/candidates`)
+      axios.get(`nominations/135183e2-a0ca-44a0-9577-0d2b16c3217f/candidates`)
         .then(res => {
           const nominations = res.data;
           const candidateCount = res.data.length;
-          localStorage.setItem('candidate',res.data.length)
+          localStorage.setItem('candidate',res.data.length);
           this.setState({ nominations });
           this.setState({ candidateCount });
         })
