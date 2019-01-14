@@ -59,6 +59,8 @@ class TextFields extends React.Component {
     };
 
     handleChange = (name) => event => {
+        console.log(event.target.value)
+        console.log(name);
         this.setState({
             // payments:{
                 [name]:event.target.value,
@@ -67,8 +69,9 @@ class TextFields extends React.Component {
     };
 
     componentDidMount() {
+        console.log(this)
         var candidateCount = localStorage.getItem('candidate');
-      axios.get(`nominations/135183e2-a0ca-44a0-9577-0d2b16c3217f/payments`)
+      axios.get(`nominations/1/payments`)
         .then(res => {
           const payments = res.data;
           const depositor=res.data.depositor;
@@ -76,6 +79,8 @@ class TextFields extends React.Component {
           const depositeDate=res.data.depositeDate;
           const paymentStatus=res.data.paymentStatus;
 
+
+          console.log("payments",payments);
           this.setState({ depositor });
           this.setState({ depositAmount });
           this.setState({ depositeDate });
@@ -93,72 +98,13 @@ class TextFields extends React.Component {
                 <Grid container direction="row" justify="flex-start" alignItems="stretch" spacing={8}>
                     <Grid item lg={3}>
                     <TextField
-                            label="Depositor Name"
-                            value={this.state.depositor}
-                            onChange={this.handleChange('depositor')}
+                            label="Deposited Amount"
+                            value={this.state.depositAmount}
+                            onChange={this.handleChange('depositedAmount')}
                         />  
                     </Grid>
-                    <Grid item lg={3}>
-                        <TextField
-                            id="standard-name"
-                            label="Deposited Amount"
-                            className={classes.textField}
-                            value={this.state.depositAmount}
-                            onChange={this.handleChange('depositAmount')}
-                            margin="normal"
-                        />
-                    </Grid>
-                    <Grid item lg={3}>
-                        <TextField
-                            id="standard-name"
-                            label="Candidate Count"
-                            className={classes.textField}
-                            value={localStorage.getItem('candidate')}
-                            onChange={this.handleChange('candidateCount')}
-                            margin="normal"
-                        />
-                    </Grid>
-
                 </Grid>
-                <Grid container spacing={8}>
-                    <Grid item lg={3}>
-                        <TextField
-                            id="date"
-                            label="Diposited Date"
-                            type="date"
-                            value={this.state.depositeDate}
-                            // defaultValue="2017-05-24"
-                            className={classes.textField}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            margin="normal"
-                        />
-                    </Grid>
-                    <Grid item lg={3}>
-                         <TextField
-                            id="standard-select-currency"
-                            select
-                            label="Select"
-                            className={classes.textField}
-                            value={this.state.paymentStatus}
-                            onChange={this.handleChange('paymentStatus')}
-                            SelectProps={{
-                                MenuProps: {
-                                className: classes.menu,
-                                },
-                            }}
-                            // helperText="Please select your currency"
-                            margin="normal"
-                            >
-                            {paymentStatus.map(option => (
-                                <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                                </MenuItem>
-                            ))}
-                            </TextField>       
-                    </Grid>
-                </Grid>
+                
                
 
                 {/* <Grid container spacing={8}>
