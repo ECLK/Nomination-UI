@@ -84,7 +84,6 @@ class TextFields extends React.Component {
 
     send = (e) => {
         e.preventDefault();
-        console.log('send data');
         axios({
             method: 'post',
             url: '',

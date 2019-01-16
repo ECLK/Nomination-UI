@@ -59,8 +59,6 @@ class TextFields extends React.Component {
     };
 
     handleChange = (name) => event => {
-        console.log(event.target.value)
-        console.log(name);
         this.setState({
             // payments:{
                 [name]:event.target.value,
@@ -69,7 +67,6 @@ class TextFields extends React.Component {
     };
 
     componentDidMount() {
-        console.log(this)
         var candidateCount = localStorage.getItem('candidate');
       axios.get(`nominations/135183e2-a0ca-44a0-9577-0d2b16c3217f/payments`)
         .then(res => {
@@ -79,8 +76,6 @@ class TextFields extends React.Component {
           const depositeDate=res.data.depositeDate;
           const paymentStatus=res.data.paymentStatus;
 
-
-          console.log("payments",payments);
           this.setState({ depositor });
           this.setState({ depositAmount });
           this.setState({ depositeDate });

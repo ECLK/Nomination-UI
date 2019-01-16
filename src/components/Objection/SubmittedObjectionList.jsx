@@ -41,7 +41,7 @@ class SimpleList extends React.Component {
 				<List component="nav">
 				{
 					this.state.objection.map((objection, index) => 
-						<ListItemLink>
+						<ListItemLink key={index}>
 							<ListItemText primary={objection.description.substring(0,30)+'...'}/>
 						</ListItemLink>
 					)
