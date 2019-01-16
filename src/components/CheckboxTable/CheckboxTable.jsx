@@ -1,6 +1,10 @@
 import React from 'react';
 import PropTypes, { array } from 'prop-types';
+<<<<<<< HEAD
 import { withStyles, jssPreset } from '@material-ui/core/styles';
+=======
+import { withStyles } from '@material-ui/core/styles';
+>>>>>>> 411fa768832d564690bd9c7b643cc89d9d87ed8c
 import axios from 'axios';
 import ReactDOM from "react-dom";
 import MUIDataTable from "mui-datatables";
@@ -25,12 +29,10 @@ const styles = theme => ({
 });
 
 
-/**
- * this is a table with checkboxes with relates to headers on columns and tables.
- */
-class CheckboxTableGrid extends React.Component {
 
-    constructor(props) {
+class CustomizedTable extends React.Component {
+    
+    constructor(props){
         super(props);
 
         this.state = {
@@ -155,7 +157,11 @@ class CheckboxTableGrid extends React.Component {
 
         return (
             <MUIDataTable
+<<<<<<< HEAD
                 title={this.props.title}
+=======
+                title={"Nomination Candidate list"}
+>>>>>>> 411fa768832d564690bd9c7b643cc89d9d87ed8c
                 data={outputData}
                 columns={columns}
                 options={options}
@@ -165,5 +171,9 @@ class CheckboxTableGrid extends React.Component {
 }
 
 
+<<<<<<< HEAD
 export default withStyles(styles)(CheckboxTableGrid);
+=======
+export default withStyles(styles)(CustomizedTable);
+>>>>>>> 411fa768832d564690bd9c7b643cc89d9d87ed8c
 
