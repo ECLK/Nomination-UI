@@ -1,19 +1,19 @@
-import React from 'react';
+import React from "react";
 
-import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
-import { linkTo } from '@storybook/addon-links';
+import { storiesOf } from "@storybook/react";
+// import { action } from "@storybook/addon-actions";
+// import { linkTo } from "@storybook/addon-links";
 
-import { Button, Welcome } from '@storybook/react/demo';
+import DatePickers from "../components/DatePicker";
+import Progress from "../components/Progress/Progress";
+import Table from "../components/common/Table";
 
-storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
+import { tableHeadings, tableData } from "./_data";
 
-storiesOf('Button', module)
-  .add('with text', () => <Button onClick={action('clicked')}>Hello Button</Button>)
-  .add('with some emoji', () => (
-    <Button onClick={action('clicked')}>
-      <span role="img" aria-label="so cool">
-        😀 😎 👍 💯
-      </span>
-    </Button>
-  ));
+storiesOf("Table", module).add("default", () => (
+  <Table headings={tableHeadings} rows={tableData} />
+));
+
+storiesOf("DatePicker", module).add("default", () => <DatePickers />);
+
+storiesOf("Progress", module).add("default", () => <Progress />);
