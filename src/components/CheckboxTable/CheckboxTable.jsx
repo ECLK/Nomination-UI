@@ -26,7 +26,7 @@ const styles = theme => ({
 
 
 
-class CustomizedTable extends React.Component {
+class CheckboxTableGrid extends React.Component {
     
     constructor(props){
         super(props);
