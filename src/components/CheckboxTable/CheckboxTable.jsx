@@ -1,10 +1,6 @@
 import React from 'react';
 import PropTypes, { array } from 'prop-types';
-<<<<<<< HEAD
 import { withStyles, jssPreset } from '@material-ui/core/styles';
-=======
-import { withStyles } from '@material-ui/core/styles';
->>>>>>> 411fa768832d564690bd9c7b643cc89d9d87ed8c
 import axios from 'axios';
 import ReactDOM from "react-dom";
 import MUIDataTable from "mui-datatables";
