@@ -55,6 +55,7 @@ export default class Protected extends Component {
                     <Route path='/admin/election-config' component={Admin_ElectionConfig} />
                     <Route path='/admin/NominationProcess-config' component={Admin_NominationProcessConfig} />
                     <Route path='/admin/active-election' component={ActiveElectionForm} />
+                    <Route path='/admin/allow-nomination' component={AllowNomination} />
 
 
 

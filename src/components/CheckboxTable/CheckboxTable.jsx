@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes, { array } from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, jssPreset } from '@material-ui/core/styles';
 import axios from 'axios';
 import ReactDOM from "react-dom";
 import MUIDataTable from "mui-datatables";
@@ -16,7 +16,7 @@ const styles = theme => ({
     },
     table: {
         minWidth: 700,
-    },
+    }, 
     row: {
         '&:nth-of-type(odd)': {
             backgroundColor: theme.palette.background.default,
@@ -25,74 +25,86 @@ const styles = theme => ({
 });
 
 
-
-class CustomizedTable extends React.Component {
+/**
+ * this is a table with checkboxes with relates to headers on columns and tables.
+ */
+class CheckboxTableGrid extends React.Component {
     
     constructor(props){
         super(props);
 
         this.state = {
             open: true,
-            checkboxGrid: [[]],
+            checkboxGrid: [],
+            rowHeaders: [],
+            columnHeaders: [],
+            rowData: [],
         };
+    }
 
-        
+    componentWillMount() {
+
+        let rowHeaders = [''];
+        this.props.rows.map( (value) => {
+            rowHeaders.push(value);
+        });
+
+        let columnHeaders = ['', ''];
+        this.props.cols.map( (value) => {
+            columnHeaders.push(value);
+        });
+
+        let checkboxGrid = [];
+        rowHeaders.map(() => {
+            let row = [];
+            columnHeaders.map(() => {
+                row.push(false);
+            });
+            checkboxGrid.push(row);
+        });
+
+        this.setState({ rowHeaders, columnHeaders, checkboxGrid });
 
     }
 
 
+    // this will handle the change of checkbox and update the state.checkboxGrid variable, which is the source to the grid.
     handleChange = (row, col) => event => {
-        let checkboxGrid = this.state.checkboxGrid.slice();
+        let checkboxGrid = Array.from(this.state.checkboxGrid);
+        console.log(row +' ' + col);
+        
         checkboxGrid[row][col] = event.target.checked;
         this.setState({ checkboxGrid });
+
         console.log(checkboxGrid);
     };
 
 
+
+
     render() {
         const { classes } = this.props;
-        console.log('---->'+this.props.columnHeaders);
 
-        let rowData = [
-            {
-                party: "",
-                division1: <Checkbox color="primary" checked={this.state.checkboxGrid[0][0]} onChange={this.handleChange(0,0)}></Checkbox>,
-                division2: <Checkbox color="primary" checked={this.state.checkboxGrid[0][1]} onChange={this.handleChange(0,1)}></Checkbox>,
-                division3: <Checkbox color="primary" checked={this.state.checkboxGrid[0][2]} onChange={this.handleChange(0,2)}></Checkbox>,
-                division4: <Checkbox color="primary" checked={this.state.checkboxGrid[0][3]} onChange={this.handleChange(0,3)}></Checkbox>,
-                division5: <Checkbox color="primary" checked={this.state.checkboxGrid[0][4]} onChange={this.handleChange(0,4)}></Checkbox>,
-            },
-            {
-                party: 'Registered Political Party-2',
-                division1: <Checkbox color="primary"></Checkbox>,
-                division2: <Checkbox color="primary"></Checkbox>,
-                division3: <Checkbox color="primary"></Checkbox>,
-                division4: <Checkbox color="primary"></Checkbox>,
-                division5: <Checkbox color="primary"></Checkbox>,
-            },
-            {
-                party: 'Independent Group-1',
-                division1: <Checkbox color="primary"></Checkbox>,
-                division2: <Checkbox color="primary"></Checkbox>,
-                division3: <Checkbox color="primary"></Checkbox>,
-                division4: <Checkbox color="primary"></Checkbox>,
-                division5: <Checkbox color="primary"></Checkbox>,
-            },
-            {
-                party: 'Independent Group-1',
-                division1: <Checkbox color="primary"></Checkbox>,
-                division2: <Checkbox color="primary"></Checkbox>,
-                division3: <Checkbox color="primary"></Checkbox>,
-                division4: <Checkbox color="primary"></Checkbox>,
-                division5: <Checkbox color="primary"></Checkbox>,
+        // this is written here so that `checked={this.state.checkboxGrid[i][j-1]}` could work.
+        // on this way updated checkbox data is always taken from state and setup properly
+        let rowData = [];
+        for (let i = 0; i < this.state.rowHeaders.length; i++) {
+            let colData = [];
+            for (let j = 0; j < this.state.columnHeaders.length; j++){
+                if (j==0){
+                    colData.push(this.state.rowHeaders[i]);
+                } else {
+                    colData.push(<Checkbox color="primary" checked={this.state.checkboxGrid[i][j-1]} onChange={this.handleChange(i,j-1)}></Checkbox>);
+                }
             }
-        ]
+            rowData.push(colData);
+        }
 
+        // set row data headers
         const outputData = rowData.map(Object.values);
 
-
         // set column data
-        const columns = this.props.columnHeaders;
+        const columns = this.state.columnHeaders;
 
         // set option list
         const options = {
@@ -103,7 +115,7 @@ class CustomizedTable extends React.Component {
 
         return (
             <MUIDataTable
-                title={"Nomination Candidate list"}
+                title={this.props.title}
                 data={outputData}
                 columns={columns}
                 options={options}
@@ -113,5 +125,5 @@ class CustomizedTable extends React.Component {
 }
 
 
-export default withStyles(styles)(CustomizedTable);
+export default withStyles(styles)(CheckboxTableGrid);
 
