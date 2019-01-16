@@ -81,13 +81,14 @@ class Dashboard extends React.Component {
     state = {
         open: true,
         nominations: []
-
     };
 
 
     componentDidMount() {
-        const { getNominations } = this.props;
+        const { getNominations, all_nominations } = this.props;
         getNominations();
+
+        console.log(all_nominations)
     }
 
     handleDrawerOpen = () => {
@@ -116,9 +117,17 @@ Dashboard.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Dashboard);
+const mapStateToProps = ({ Nomination }) => {
+    const { all_nominations } = Nomination;
 
+    return { all_nominations }
+};
 
+const mapActionsToProps = {
+    getNominations
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Dashboard));
 
 
 
