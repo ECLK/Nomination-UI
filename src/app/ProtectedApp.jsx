@@ -4,7 +4,6 @@ import Login from 'pages/Login/Login';
 
 import NominationForm from 'pages/USER/NominationForm/NominationForm';
 import Home from 'pages/USER/Home/Home';
-import Nomination from 'pages/USER/Nomination/Nomination'
 import Objection from 'pages/USER/Objection/Objection'
 import Profile from 'pages/USER/Profile/Profile'
 
@@ -15,6 +14,12 @@ import Admin_ElectionConfig from 'pages/ADMIN/Election-config/Election-config'
 import Admin_NominationProcessConfig from 'pages/ADMIN/NominationProcess-config/NominationProcess-config'
 import ActiveElectionForm from 'pages/ADMIN/ActiveElectionForm/ActiveElectionForm';
 import AllowNomination from 'pages/ADMIN/Nomination/AllowNomination';
+
+import NominationReview from 'pages/ADMIN/Nomination_review/Nomination_review';
+import PaymentReview from 'pages/ADMIN/Payment_review/Payment_review';
+import ObjectionReview from 'pages/ADMIN/Objection_review/Objection_review';
+import ElectionReview from 'pages/ADMIN/Election_review/Election_review';
+
 
 
 export default class Protected extends Component {
@@ -53,9 +58,14 @@ export default class Protected extends Component {
                     <Route path='/admin/call-election' component={Admin_CallElection} />
                     <Route path='/admin/candidate-config' component={Admin_CandidateConfig} />
                     <Route path='/admin/election-config' component={Admin_ElectionConfig} />
-                    <Route path='/admin/NominationProcess-config' component={Admin_NominationProcessConfig} />
+                    <Route path='/admin/nominationProcess-config' component={Admin_NominationProcessConfig} />
                     <Route path='/admin/active-election' component={ActiveElectionForm} />
                     <Route path='/admin/allow-nomination' component={AllowNomination} />
+
+                    <Route path='/admin/nomination-review' component={NominationReview} />
+                    <Route path='/admin/payment-review' component={PaymentReview} />
+                    <Route path='/admin/objection-review' component={ObjectionReview} />
+                    <Route path='/admin/election-review' component={ElectionReview} />
 
 
 
