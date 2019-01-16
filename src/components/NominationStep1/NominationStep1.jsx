@@ -34,12 +34,11 @@ class CustomizedTable extends React.Component {
   
   
     componentDidMount() {
-      console.log(this)
       axios.get(`nominations/135183e2-a0ca-44a0-9577-0d2b16c3217f/candidates`)
         .then(res => {
           const nominations = res.data;
           const candidateCount = res.data.length;
-          localStorage.setItem('candidate',res.data.length)
+          localStorage.setItem('candidate',res.data.length);
           this.setState({ nominations });
           this.setState({ candidateCount });
         })
@@ -123,8 +122,6 @@ class CustomizedTable extends React.Component {
     ]
 
 const outputData = rows.map( Object.values );
-console.log("output",outputData);
-
       const data = outputData;
       const options = {
         filterType: "dropdown",

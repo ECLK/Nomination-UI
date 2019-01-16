@@ -58,7 +58,6 @@ const styles = theme => ({
         margin: theme.spacing.unit,
         width: theme.spacing.unit * 150,
         // height: theme.spacing.unit,
-
     },
    
 });
@@ -81,7 +80,7 @@ class TextFields extends React.Component {
       handleUpload(ev) {
         ev.preventDefault();
     
-        console.log("gfffffffffffffffff",this.state.selectedFile);
+        // console.log("gfffffffffffffffff",this.state.selectedFile);
         const data = new FormData();
         const test = this.state;
 
@@ -94,7 +93,7 @@ class TextFields extends React.Component {
         // this.setState({ imageURL: `http://localhost:9001/${body.file}`, uploadStatus: true });
           })
           .catch(function (error) {
-            console.log(error);
+            // console.log(error);
           });
       }
 
@@ -105,7 +104,7 @@ class TextFields extends React.Component {
 
 
         let file = event[0];
-        console.log("WWWWWWWWWWWWWWWWWWWWWWW",nominationId)
+        // console.log("WWWWWWWWWWWWWWWWWWWWWWW",nominationId)
 
         // let fileprops = {
         //     "supportDocConfDataId":supportDocConfDataId,
@@ -123,7 +122,7 @@ class TextFields extends React.Component {
         //     selectedFile: event[0].name,
         //     loaded: 0,
         //   })
-          console.log("=========",this.state);
+        //   console.log("=========",this.state);
 
         }
 
@@ -139,11 +138,11 @@ class TextFields extends React.Component {
             this.setState(
                 { selectedFile: event[0].name },
                   () => {
-                    console.log(this.state.selectedFile) // Mustkeom
+                    // console.log(this.state.selectedFile) // Mustkeom
                   }
             );
 
-            console.log("hhhhhhhhhhhhhh",this.state.selectedFile);
+            // console.log("hhhhhhhhhhhhhh",this.state.selectedFile);
         }
 
     render() {

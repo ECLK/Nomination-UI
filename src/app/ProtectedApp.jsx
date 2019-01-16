@@ -13,6 +13,7 @@ import Admin_CandidateConfig from 'pages/ADMIN/Candidate-config/Candidate-config
 import Admin_ElectionConfig from 'pages/ADMIN/Election-config/Election-config'
 import Admin_NominationProcessConfig from 'pages/ADMIN/NominationProcess-config/NominationProcess-config'
 import ActiveElectionForm from 'pages/ADMIN/ActiveElectionForm/ActiveElectionForm';
+import AllowNomination from 'pages/ADMIN/Nomination/AllowNomination';
 
 import NominationReview from 'pages/ADMIN/Nomination_review/Nomination_review';
 import PaymentReview from 'pages/ADMIN/Payment_review/Payment_review';
@@ -48,10 +49,8 @@ export default class Protected extends Component {
                     <Redirect exact from='/' to='/home' />
                     <Route path='/home' component={Home} />
                     <Route path='/login' component={Login} />
-                    {/* <Route path='/nomination' component={Nomination} /> */}
                     <Route path='/objection' component={Objection} />
                     <Route path='/profile' component={Profile} />
-
                     <Route path='/nomination' component={NominationForm} />
                     
                     <Redirect exact from='/admin' to='/admin/home' />
@@ -72,6 +71,7 @@ export default class Protected extends Component {
                     {/* <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login}/>
                     <Route path='/objection' component={(this.state.isLoggedIn) ? Objection : Login} />
                     <Route path='/profile' component={(this.state.isLoggedIn) ? Profile : Login} />
+                    <Route path='/allow-nomination' component={(this.state.isLoggedIn) ? AllowNomination : Login} />
                     <Route path='/election' component={(this.state.isLoggedIn) ? ElectionHome : Login}} /> */}
 
                 </Switch>
