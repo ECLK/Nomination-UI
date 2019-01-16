@@ -28,21 +28,12 @@ class AllowNomination extends React.Component {
     };
 
     componentDidMount(){
-<<<<<<< HEAD
         //
-=======
-        let columnHeaders = ['', '', 'Division-1', 'Division-2', 'Division-3', 'Division-4'];
-        this.setState({ columnHeaders });
-
-        let rowHeaders = ['Party-1', 'Party-2', 'Party-3', 'Party-4'];
-        this.setState({ rowHeaders });
->>>>>>> 411fa768832d564690bd9c7b643cc89d9d87ed8c
     }
 
     render() {
         const { classes } = this.props;
 
-<<<<<<< HEAD
         let columnHeaders = ['Division-1', 'Division-2', 'Division-3', 'Division-4'];
 
         let rowHeaders = ['Party-1', 'Party-2', 'Party-3', 'Party-4'];
@@ -70,8 +61,6 @@ class AllowNomination extends React.Component {
             },
         ]
 
-=======
->>>>>>> 411fa768832d564690bd9c7b643cc89d9d87ed8c
         return (
             <div className={classes.root}>
                 <CssBaseline />
@@ -80,11 +69,7 @@ class AllowNomination extends React.Component {
                 <div className={classes.content}>
                     {/* all the content should go here.. */}
 
-<<<<<<< HEAD
                     <CheckboxTable title="Allow Nominations" data={nomination_setup} cols={columnHeaders} rows={rowHeaders}></CheckboxTable>
-=======
-                    <CheckboxTable columnHeaders={this.state.columnHeaders} rowHeaders={this.state.rowHeaders}></CheckboxTable>
->>>>>>> 411fa768832d564690bd9c7b643cc89d9d87ed8c
                 </div>
 
 
