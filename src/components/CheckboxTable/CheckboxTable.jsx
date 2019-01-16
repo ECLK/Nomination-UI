@@ -157,11 +157,7 @@ class CustomizedTable extends React.Component {
 
         return (
             <MUIDataTable
-<<<<<<< HEAD
                 title={this.props.title}
-=======
-                title={"Nomination Candidate list"}
->>>>>>> 411fa768832d564690bd9c7b643cc89d9d87ed8c
                 data={outputData}
                 columns={columns}
                 options={options}
@@ -171,9 +167,5 @@ class CustomizedTable extends React.Component {
 }
 
 
-<<<<<<< HEAD
 export default withStyles(styles)(CheckboxTableGrid);
-=======
-export default withStyles(styles)(CustomizedTable);
->>>>>>> 411fa768832d564690bd9c7b643cc89d9d87ed8c
 
