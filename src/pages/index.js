@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import withRoot from 'withRoot';
-import Loadable from 'react-loadable';
+//import Loadable from 'react-loadable';
 import Progress from 'components/Progress/Progress';
 import Login from 'pages/Login/Login';
 
@@ -14,12 +14,7 @@ const styles = theme => ({
   }
 });
 
-const LoadableProtectedApp = Loadable({
-    loader: () =>
-        import(
-            '../app/ProtectedApp'),
-    loading: Progress,
-});
+const LoadableProtectedApp = lazy(() => import('../app/ProtectedApp'));
 
 class Index extends React.Component {
   state = {
@@ -27,10 +22,10 @@ class Index extends React.Component {
   };
 
   constructor(props) {
-      super(props);
-      this.state = {
-          user: {},
-      };
+    super(props);
+    this.state = {
+      user: {},
+    };
   };
 
 
@@ -40,14 +35,16 @@ class Index extends React.Component {
 
     return (
       <div className={classes.root}>
+        <Suspense fallback={Progress}>
           <Router basename='/election'>
-              <Switch>
-                  {<Route path='/login' render={props => <Login {...props} updateUser={this.updateUser} />} />}
-                  <Route path='/logout' />
-                  {!user && <Redirect to={{ pathname: '/login'}} />}
-                  <Route render={() => <LoadableProtectedApp user={user} />} />
-              </Switch>
+            <Switch>
+              {<Route path='/login' render={props => <Login {...props} updateUser={this.updateUser} />} />}
+              <Route path='/logout' />
+              {!user && <Redirect to={{ pathname: '/login' }} />}
+              <Route render={() => <LoadableProtectedApp user={user} />} />
+            </Switch>
           </Router>
+        </Suspense>
       </div>
     );
   }
