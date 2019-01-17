@@ -8,6 +8,8 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
+import axios from 'axios';
+
 
 
 
@@ -52,14 +54,21 @@ class CheckboxesGroup extends React.Component {
     gilad: true,
     jason: false,
     antoine: false,
+    // nominationStart:'',
+    // nominationEnd:'',
+    // objectionStart:'',
+    // objectionEnd:'',
+
   };
 
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.checked });
-  };
+  // handleChange = name => event => {
+  //   this.setState({ [name]: event.target.value });
+  //   console.log("***************",this.state)
+  // };
+  
 
   render() {
-    const { classes } = this.props;
+    const { classes,values, handleChange  } = this.props;
     const { gilad, jason, antoine } = this.state;
     const error = [gilad, jason, antoine].filter(v => v).length !== 2;
 
@@ -95,11 +104,14 @@ class CheckboxesGroup extends React.Component {
                 <Grid container direction="row" justify="flex-start" alignItems="stretch" spacing={8}>
                  <Grid item lg={3}>
                     <TextField
-                        id="datetime-local"
+                        id="nominationStart"
                         // label="Next appointment"
                         type="datetime-local"
-                        defaultValue="2017-05-24T10:30"
+                        defaultValue={values.nominationStart}
                         className={classes.textField}
+                        name="nominationStart"
+                        value={this.state.nominationStart}
+                        onChange={handleChange('nominationStart')}
                         InputLabelProps={{
                         shrink: true,
                         }}
@@ -112,8 +124,11 @@ class CheckboxesGroup extends React.Component {
                         id="datetime-local"
                         // label="Next appointment"
                         type="datetime-local"
-                        defaultValue="2017-05-24T10:30"
+                        defaultValue={values.nominationEnd}
                         className={classes.textField}
+                        name="nominationEnd"
+                        value={this.state.nominationEnd}
+                        onChange={handleChange('nominationEnd')}
                         InputLabelProps={{
                         shrink: true,
                         }}
@@ -126,8 +141,11 @@ class CheckboxesGroup extends React.Component {
                         id="datetime-local"
                         // label="Next appointment"
                         type="datetime-local"
-                        defaultValue="2017-05-24T10:30"
+                        defaultValue={values.objectionStart}
                         className={classes.textField}
+                        name="objectionStart"
+                        value={this.state.objectionStart}
+                        onChange={handleChange('objectionStart')}
                         InputLabelProps={{
                         shrink: true,
                         }}
@@ -140,8 +158,11 @@ class CheckboxesGroup extends React.Component {
                         id="datetime-local"
                         // label="Next appointment"
                         type="datetime-local"
-                        defaultValue="2017-05-24T10:30"
+                        defaultValue={values.objectionEnd}
                         className={classes.textField}
+                        name="objectionEnd"
+                        value={this.state.objectionEnd}
+                        onChange={handleChange('objectionEnd')}
                         InputLabelProps={{
                         shrink: true,
                         }}
@@ -152,7 +173,6 @@ class CheckboxesGroup extends React.Component {
           </FormGroup>
           {/* <FormHelperText>You can display an error</FormHelperText> */}
         </FormControl>
-        <button onClick={()=>this.handleChange(1)}>Go to tab 3</button> 
 
       </div>
     );

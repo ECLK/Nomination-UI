@@ -4,7 +4,7 @@ import {
 
 const initialState = {
     //define the common states only
-    modalOpen: false
+    all_nominations: []
 };
 
 export default function reducer(state = initialState, action) {
