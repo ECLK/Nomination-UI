@@ -14,7 +14,7 @@ const styles = theme => ({
   }
 });
 
-const LoadableProtectedApp = lazy(() => import('../app/ProtectedApp'));
+const LoadableProtectedApp = lazy(() => import('app/ProtectedApp'));
 
 class Index extends React.Component {
   state = {
