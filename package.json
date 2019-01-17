@@ -47,7 +47,6 @@
     "@storybook/addon-actions": "^4.1.6",
     "@storybook/addon-links": "^4.1.6",
     "@storybook/addons": "^4.1.6",
-    "@babel/core": "^7.2.2",
-    "babel-loader": "^8.0.5"
+    "@babel/core": "^7.2.2"
   }
 }
