@@ -51,22 +51,22 @@ class TextFields extends React.Component {
       payments: {
           
       },
-      depositor:'test',
-      depositAmount:'test',
-      depositeDate:'test',
-      paymentStatus:'test',
+    //   depositor:'test',
+    //   depositAmount:'test4',
+    //   depositeDate:'test',
+    //   paymentStatus:'test',
 
     };
 
-    handleChange = (name) => event => {
-        console.log(event.target.value)
-        console.log(name);
-        this.setState({
-            // payments:{
-                [name]:event.target.value,
-            // } 
-        });
-    };
+    // handleChange = (name) => event => {
+    //     console.log(event.target.value)
+    //     console.log(name);
+    //     this.setState({
+    //         // payments:{
+    //             [name]:event.target.value,
+    //         // } 
+    //     });
+    // };
 
     componentDidMount() {
         console.log(this)
@@ -91,16 +91,20 @@ class TextFields extends React.Component {
     }
 
     render() {
-        const {classes} = this.props;
+        const { classes,values, handleChange  } = this.props;
 
         return (
             <form className={classes.container} noValidate autoComplete="off">
                 <Grid container direction="row" justify="flex-start" alignItems="stretch" spacing={8}>
                     <Grid item lg={3}>
                     <TextField
-                            label="Deposited Amount"
+                            // label="Deposited Amount"
                             value={this.state.depositAmount}
-                            onChange={this.handleChange('depositedAmount')}
+                            name="depositAmount"
+                            // onChange={this.handleChange('depositedAmount')}
+                            defaultValue={values.depositAmount}
+                            onChange={handleChange('depositAmount')}
+
                         />  
                     </Grid>
                 </Grid>

@@ -51,22 +51,19 @@ class TextFields extends React.Component {
       payments: {
           
       },
-      depositor:'test',
-      depositAmount:'test',
-      depositeDate:'test',
-      paymentStatus:'test',
+      
 
     };
 
-    handleChange = (name) => event => {
-        console.log(event.target.value)
-        console.log(name);
-        this.setState({
-            // payments:{
-                [name]:event.target.value,
-            // } 
-        });
-    };
+    // handleChange = (name) => event => {
+    //     console.log(event.target.value)
+    //     console.log(name);
+    //     this.setState({
+    //         // payments:{
+    //             [name]:event.target.value,
+    //         // } 
+    //     });
+    // };
 
     componentDidMount() {
         console.log(this)
@@ -91,7 +88,7 @@ class TextFields extends React.Component {
     }
 
     render() {
-        const {classes} = this.props;
+        const { classes,values, handleChange  } = this.props;
 
         return (
             <form className={classes.container} noValidate autoComplete="off">
@@ -99,8 +96,10 @@ class TextFields extends React.Component {
                     <Grid item lg={3}>
                     <TextField
                             label="Weightage % Vote-Based"
-                            value={this.state.depositor}
-                            onChange={this.handleChange('depositor')}
+                            value={this.state.WeightageVote}
+                            onChange={handleChange('WeightageVote')}
+                            defaultValue={values.WeightageVote}
+
                         />  
                     </Grid>
                     <Grid item lg={3}>
@@ -108,14 +107,13 @@ class TextFields extends React.Component {
                             id="standard-name"
                             label="Weightage % Prefarence-Based"
                             className={classes.textField}
-                            value={this.state.depositAmount}
-                            onChange={this.handleChange('depositAmount')}
+                            value={this.state.WeightagePrefarence}
+                            defaultValue={values.WeightagePrefarence}
+                            onChange={handleChange('WeightagePrefarence')}
                             margin="normal"
                         />
                     </Grid>
-                   
-
-                </Grid>
+                 </Grid>
                 
                
 
