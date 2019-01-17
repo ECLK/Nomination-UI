@@ -1,68 +1,173 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import StepContent from '@material-ui/core/StepContent';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import ElectionTimeLine from '../ElectionTimeLine/ElectionTimeLine';
 import ElectionPayment from '../ElectionPayment/ElectionPayment';
 import ElectionWeightage from '../ElectionWeightage/ElectionWeightage';
+import axios from 'axios';
 
 
-
-function TabContainer(props) {
-  return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
-      {props.children}
-    </Typography>
-  );
-}
-
-TabContainer.propTypes = {
-  children: PropTypes.node.isRequired,
-};
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
+    width: '90%',
+  },
+  button: {
+    marginTop: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+  },
+  actionsContainer: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+  resetContainer: {
+    padding: theme.spacing.unit * 3,
   },
 });
 
-class SimpleTabs extends React.Component {
+function getSteps() {
+  return ['TIME LINE', 'PAYMENT', 'WEIGHTAGE'];
+}
+
+
+
+class VerticalLinearStepper extends React.Component {
   state = {
-    value: 0,
+    activeStep: 0,
+    nominationStart:'2017-05-24T10:30',
+    nominationEnd:'2017-05-24T10:30',
+    objectionStart:'2017-05-24T10:30',
+    objectionEnd:'2017-05-24T10:30',
+    depositAmount:'Amount',
+    WeightagePrefarence:'%',
+    WeightageVote:'%',
+    values:''
   };
 
-  handleChange = (event, value) => {
-    this.setState({ value });
+  handleNext = () => {
+    this.setState(state => ({
+      activeStep: state.activeStep + 1,
+    }));
+
+    // if(this.activeStep === 2){
+    //   this.handleSubmit();
+    //   }
+
   };
+
+  handleBack = () => {
+    this.setState(state => ({
+      activeStep: state.activeStep - 1,
+    }));
+  };
+
+  handleReset = () => {
+    this.setState({
+      activeStep: 0,
+    });
+  };
+
+  handleSubmit = () => {
+    alert('sd');
+   console.log("=======",this.state);
+  };
+
+  handleChange = input => e => {
+    this.setState({[input]:e.target.value});
+  }
+
+  getStepContent(step,values) {
+    switch (step) {
+      case 0:
+        return <ElectionTimeLine
+        handleChange={this.handleChange}
+                 values={values}
+                 />;
+      case 1:
+        return <ElectionPayment
+        handleChange={this.handleChange}
+                 values={values}
+        />;
+      case 2:
+        return <ElectionWeightage
+        handleChange={this.handleChange}
+        values={values}
+        />;
+      default:
+        return 'Unknown step';
+    }
+  }
 
   render() {
     const { classes } = this.props;
-    const { value } = this.state;
+    const steps = getSteps();
+    const { activeStep } = this.state;
+    const { nominationStart,nominationEnd,objectionStart,objectionEnd,depositAmount,WeightageVote,WeightagePrefarence } = this.state;
+    const values = { nominationStart,nominationEnd,objectionStart,objectionEnd,depositAmount,WeightageVote,WeightagePrefarence }
+
+   
 
     return (
       <div className={classes.root}>
-        <AppBar position="static">
-          <Tabs value={value} onChange={this.handleChange}>
-            <Tab label="Time Line" />
-            <Tab label="Payment" />
-            <Tab label="Weightage" />
-          </Tabs>
-        </AppBar>
-        {value === 0 && <TabContainer><ElectionTimeLine/></TabContainer>}
-        {value === 1 && <TabContainer><ElectionPayment/></TabContainer>}
-        {value === 2 && <TabContainer><ElectionWeightage/></TabContainer>}
+        <Stepper activeStep={activeStep} orientation="vertical">
+          {steps.map((label, index) => {
+            return (
+              
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+                <StepContent>
+                  <Typography>{this.getStepContent(activeStep,values)}</Typography>
+                  <div className={classes.actionsContainer}>
+                    <div>
+                      <Button
+                        disabled={activeStep === 0}
+                        onClick={this.handleBack}
+                        className={classes.button}
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={this.handleNext}
+                        className={classes.button}
+                        // onClick={activeStep === 3 ? this.handleSubmit : this.handleNext}
 
+                      >
+                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                      </Button>
+                    </div>
+                  </div>
+                </StepContent>
+              </Step>
+            );
+          })}
+        </Stepper>
+
+        {activeStep === steps.length && (
+          <Paper square elevation={0} className={classes.resetContainer}>
+            <Typography>All steps completed - Submited for approval</Typography>
+            <Button onClick={this.handleReset} className={classes.button}>
+              Reset
+            </Button>
+            <Button color="primary" onClick={this.handleSubmit} className={classes.button}>
+              Submit
+            </Button>
+          </Paper>
+        )}
       </div>
     );
   }
 }
 
-SimpleTabs.propTypes = {
-  classes: PropTypes.object.isRequired,
+VerticalLinearStepper.propTypes = {
+  classes: PropTypes.object,
 };
 
-export default withStyles(styles)(SimpleTabs);
+export default withStyles(styles)(VerticalLinearStepper);
