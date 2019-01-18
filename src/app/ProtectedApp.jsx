@@ -41,32 +41,44 @@ export default class Protected extends Component {
         }
     }
 
+    isAdmin = () => {
+        if (sessionStorage.getItem('role') !== null){
+            if (sessionStorage.getItem('role').includes('admin')){
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     render() {
         return (
             /* app level routers needs to handle here*/
             <div>
                 <Switch>
                     <Redirect exact from='/' to='/home' />
-                    <Route path='/home' component={Home} />
+                    <Route path='/home' component={(this.state.isLoggedIn) ? Home : Login} />
                     <Route path='/login' component={Login} />
-                    <Route path='/objection' component={Objection} />
-                    <Route path='/profile' component={Profile} />
-                    <Route path='/nomination' component={NominationForm} />
+                    <Route path='/objection' component={(this.state.isLoggedIn) ? Objection : Login} />
+                    <Route path='/profile' component={(this.state.isLoggedIn) ? Profile : Login} />
+                    <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login} />
                     
                     <Redirect exact from='/admin' to='/admin/home' />
-                    <Route path='/admin/home' component={Admin_home} />
-                    <Route path='/admin/call-election' component={Admin_CallElection} />
-                    <Route path='/admin/candidate-config' component={Admin_CandidateConfig} />
-                    <Route path='/admin/election-config' component={Admin_ElectionConfig} />
+                    <Route path='/admin/home' component={(this.state.isLoggedIn) ? Admin_home : Login} />
+                    <Route path='/admin/call-election' component={(this.state.isLoggedIn) ? Admin_CallElection : Login} />
+                    <Route path='/admin/candidate-config' component={(this.state.isLoggedIn) ? Admin_CandidateConfig : Login} />
+                    <Route path='/admin/election-config' component={(this.state.isLoggedIn) ? Admin_ElectionConfig : Login} />
 
-                    <Route path='/admin/nominationProcess-config' component={Admin_NominationProcessConfig} />
-                    <Route path='/admin/active-election' component={ActiveElectionForm} />
-                    <Route path='/admin/allow-nomination' component={AllowNomination} />
+                    <Route path='/admin/nominationProcess-config' component={(this.state.isLoggedIn) ? Admin_NominationProcessConfig : Login} />
+                    <Route path='/admin/active-election' component={(this.state.isLoggedIn) ? ActiveElectionForm : Login} />
+                    <Route path='/admin/allow-nomination' component={(this.state.isLoggedIn) ? AllowNomination : Login} />
 
-                    <Route path='/admin/nomination-review' component={NominationReview} />
-                    <Route path='/admin/payment-review' component={PaymentReview} />
-                    <Route path='/admin/objection-review' component={ObjectionReview} />
-                    <Route path='/admin/election-review' component={ElectionReview} />
+                    <Route path='/admin/nomination-review' component={(this.state.isLoggedIn) ? NominationReview : Login} />
+                    <Route path='/admin/payment-review' component={(this.state.isLoggedIn) ? PaymentReview : Login} />
+                    <Route path='/admin/objection-review' component={(this.state.isLoggedIn) ? ObjectionReview : Login} />
+                    <Route path='/admin/election-review' component={(this.state.isLoggedIn) ? ElectionReview : Login} />
 
 
 
