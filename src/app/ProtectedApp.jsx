@@ -15,7 +15,7 @@ import Admin_NominationProcessConfig from 'pages/ADMIN/NominationProcess-config/
 import ActiveElectionForm from 'pages/ADMIN/ActiveElectionForm/ActiveElectionForm';
 
 import NominationReview from 'modules/nomination/Nomination_review';
-import PaymentReview from 'pages/ADMIN/Payment_review/Payment_review';
+import PaymentReview from 'modules/payment/Payment_review';
 import ObjectionReview from 'pages/ADMIN/Objection_review/Objection_review';
 import ElectionReview from 'pages/ADMIN/Election_review/Election_review';
 
