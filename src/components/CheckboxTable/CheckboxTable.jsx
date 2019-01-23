@@ -122,7 +122,6 @@ class CheckboxTableGrid extends React.Component {
         let checkboxGrid = Array.from(this.state.checkboxGrid);
         for (let i = 0; i < this.props.rows.length; i++) {
             checkboxGrid[i + 1][params.col] = params.event.target.checked;
-            console.log(params)
             if (params.value) {
                 let allow_party = {
                     'division_id': this.props.cols[params.col - 1].id,
@@ -132,7 +131,7 @@ class CheckboxTableGrid extends React.Component {
                 }
                 this.state.rowData.push(allow_party);
             } else {
-                this.removeValue(params.row + '-' + (i - 1))
+                this.removeValue((i + 1) + '-' + params.col)
             }
         }
     }
@@ -147,15 +146,18 @@ class CheckboxTableGrid extends React.Component {
 
             case 'columns':
                 this.setColumns(params);
+                console.log(params);
                 break;
             case 'all':
-                for (let i = 0; i < this.props.rows.length; i++) {
+                for (let i = 0; i < this.props.rows.length+1; i++) {
+                    checkboxGrid[i][0] = params.event.target.checked;
                     for (let j = 1; j < this.props.cols.length + 1; j++) {
+                    checkboxGrid[0][j] = params.event.target.checked;
                         let param = {
                             col: j,
                             row: i,
                             event: params.event,
-                            value:params.value
+                            value: params.value
                         }
                         this.setColumns(param)
                     }
