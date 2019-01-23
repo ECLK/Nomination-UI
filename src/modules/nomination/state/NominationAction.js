@@ -1,7 +1,7 @@
 import {
     GET_NOMINATIONS
 } from "./NominationTypes";
-import { API_URL } from "../config.js";
+import { API_URL } from "../../../config.js";
 import axios from "axios";
 // import store from '../store';
 
