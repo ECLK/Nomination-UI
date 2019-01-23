@@ -5,6 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import MainMenu from 'components/MainMenu/MainMenu';
 import Axios from 'axios';
 import CheckboxTable from 'components/CheckboxTable/CheckboxTable';
+import { Button, FormGroup, Paper, Card, CardContent, CardActionArea, CardActions } from '@material-ui/core';
 
 
 const styles = theme => ({
@@ -13,6 +14,13 @@ const styles = theme => ({
             paddingLeft: theme.drawer.width,
             flexShrink: 0,
         },
+    },
+    button: {
+        marginRight: theme.spacing.unit,
+        right: 0
+    },
+    buttons: {
+        margin: theme.spacing.unit
     },
     topBottomSpace: {
         marginBottom: 15
@@ -31,6 +39,16 @@ class AllowNomination extends React.Component {
         //
     }
 
+    handleSubmit = (e) => {
+        e.preventDefault()
+        // if (!this.validate()) {
+          
+        //     console.log(this);
+        // }
+        console.log(this);
+    }
+
+
     render() {
         const { classes } = this.props;
 
@@ -47,23 +65,23 @@ class AllowNomination extends React.Component {
                 name: 'Division-3'
             },
             {
-                id:'Division-4-id',
-                name:'Division-4'
+                id: 'Division-4-id',
+                name: 'Division-4'
             }
         ];
 
         let rowHeaders = [{
-            id:'Party-1-id',
-            name:'Party-1'
+            id: 'Party-1-id',
+            name: 'Party-1'
         }, {
-            id:'Party-2-id',
-            name:'Party-2'
+            id: 'Party-2-id',
+            name: 'Party-2'
         }, {
-            id:'Party-3-id',
-            name:'Party-3'
+            id: 'Party-3-id',
+            name: 'Party-3'
         }, {
-            id:'Party-4-id',
-            name:'Party-4'
+            id: 'Party-4-id',
+            name: 'Party-4'
         }];
 
         let nomination_setup = [
@@ -89,19 +107,28 @@ class AllowNomination extends React.Component {
             },
         ]
 
+
         return (
+
             <div className={classes.root}>
                 <CssBaseline />
                 <MainMenu title="Election Commission of Sri Lanka" ></MainMenu>
 
                 <div className={classes.content}>
-                    {/* all the content should go here.. */}
-
-                    <CheckboxTable title="Allow Nominations" data={nomination_setup} cols={columnHeaders} rows={rowHeaders}></CheckboxTable>
+                    <Card>
+                        <CardContent>
+                            {/* all the content should go here.. */}
+                            <form ref="form" onSubmit={this.handleSubmit}>
+                                <CheckboxTable title="Allow Nominations" data={nomination_setup} cols={columnHeaders} rows={rowHeaders}></CheckboxTable>
+                                <div className={classes.buttons}>
+                                    <Button variant="contained" type="small" color="primary" className={classes.button} color="primary">Cancel</Button>
+                                    <Button variant="contained" type="submit" color="primary" className={classes.button} color="primary">Submit</Button>
+                                </div>
+                            </form>
+                        </CardContent>
+                    </Card>
                 </div>
-
-
-            </div>
+            </div >
         );
     }
 }
