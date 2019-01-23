@@ -10,9 +10,10 @@ const initialState = {
 export default function reducer(state = initialState, action) {
     switch (action.type) {
         case GET_NOMINATIONS:
+            debugger;
             return {
                 ...state,
-                modalOpen: action.payload
+                all_nominations: action.payload
             };
 
 
