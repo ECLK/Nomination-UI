@@ -1,0 +1,1 @@
+export const GET_ELECTIONS = "GET_ELECTIONS";
