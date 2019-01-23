@@ -2,10 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import AdminMenu from 'components/AdminMenu/AdminMenu';
+import MainMenu from 'components/MainMenu/MainMenu';
+import NominationForm from 'components/NominationForm/NominationForm';
+import { postNominationPayments } from './state/NominationAction';
 import { connect } from 'react-redux';
-import { getNominations } from './state/NominationAction';
 
+
+import axios from 'axios';
 
 const drawerWidth = 240;
 
@@ -84,14 +87,26 @@ class Dashboard extends React.Component {
     state = {
         open: true,
         nominations: []
+
     };
 
+    handleSubmit = (activeStep) => {
+        if (activeStep == 2){
+          alert("fff");
+        }
+      };
 
+    handleChange = (name) => event => {
+        console.log(event.target.value)
+        setPaymentState();
+    };
+    
+    
     componentDidMount() {
-        const { getNominations, all_nominations } = this.props;
-        getNominations();
-
-        console.log(all_nominations)
+      
+            const { postNominationPayments, candidatePayments } = this.props;
+            postNominationPayments();
+    
     }
 
     handleDrawerOpen = () => {
@@ -107,8 +122,11 @@ class Dashboard extends React.Component {
 
         return (
             <div className={classes.root}>
+            
                 <CssBaseline />
-                <AdminMenu title="Elections Commission of Sri Lanka"></AdminMenu>
+                <MainMenu title="Elections Commission of Sri Lanka"></MainMenu>
+                <NominationForm handleSubmit={this.handleSubmit} handleChange={this.handleChange} title="Elections Commission of Sri Lanka"></NominationForm>
+
             </div>
         );
     }
@@ -118,17 +136,16 @@ Dashboard.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = ({ Nomination }) => {
-    const { all_nominations } = Nomination;
-    return { all_nominations }
+const mapStateToProps = ({ Election }) => {
+    const { candidatePayments } = Election;
+    return { candidatePayments }
 };
 
 const mapActionsToProps = {
-    getNominations
+    postNominationPayments,
+    setPaymentState
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Dashboard));
 
-
-
-
+// export default withStyles(styles)(Dashboard);

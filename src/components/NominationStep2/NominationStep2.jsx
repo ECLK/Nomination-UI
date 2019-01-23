@@ -58,15 +58,7 @@ class TextFields extends React.Component {
 
     };
 
-    handleChange = (name) => event => {
-        console.log(event.target.value)
-        console.log(name);
-        this.setState({
-            // payments:{
-                [name]:event.target.value,
-            // } 
-        });
-    };
+    
 
     componentDidMount() {
         console.log(this)
@@ -91,7 +83,7 @@ class TextFields extends React.Component {
     }
 
     render() {
-        const {classes} = this.props;
+        const {classes, handleChange} = this.props;
 
         return (
             <form className={classes.container} noValidate autoComplete="off">
@@ -100,7 +92,7 @@ class TextFields extends React.Component {
                     <TextField
                             label="Depositor Name"
                             value={this.state.depositor}
-                            onChange={this.handleChange('depositor')}
+                            onChange={handleChange('depositor')}
                         />  
                     </Grid>
                     <Grid item lg={3}>
@@ -109,7 +101,7 @@ class TextFields extends React.Component {
                             label="Deposited Amount"
                             className={classes.textField}
                             value={this.state.depositAmount}
-                            onChange={this.handleChange('depositAmount')}
+                            onChange={handleChange('depositAmount')}
                             margin="normal"
                         />
                     </Grid>
@@ -119,7 +111,7 @@ class TextFields extends React.Component {
                             label="Candidate Count"
                             className={classes.textField}
                             value={localStorage.getItem('candidate')}
-                            onChange={this.handleChange('candidateCount')}
+                            onChange={handleChange('candidateCount')}
                             margin="normal"
                         />
                     </Grid>
@@ -147,7 +139,7 @@ class TextFields extends React.Component {
                             label="Select"
                             className={classes.textField}
                             value={this.state.paymentStatus}
-                            onChange={this.handleChange('paymentStatus')}
+                            onChange={handleChange('paymentStatus')}
                             SelectProps={{
                                 MenuProps: {
                                 className: classes.menu,

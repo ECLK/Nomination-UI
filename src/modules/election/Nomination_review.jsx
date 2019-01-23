@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AdminMenu from 'components/AdminMenu/AdminMenu';
-import { connect } from 'react-redux';
-import { getNominations } from './state/NominationAction';
-
 
 const drawerWidth = 240;
 
