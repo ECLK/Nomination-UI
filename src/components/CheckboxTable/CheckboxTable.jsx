@@ -5,6 +5,8 @@ import axios from 'axios';
 import ReactDOM from "react-dom";
 import MUIDataTable from "mui-datatables";
 import Checkbox from '@material-ui/core/Checkbox';
+import _ from 'underscore/underscore';
+
 
 
 
@@ -27,8 +29,8 @@ const styles = theme => ({
 
 
 class CheckboxTableGrid extends React.Component {
-    
-    constructor(props){
+
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -37,6 +39,7 @@ class CheckboxTableGrid extends React.Component {
             rowHeaders: [],
             columnHeaders: [],
             rowData: [],
+            data: []
         };
     }
 
@@ -44,12 +47,12 @@ class CheckboxTableGrid extends React.Component {
 
         let rowHeaders = [''];
         this.props.rows.map((value) => {
-            rowHeaders.push(value);
+            rowHeaders.push(value.name);
         });
 
         let columnHeaders = ['', ''];
         this.props.cols.map((value) => {
-            columnHeaders.push(value);
+            columnHeaders.push(value.name);
         });
 
         let checkboxGrid = [];
@@ -67,24 +70,27 @@ class CheckboxTableGrid extends React.Component {
 
 
     // this will handle the change of checkbox and update the state.checkboxGrid variable, which is the source to the grid.
-    handleChange = (row, col, data) => event => {
+    handleChange = (row, col, data) => (event, value) => {
+        console.log(value)
         let checkboxGrid = Array.from(this.state.checkboxGrid);
         console.log(row + ' ' + col);
 
-        if (col == 0) {
-            this.setValue('rows',event,row,col)
-        } else if (row == 0) {
-            this.setValue('columns',event,row,col)
-        }
-        //TODO:: implement on all select
-
-        let allow_party = {
-            'division_id': this.state.columnHeaders[col + 1],
-            'team_id': this.state.rowHeaders[row],
+        let params = {
+            event: event,
+            row: row,
+            col: col,
+            value: value
         }
 
-        console.log(this.state.rowHeaders[row])
-        console.log(this.state.columnHeaders[col + 1])
+        if ((col == 0) & (row != 0)) {
+            this.setValue('rows', params)
+        } else if ((col != 0) && (row == 0)) {
+            this.setValue('columns', params)
+        } else if ((col == 0) && (row == 0)) {
+            this.setValue('all', params);
+        } else {
+            this.setValue('single', params)
+        }
 
         checkboxGrid[row][col] = event.target.checked;
         this.setState({ checkboxGrid });
@@ -93,30 +99,92 @@ class CheckboxTableGrid extends React.Component {
     };
 
 
-    setValue = (value,event,row,col) => {
+    setRows = (params) => {
+        let checkboxGrid = Array.from(this.state.checkboxGrid);
+        for (let i = 0; i < this.props.cols.length; i++) {
+            checkboxGrid[params.row][i + 1] = params.event.target.checked;
+            if (params.value) {
+                let allow_party = {
+                    'division_id': this.props.cols[i].id,
+                    'team_id': this.props.rows[params.row - 1].id,
+                    'election_id': '',
+                    'id': params.row + '-' + (i + 1)
+                }
+                this.state.rowData.push(allow_party);
+            } else {
+                this.removeValue(params.row + '-' + (i + 1))
+            }
+
+        }
+    }
+
+    setColumns = (params) => {
+        let checkboxGrid = Array.from(this.state.checkboxGrid);
+        for (let i = 0; i < this.props.rows.length; i++) {
+            checkboxGrid[i + 1][params.col] = params.event.target.checked;
+            console.log(params)
+            if (params.value) {
+                let allow_party = {
+                    'division_id': this.props.cols[params.col - 1].id,
+                    'team_id': this.props.rows[i].id,
+                    'election_id': '',
+                    'id': (i + 1) + '-' + params.col
+                }
+                this.state.rowData.push(allow_party);
+            } else {
+                this.removeValue(params.row + '-' + (i - 1))
+            }
+        }
+    }
+
+
+    setValue = (value, params) => {
         let checkboxGrid = Array.from(this.state.checkboxGrid);
         switch (value) {
             case 'rows':
-                for (let i = 0; i < this.state.columnHeaders.length; i++) {
-                    checkboxGrid[row][i] = event.target.checked;
-                    let allow_party = {
-                        'division_id': this.state.columnHeaders[i],
-                        'team_id': this.state.rowHeaders[row],
-                    }
-                }
+                this.setRows(params);
                 break;
 
             case 'columns':
-                for (let i = 0; i < this.state.rowHeaders.length; i++) {
-                    checkboxGrid[i][col] = event.target.checked;
-                    let allow_party = {
-                        'division_id': this.state.columnHeaders[col],
-                        'team_id': this.state.rowHeaders[i],
+                this.setColumns(params);
+                break;
+            case 'all':
+                for (let i = 0; i < this.props.rows.length; i++) {
+                    for (let j = 1; j < this.props.cols.length + 1; j++) {
+                        let param = {
+                            col: j,
+                            row: i,
+                            event: params.event,
+                            value:params.value
+                        }
+                        this.setColumns(param)
                     }
                 }
-                break;
+            default:
+                if (params.value) {
+                    let allow_party = {
+                        'division_id': this.props.cols[params.col].id,
+                        'team_id': this.props.rows[params.row].id,
+                        'election_id': '',
+                        'id': params.row + '-' + params.col
+                    }
+                    this.state.rowData.push(allow_party);
+                } else {
+                    this.removeValue(params.row + '-' + params.col)
+                }
+
         }
 
+        this.state.rowData = _.uniq(this.state.rowData, function (data) {
+            return data.id
+        })
+    }
+
+    removeValue = (id) => {
+        this.state.rowData = _.without(this.state.rowData, _.findWhere(this.state.rowData, {
+            id: id
+        }));
+        console.log(this.state.rowData);
     }
 
 

@@ -30,6 +30,7 @@
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.7",
     "redux-thunk": "^2.3.0",
+    "underscore": "^1.9.1",
     "update": "^0.7.4"
   },
   "scripts": {

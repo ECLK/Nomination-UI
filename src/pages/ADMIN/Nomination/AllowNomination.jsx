@@ -27,37 +27,65 @@ class AllowNomination extends React.Component {
         columnHeaders: [],
     };
 
-    componentDidMount(){
+    componentDidMount() {
         //
     }
 
     render() {
         const { classes } = this.props;
 
-        let columnHeaders = ['Division-1', 'Division-2', 'Division-3', 'Division-4'];
+        let columnHeaders = [
+            {
+                id: 'Division-1-id',
+                name: 'Division-1'
+            },
+            {
+                id: 'Division-2-id',
+                name: 'Division-2'
+            }, {
+                id: 'Division-3-id',
+                name: 'Division-3'
+            },
+            {
+                id:'Division-4-id',
+                name:'Division-4'
+            }
+        ];
 
-        let rowHeaders = ['Party-1', 'Party-2', 'Party-3', 'Party-4'];
+        let rowHeaders = [{
+            id:'Party-1-id',
+            name:'Party-1'
+        }, {
+            id:'Party-2-id',
+            name:'Party-2'
+        }, {
+            id:'Party-3-id',
+            name:'Party-3'
+        }, {
+            id:'Party-4-id',
+            name:'Party-4'
+        }];
 
         let nomination_setup = [
             {
-                'election_id':0,
-                'team_id':'Party-2',
-                'division_id':'Division-3'
+                'election_id': 0,
+                'team_id': 'Party-2',
+                'division_id': 'Division-3'
             },
             {
-                'election_id':0,
-                'team_id':'Party-3',
-                'division_id':'Division-3'
+                'election_id': 0,
+                'team_id': 'Party-3',
+                'division_id': 'Division-3'
             },
             {
-                'election_id':0,
-                'team_id':'Party-4',
-                'division_id':'Division-2'
+                'election_id': 0,
+                'team_id': 'Party-4',
+                'division_id': 'Division-2'
             },
             {
-                'election_id':0,
-                'team_id':'Party-1',
-                'division_id':'Division-1'
+                'election_id': 0,
+                'team_id': 'Party-1',
+                'division_id': 'Division-1'
             },
         ]
 
