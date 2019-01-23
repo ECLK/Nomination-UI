@@ -2,7 +2,7 @@ import {
     GET_NOMINATIONS,
     POST_NOMINATION_PAYMENTS
 } from "./NominationTypes";
-import { API_BASE_URL } from "../../../config.js";
+import { API_URL } from "../../../config.js";
 import axios from "axios";
 // import store from '../store';
 
@@ -12,7 +12,7 @@ export const getNominations = function getNominations() {
     return function (dispatch) {
         const response = axios
             .get(
-                `${API_BASE_URL}/nominations`
+                `${API_URL}/nominations`
             )
             .then(response => {
                 dispatch({
@@ -28,7 +28,7 @@ export const postNominationPayments = function postNominationPayments(body) {
     return function (dispatch) {
         const response = axios
             .post(
-                `${API_BASE_URL}/nominations/payments`,
+                `${API_URL}/nominations/payments`,
                 {body}
             )
             .then(response => {
