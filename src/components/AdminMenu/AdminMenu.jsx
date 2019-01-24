@@ -13,10 +13,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import {Link} from 'react-router-dom';
 
 import HomeIcon from '@material-ui/icons/Home';
+import MoneyIcon from '@material-ui/icons/AttachMoney';
 import ProfileIcon from '@material-ui/icons/AccountBox';
 import NominationIcon from '@material-ui/icons/Description';
 import ObjectionIcon from '@material-ui/icons/PanTool';
@@ -84,7 +85,12 @@ class ResponsiveDrawer extends React.Component {
               <ListItemIcon><ObjectionIcon /></ListItemIcon>
               <ListItemText primary="Objection review" />
             </ListItem>
-           
+            <ListItem button key="Payment_review" component={Link} to='/admin/payment-review'
+                      selected={this.props.page === "Home"}>
+                <ListItemIcon><MoneyIcon/></ListItemIcon>
+                <ListItemText primary="Payment Review"/>
+            </ListItem>
+
         </List>
         <Divider />
         <List>
