@@ -6,6 +6,7 @@
     "@material-ui/core": "latest",
     "@material-ui/icons": "latest",
     "axios": "^0.18.0",
+    "immutability-helper": "^2.9.0",
     "jss": "latest",
     "material-ui-dropzone": "^2.0.0",
     "moment": "^2.23.0",
@@ -31,7 +32,8 @@
     "redux-devtools-extension": "^2.13.7",
     "redux-thunk": "^2.3.0",
     "underscore": "^1.9.1",
-    "update": "^0.7.4"
+    "update": "^0.7.4",
+    "yarn-install": "^1.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

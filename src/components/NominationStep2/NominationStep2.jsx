@@ -80,13 +80,22 @@ class TextFields extends React.Component {
           this.setState({ depositAmount });
           this.setState({ depositeDate });
           this.setState({ paymentStatus });
-
-
         })
     }
-
+    handleChange = (name) => event => {
+        console.log(event.target.value)
+        console.log(name);
+        this.setState({
+            // payments:{
+                [name]:event.target.value,
+            // } 
+        });
+        this.props.handleChange(this.state);
+    };
+    
     render() {
-        const {classes} = this.props;
+        // debugger;
+        const {classes, handleChange} = this.props;
 
         return (
             <form className={classes.container} noValidate autoComplete="off">
@@ -95,7 +104,7 @@ class TextFields extends React.Component {
                     <TextField
                             label="Depositor Name"
                             value={this.state.depositor}
-                            onChange={this.handleChange('depositor')}
+                            onChange={this.handleChange("depositor")}
                         />  
                     </Grid>
                     <Grid item lg={3}>
