@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Login from 'pages/Login/Login';
 
-import NominationForm from 'pages/USER/NominationForm/NominationForm';
+// import NominationForm from 'pages/USER/NominationForm/NominationForm';
+import NominationForm from 'modules/nomination/NominationForm';
+
 import Home from 'pages/USER/Home/Home';
 import Objection from 'pages/USER/Objection/Objection'
 import Profile from 'pages/USER/Profile/Profile'
@@ -14,6 +16,7 @@ import Admin_ElectionConfig from 'pages/ADMIN/Election-config/Election-config'
 import Admin_NominationProcessConfig from 'pages/ADMIN/NominationProcess-config/NominationProcess-config'
 import ActiveElectionForm from 'pages/ADMIN/ActiveElectionForm/ActiveElectionForm';
 
+// import NominationReview from 'pages/ADMIN/Nomination_review/Nomination_review';
 import NominationReview from 'modules/nomination/Nomination_review';
 import PaymentReview from 'modules/payment/Payment_review';
 import ObjectionReview from 'pages/ADMIN/Objection_review/Objection_review';
