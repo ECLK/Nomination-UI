@@ -18,10 +18,11 @@ import ActiveElectionForm from 'pages/ADMIN/ActiveElectionForm/ActiveElectionFor
 
 // import NominationReview from 'pages/ADMIN/Nomination_review/Nomination_review';
 import NominationReview from 'modules/nomination/Nomination_review';
-
-import PaymentReview from 'pages/ADMIN/Payment_review/Payment_review';
+import PaymentReview from 'modules/payment/Payment_review';
 import ObjectionReview from 'pages/ADMIN/Objection_review/Objection_review';
 import ElectionReview from 'pages/ADMIN/Election_review/Election_review';
+
+import ElectionConfig from 'modules/election-model/ElectionConfig';
 
 
 
@@ -62,7 +63,8 @@ export default class Protected extends Component {
                     <Route path='/admin/home' component={Admin_home} />
                     <Route path='/admin/call-election' component={Admin_CallElection} />
                     <Route path='/admin/candidate-config' component={Admin_CandidateConfig} />
-                    <Route path='/admin/election-config' component={Admin_ElectionConfig} />
+
+                    <Route path='/admin/election-config' component={ElectionConfig} />
 
                     <Route path='/admin/nominationProcess-config' component={Admin_NominationProcessConfig} />
                     <Route path='/admin/active-election' component={ActiveElectionForm} />
