@@ -41,11 +41,6 @@ class AllowNomination extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault()
-        // if (!this.validate()) {
-          
-        //     console.log(this);
-        // }
-        console.log(this);
     }
 
 

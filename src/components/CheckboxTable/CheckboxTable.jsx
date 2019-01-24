@@ -71,10 +71,7 @@ class CheckboxTableGrid extends React.Component {
 
     // this will handle the change of checkbox and update the state.checkboxGrid variable, which is the source to the grid.
     handleChange = (row, col, data) => (event, value) => {
-        console.log(value)
         let checkboxGrid = Array.from(this.state.checkboxGrid);
-        console.log(row + ' ' + col);
-
         let params = {
             event: event,
             row: row,
@@ -94,8 +91,6 @@ class CheckboxTableGrid extends React.Component {
 
         checkboxGrid[row][col] = event.target.checked;
         this.setState({ checkboxGrid });
-
-        console.log(this.state.rowData);
     };
 
 
@@ -146,7 +141,6 @@ class CheckboxTableGrid extends React.Component {
 
             case 'columns':
                 this.setColumns(params);
-                console.log(params);
                 break;
             case 'all':
                 for (let i = 0; i < this.props.rows.length+1; i++) {
@@ -186,7 +180,6 @@ class CheckboxTableGrid extends React.Component {
         this.state.rowData = _.without(this.state.rowData, _.findWhere(this.state.rowData, {
             id: id
         }));
-        console.log(this.state.rowData);
     }
 
 
