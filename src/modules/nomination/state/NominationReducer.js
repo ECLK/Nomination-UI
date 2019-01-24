@@ -6,7 +6,7 @@ import {
 const initialState = {
     //define the common states only
     all_nominations: [3],
-    candidatePayments:[2500]
+    candidatePayments:[]
 };
 
 export default function reducer(state = initialState, action) {
@@ -20,7 +20,7 @@ export default function reducer(state = initialState, action) {
             case POST_NOMINATION_PAYMENTS:
             return {
                 ...state,
-                modalOpen: action.payload
+                candidatePayments: action.payload
             };
 
 

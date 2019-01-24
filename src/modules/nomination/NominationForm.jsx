@@ -84,28 +84,65 @@ const styles = theme => ({
 });
 
 class Dashboard extends React.Component {
-    state = {
-        open: true,
-        nominations: []
+    // state = {
+    //     open: true,
+    //     nominations: [],
+    //     depositor:'test',
+    //     depositAmount:'test',
+    //     depositeDate:'test',
+    //     paymentStatus:'test',
 
-    };
-
-    handleSubmit = (activeStep) => {
-        if (activeStep == 2){
-          alert("fff");
+    // };
+    constructor(props) {
+        super(props)
+    
+        this.state = {
+            open: true,
+            nominations: [],
+            depositor:'test',
+            depositAmount:'test',
+            depositeDate:'test',
+            paymentStatus:'test',
         }
-      };
+        // this.handleSubmit = this.handleSubmit.bind(this);
+        
+        this.handleChange = this.handleChange.bind(this);
 
-    handleChange = (name) => event => {
-        console.log(event.target.value)
-        setPaymentState();
+
+
+
+      }
+  
+
+    // handleSubmit(activeStep){
+    //     console.log("activeStep",this.state);
+    //     if (activeStep == 2){
+    //         postNominationPayments(this.state);
+    //     }
+    // };
+
+    handleChange(name) {
+        // console.log(event.target.value)
+        console.log("0000000000000000",this.state);
+
+// debugger;
+        
+
+        this.setState({
+            payments:{
+                // [name]:event.target.value,
+            } 
+        });
+        // console.log("====",this.state);
+        // console.log('**********************');
+        // console.log(this.state);
     };
     
     
     componentDidMount() {
       
-            const { postNominationPayments, candidatePayments } = this.props;
-            postNominationPayments();
+            // const { postNominationPayments, candidatePayments } = this.props;
+            // postNominationPayments();
     
     }
 
@@ -118,14 +155,16 @@ class Dashboard extends React.Component {
     };
 
     render() {
-        const { classes } = this.props;
+        
+
+        const { classes, postNominationPayments } = this.props;
 
         return (
             <div className={classes.root}>
             
                 <CssBaseline />
                 <MainMenu title="Elections Commission of Sri Lanka"></MainMenu>
-                <NominationForm handleSubmit={this.handleSubmit} handleChange={this.handleChange} title="Elections Commission of Sri Lanka"></NominationForm>
+                <NominationForm postNominationPayments={this.props.postNominationPayments} handleChange={this.handleChange} title="Elections Commission of Sri Lanka"></NominationForm>
 
             </div>
         );
@@ -142,8 +181,8 @@ const mapStateToProps = ({ Election }) => {
 };
 
 const mapActionsToProps = {
-    postNominationPayments,
-    setPaymentState
+    
+    postNominationPayments
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Dashboard));

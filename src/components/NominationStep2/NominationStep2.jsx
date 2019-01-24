@@ -77,12 +77,21 @@ class TextFields extends React.Component {
           this.setState({ depositAmount });
           this.setState({ depositeDate });
           this.setState({ paymentStatus });
-
-
         })
     }
-
+    handleChange = (name) => event => {
+        console.log(event.target.value)
+        console.log(name);
+        this.setState({
+            // payments:{
+                [name]:event.target.value,
+            // } 
+        });
+        this.props.handleChange(this.state);
+    };
+    
     render() {
+        // debugger;
         const {classes, handleChange} = this.props;
 
         return (
@@ -92,7 +101,7 @@ class TextFields extends React.Component {
                     <TextField
                             label="Depositor Name"
                             value={this.state.depositor}
-                            onChange={handleChange('depositor')}
+                            onChange={this.handleChange("depositor")}
                         />  
                     </Grid>
                     <Grid item lg={3}>
@@ -101,7 +110,7 @@ class TextFields extends React.Component {
                             label="Deposited Amount"
                             className={classes.textField}
                             value={this.state.depositAmount}
-                            onChange={handleChange('depositAmount')}
+                            onChange={this.handleChange('depositAmount')}
                             margin="normal"
                         />
                     </Grid>
@@ -111,7 +120,7 @@ class TextFields extends React.Component {
                             label="Candidate Count"
                             className={classes.textField}
                             value={localStorage.getItem('candidate')}
-                            onChange={handleChange('candidateCount')}
+                            onChange={this.handleChange('candidateCount')}
                             margin="normal"
                         />
                     </Grid>
@@ -139,7 +148,7 @@ class TextFields extends React.Component {
                             label="Select"
                             className={classes.textField}
                             value={this.state.paymentStatus}
-                            onChange={handleChange('paymentStatus')}
+                            onChange={this.handleChange('paymentStatus')}
                             SelectProps={{
                                 MenuProps: {
                                 className: classes.menu,

@@ -11,6 +11,7 @@ import NominationStep2 from '../NominationStep2/NominationStep2';
 import NominationStep3 from '../NominationStep3/NominationStep3';
 
 
+
 const styles = theme => ({
   root: {
     width: '90%',
@@ -49,7 +50,7 @@ class HorizontalNonLinearStepper extends React.Component {
       case 0:
         return <NominationStep1/>;
       case 1:
-        return <NominationStep2 handleChange={handleChange}/>;
+        return <NominationStep2 handleChange={this.handleChange}/>;
       case 2:
         return <NominationStep3 />;
       default:
@@ -63,10 +64,10 @@ class HorizontalNonLinearStepper extends React.Component {
 
   handleNext = () => {
     let activeStep;
-    const { handleSubmit } = this.props;
-
-    handleSubmit(this.state.activeStep);
-
+    const { postNominationPayments } = this.props;
+    // const { handleChange } = this.props;
+    // console.log("ppp",name);
+    
     if (this.isLastStep() && !this.allStepsCompleted()) {
       // It's the last step, but not all steps have been completed,
       // find the first step that has been completed
@@ -78,6 +79,11 @@ class HorizontalNonLinearStepper extends React.Component {
     this.setState({
       activeStep,
     });
+    // handleSubmit(activeStep);
+    if (activeStep == 2){
+      // postNominationPayments(this.state);
+      postNominationPayments(this.state);
+  }
   };
 
   handleBack = () => {
