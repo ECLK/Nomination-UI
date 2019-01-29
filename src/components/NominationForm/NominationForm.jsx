@@ -11,6 +11,7 @@ import NominationStep2 from '../NominationStep2/NominationStep2';
 import NominationStep3 from '../NominationStep3/NominationStep3';
 
 
+
 const styles = theme => ({
   root: {
     width: '90%',
@@ -33,24 +34,29 @@ function getSteps() {
   return ['Candidate Details', 'Payment Details', 'Review'];
 }
 
-function getStepContent(step,props) {
-  switch (step) {
-    case 0:
-      return <NominationStep1/>;
-    case 1:
-      return <NominationStep2/>;
-    case 2:
-      return <NominationStep3/>;
-    default:
-      return 'Unknown step';
-  }
-}
+
 
 class HorizontalNonLinearStepper extends React.Component {
   state = {
     activeStep: 0,
     completed: {},
+    props:''
   };
+
+  getStepContent(step,props) {
+    const { handleChange } = this.props;
+    console.log(handleChange);
+    switch (step) {
+      case 0:
+        return <NominationStep1/>;
+      case 1:
+        return <NominationStep2 handleChange={this.handleChange}/>;
+      case 2:
+        return <NominationStep3 />;
+      default:
+        return 'Unknown step';
+    }
+  }
 
   totalSteps = () => {
     return getSteps().length;
@@ -58,7 +64,10 @@ class HorizontalNonLinearStepper extends React.Component {
 
   handleNext = () => {
     let activeStep;
-
+    const { postNominationPayments } = this.props;
+    // const { handleChange } = this.props;
+    // console.log("ppp",name);
+    
     if (this.isLastStep() && !this.allStepsCompleted()) {
       // It's the last step, but not all steps have been completed,
       // find the first step that has been completed
@@ -70,6 +79,11 @@ class HorizontalNonLinearStepper extends React.Component {
     this.setState({
       activeStep,
     });
+    // handleSubmit(activeStep);
+    if (activeStep == 2){
+      // postNominationPayments(this.state);
+      postNominationPayments(this.state);
+  }
   };
 
   handleBack = () => {
@@ -77,6 +91,8 @@ class HorizontalNonLinearStepper extends React.Component {
       activeStep: state.activeStep - 1,
     }));
   };
+
+
 
   handleStep = step => () => {
     this.setState({
@@ -116,7 +132,7 @@ class HorizontalNonLinearStepper extends React.Component {
     const { classes } = this.props;
     const steps = getSteps();
     const { activeStep } = this.state;
-
+    
     return (
       <div className={classes.root}>
         <Stepper nonLinear activeStep={activeStep}>
@@ -143,7 +159,7 @@ class HorizontalNonLinearStepper extends React.Component {
             </div>
           ) : (
             <div>
-              <Typography className={classes.instructions}>{getStepContent(activeStep,this.props)}</Typography>
+              <Typography className={classes.instructions}>{this.getStepContent(activeStep,this.props)}</Typography>
               <div>
                 <Button
                   disabled={activeStep === 0}

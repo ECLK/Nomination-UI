@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Login from 'pages/Login/Login';
 
-import NominationForm from 'pages/USER/NominationForm/NominationForm';
+// import NominationForm from 'pages/USER/NominationForm/NominationForm';
+import NominationForm from 'modules/nomination/NominationForm';
+
 import Home from 'pages/USER/Home/Home';
 import Objection from 'pages/USER/Objection/Objection'
 import Profile from 'pages/USER/Profile/Profile'
@@ -15,10 +17,13 @@ import Admin_NominationProcessConfig from 'pages/ADMIN/NominationProcess-config/
 import ActiveElectionForm from 'pages/ADMIN/ActiveElectionForm/ActiveElectionForm';
 import AllowNomination from 'pages/ADMIN/Nomination/AllowNomination';
 
-import NominationReview from 'pages/ADMIN/Nomination_review/Nomination_review';
-import PaymentReview from 'pages/ADMIN/Payment_review/Payment_review';
+// import NominationReview from 'pages/ADMIN/Nomination_review/Nomination_review';
+import NominationReview from 'modules/nomination/Nomination_review';
+import PaymentReview from 'modules/payment/Payment_review';
 import ObjectionReview from 'pages/ADMIN/Objection_review/Objection_review';
 import ElectionReview from 'pages/ADMIN/Election_review/Election_review';
+
+import ElectionConfig from 'modules/election-model/ElectionConfig';
 
 
 
@@ -66,10 +71,11 @@ export default class Protected extends Component {
                     <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login} />
                     
                     <Redirect exact from='/admin' to='/admin/home' />
-                    <Route path='/admin/home' component={(this.state.isLoggedIn) ? Admin_home : Login} />
-                    <Route path='/admin/call-election' component={(this.state.isLoggedIn) ? Admin_CallElection : Login} />
-                    <Route path='/admin/candidate-config' component={(this.state.isLoggedIn) ? Admin_CandidateConfig : Login} />
-                    <Route path='/admin/election-config' component={(this.state.isLoggedIn) ? Admin_ElectionConfig : Login} />
+                    <Route path='/admin/home' component={Admin_home} />
+                    <Route path='/admin/call-election' component={Admin_CallElection} />
+                    <Route path='/admin/candidate-config' component={Admin_CandidateConfig} />
+
+                    <Route path='/admin/election-config' component={ElectionConfig} />
 
                     <Route path='/admin/nominationProcess-config' component={(this.state.isLoggedIn) ? Admin_NominationProcessConfig : Login} />
                     <Route path='/admin/active-election' component={(this.state.isLoggedIn) ? ActiveElectionForm : Login} />

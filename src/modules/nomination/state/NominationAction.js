@@ -1,17 +1,18 @@
 import {
-    GET_NOMINATIONS
+    GET_NOMINATIONS,
+    POST_NOMINATION_PAYMENTS,
 } from "./NominationTypes";
-import { API_URL } from "../config.js";
+import { API_BASE_URL } from "../../../config.js";
 import axios from "axios";
 // import store from '../store';
 
 
-export function getNominations() {
+export const getNominations = function getNominations() {
 
     return function (dispatch) {
         const response = axios
             .get(
-                `${API_URL}/nominations`
+                `${API_BASE_URL}/nominations`
             )
             .then(response => {
                 dispatch({
@@ -21,6 +22,27 @@ export function getNominations() {
             });
     };
 }
+
+export const postNominationPayments = function postNominationPayments(body) {
+
+    return function (dispatch) {
+        const response = axios
+            .post(
+                `${API_BASE_URL}/nominations/payments`,
+                {body}
+            )
+            .then(response => {
+                dispatch({
+                    type: POST_NOMINATION_PAYMENTS,
+                    payload: response.data
+                })
+            });
+    };
+}
+
+
+
+
 
 
 
