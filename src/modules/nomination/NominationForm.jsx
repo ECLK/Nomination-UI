@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import MainMenu from 'components/MainMenu/MainMenu';
-import NominationForm from 'components/NominationForm/NominationForm';
-import { postNominationPayments } from './state/NominationAction';
-import { connect } from 'react-redux';
+import NominationForm from 'components/NominationForm';
 
 
 import axios from 'axios';
@@ -84,63 +82,21 @@ const styles = theme => ({
 });
 
 class Dashboard extends React.Component {
-    // state = {
-    //     open: true,
-    //     nominations: [],
-    //     depositor:'test',
-    //     depositAmount:'test',
-    //     depositeDate:'test',
-    //     paymentStatus:'test',
-
-    // };
+  
     constructor(props) {
         super(props)
     
         this.state = {
-            open: true,
-            nominations: [],
-            depositor:'test',
-            depositAmount:'test',
-            depositeDate:'test',
-            paymentStatus:'test',
+            nominationId:''
         }
-        // this.handleSubmit = this.handleSubmit.bind(this);
-        
-        this.handleChange = this.handleChange.bind(this);
+        this.setState({ nominationId: this.props.location.referer.id });
 
-
-
-
+          console.log(this.props.location.referer.id);
+        // debugger;
       }
-  
-
-    // handleSubmit(activeStep){
-    //     console.log("activeStep",this.state);
-    //     if (activeStep == 2){
-    //         postNominationPayments(this.state);
-    //     }
-    // };
-
-    handleChange(name) {
-        // console.log(event.target.value)
-        console.log("0000000000000000",this.state);
-
-// debugger;
-        
-
-        this.setState({
-            payments:{
-                // [name]:event.target.value,
-            } 
-        });
-        // console.log("====",this.state);
-        // console.log('**********************');
-        // console.log(this.state);
-    };
-    
     
     componentDidMount() {
-      
+        // debugger;
             // const { postNominationPayments, candidatePayments } = this.props;
             // postNominationPayments();
     
@@ -156,7 +112,6 @@ class Dashboard extends React.Component {
 
     render() {
         
-
         const { classes, postNominationPayments } = this.props;
 
         return (
@@ -164,7 +119,7 @@ class Dashboard extends React.Component {
             
                 <CssBaseline />
                 <MainMenu title="Elections Commission of Sri Lanka"></MainMenu>
-                <NominationForm postNominationPayments={this.props.postNominationPayments} handleChange={this.handleChange} title="Elections Commission of Sri Lanka"></NominationForm>
+                <NominationForm customProps = {this.props.location.referer.id} title="Elections Commission of Sri Lanka"></NominationForm>
 
             </div>
         );
@@ -175,16 +130,5 @@ Dashboard.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = ({ Election }) => {
-    const { candidatePayments } = Election;
-    return { candidatePayments }
-};
 
-const mapActionsToProps = {
-    
-    postNominationPayments
-};
-
-export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Dashboard));
-
-// export default withStyles(styles)(Dashboard);
+export default withStyles(styles)(Dashboard);

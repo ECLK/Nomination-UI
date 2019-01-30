@@ -11,6 +11,8 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
+import { Redirect } from 'react-router-dom'
+
 
 const styles = theme => ({
 	root: {
@@ -38,6 +40,8 @@ const styles = theme => ({
 		state = {
 			expanded: null,
 			division: [],
+			goToNomination:false,
+			nominationId:'dummyId'
 		};
 
 		handleChange = panel => (event, expanded) => {
@@ -54,13 +58,16 @@ const styles = theme => ({
 			});
 	}
 
-	redirectToTarget = () => {
-		this.context.router.history.push(`/nomination`);
+	redirectToTarget = (id) => {
+		this.setState({ nominationId: id });
+		this.setState({goToNomination:true});
 	}
 
 	render() {
 		const { classes } = this.props;
+		const {props} = this;
 		const { expanded } = this.state;
+		if (this.state.goToNomination) return <Redirect {...props} to={{  pathname: 'nomination', referer: { id: this.state.nominationId } }} />;
 
 		return (
 			<div className={classes.root}>
@@ -84,20 +91,19 @@ const styles = theme => ({
 											<ListItem className={classes.list} key={index}>
 												<ListItemText primary="Status" />
 												<Typography>{nomination.status}</Typography>
-											</ListItem>
-										)
-									}
-									<ListItem className={classes.list}>
-									{
+												<Typography>{nomination.id}</Typography>
+												{
 										division.nomination.length < 1 &&
-										<Button variant="contained" color="primary" className={classes.button} onClick={this.redirectToTarget}>Create</Button>
+										<Button variant="contained" color="primary" onClick={() => this.redirectToTarget(nomination.id)} className={classes.button} >Create</Button>
 									}
 									{
 										division.nomination.length > 0 &&
-										<Button variant="contained" color="primary" className={classes.button} onClick={this.redirectToTarget}>View / Edit</Button>
+										<Button variant="contained" color="primary" onClick={() => this.redirectToTarget(nomination.id)} className={classes.button} >View / Edit</Button>
 									}
-										
-									</ListItem>
+											</ListItem>
+										)
+									}
+									
 								</List>
 								
 							</ExpansionPanelDetails>

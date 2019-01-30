@@ -18,6 +18,7 @@ import axios from 'axios';
 const styles = theme => ({
   root: {
     width: '90%',
+    paddingLeft: 240
   },
   button: {
     marginTop: theme.spacing.unit,

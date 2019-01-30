@@ -7,10 +7,13 @@ import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
 import "react-datepicker/dist/react-datepicker.css";
 
+
+
 const styles = theme => ({
     container: {
         display: 'flex',
         flexWrap: 'wrap',
+        paddingLeft: 25
     },
     textField: {
         marginLeft: theme.spacing.unit,
@@ -45,54 +48,49 @@ const paymentStatus = [
       label: 'REJECTED',
     },
   ];
-class TextFields extends React.Component {
+class NominationPayments extends React.Component {
     state = {
       open: true,
-      payments: {
-          
-      },
-      depositor:'test',
-      depositAmount:'test',
-      depositeDate:'test',
-      paymentStatus:'test',
+   
+    //   candidateCount:localStorage.getItem('candidate')
 
     };
+    
 
     
 
     componentDidMount() {
-        console.log(this)
-        var candidateCount = localStorage.getItem('candidate');
-      axios.get(`nominations/135183e2-a0ca-44a0-9577-0d2b16c3217f/payments`)
-        .then(res => {
-          const payments = res.data;
-          const depositor=res.data.depositor;
-          const depositAmount=res.data.depositAmount;
-          const depositeDate=res.data.depositeDate;
-          const paymentStatus=res.data.paymentStatus;
+    //     console.log(this)
+    //     var candidateCount = localStorage.getItem('candidate');
+    //   axios.get(`nominations/135183e2-a0ca-44a0-9577-0d2b16c3217f/payments`)
+    //     .then(res => {
+    //       const payments = res.data;
+    //       const depositor=res.data.depositor;
+    //       const depositAmount=res.data.depositAmount;
+    //       const depositeDate=res.data.depositeDate;
+    //       const paymentStatus=res.data.paymentStatus;
 
 
-          console.log("payments",payments);
-          this.setState({ depositor });
-          this.setState({ depositAmount });
-          this.setState({ depositeDate });
-          this.setState({ paymentStatus });
-        })
-    }
-    handleChange = (name) => event => {
-        console.log(event.target.value)
-        console.log(name);
-        this.setState({
-            // payments:{
-                [name]:event.target.value,
-            // } 
-        });
-        this.props.handleChange(this.state);
-    };
+    //       console.log("payments",payments);
+    //       this.setState({ depositor });
+    //       this.setState({ depositAmount });
+    //       this.setState({ depositeDate });
+    //       this.setState({ paymentStatus });
+    //     })
+    // setPaymentStatus();
+
+    // const { handleSubmit } = this.props;
+     
+
+    
+}
+
+      
+
+
     
     render() {
-        // debugger;
-        const {classes, handleChange} = this.props;
+        const {classes, depositor,handleChange,nominationPayments} = this.props;
 
         return (
             <form className={classes.container} noValidate autoComplete="off">
@@ -100,8 +98,8 @@ class TextFields extends React.Component {
                     <Grid item lg={3}>
                     <TextField
                             label="Depositor Name"
-                            value={this.state.depositor}
-                            onChange={this.handleChange("depositor")}
+                            value={nominationPayments.depositor}
+                            onChange={handleChange("depositor")}
                         />  
                     </Grid>
                     <Grid item lg={3}>
@@ -109,8 +107,8 @@ class TextFields extends React.Component {
                             id="standard-name"
                             label="Deposited Amount"
                             className={classes.textField}
-                            value={this.state.depositAmount}
-                            onChange={this.handleChange('depositAmount')}
+                            value={nominationPayments.amount}
+                            onChange={handleChange('depositAmount')}
                             margin="normal"
                         />
                     </Grid>
@@ -120,7 +118,7 @@ class TextFields extends React.Component {
                             label="Candidate Count"
                             className={classes.textField}
                             value={localStorage.getItem('candidate')}
-                            onChange={this.handleChange('candidateCount')}
+                            onChange={handleChange('candidateCount')}
                             margin="normal"
                         />
                     </Grid>
@@ -132,8 +130,9 @@ class TextFields extends React.Component {
                             id="date"
                             label="Diposited Date"
                             type="date"
-                            value={this.state.depositeDate}
+                            value={nominationPayments.depositeDate}
                             // defaultValue="2017-05-24"
+                            onChange={handleChange('depositeDate')}
                             className={classes.textField}
                             InputLabelProps={{
                                 shrink: true,
@@ -141,14 +140,14 @@ class TextFields extends React.Component {
                             margin="normal"
                         />
                     </Grid>
-                    <Grid item lg={3}>
+                    {/* <Grid item lg={3}>
                          <TextField
                             id="standard-select-currency"
                             select
                             label="Select"
                             className={classes.textField}
-                            value={this.state.paymentStatus}
-                            onChange={this.handleChange('paymentStatus')}
+                            value={nominationPayments.paymentStatus}
+                            onChange={handleChange('paymentStatus')}
                             SelectProps={{
                                 MenuProps: {
                                 className: classes.menu,
@@ -163,7 +162,7 @@ class TextFields extends React.Component {
                                 </MenuItem>
                             ))}
                             </TextField>       
-                    </Grid>
+                    </Grid> */}
                 </Grid>
                
 
@@ -183,8 +182,10 @@ class TextFields extends React.Component {
     }
 }
 
-TextFields.propTypes = {
+NominationPayments.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TextFields);
+export default withStyles(styles)(NominationPayments);
+
+

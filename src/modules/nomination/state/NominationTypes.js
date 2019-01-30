@@ -1,4 +1,7 @@
 export const GET_NOMINATIONS = "GET_NOMINATIONS";
 export const POST_NOMINATION_PAYMENTS = "POST_NOMINATION_PAYMENTS";
+export const AUTH_FAILED = "AUTH_FAILED";
+export const ERROR = "ERROR";
+
 
 

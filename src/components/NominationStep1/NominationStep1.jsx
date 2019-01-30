@@ -25,17 +25,21 @@ const styles = theme => ({
 
 
 class CustomizedTable extends React.Component {
-  state = {
-      open: true,
-      nominations: [],
-      candidateCount:'0'
 
-  };
+  constructor(props){
+    super(props);
+    this.state = {
+    open: true,
+    nominations: [],
+    candidateCount:'0',
+    }
+    
+}
   
-  
-    componentDidMount() {
-      console.log(this)
-      axios.get(`nominations/135183e2-a0ca-44a0-9577-0d2b16c3217f/candidates`)
+  componentDidMount() {
+    const { customProps } = this.props;    
+
+      axios.get(`nominations/${customProps}/candidates`)
         .then(res => {
           const nominations = res.data;
           const candidateCount = res.data.length;
@@ -57,6 +61,7 @@ class CustomizedTable extends React.Component {
 
   render() {
       const rows = this.state.nominations;
+      
 
       const columns = [
         {
