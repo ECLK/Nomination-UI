@@ -11,7 +11,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
-import { Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 
 const styles = theme => ({
@@ -40,7 +40,7 @@ const styles = theme => ({
 		state = {
 			expanded: null,
 			division: [],
-			goToNomination:false,
+			// goToNomination:false,
 			nominationId:'dummyId'
 		};
 
@@ -60,14 +60,16 @@ const styles = theme => ({
 
 	redirectToTarget = (id) => {
 		this.setState({ nominationId: id });
-		this.setState({goToNomination:true});
+		// this.setState({goToNomination:true});
 	}
 
 	render() {
 		const { classes } = this.props;
 		const {props} = this;
 		const { expanded } = this.state;
-		if (this.state.goToNomination) return <Redirect {...props} to={{  pathname: 'nomination', referer: { id: this.state.nominationId } }} />;
+		// if (this.state.goToNomination) return <Redirect {...props} to={{  pathname: 'nomination', referer: { id: this.state.nominationId } }} />;
+
+		// if (this.state.goToNomination) return <Link to={{ pathname: "nomination", state: { id: this.state.nominationId }}}  />;
 
 		return (
 			<div className={classes.root}>
@@ -91,15 +93,18 @@ const styles = theme => ({
 											<ListItem className={classes.list} key={index}>
 												<ListItemText primary="Status" />
 												<Typography>{nomination.status}</Typography>
-												<Typography>{nomination.id}</Typography>
+												<div>
 												{
 										division.nomination.length < 1 &&
 										<Button variant="contained" color="primary" onClick={() => this.redirectToTarget(nomination.id)} className={classes.button} >Create</Button>
 									}
 									{
 										division.nomination.length > 0 &&
-										<Button variant="contained" color="primary" onClick={() => this.redirectToTarget(nomination.id)} className={classes.button} >View / Edit</Button>
+										<Link style={{ textDecoration: 'none' }} to={{ pathname: "nomination", state: { id: nomination.id }}}  >
+										<Button variant="contained" color="primary"  className={classes.button} >View / Edit</Button>
+										</Link>
 									}
+									</div>
 											</ListItem>
 										)
 									}

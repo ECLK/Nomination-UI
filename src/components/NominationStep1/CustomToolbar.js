@@ -4,7 +4,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
 import { withStyles } from "@material-ui/core/styles";
 import Modal from "react-responsive-modal";
-import CandidateTabContainer from '../CandidateTabContainer/CandidateTabContainer';
+import CandidateTabContainer from '../CandidateTabContainer';
 
 
 
@@ -33,7 +33,7 @@ class CustomToolbar extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, customProps } = this.props;
     const { open } = this.state;
 
     return (
@@ -47,7 +47,7 @@ class CustomToolbar extends React.Component {
         <Modal open={open} onClose={this.onCloseModal} center>
           <h2>Add Candidate</h2>
           <p>
-          <CandidateTabContainer/>
+          <CandidateTabContainer onCloseModal={this.onCloseModal} customProps={customProps} />
           </p>
         </Modal>
       </div>

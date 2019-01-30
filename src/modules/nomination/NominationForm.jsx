@@ -89,10 +89,11 @@ class Dashboard extends React.Component {
         this.state = {
             nominationId:''
         }
-        this.setState({ nominationId: this.props.location.referer.id });
+        
+        // this.setState({ nominationId: this.props.location.referer.id });
 
-          console.log(this.props.location.referer.id);
-        // debugger;
+          console.log(this.props.location.state.id);
+       
       }
     
     componentDidMount() {
@@ -119,7 +120,7 @@ class Dashboard extends React.Component {
             
                 <CssBaseline />
                 <MainMenu title="Elections Commission of Sri Lanka"></MainMenu>
-                <NominationForm customProps = {this.props.location.referer.id} title="Elections Commission of Sri Lanka"></NominationForm>
+                <NominationForm customProps = {this.props.location.state.id} title="Elections Commission of Sri Lanka"></NominationForm>
 
             </div>
         );

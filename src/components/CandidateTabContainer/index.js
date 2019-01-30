@@ -5,7 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import CandidateProfile from'../CandidateProfile/CandidateProfile';
+import CandidateProfile from'../CandidateProfile';
 import CandidateFileUpload from'../CandidateFileUpload/CandidateFileUpload';
 
 
@@ -39,7 +39,7 @@ class ScrollableTabsButtonAuto extends React.Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes , customProps ,onCloseModal } = this.props;
         const { value } = this.state;
 
         return (
@@ -58,7 +58,7 @@ class ScrollableTabsButtonAuto extends React.Component {
 
                     </Tabs>
                 </AppBar>
-                {value === 0 && <TabContainer><CandidateProfile></CandidateProfile></TabContainer>}
+                {value === 0 && <TabContainer><CandidateProfile onCloseModal={this.onCloseModal} customProps={customProps}></CandidateProfile></TabContainer>}
                 {value === 1 && <TabContainer><CandidateFileUpload></CandidateFileUpload></TabContainer>}
 
             </div>

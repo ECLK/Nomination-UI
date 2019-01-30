@@ -129,6 +129,7 @@ class CustomizedTable extends React.Component {
 
 const outputData = rows.map( Object.values );
 console.log("output",outputData);
+const { customProps } = this.props;    
 
       const data = outputData;
       const options = {
@@ -136,7 +137,7 @@ console.log("output",outputData);
         responsive: "scroll",
         customToolbar: () => {
           return (
-            <CustomToolbar />
+            <CustomToolbar customProps = {customProps} />
           );
         }
       };

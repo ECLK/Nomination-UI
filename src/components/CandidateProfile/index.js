@@ -5,6 +5,8 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
+import Hidden from '@material-ui/core/Hidden';
+
 
 
 const styles = theme => ({
@@ -123,6 +125,10 @@ class TextFields extends React.Component {
 
 
     handleChange = name => event => {
+        const { customProps } = this.props;
+        this.setState({
+            nominationId: customProps
+        });
         this.setState({
             [name]: event.target.value,
         });
@@ -131,9 +137,7 @@ class TextFields extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log('send data');
-        console.log("=========",this.state);
-
+       
         axios({
             method: 'post',
             headers: {
@@ -157,7 +161,7 @@ class TextFields extends React.Component {
     };
 
     render() {
-        const {classes} = this.props;
+        const {classes , onCloseModal} = this.props;
 
         return (
             <form className={classes.container} onSubmit={this.handleSubmit} noValidate autoComplete="off">
@@ -202,17 +206,18 @@ class TextFields extends React.Component {
                             margin="normal"
                         />
                     </Grid>
-
-                    <Grid item lg={4}>
+                    {/* <Hidden xsUp> */}
+                    {/* <Grid item lg={4}>
                         <TextField
                             id="standard-name"
                             label="nomination Id"
-                            value={this.state.nominationId}
+                            value={customProps}
                             onChange={this.handleChange('nominationId')}
                             className={classes.textField}
                             margin="normal"
                         />
-                    </Grid>
+                    </Grid> */}
+                    {/* </Hidden> */}
 
                 </Grid>
                 <Grid container spacing={8}>
@@ -360,12 +365,12 @@ class TextFields extends React.Component {
 
                 </Grid>
                 <Grid container spacing={8}>
-                    <Grid className={classes.label}  item lg={3}>
-                        <Button variant="contained" color="primary" className={classes.button}>
-                            Cancel
+                    <Grid className={classes.label}  item lg={8}>
+                        <Button variant="contained" type="submit" value="Submit&New" color="primary" className={classes.submit}>
+                            Save & New
                         </Button>
-                        <Button  variant="contained" type="submit" value="Submit" color="secondary" className={classes.submit}>
-                            Save
+                        <Button  variant="contained" onClick={this.onCloseModal} type="submit" value="Submit&Clouse" color="default" className={classes.submit}>
+                            Save & Clouse
                         </Button>
                     </Grid>
                 </Grid>
