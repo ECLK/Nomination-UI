@@ -12,7 +12,7 @@ import Profile from 'pages/USER/Profile/Profile'
 import Admin_home from 'pages/ADMIN/Home/Home'
 import Admin_CallElection from 'pages/ADMIN/Call-election/Call-election'
 import Admin_CandidateConfig from 'pages/ADMIN/Candidate-config/Candidate-config'
-import Admin_ElectionConfig from 'pages/ADMIN/Election-config/Election-config'
+
 import Admin_NominationProcessConfig from 'pages/ADMIN/NominationProcess-config/NominationProcess-config'
 import ActiveElectionForm from 'pages/ADMIN/ActiveElectionForm/ActiveElectionForm';
 
@@ -22,7 +22,7 @@ import PaymentReview from 'modules/payment/Payment_review';
 import ObjectionReview from 'pages/ADMIN/Objection_review/Objection_review';
 import ElectionReview from 'pages/ADMIN/Election_review/Election_review';
 
-import ElectionConfig from 'modules/election-model/ElectionConfig';
+import CreateElection from 'modules/election-model/CreateElection';
 
 
 
@@ -64,7 +64,7 @@ export default class Protected extends Component {
                     <Route path='/admin/call-election' component={Admin_CallElection} />
                     <Route path='/admin/candidate-config' component={Admin_CandidateConfig} />
 
-                    <Route path='/admin/election-config' component={ElectionConfig} />
+                    <Route path='/admin/create-election' component={CreateElection} />
 
                     <Route path='/admin/nominationProcess-config' component={Admin_NominationProcessConfig} />
                     <Route path='/admin/active-election' component={ActiveElectionForm} />

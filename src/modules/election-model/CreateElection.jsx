@@ -10,7 +10,10 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AdminMenu from 'components/AdminMenu/AdminMenu';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import { Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom';
+import CandidateForm from './CandidateForm';
+import DivisionConfig from './DivisionConfig';
+import ElectionConfig from './ElectionConfig';
 
 
 const styles = theme => ({
@@ -27,6 +30,9 @@ const styles = theme => ({
     },
     pageContent: {
         padding: 24,
+    },
+    paperContent:{
+        padding: 24,
     }
 });
 
@@ -37,17 +43,17 @@ function getSteps() {
 function getStepContent(step) {
     switch (step) {
         case 0:
-            return 'Candidate Form Configuration';
+            return <CandidateForm />;
         case 1:
-            return 'Division Configuration';
+            return <DivisionConfig />;
         case 2:
-            return 'Election Configuration';
+            return <ElectionConfig />;
         default:
             return 'Unknown step';
     }
 }
 
-class ElectionConfig extends React.Component {
+class CreateElection extends React.Component {
     state = {
         activeStep: 0,
         skipped: new Set(),
@@ -137,7 +143,11 @@ class ElectionConfig extends React.Component {
                                                 );
                                             })}
                                         </Stepper>
-                                        <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+                                        <Grid className={classes.paperContent} container spacing={24}>
+                                            <Grid item xs={12}>
+                                                {getStepContent(activeStep)}
+                                            </Grid>
+                                        </Grid>
                                         <div>
                                             <Button
                                                 disabled={activeStep === 0}
@@ -179,8 +189,8 @@ class ElectionConfig extends React.Component {
     }
 }
 
-ElectionConfig.propTypes = {
+CreateElection.propTypes = {
     classes: PropTypes.object,
 };
 
-export default withStyles(styles)(ElectionConfig);
+export default withStyles(styles)(CreateElection);
