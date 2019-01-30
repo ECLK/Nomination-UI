@@ -67,7 +67,7 @@ class FilledTextFields extends React.Component {
     render() {
         const {classes} = this.props;
 
-        if (this.state.goToConfig) return <Redirect to="/admin/election-config" />;
+        if (this.state.goToConfig) return <Redirect to="/admin/create-election" />;
 
         return (
 
