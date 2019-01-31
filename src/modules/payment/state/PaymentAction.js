@@ -1,4 +1,5 @@
-import {PAYMENT_LOAD_SUCCESS, TOGGLE_PAYMENT} from './PaymentTypes'
+import {loadElections} from "../../election/state/ElectionAction";
+import {PAYMENT_LOAD_SUCCESS, PAYMENTS_LOADING, TOGGLE_PAYMENT} from './PaymentTypes'
 
 function paymentsLoadSuccess(payments) {
     return {
@@ -7,16 +8,25 @@ function paymentsLoadSuccess(payments) {
     };
 }
 
+export function loadElectionsAndPayments() {
+    return function (dispatch) {
+        dispatch(loadElections()).then(_ => dispatch(loadPayments()));
+    }
+}
+
 export function loadPayments() {
 
     return function (dispatch) {
 
-        // axios.get(
+        dispatch({
+            type: PAYMENTS_LOADING
+        });
+
+        // return axios.get(
         //     `${API_BASE_URL}/payments`
         // ).then(response => {
         //     dispatch(paymentsLoadSuccess(response))
         // });
-
 
         const payments = [{
             nomination_id: "8ed2e77d-db11-4e69-83a2-3c005ebb3d40",
@@ -38,10 +48,9 @@ export function loadPayments() {
             note: "comment",
         }];
 
-
-        setTimeout(() => {
-            dispatch(paymentsLoadSuccess(payments));
-        }, 1000);
+        return new Promise(resolve =>
+            setTimeout(resolve, 1000)
+        ).then(_ => dispatch(paymentsLoadSuccess(payments)));
     };
 }
 

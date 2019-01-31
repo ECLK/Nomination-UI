@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AdminMenu from 'components/AdminMenu/AdminMenu';
-import {loadPayments, togglePayment} from './state/PaymentAction'
+import Paper from '@material-ui/core/Paper';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import {loadElectionsAndPayments, togglePayment} from './state/PaymentAction'
 import Typography from '@material-ui/core/Typography'
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
@@ -23,6 +25,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import PersonIcon from '@material-ui/icons/Person';
 import MoneyIcon from '@material-ui/icons/AttachMoney';
+import {REQUEST_STATE} from "../../lib/request_redux_state";
 
 const drawerWidth = 240;
 
@@ -37,9 +40,14 @@ const styles = theme => ({
     dropDown: {
         paddingBottom: 10,
         paddingTop: 24,
+        width: 250
     },
     container: {
         // padding: 10
+    },
+    loadingPanel: {
+        height: 94,
+        paddingTop: 28
     }
 });
 
@@ -52,8 +60,8 @@ class PaymentReview extends React.Component {
 
 
     componentDidMount() {
-        const {loadPayments} = this.props;
-        loadPayments();
+        const {loadElectionsAndPayments} = this.props;
+        loadElectionsAndPayments();
     }
 
     togglePanel = panelIndex => (event, didExpand) => {
@@ -67,22 +75,22 @@ class PaymentReview extends React.Component {
         togglePayment(paymentId);
     };
 
-    blockPropagation(event) {
+    static blockPropagation(event) {
         event.stopPropagation();
     };
 
 
     render() {
-        const {classes, payments} = this.props;
+        const {classes, payments, electionsLoading, elections, paymentState} = this.props;
         const {expandedPanelIndex} = this.state;
 
-        const elections = [{
-            "election_id": "32d250c8-b6b0-4aa6-9b14-4817dbb268d9",
-            "election_name": "2019 Parliamentary",
-        }, {
-            "election_id": "a93b50c8-b6b0-4aa6-9b14-4817dbb268d9",
-            "election_name": "2020 Provincial",
-        }];
+        // const elections = [{
+        //     "election_id": "32d250c8-b6b0-4aa6-9b14-4817dbb268d9",
+        //     "election_name": "2019 Parliamentary",
+        // }, {
+        //     "election_id": "a93b50c8-b6b0-4aa6-9b14-4817dbb268d9",
+        //     "election_name": "2020 Provincial",
+        // }];
 
         let selectedElection = this.state.selectedElection;
         if (!selectedElection) {
@@ -91,6 +99,13 @@ class PaymentReview extends React.Component {
 
         const menuItems = elections.map(election => (
             <MenuItem value={election.election_id}>{election.election_name}</MenuItem>));
+
+        let paymentLoadingElement = null;
+        paymentLoadingElement = (<div>
+            {paymentState === REQUEST_STATE.LOADING ? <LinearProgress/> : <div style={{height: 4}}></div>}
+            {payments.length === 0 &&
+            <Paper className={classes.loadingPanel}/>}
+        </div>);
 
 
         const paymentElements = payments.map((payment, i) => (
@@ -108,7 +123,7 @@ class PaymentReview extends React.Component {
                             />
                         }
                         label="Received"
-                        onClick={this.blockPropagation}
+                        onClick={PaymentReview.blockPropagation}
                     />
 
                     {/*<Typography className={classes.secondaryHeading}>I am an expansion panel</Typography>*/}
@@ -148,9 +163,10 @@ class PaymentReview extends React.Component {
 
                 <div className={classes.container}>
 
-                    <form className={classes.dropDown} autoComplete="off">
-                        <FormControl className={classes.formControl}>
+                    <form autoComplete="off">
+                        <FormControl className={classes.dropDown}>
                             <InputLabel htmlFor="election-select">Election</InputLabel>
+
                             <Select
                                 value={selectedElection}
                                 onChange={this.handleChangeElection}
@@ -160,8 +176,8 @@ class PaymentReview extends React.Component {
                                 }}
                             >
                                 {menuItems}
-
                             </Select>
+                            {electionsLoading ? <LinearProgress/> : <div style={{height: 4}}></div>}
                         </FormControl>
                     </form>
 
@@ -169,6 +185,7 @@ class PaymentReview extends React.Component {
                     <br/>
 
                     <div style={{width: '100%'}}>
+                        {paymentLoadingElement}
                         {paymentElements}
                     </div>
 
@@ -187,14 +204,18 @@ PaymentReview.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = ({Payment}) => {
+const mapStateToProps = ({Payment, Election}) => {
     const {payments} = Payment;
-    return {payments};
+    const {elections} = Election;
+    const paymentState = Payment.requestState;
+    const electionsLoading = Election.requestState === REQUEST_STATE.LOADING;
+    return {payments, elections, paymentState, electionsLoading};
 };
 
 const mapActionsToProps = {
-    loadPayments,
-    togglePayment
+    togglePayment,
+    loadElectionsAndPayments,
+
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(PaymentReview));

@@ -1,8 +1,11 @@
-import {PAYMENT_LOAD_SUCCESS, TOGGLE_PAYMENT} from "./PaymentTypes";
+import {PAYMENT_LOAD_SUCCESS, PAYMENTS_LOADING, TOGGLE_PAYMENT} from "./PaymentTypes";
 import update from 'immutability-helper';
+import {REQUEST_STATE} from "../../../lib/request_redux_state";
+
 
 const initialState = {
-    payments: []
+    payments: [],
+    requestState: REQUEST_STATE.NOT_STARTED
 };
 
 function findPaymentIndex(payments, id) {
@@ -11,10 +14,16 @@ function findPaymentIndex(payments, id) {
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
+        case PAYMENTS_LOADING:
+            return {
+                ...state,
+                requestState: REQUEST_STATE.LOADING
+            };
         case PAYMENT_LOAD_SUCCESS:
             return {
                 ...state,
-                payments: action.payload
+                payments: action.payload,
+                requestState: REQUEST_STATE.SUCCESS
             };
         case TOGGLE_PAYMENT:
             const payments = state.payments;
