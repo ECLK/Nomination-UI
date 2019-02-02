@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
 import Hidden from '@material-ui/core/Hidden';
+import Notifier, { openSnackbar } from '../Notifier';
+
 
 
 
@@ -32,7 +34,14 @@ const styles = theme => ({
         display: 'none',
     },
     label: {
-        marginLeft: theme.spacing.unit*5,
+        marginLeft: theme.spacing.unit*15,
+    },
+    label: {
+        marginLeft: theme.spacing.unit*30,
+        padingTop:theme.spacing.unit*30
+    },
+    submit: {
+        marginLeft: theme.spacing.unit
     },
 
 });
@@ -118,10 +127,8 @@ class TextFields extends React.Component {
 
     componentDidMount() {
 
-
-
-
     }
+    
 
 
     handleChange = name => event => {
@@ -133,9 +140,22 @@ class TextFields extends React.Component {
             [name]: event.target.value,
         });
     };
+    
+    handleChangeButton = (e) => {
+        const { onCloseModal } = this.props;
+        if(e.currentTarget.value==="Submit&Clouse"){
+            onCloseModal();
+            
+
+        }
+        }
 
 
     handleSubmit = (e) => {
+        // console.log(e.currentTarget.value);
+        // debugger;
+        // this.refs.btn.setAttribute("disabled", "disabled");
+
         e.preventDefault();
        
         axios({
@@ -150,8 +170,12 @@ class TextFields extends React.Component {
         .then(function (response) {
             // return response.json();
             // console.log("ffff",response.json());
+            // openSnackbar({ message: 'Candidate Added Sccessfully...' });
+            setTimeout(() => {
+                openSnackbar({ message: 'Candidate Added Sccessfully...' });
+            }, 6000);
             // resultElement.innerHTML = generateSuccessHTMLOutput(response);
-            alert("sucsess",response);
+            // alert("sucsess",response);
             // this.onCloseModal();
           })
           .catch(function (error) {
@@ -162,12 +186,12 @@ class TextFields extends React.Component {
 
     render() {
         const {classes , onCloseModal} = this.props;
-
         return (
             <form className={classes.container} onSubmit={this.handleSubmit} noValidate autoComplete="off">
 
-                <Grid container spacing={8}>
-                    <Grid item lg={4}>
+                <Grid container spacing={12}>
+                <Notifier />
+                    <Grid item lg={6}>
                         <TextField
 
                             id="standard-name"
@@ -181,7 +205,7 @@ class TextFields extends React.Component {
                         />
                     </Grid>
 
-                    <Grid item lg={4}>
+                    <Grid item lg={6}>
                         <TextField
                             id="standard-name"
                             label="Full Name"
@@ -194,8 +218,8 @@ class TextFields extends React.Component {
                     </Grid>
 
                 </Grid>
-                <Grid container spacing={8}>
-                    <Grid item lg={4}>
+                <Grid container spacing={12}>
+                    <Grid item lg={6}>
                         <TextField
 
                             id="standard-name"
@@ -207,21 +231,21 @@ class TextFields extends React.Component {
                         />
                     </Grid>
                     {/* <Hidden xsUp> */}
-                    {/* <Grid item lg={4}>
-                        <TextField
-                            id="standard-name"
-                            label="nomination Id"
-                            value={customProps}
-                            onChange={this.handleChange('nominationId')}
-                            className={classes.textField}
-                            margin="normal"
+                    <Grid item lg={6}>
+                    <TextField
+                        id="standard-name"
+                        label="Occupation"
+                        className={classes.textField}
+                        value={this.state.occupation}
+                        onChange={this.handleChange('occupation')}
+                        margin="normal"
                         />
-                    </Grid> */}
+                    </Grid>
                     {/* </Hidden> */}
 
                 </Grid>
-                <Grid container spacing={8}>
-                    <Grid item lg={4}>
+                <Grid container spacing={12}>
+                    <Grid item lg={6}>
                         <TextField
                             id="date"
                             label="Date of Birth"
@@ -239,7 +263,7 @@ class TextFields extends React.Component {
 
                     </Grid>
 
-                    <Grid item lg={4}>
+                    <Grid item lg={6}>
                     <TextField
                             id="standard-select-currency-native"
                             select
@@ -270,21 +294,9 @@ class TextFields extends React.Component {
 
                 </Grid>
 
-                <Grid container spacing={8}>
-                    <Grid item lg={4}>
-                        <TextField
-
-                            id="standard-name"
-                            label="Occupation"
-                            className={classes.textField}
-                            value={this.state.occupation}
-                            onChange={this.handleChange('occupation')}
-                            margin="normal"
-                        />
-                    </Grid>
-
-                    <Grid item lg={4}>
-                        <TextField
+                <Grid container spacing={12}>
+                    <Grid item lg={6}>
+                    <TextField
                             id="standard-multiline-flexible"
                             label="Address"
                             multiline
@@ -294,8 +306,11 @@ class TextFields extends React.Component {
                             className={classes.textField}
                             margin="normal"
                         />
+                    </Grid>
+
+                    <Grid item lg={6}>
+                        
                         <TextField
-                            hidden
                             id="standard-multiline-flexible"
                             label="Counsil Name  "
                             multiline
@@ -308,8 +323,8 @@ class TextFields extends React.Component {
                     </Grid>
 
                 </Grid>
-                <Grid container spacing={8}>
-                    <Grid item lg={4}>
+                <Grid container spacing={12}>
+                    <Grid item lg={6}>
                     <TextField
                             id="standard-select-currency-native"
                             select
@@ -336,7 +351,7 @@ class TextFields extends React.Component {
                         </TextField>
                     </Grid>
 
-                    <Grid item lg={4}>
+                    <Grid item lg={6}>
                     <TextField
                             id="standard-select-currency-native"
                             select
@@ -364,12 +379,13 @@ class TextFields extends React.Component {
                     </Grid>
 
                 </Grid>
-                <Grid container spacing={8}>
-                    <Grid className={classes.label}  item lg={8}>
+                <Grid container spacing={12}>
+                    <Grid className={classes.label}  item lg={12}>
+                    <br /><br />
                         <Button variant="contained" type="submit" value="Submit&New" color="primary" className={classes.submit}>
                             Save & New
                         </Button>
-                        <Button  variant="contained" onClick={this.onCloseModal} type="submit" value="Submit&Clouse" color="default" className={classes.submit}>
+                        <Button  variant="contained" onClick = { this.handleChangeButton }  type="submit" value="Submit&Clouse" color="default" className={classes.submit}>
                             Save & Clouse
                         </Button>
                     </Grid>

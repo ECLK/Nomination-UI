@@ -41,15 +41,14 @@ class ScrollableTabsButtonAuto extends React.Component {
     render() {
         const { classes , customProps ,onCloseModal } = this.props;
         const { value } = this.state;
-
         return (
             <div className={classes.root}>
-                <AppBar position="static" color="default">
+                <AppBar position="static" >
                     <Tabs
                         value={value}
                         onChange={this.handleChange}
-                        indicatorColor="primary"
-                        textColor="primary"
+                        // indicatorColor="primary"
+                        // textColor="primary"
                         scrollable
                         scrollButtons="auto"
                     >
@@ -58,7 +57,7 @@ class ScrollableTabsButtonAuto extends React.Component {
 
                     </Tabs>
                 </AppBar>
-                {value === 0 && <TabContainer><CandidateProfile onCloseModal={this.onCloseModal} customProps={customProps}></CandidateProfile></TabContainer>}
+                {value === 0 && <TabContainer><CandidateProfile onCloseModal={onCloseModal} customProps={customProps}></CandidateProfile></TabContainer>}
                 {value === 1 && <TabContainer><CandidateFileUpload></CandidateFileUpload></TabContainer>}
 
             </div>

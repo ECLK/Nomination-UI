@@ -6,6 +6,8 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
 import "react-datepicker/dist/react-datepicker.css";
+import Select from '@material-ui/core/Select';
+
 
 
 
@@ -48,6 +50,40 @@ const paymentStatus = [
       label: 'REJECTED',
     },
   ];
+
+const designation = [
+    {
+      value: 'teamLeader',
+      label: 'Team Leader',
+    },
+    {
+      value: 'secretory',
+      label: 'Secretory',
+    },
+    {
+      value: 'other',
+      label: 'Other',
+    },
+  ];
+
+  const currencies = [
+    {
+      value: 'USD',
+      label: '$',
+    },
+    {
+      value: 'EUR',
+      label: '€',
+    },
+    {
+      value: 'BTC',
+      label: '฿',
+    },
+    {
+      value: 'JPY',
+      label: '¥',
+    },
+  ];
 class NominationPayments extends React.Component {
     state = {
       open: true,
@@ -80,16 +116,24 @@ class NominationPayments extends React.Component {
     // setPaymentStatus();
 
     // const { handleSubmit } = this.props;
-     
-
-    
+       
 }
+
+// handleChanged = name => event => {
+//     const {handleChange} = this.props;
+
+//     this.setState({
+//       [name]: event.target.value,
+//     });
+//     {handleChange('depositeDate')}
+//   };
 
       
 
 
     
     render() {
+        debugger;
         const {classes, depositor,handleChange,nominationPayments} = this.props;
 
         return (
@@ -139,6 +183,51 @@ class NominationPayments extends React.Component {
                             }}
                             margin="normal"
                         />
+                    </Grid>
+                    <Grid item lg={3}>
+                         {/* <TextField
+                            id="standard-select-currency"
+                            select
+                            label="Designation"
+                            className={classes.textField}
+                            value={nominationPayments.designation}
+                             onChange={this.handleChanged}
+                            SelectProps={{
+                                MenuProps: {
+                                className: classes.menu,
+                                },
+                            }}
+                            // helperText="Please select your currency"
+                            margin="normal"
+                            >
+                            {designation.map(option => (
+                                <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                                </MenuItem>
+                            ))}
+                            </TextField>    */}
+                            {/* <TextField
+                            id="standard-select-designation"
+                            select
+                            label="Select"
+                            className={classes.textField}
+                            value={this.state.designation}
+                            onChange={this.handleChanged('designation')}
+                            SelectProps={{
+                                MenuProps: {
+                                className: classes.menu,
+                                },
+                            }}
+                            helperText="Please select your designation"
+                            margin="normal"
+                            >
+                            {designation.map(option => (
+                                <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                                </MenuItem>
+                            ))}
+                            </TextField>     */}
+                            
                     </Grid>
                     {/* <Grid item lg={3}>
                          <TextField

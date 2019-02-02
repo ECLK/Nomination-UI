@@ -11,6 +11,8 @@ import NominationStep2 from '../NominationStep2';
 import NominationStep3 from '../NominationStep3/NominationStep3';
 import { postNominationPayments } from '../../modules/nomination/state/NominationAction';
 import { connect } from 'react-redux';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 import axios from "axios";
 
 
@@ -21,7 +23,8 @@ const styles = theme => ({
   root: {
     width: '90%',
     marginTop:10,
-
+    padding: 24,
+    paddingLeft: 26,
   },
   button: {
     marginRight: theme.spacing.unit,
@@ -33,6 +36,12 @@ const styles = theme => ({
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit,
   },
+  pageContent: {
+    padding: 24,
+},
+paperContent:{
+  padding: 24,
+}
 });
 
 function getSteps() {
@@ -67,6 +76,7 @@ class NominationForm extends React.Component {
             [name]:event.target.value,
     });   
   };
+
 
   getStepContent(step,props) {
     const { nominationPayments, customProps } = this.props;
@@ -160,6 +170,8 @@ class NominationForm extends React.Component {
     
     return (
       <div className={classes.root}>
+      <Paper className={classes.pageContent} elevation={1}>
+
         <Stepper nonLinear activeStep={activeStep}>
           {steps.map((label, index) => {
             return (
@@ -184,7 +196,13 @@ class NominationForm extends React.Component {
             </div>
           ) : (
             <div>
-              <Typography className={classes.instructions}>{this.getStepContent(activeStep,this.props)}</Typography>
+              <Grid className={classes.paperContent} container spacing={24}>
+                                            <Grid item xs={12}>
+                                                {/* {getStepContent(activeStep)} */}
+                                                {this.getStepContent(activeStep,this.props)}
+                                            </Grid>
+                                        </Grid>
+              {/* <Typography className={classes.instructions}>{this.getStepContent(activeStep,this.props)}</Typography> */}
               <div>
                 <Button
                   disabled={activeStep === 0}
@@ -215,6 +233,7 @@ class NominationForm extends React.Component {
             </div>
           )}
         </div>
+        </Paper>
       </div>
     );
   }

@@ -5,9 +5,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import MainMenu from 'components/MainMenu/MainMenu';
 import NominationForm from 'components/NominationForm';
 
-
-import axios from 'axios';
-
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -89,18 +86,10 @@ class Dashboard extends React.Component {
         this.state = {
             nominationId:''
         }
-        
-        // this.setState({ nominationId: this.props.location.referer.id });
-
-          console.log(this.props.location.state.id);
-       
       }
     
     componentDidMount() {
-        // debugger;
-            // const { postNominationPayments, candidatePayments } = this.props;
-            // postNominationPayments();
-    
+      
     }
 
     handleDrawerOpen = () => {
@@ -113,7 +102,7 @@ class Dashboard extends React.Component {
 
     render() {
         
-        const { classes, postNominationPayments } = this.props;
+        const { classes } = this.props;
 
         return (
             <div className={classes.root}>

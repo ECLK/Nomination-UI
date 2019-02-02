@@ -53,7 +53,7 @@ const styles = theme => ({
     },
     FormGroup: {
         margin: theme.spacing.unit,
-        width: theme.spacing.unit * 150,
+        // width: theme.spacing.unit * 150,
         // height: theme.spacing.unit,
 
     },
