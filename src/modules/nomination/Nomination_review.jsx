@@ -146,10 +146,10 @@ const styles = theme => ({
     margin: theme.spacing.unit,
   },
   green_button: {
-    color: "green",
+    color: "darkgreen",
   },
   red_button: {
-    color: "red",
+    color: "firebrick",
   },
 
 });
