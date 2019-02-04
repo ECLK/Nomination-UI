@@ -5,7 +5,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AdminMenu from 'components/AdminMenu/AdminMenu';
 import Paper from '@material-ui/core/Paper';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import {loadElectionsAndPayments, togglePayment} from './state/PaymentAction'
+import {loadPayments, togglePayment} from './state/PaymentAction'
+import {loadElections} from '../election/state/ElectionAction'
 import Typography from '@material-ui/core/Typography'
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
@@ -55,13 +56,12 @@ class PaymentReview extends React.Component {
     state = {
         open: true,
         expandedPanelIndex: -1,
-        payments: []
     };
 
 
     componentDidMount() {
-        const {loadElectionsAndPayments} = this.props;
-        loadElectionsAndPayments();
+        const {loadElections} = this.props;
+        loadElections();
     }
 
     togglePanel = panelIndex => (event, didExpand) => {
@@ -72,8 +72,28 @@ class PaymentReview extends React.Component {
 
     handlePaymentToggle = paymentId => event => {
         const {togglePayment} = this.props;
-        togglePayment(paymentId);
+        togglePayment(this.state.selectedElection, paymentId);
     };
+
+    handleChangeElection = event => {
+        this.selectElection(event.target.value);
+    };
+
+    selectElection = (selectedElection) => {
+        this.setState({selectedElection});
+        const {loadPayments} = this.props;
+        loadPayments(selectedElection);
+    };
+
+    componentWillReceiveProps(nextProps) {
+        const elections = nextProps.elections;
+        if (this.props.elections !== elections) {
+            if (!this.state.selectedElection && elections.length > 0) { // TODO : add || find(selected, elections) < 0
+                this.selectElection(elections[0].election_id);
+            }
+            console.log("kkk");
+        }
+    }
 
     static blockPropagation(event) {
         event.stopPropagation();
@@ -83,33 +103,22 @@ class PaymentReview extends React.Component {
     render() {
         const {classes, payments, electionsLoading, elections, paymentState} = this.props;
         const {expandedPanelIndex} = this.state;
-
-        // const elections = [{
-        //     "election_id": "32d250c8-b6b0-4aa6-9b14-4817dbb268d9",
-        //     "election_name": "2019 Parliamentary",
-        // }, {
-        //     "election_id": "a93b50c8-b6b0-4aa6-9b14-4817dbb268d9",
-        //     "election_name": "2020 Provincial",
-        // }];
-
         let selectedElection = this.state.selectedElection;
-        if (!selectedElection) {
-            selectedElection = elections.length > 0 && elections[0].election_id;
-        }
+        const selectedPayments = payments[selectedElection] || [];
 
         const menuItems = elections.map(election => (
-            <MenuItem value={election.election_id}>{election.election_name}</MenuItem>));
+            <MenuItem key={election.election_id} value={election.election_id}>{election.election_name}</MenuItem>));
 
         let paymentLoadingElement = null;
         paymentLoadingElement = (<div>
             {paymentState === REQUEST_STATE.LOADING ? <LinearProgress/> : <div style={{height: 4}}></div>}
-            {payments.length === 0 &&
+            {selectedPayments.length === 0 &&
             <Paper className={classes.loadingPanel}/>}
         </div>);
 
 
-        const paymentElements = payments.map((payment, i) => (
-            <ExpansionPanel expanded={expandedPanelIndex === i} onChange={this.togglePanel(i)}>
+        const paymentElements = selectedPayments.map((payment, i) => (
+            <ExpansionPanel key={payment.payment_id} expanded={expandedPanelIndex === i} onChange={this.togglePanel(i)}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
                     <Typography className={classes.heading}>{payment.depositor}</Typography>
 
@@ -214,7 +223,8 @@ const mapStateToProps = ({Payment, Election}) => {
 
 const mapActionsToProps = {
     togglePayment,
-    loadElectionsAndPayments,
+    loadElections,
+    loadPayments
 
 };
 
