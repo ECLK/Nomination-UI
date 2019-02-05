@@ -25,6 +25,10 @@ const styles = theme => ({
     },
     topBottomSpace: {
         marginBottom: 15
+    },
+    root: {
+        paddingLeft: 6,
+        paddingRight:10
     }
 });
 

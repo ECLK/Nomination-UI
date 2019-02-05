@@ -7,3 +7,8 @@ export const APPROVAL_STATE = {
   REJECTED: 'rejected',
   PENDING: 'pending',
 };
+export const AUTH_FAILED = "AUTH_FAILED";
+export const ERROR = "ERROR";
+
+
+

@@ -197,6 +197,7 @@ class NominationReview extends React.Component {
     let selectedElection = this.state.selectedElection;
     if (!selectedElection) {
       selectedElection = elections.length > 0 && elections[0].election_id;
+
     }
 
     const CandidateRow = (props) => {
