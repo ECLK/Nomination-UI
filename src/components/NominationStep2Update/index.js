@@ -87,6 +87,10 @@ const designation = [
 class NominationPayments extends React.Component {
     state = {
       open: true,
+      depositor:'',
+      depositAmount:'',
+      depositeDate:'',
+      
    
     //   candidateCount:localStorage.getItem('candidate')
 
@@ -96,26 +100,26 @@ class NominationPayments extends React.Component {
     
 
     componentDidMount() {
-    //     console.log(this)
-    //     var candidateCount = localStorage.getItem('candidate');
-    //   axios.get(`nominations/135183e2-a0ca-44a0-9577-0d2b16c3217f/payments`)
-    //     .then(res => {
-    //       const payments = res.data;
-    //       const depositor=res.data.depositor;
-    //       const depositAmount=res.data.depositAmount;
-    //       const depositeDate=res.data.depositeDate;
-    //       const paymentStatus=res.data.paymentStatus;
+        const { customProps } = this.props;
+
+        var candidateCount = localStorage.getItem('candidate');
+      axios.get(`nominations/${customProps}/payments`)
+        .then(res => {
+          const payments = res.data;
+          const depositor=res.data.depositor;
+          const depositAmount=res.data.depositAmount;
+          const depositeDate=res.data.depositeDate;
+          const paymentStatus=res.data.paymentStatus;
 
 
-    //       console.log("payments",payments);
-    //       this.setState({ depositor });
-    //       this.setState({ depositAmount });
-    //       this.setState({ depositeDate });
-    //       this.setState({ paymentStatus });
-    //     })
+          console.log("payments",payments);
+          this.setState({ depositor });
+          this.setState({ depositAmount });
+          this.setState({ depositeDate });
+          this.setState({ paymentStatus });
+        })
     // setPaymentStatus();
 
-    // const { handleSubmit } = this.props;
        
 }
 
@@ -141,8 +145,9 @@ class NominationPayments extends React.Component {
                     <Grid item lg={3}>
                     <TextField
                             label="Depositor Name"
-                            value={nominationPayments.depositor}
+                            value={this.state.depositor}
                             onChange={handleChange("depositor")}
+                            onChange={e => this.setState({ depositor: e.target.value })}
                         />  
                     </Grid>
                     <Grid item lg={3}>
@@ -150,8 +155,9 @@ class NominationPayments extends React.Component {
                             id="standard-name"
                             label="Deposited Amount"
                             className={classes.textField}
-                            value={nominationPayments.amount}
+                            value={this.state.depositAmount}
                             onChange={handleChange('depositAmount')}
+                            onChange={e => this.setState({ depositAmount: e.target.value })}
                             margin="normal"
                         />
                     </Grid>
@@ -173,9 +179,10 @@ class NominationPayments extends React.Component {
                             id="date"
                             label="Diposited Date"
                             type="date"
-                            value={nominationPayments.depositeDate}
+                            value={this.state.depositeDate}
                             // defaultValue="2017-05-24"
                             onChange={handleChange('depositeDate')}
+                            onChange={e => this.setState({ depositeDate: e.target.value })}
                             className={classes.textField}
                             InputLabelProps={{
                                 shrink: true,

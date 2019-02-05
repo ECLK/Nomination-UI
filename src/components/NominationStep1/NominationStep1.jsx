@@ -4,6 +4,18 @@ import axios from 'axios';
 import MUIDataTable from "mui-datatables";
 import CustomToolbar from "./CustomToolbar";
 import Button from '@material-ui/core/Button';
+import Switch from "@material-ui/core/Switch";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import PropTypes from "prop-types";
+import AddIcon from '@material-ui/icons/Add';
+
+
+
+
+
+
+
 
 
 
@@ -26,6 +38,12 @@ const styles = theme => ({
 
 
 class CustomizedTable extends React.Component {
+
+    static propTypes = {
+        value: PropTypes.string.isRequired,
+        index: PropTypes.number.isRequired,
+        change: PropTypes.func.isRequired
+      };
 
     constructor(props) {
         super(props);
@@ -125,22 +143,33 @@ class CustomizedTable extends React.Component {
                     display: true
                 }
             },
-            // {
-            //     name: "Location",
-            //     options: {
-            //       filter: true,
-            //       customBodyRender: (value, tableMeta, updateValue) => {
-            //         return (
-            //           'test'
-            //         );
-            //       },         
-            //     }
-            //   },
+            {
+                name: "Action",
+                options: {
+                  filter: true,
+                  customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <CustomToolbar
+                value={value}
+                index={tableMeta.rowData[0]}
+                change={event => updateValue(event)}
+                customProps={customProps}
+                modalType="Update"
+
+              />
+                         
+                    );
+                  },         
+                }
+            },
+           
            
 
         ]
+        // rows = rows.concat('true');
 
         const outputData = rows.map(Object.values);
+
         console.log("output", outputData);
         const { customProps } = this.props;
 
@@ -150,7 +179,7 @@ class CustomizedTable extends React.Component {
             responsive: "scroll",
             customToolbar: () => {
                 return (
-                    <CustomToolbar customProps={customProps} />
+                    <CustomToolbar customProps={customProps} modalType="Add" />
                 );
             }
         };
