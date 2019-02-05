@@ -74,14 +74,14 @@ class TextFields extends React.Component {
           const depositor=res.data.depositor;
           const depositAmount=res.data.depositAmount;
           const depositeDate=res.data.depositeDate;
-          const paymentStatus=res.data.paymentStatus;
+        //   const paymentStatus=res.data.paymentStatus;
 
 
           console.log("payments",payments);
           this.setState({ depositor });
           this.setState({ depositAmount });
           this.setState({ depositeDate });
-          this.setState({ paymentStatus });
+        //   this.setState({ paymentStatus });
 
 
         })

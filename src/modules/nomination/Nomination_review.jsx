@@ -88,9 +88,8 @@ class Dashboard extends React.Component {
 
 
     componentDidMount() {
-        const { getNominations, all_nominations } = this.props;
+        const { getNominations,  all_nominations } = this.props;
         getNominations();
-
         console.log(all_nominations)
     }
 
@@ -124,7 +123,7 @@ const mapStateToProps = ({ Nomination }) => {
 };
 
 const mapActionsToProps = {
-    getNominations
+    getNominations, 
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Dashboard));

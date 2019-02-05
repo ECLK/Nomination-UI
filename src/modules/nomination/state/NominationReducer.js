@@ -1,28 +1,42 @@
 import {
     GET_NOMINATIONS,
-    POST_NOMINATION_PAYMENTS
+    POST_NOMINATION_PAYMENTS,
+    ERROR,
+    AUTH_FAILED
 } from "./NominationTypes";
 
 const initialState = {
     //define the common states only
-    all_nominations: [3],
-    candidatePayments:[]
+    all_nominations: [],
+    nominationPayments:{
+    },
+    
 };
 
 export default function reducer(state = initialState, action) {
+    // debugger;
     switch (action.type) {
         case GET_NOMINATIONS:
-            debugger;
+        return {
+            ...state,
+            all_nominations: action.payload
+        };
+        case POST_NOMINATION_PAYMENTS:
             return {
                 ...state,
-                all_nominations: action.payload
+                nominationPayments: action.payload
             };
-            case POST_NOMINATION_PAYMENTS:
+        case AUTH_FAILED:
             return {
                 ...state,
-                candidatePayments: action.payload
-            };
-
+                nominationPayments: action.payload
+            };  
+        case ERROR:
+            return {
+                ...state,
+                nominationPayments: action.payload
+            };  
+      
 
     }
     return state;
