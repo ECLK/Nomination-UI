@@ -7,6 +7,9 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import CandidateProfile from'../CandidateProfile';
 import CandidateFileUpload from'../CandidateFileUpload/CandidateFileUpload';
+import CandidateProfileUpdate from'../CandidateProfileUpdate';
+
+
 
 
 function TabContainer(props) {
@@ -39,29 +42,56 @@ class ScrollableTabsButtonAuto extends React.Component {
     };
 
     render() {
-        const { classes , customProps ,onCloseModal } = this.props;
+        const { classes , customProps ,onCloseModal,index } = this.props;
         const { value } = this.state;
-        return (
-            <div className={classes.root}>
-                <AppBar position="static" >
-                    <Tabs
-                        value={value}
-                        onChange={this.handleChange}
-                        // indicatorColor="primary"
-                        // textColor="primary"
-                        scrollable
-                        scrollButtons="auto"
-                    >
-                        <Tab label="Candidate Profile" />
-                        <Tab label="Upload" />
-
-                    </Tabs>
-                </AppBar>
-                {value === 0 && <TabContainer><CandidateProfile onCloseModal={onCloseModal} customProps={customProps}></CandidateProfile></TabContainer>}
-                {value === 1 && <TabContainer><CandidateFileUpload></CandidateFileUpload></TabContainer>}
-
-            </div>
-        );
+        if(index){
+            return (
+                <div className={classes.root}>
+                    <AppBar position="static" >
+                        <Tabs
+                            value={value}
+                            onChange={this.handleChange}
+                            // indicatorColor="primary"
+                            // textColor="primary"
+                            scrollable
+                            scrollButtons="auto"
+                        >
+                            <Tab label="Candidate Profile" />
+                            <Tab label="Upload" />
+    
+                        </Tabs>
+                    </AppBar>
+                    {value === 0 && <TabContainer><CandidateProfileUpdate onCloseModal={onCloseModal} customProps={customProps} index={index}></CandidateProfileUpdate></TabContainer>}
+                    {value === 1 && <TabContainer><CandidateFileUpload></CandidateFileUpload></TabContainer>}
+                    
+    
+                </div>
+            );
+        }else{
+            return (
+                <div className={classes.root}>
+                    <AppBar position="static" >
+                        <Tabs
+                            value={value}
+                            onChange={this.handleChange}
+                            // indicatorColor="primary"
+                            // textColor="primary"
+                            scrollable
+                            scrollButtons="auto"
+                        >
+                            <Tab label="Candidate Profile" />
+                            <Tab label="Upload" />
+    
+                        </Tabs>
+                    </AppBar>
+                    {value === 0 && <TabContainer><CandidateProfile onCloseModal={onCloseModal} customProps={customProps}></CandidateProfile></TabContainer>}
+                    {value === 1 && <TabContainer><CandidateFileUpload></CandidateFileUpload></TabContainer>}
+                    
+    
+                </div>
+            );
+        }
+        
     }
 }
 

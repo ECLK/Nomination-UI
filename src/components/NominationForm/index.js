@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import NominationStep1 from '../NominationStep1/NominationStep1';
 import NominationStep2 from '../NominationStep2';
 import NominationStep3 from '../NominationStep3/NominationStep3';
+import NominationStep2Update from '../NominationStep2Update';
 import { postNominationPayments } from '../../modules/nomination/state/NominationAction';
 import { connect } from 'react-redux';
 import Paper from '@material-ui/core/Paper';
@@ -84,7 +85,11 @@ class NominationForm extends React.Component {
       case 0:
         return <NominationStep1 customProps={customProps}/>;
       case 1:
+      if(customProps){
+        return <NominationStep2Update customProps={customProps} nominationPayments={nominationPayments} handleChange={this.handleChange} />;
+      }else{
         return <NominationStep2 nominationPayments={nominationPayments} handleChange={this.handleChange} />;
+      }
       case 2:
         return <NominationStep3 />;
       default:

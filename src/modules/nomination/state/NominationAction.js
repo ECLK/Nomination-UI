@@ -88,21 +88,21 @@ export const getNominations = function getNominations() {
   };
 }
 
-
-  return function (dispatch) {
-    const response = axios
-      .post(
-        `${API_BASE_URL}/nominations/payments`,
-        {body}
-      )
-      .then(response => {
-        dispatch({
-          type: POST_NOMINATION_PAYMENTS,
-          payload: response.data
-        })
-      });
-  };
-};
+// export const getNominations = function getNominations() {
+//   return function (dispatch) {
+//     const response = axios
+//       .post(
+//         `${API_BASE_URL}/nominations/payments`,
+//         {body}
+//       )
+//       .then(response => {
+//         dispatch({
+//           type: POST_NOMINATION_PAYMENTS,
+//           payload: response.data
+//         })
+//       });
+//   };
+// }
 
 export const onChangeApproval = (id, status) => {
   return {
