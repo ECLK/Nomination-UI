@@ -1,5 +1,12 @@
 export const GET_NOMINATIONS = "GET_NOMINATIONS";
 export const POST_NOMINATION_PAYMENTS = "POST_NOMINATION_PAYMENTS";
+export const NOMINATIONS_LOADED = "NOMINATIONS_LOADED";
+export const ON_NOMINATION_APPROVAL_CHANGE = "ON_NOMINATION_APPROVAL_CHANGE";
+export const APPROVAL_STATE = {
+  APPROVED: 'approved',
+  REJECTED: 'rejected',
+  PENDING: 'pending',
+};
 export const AUTH_FAILED = "AUTH_FAILED";
 export const ERROR = "ERROR";
 
