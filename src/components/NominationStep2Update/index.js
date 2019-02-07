@@ -6,11 +6,16 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
 import "react-datepicker/dist/react-datepicker.css";
+import Select from '@material-ui/core/Select';
+
+
+
 
 const styles = theme => ({
     container: {
         display: 'flex',
         flexWrap: 'wrap',
+        paddingLeft: 25
     },
     textField: {
         marginLeft: theme.spacing.unit,
@@ -45,24 +50,60 @@ const paymentStatus = [
       label: 'REJECTED',
     },
   ];
-class TextFields extends React.Component {
+
+const designation = [
+    {
+      value: 'teamLeader',
+      label: 'Team Leader',
+    },
+    {
+      value: 'secretory',
+      label: 'Secretory',
+    },
+    {
+      value: 'other',
+      label: 'Other',
+    },
+  ];
+
+  const currencies = [
+    {
+      value: 'USD',
+      label: '$',
+    },
+    {
+      value: 'EUR',
+      label: '€',
+    },
+    {
+      value: 'BTC',
+      label: '฿',
+    },
+    {
+      value: 'JPY',
+      label: '¥',
+    },
+  ];
+class NominationPayments extends React.Component {
     state = {
       open: true,
-      payments: {
-          
-      },
-      depositor:'test',
-      depositAmount:'test',
-      depositeDate:'test',
-      paymentStatus:'test',
+      depositor:'',
+      depositAmount:'',
+      depositeDate:'',
+      
+   
+    //   candidateCount:localStorage.getItem('candidate')
 
     };
+    
 
     
 
     componentDidMount() {
+        const { customProps } = this.props;
+
         var candidateCount = localStorage.getItem('candidate');
-      axios.get(`nominations/135183e2-a0ca-44a0-9577-0d2b16c3217f/payments`)
+      axios.get(`nominations/${customProps}/payments`)
         .then(res => {
           const payments = res.data;
           const depositor=res.data.depositor;
@@ -75,21 +116,26 @@ class TextFields extends React.Component {
           this.setState({ depositeDate });
           this.setState({ paymentStatus });
         })
-    }
-    handleChange = (name) => event => {
-        console.log(event.target.value)
-        console.log(name);
-        this.setState({
-            // payments:{
-                [name]:event.target.value,
-            // } 
-        });
-        this.props.handleChange(this.state);
-    };
+    // setPaymentStatus();
+
+       
+}
+
+// handleChanged = name => event => {
+//     const {handleChange} = this.props;
+
+//     this.setState({
+//       [name]: event.target.value,
+//     });
+//     {handleChange('depositeDate')}
+//   };
+
+      
+
+
     
     render() {
-        // debugger;
-        const {classes, handleChange} = this.props;
+        const {classes, depositor,handleChange,nominationPayments} = this.props;
 
         return (
             <form className={classes.container} noValidate autoComplete="off">
@@ -98,7 +144,8 @@ class TextFields extends React.Component {
                     <TextField
                             label="Depositor Name"
                             value={this.state.depositor}
-                            onChange={this.handleChange("depositor")}
+                            onChange={handleChange("depositor")}
+                            onChange={e => this.setState({ depositor: e.target.value })}
                         />  
                     </Grid>
                     <Grid item lg={3}>
@@ -107,7 +154,8 @@ class TextFields extends React.Component {
                             label="Deposited Amount"
                             className={classes.textField}
                             value={this.state.depositAmount}
-                            onChange={this.handleChange('depositAmount')}
+                            onChange={handleChange('depositAmount')}
+                            onChange={e => this.setState({ depositAmount: e.target.value })}
                             margin="normal"
                         />
                     </Grid>
@@ -117,7 +165,7 @@ class TextFields extends React.Component {
                             label="Candidate Count"
                             className={classes.textField}
                             value={localStorage.getItem('candidate')}
-                            onChange={this.handleChange('candidateCount')}
+                            onChange={handleChange('candidateCount')}
                             margin="normal"
                         />
                     </Grid>
@@ -131,6 +179,8 @@ class TextFields extends React.Component {
                             type="date"
                             value={this.state.depositeDate}
                             // defaultValue="2017-05-24"
+                            onChange={handleChange('depositeDate')}
+                            onChange={e => this.setState({ depositeDate: e.target.value })}
                             className={classes.textField}
                             InputLabelProps={{
                                 shrink: true,
@@ -139,13 +189,58 @@ class TextFields extends React.Component {
                         />
                     </Grid>
                     <Grid item lg={3}>
+                         {/* <TextField
+                            id="standard-select-currency"
+                            select
+                            label="Designation"
+                            className={classes.textField}
+                            value={nominationPayments.designation}
+                             onChange={this.handleChanged}
+                            SelectProps={{
+                                MenuProps: {
+                                className: classes.menu,
+                                },
+                            }}
+                            // helperText="Please select your currency"
+                            margin="normal"
+                            >
+                            {designation.map(option => (
+                                <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                                </MenuItem>
+                            ))}
+                            </TextField>    */}
+                            {/* <TextField
+                            id="standard-select-designation"
+                            select
+                            label="Select"
+                            className={classes.textField}
+                            value={this.state.designation}
+                            onChange={this.handleChanged('designation')}
+                            SelectProps={{
+                                MenuProps: {
+                                className: classes.menu,
+                                },
+                            }}
+                            helperText="Please select your designation"
+                            margin="normal"
+                            >
+                            {designation.map(option => (
+                                <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                                </MenuItem>
+                            ))}
+                            </TextField>     */}
+                            
+                    </Grid>
+                    {/* <Grid item lg={3}>
                          <TextField
                             id="standard-select-currency"
                             select
                             label="Select"
                             className={classes.textField}
-                            value={this.state.paymentStatus}
-                            onChange={this.handleChange('paymentStatus')}
+                            value={nominationPayments.paymentStatus}
+                            onChange={handleChange('paymentStatus')}
                             SelectProps={{
                                 MenuProps: {
                                 className: classes.menu,
@@ -160,7 +255,7 @@ class TextFields extends React.Component {
                                 </MenuItem>
                             ))}
                             </TextField>       
-                    </Grid>
+                    </Grid> */}
                 </Grid>
                
 
@@ -180,8 +275,10 @@ class TextFields extends React.Component {
     }
 }
 
-TextFields.propTypes = {
+NominationPayments.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TextFields);
+export default withStyles(styles)(NominationPayments);
+
+

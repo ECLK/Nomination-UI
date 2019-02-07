@@ -1,6 +1,5 @@
-import {
-    POST_ACTIVE_ELECTION_DATA
-} from "./ElectionTypes";
+import {ELECTION_LOAD_SUCCESS, ELECTIONS_LOADING, POST_ACTIVE_ELECTION_DATA} from "./ElectionTypes";
+import {REQUEST_STATE} from "../../../lib/request_redux_state";
 
 const initialState = {
     //define the common states only
@@ -11,7 +10,8 @@ const initialState = {
     depositAmount:'Amount',
     WeightagePrefarence:'%',
     WeightageVote:'%',
-
+    requestState: REQUEST_STATE.NOT_STARTED,
+    elections:[]
 };
 
 export default function reducer(state = initialState, action) {
@@ -21,8 +21,17 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 modalOpen: action.payload
             };
-
-
+        case ELECTIONS_LOADING:
+            return {
+                ...state,
+                requestState: REQUEST_STATE.LOADING
+            };
+        case ELECTION_LOAD_SUCCESS:
+            return {
+                ...state,
+                elections: action.payload,
+                requestState: REQUEST_STATE.SUCCESS
+            };
     }
     return state;
 }
