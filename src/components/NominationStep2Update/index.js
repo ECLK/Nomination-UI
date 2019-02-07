@@ -111,8 +111,6 @@ class NominationPayments extends React.Component {
           const depositeDate=res.data.depositeDate;
           const paymentStatus=res.data.paymentStatus;
 
-
-          console.log("payments",payments);
           this.setState({ depositor });
           this.setState({ depositAmount });
           this.setState({ depositeDate });
