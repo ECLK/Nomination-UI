@@ -61,6 +61,15 @@ export default class Protected extends Component {
     render() {
         return (
             /* app level routers needs to handle here*/
+
+            /* 
+            Added dummy login
+            
+            For user routes:- ["username": "user"]
+            For admin routes:- ["username": "admin"]
+            PS: anything on password field.
+            
+            */
             <div>
                 <Switch>
                     <Redirect exact from='/' to='/home' />
@@ -71,11 +80,11 @@ export default class Protected extends Component {
                     <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login} />
                     
                     <Redirect exact from='/admin' to='/admin/home' />
-                    <Route path='/admin/home' component={Admin_home} />
-                    <Route path='/admin/call-election' component={Admin_CallElection} />
-                    <Route path='/admin/candidate-config' component={Admin_CandidateConfig} />
+                    <Route path='/admin/home' component={(this.state.isLoggedIn) ? Admin_home : Login} />
+                    <Route path='/admin/call-election' component={(this.state.isLoggedIn) ? Admin_CallElection : Login} />
+                    <Route path='/admin/candidate-config' component={(this.state.isLoggedIn) ? Admin_CandidateConfig : Login}/>
 
-                    <Route path='/admin/create-election' component={CreateElection} />
+                    <Route path='/admin/create-election' component={(this.state.isLoggedIn) ? CreateElection : Login} />
 
                     <Route path='/admin/nominationProcess-config' component={(this.state.isLoggedIn) ? Admin_NominationProcessConfig : Login} />
                     <Route path='/admin/active-election' component={(this.state.isLoggedIn) ? ActiveElectionForm : Login} />
@@ -85,7 +94,6 @@ export default class Protected extends Component {
                     <Route path='/admin/payment-review' component={(this.state.isLoggedIn) ? PaymentReview : Login} />
                     <Route path='/admin/objection-review' component={(this.state.isLoggedIn) ? ObjectionReview : Login} />
                     <Route path='/admin/election-review' component={(this.state.isLoggedIn) ? ElectionReview : Login} />
-
 
 
                     {/* <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login}/>
