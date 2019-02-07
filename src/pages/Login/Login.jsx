@@ -70,10 +70,8 @@ class Login extends React.Component {
         if (username.length > 0){
             if (username.includes("user")) {
                 sessionStorage.setItem('role', 'user');
-                    
             } else if (username.includes("admin")) {
                 sessionStorage.setItem('role', 'admin');
-                this.props.history.push('/admin');
             }
         }
 
