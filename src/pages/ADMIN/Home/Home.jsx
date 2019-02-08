@@ -4,7 +4,7 @@ import {withStyles} from '@material-ui/core/styles';
 
 import AdminMenu from 'components/AdminMenu/AdminMenu';
 import CreateElection from 'components/CreateElection/CreateElection';
-import CallElection from 'components/CallElection/CallElection';
+import CallElection from '../../../modules/election/CallElection';
 import ElectionModule from 'components/ElectionModule/ElectionModule';
 import ActiveElection from 'components/ActiveElection/ActiveElection.jsx';
 import Typography from '@material-ui/core/Typography';
