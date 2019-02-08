@@ -9,6 +9,8 @@ import CardActions from '@material-ui/core/CardActions';//--
 import CardContent from '@material-ui/core/CardContent';//--
 import Button from '@material-ui/core/Button';//--
 import Typography from '@material-ui/core/Typography';//--
+import {postElection } from './state/ElectionAction';
+import { connect } from 'react-redux';
 
 const styles = theme => ({
     container: {
@@ -32,20 +34,32 @@ const styles = theme => ({
 
 const ElectionModule = [
     {
-        value: 'Parliamentary',
+        value: '455cd89e-269b-4b69-96ce-8d7c7bf44ac2',
         label: 'Parliamentary',
     },
     {
-        value: 'Provincial',
+        value: '7404a229-6274-43d0-b3c5-740c3c2e1256',
+        label: 'Presidential',
+    },
+    {
+        value: '27757873-ed40-49f7-947b-48b432a1b062',
         label: 'Provincial',
     },
 
 ];
 
-class FilledTextFields extends React.Component {
+class CallElection extends React.Component {
     state = {
-        electionName: 'Parliamentary 2018',
-        ElectionModule: 'Parliamentary',
+        electionName: '',
+        ElectionModule: '',
+    };
+
+    handleSubmit = (e) => {
+        const {postElection} = this.props;
+      
+        e.preventDefault();
+        postElection(this.state);
+       
     };
 
     handleChange = name => event => {
@@ -58,12 +72,12 @@ class FilledTextFields extends React.Component {
         const {classes} = this.props;
 
         return (
+                    <form className={classes.container} onSubmit={this.handleSubmit} noValidate autoComplete="off">
             <Card className={classes.card}>
                 <CardContent>
                     <Typography variant="h5" component="h2">
                         Call Election
                     </Typography>
-                    <form className={classes.container} noValidate autoComplete="off">
                         <TextField
                             id="filled-name"
                             label="Election Name "
@@ -100,22 +114,32 @@ class FilledTextFields extends React.Component {
                             ))}
                         </TextField>
 
-                    </form>
                     <Typography className={classes.textCallElection} component="p">
                         Election ID :EL2018111112
 
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <Button size="small">Next</Button>
+                    <Button type='submit' size="small">Next</Button>
                 </CardActions>
             </Card>
+                    </form>
         );
     }
 }
 
-FilledTextFields.propTypes = {
+CallElection.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(FilledTextFields);
+
+const mapStateToProps = ({Election}) => {
+    const {postElection} = Election;    
+    return {postElection};
+  };
+  
+  const mapActionsToProps = {
+    postElection,
+  };
+  
+  export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(CallElection));

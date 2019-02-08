@@ -1,4 +1,4 @@
-import {ELECTION_LOAD_SUCCESS, ELECTIONS_LOADING, POST_ACTIVE_ELECTION_DATA} from "./ElectionTypes";
+import {ELECTION_LOAD_SUCCESS, ELECTIONS_LOADING, POST_ACTIVE_ELECTION_DATA,POST_ELECTION} from "./ElectionTypes";
 import {API_BASE_URL} from "../../../config.js";
 import axios from "axios";
 
@@ -59,6 +59,47 @@ export function loadElections() {
 
     }
 }
+
+export const setElectionData = (val) => {
+    return {
+        type: POST_ELECTION,
+        payload: val
+    }
+}
+export function postElection(elections) {
+    return function (dispatch) {
+
+        let electionData = {
+            name: elections.electionName,
+            module_id: elections.ElectionModule,
+            created_by: '234234',
+            created_at: '234234',
+            updated_at: '234234',
+        };
+      
+       
+      const response = axios
+      .post(
+        `${API_BASE_URL}/activeElections`,
+            {...electionData}
+      )
+      .then(response => {
+        console.log(response.data);
+
+       let res = {
+        electionName: response.data.name,
+        ElectionModule: response.data.module_id,
+        created_by: response.data.created_by,
+        created_at: response.data.created_at,
+        updated_at: response.data.updated_at
+       }
+
+         dispatch(setElectionData(res));
+      }).catch(err => {
+            console.log(err)
+      });
+    };
+  }
 
 
 

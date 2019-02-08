@@ -1,4 +1,4 @@
-import {ELECTION_LOAD_SUCCESS, ELECTIONS_LOADING, POST_ACTIVE_ELECTION_DATA} from "./ElectionTypes";
+import {ELECTION_LOAD_SUCCESS, ELECTIONS_LOADING, POST_ACTIVE_ELECTION_DATA,POST_ELECTION} from "./ElectionTypes";
 import {REQUEST_STATE} from "../../../lib/request_redux_state";
 
 const initialState = {
@@ -11,7 +11,9 @@ const initialState = {
     WeightagePrefarence:'%',
     WeightageVote:'%',
     requestState: REQUEST_STATE.NOT_STARTED,
-    elections:[]
+    elections:[],
+    electionData:[]
+
 };
 
 export default function reducer(state = initialState, action) {
@@ -31,6 +33,11 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 elections: action.payload,
                 requestState: REQUEST_STATE.SUCCESS
+            };
+        case POST_ELECTION:
+            return {
+              ...state,
+              electionData: action.payload
             };
     }
     return state;
