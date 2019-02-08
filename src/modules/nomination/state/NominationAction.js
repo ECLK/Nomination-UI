@@ -122,13 +122,13 @@ export const onChangeApproval = (id, status) => {
   }
 };
 
-export const handleChangePayment = (paymentState) => {
-  debugger;
-  return {
-    type: HANDLE_CHANGE_PAYMENT,
-    payload: paymentState,
-  }
-};
+// export const handleChangePayment = (paymentState) => {
+//   debugger;
+//   return {
+//     type: HANDLE_CHANGE_PAYMENT,
+//     payload: paymentState,
+//   }
+// };
 
 
 export const handleChangePayment = (name) => event => {
