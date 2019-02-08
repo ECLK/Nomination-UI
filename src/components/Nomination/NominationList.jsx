@@ -40,7 +40,6 @@ const styles = theme => ({
 		state = {
 			expanded: null,
 			division: [],
-			// goToNomination:false,
 			nominationId:'dummyId'
 		};
 
@@ -54,23 +53,19 @@ const styles = theme => ({
 			axios.get(`elections/${sessionStorage.getItem('election_id')}/teams/5eedb70e-a4da-48e0-b971-e06cd19ecc70/divisions`)
 				.then(res => {
 					const division = res.data;
+					console.log("division",res.data);
 					this.setState({ division });
 			});
 	}
 
 	redirectToTarget = (id) => {
 		this.setState({ nominationId: id });
-		// this.setState({goToNomination:true});
 	}
 
 	render() {
 		const { classes } = this.props;
 		const {props} = this;
 		const { expanded } = this.state;
-		// if (this.state.goToNomination) return <Redirect {...props} to={{  pathname: 'nomination', referer: { id: this.state.nominationId } }} />;
-
-		// if (this.state.goToNomination) return <Link to={{ pathname: "nomination", state: { id: this.state.nominationId }}}  />;
-
 		return (
 			<div className={classes.root}>
 				{
@@ -95,13 +90,14 @@ const styles = theme => ({
 												<Typography>{nomination.status}</Typography>
 												<div>
 												{
+
 										division.nomination.length < 1 &&
 										<Button variant="contained" color="primary" onClick={() => this.redirectToTarget(nomination.id)} className={classes.button} >Create</Button>
 									}
 									{
 										division.nomination.length > 0 &&
-										<Link style={{ textDecoration: 'none' }} to={{ pathname: "nomination", state: { id: nomination.id }}}  >
-										<Button variant="contained" color="primary"  className={classes.button} >View / Edit</Button>
+										<Link style={{ textDecoration: 'none' }} to={{ pathname: "nomination", state: { id: nomination.id,status: nomination.status }}}  >
+										<Button variant="contained" color="primary"  className={classes.button} >{nomination.status === 'SUBMIT' ? 'VIEW' : 'EDIT'}</Button>
 										</Link>
 									}
 									</div>

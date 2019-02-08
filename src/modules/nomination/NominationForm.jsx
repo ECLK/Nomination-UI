@@ -4,6 +4,10 @@ import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import MainMenu from 'components/MainMenu/MainMenu';
 import NominationForm from 'components/NominationForm';
+import {getNominationPayments } from './state/NominationAction';
+import { connect } from 'react-redux';
+
+
 
 const drawerWidth = 240;
 
@@ -88,8 +92,10 @@ class Dashboard extends React.Component {
         }
       }
     
-    componentDidMount() {
-      
+   async componentDidMount() {
+        const { getNominationPayments } = this.props;
+       await getNominationPayments(this.props.location.state.id);
+
     }
 
     handleDrawerOpen = () => {
@@ -102,14 +108,13 @@ class Dashboard extends React.Component {
 
     render() {
         
-        const { classes } = this.props;
-
+        const { classes,NominationPayments } = this.props;
         return (
             <div className={classes.root}>
             
                 <CssBaseline />
                 <MainMenu title="Elections Commission of Sri Lanka"></MainMenu>
-                <NominationForm customProps = {this.props.location.state.id} title="Elections Commission of Sri Lanka"></NominationForm>
+                <NominationForm NominationPayments = {NominationPayments}  customProps = {this.props.location.state.id} nominationStatus = {this.props.location.state.status} title="Elections Commission of Sri Lanka"></NominationForm>
 
             </div>
         );
@@ -121,4 +126,25 @@ Dashboard.propTypes = {
 };
 
 
-export default withStyles(styles)(Dashboard);
+
+
+const mapStateToProps = ({Nomination}) => {
+    // const {nominationPayments} = Nomination;
+    const {getNominationPayments} = Nomination;
+    const NominationPayments = Nomination.getNominationPayments;
+
+    
+
+    // const {updateNominationPayments} = Nomination;
+  
+    
+    return {getNominationPayments,NominationPayments};
+  };
+  
+  const mapActionsToProps = {
+    // postNominationPayments,
+    getNominationPayments,
+    // updateNominationPayments
+  };
+  
+  export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Dashboard));

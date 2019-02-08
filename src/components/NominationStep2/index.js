@@ -133,15 +133,14 @@ class NominationPayments extends React.Component {
 
     
     render() {
-        const {classes, depositor,handleChange,nominationPayments} = this.props;
-
+        const {classes, depositor,handleChange,getNominationPayments} = this.props;
         return (
             <form className={classes.container} noValidate autoComplete="off">
                 <Grid container direction="row" justify="flex-start" alignItems="stretch" spacing={8}>
                     <Grid item lg={3}>
                     <TextField
                             label="Depositor Name"
-                            value={nominationPayments.depositor}
+                            value={getNominationPayments.depositor}
                             onChange={handleChange("depositor")}
                         />  
                     </Grid>
@@ -150,7 +149,7 @@ class NominationPayments extends React.Component {
                             id="standard-name"
                             label="Deposited Amount"
                             className={classes.textField}
-                            value={nominationPayments.amount}
+                            value={getNominationPayments.amount}
                             onChange={handleChange('depositAmount')}
                             margin="normal"
                         />
@@ -173,7 +172,7 @@ class NominationPayments extends React.Component {
                             id="date"
                             label="Diposited Date"
                             type="date"
-                            value={nominationPayments.depositeDate}
+                            value={getNominationPayments.depositeDate}
                             // defaultValue="2017-05-24"
                             onChange={handleChange('depositeDate')}
                             className={classes.textField}
