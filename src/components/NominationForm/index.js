@@ -10,13 +10,11 @@ import NominationStep1 from '../NominationStep1/NominationStep1';
 import NominationStep2 from '../NominationStep2';
 import NominationStep3 from '../NominationStep3/NominationStep3';
 import NominationStep2Update from '../NominationStep2Update';
-import { postNominationPayments } from '../../modules/nomination/state/NominationAction';
+import { postNominationPayments, updateNominationPayments } from '../../modules/nomination/state/NominationAction';
 import { connect } from 'react-redux';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import axios from "axios";
-
-
 
 
 
@@ -55,21 +53,41 @@ class NominationForm extends React.Component {
  
   constructor(props) {
     super(props)
+    // const { NominationPayments } = this.props;
+
 
     this.state = {
       activeStep: 0,
       completed: {},
       props:'',
       language:'',
-        depositor:'',
-        depositAmount:'',
-        depositeDate:'12345',
+      depositor:'',
+      depositAmount:'',
+      depositeDate:'',  
         filePath:'upload',
         status:'PENDING',
         nominationId:this.props.customProps,
+        payments:[],
     
     }
+    
+    // this.handleChange = this.handleChange.bind(this);
+    
   }
+
+  componentDidMount() {
+    const {NominationPayments} = this.props;
+    console.log("NominationPayments",NominationPayments);
+    this.setState({depositor:NominationPayments.depositor});   
+    this.setState({depositAmount:NominationPayments.depositAmount});   
+    this.setState({depositeDate:NominationPayments.depositeDate});   
+
+  }
+
+  //   componentDidMount() {
+  //     // const { customProps, NominationPayments } = this.props;
+  //     // getNominationPayments(customProps);
+  // }
 
 
   handleChange = (name) => event => {
@@ -80,13 +98,16 @@ class NominationForm extends React.Component {
 
 
   getStepContent(step,props) {
-    const { nominationPayments, customProps } = this.props;
+    console.log("test",this.state);
+    const { nominationPayments,NominationPayments, customProps,nominationStatus } = this.props;
     switch (step) {
       case 0:
         return <NominationStep1 customProps={customProps}/>;
       case 1:
-      if(customProps){
-        return <NominationStep2Update customProps={customProps} nominationPayments={nominationPayments} handleChange={this.handleChange} />;
+      if(nominationStatus==="DRAFT"){
+        return <NominationStep2Update NominationPayments={this.state} customProps={customProps}  handleChange={this.handleChange} />;
+      }else if(nominationStatus==="SUBMIT"){
+        return <NominationStep2 nominationPayments={nominationPayments} handleChange={this.handleChange} />;
       }else{
         return <NominationStep2 nominationPayments={nominationPayments} handleChange={this.handleChange} />;
       }
@@ -98,15 +119,13 @@ class NominationForm extends React.Component {
   }
 
   
-  
-
   totalSteps = () => {
     return getSteps().length;
   };
   
 
   handleNext = () => {
-    const {postNominationPayments}=this.props;
+    const {postNominationPayments, nominationStatus, customProps}=this.props;
     let activeStep;
    
     if (this.isLastStep() && !this.allStepsCompleted()) {
@@ -120,8 +139,10 @@ class NominationForm extends React.Component {
     this.setState({
       activeStep,
     });
-    if (activeStep === 2){
+    if (activeStep === 2 && nominationStatus === "DRAFT"){
       postNominationPayments(this.state);   
+  }else{
+    updateNominationPayments(customProps,this.state);   
   }
   };
 
@@ -251,11 +272,19 @@ NominationForm.propTypes = {
 
 const mapStateToProps = ({Nomination}) => {
   const {nominationPayments} = Nomination;
-  return {nominationPayments};
+  const NominationPayments = Nomination.getNominationPayments;
+
+  // const {getNominationPayments} = Nomination;
+  const {updateNominationPayments} = Nomination;
+
+  
+  return {nominationPayments,updateNominationPayments,NominationPayments};
 };
 
 const mapActionsToProps = {
-  postNominationPayments 
+  postNominationPayments,
+  // getNominationPayments,
+  updateNominationPayments
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(NominationForm));

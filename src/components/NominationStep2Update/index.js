@@ -7,6 +7,8 @@ import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
 import "react-datepicker/dist/react-datepicker.css";
 import Select from '@material-ui/core/Select';
+import { getNominationPayments,handleChangePayment } from '../../modules/nomination/state/NominationAction';
+import { connect } from 'react-redux';
 
 
 
@@ -85,43 +87,33 @@ const designation = [
     },
   ];
 class NominationPayments extends React.Component {
-    state = {
-      open: true,
-      depositor:'',
-      depositAmount:'',
-      depositeDate:'',
-      
+  
+    constructor(props) {
+        super(props)
+        // const {NominationPayments} = this.props;
+
+        this.state = {
+            open: true,
+            depositor:'',
+            depositAmount:'',
+            depositeDate:'',       
+        }
+      }
+
    
-    //   candidateCount:localStorage.getItem('candidate')
+    
+    // handleChange = (name) => event => {
+    //     const {handleChangePayment} = this.props;
 
-    };
+    //     this.setState({
+    //             [name]:event.target.value,
+    //     });   
+    //     handleChangePayment(this.state);
+    //   };
+
     
 
     
-
-    componentDidMount() {
-        const { customProps } = this.props;
-
-        var candidateCount = localStorage.getItem('candidate');
-      axios.get(`nominations/${customProps}/payments`)
-        .then(res => {
-          const payments = res.data;
-          const depositor=res.data.depositor;
-          const depositAmount=res.data.depositAmount;
-          const depositeDate=res.data.depositeDate;
-          const paymentStatus=res.data.paymentStatus;
-
-
-          console.log("payments",payments);
-          this.setState({ depositor });
-          this.setState({ depositAmount });
-          this.setState({ depositeDate });
-          this.setState({ paymentStatus });
-        })
-    // setPaymentStatus();
-
-       
-}
 
 // handleChanged = name => event => {
 //     const {handleChange} = this.props;
@@ -137,17 +129,16 @@ class NominationPayments extends React.Component {
 
     
     render() {
-        const {classes, depositor,handleChange,nominationPayments} = this.props;
-
+        const {classes, depositor,handleChange,NominationPayments} = this.props;
         return (
             <form className={classes.container} noValidate autoComplete="off">
                 <Grid container direction="row" justify="flex-start" alignItems="stretch" spacing={8}>
                     <Grid item lg={3}>
                     <TextField
                             label="Depositor Name"
-                            value={this.state.depositor}
+                            value={NominationPayments.depositor}
                             onChange={handleChange("depositor")}
-                            onChange={e => this.setState({ depositor: e.target.value })}
+                            // onChange={e => this.setState({ depositor: e.target.value })}
                         />  
                     </Grid>
                     <Grid item lg={3}>
@@ -155,9 +146,9 @@ class NominationPayments extends React.Component {
                             id="standard-name"
                             label="Deposited Amount"
                             className={classes.textField}
-                            value={this.state.depositAmount}
+                            value={NominationPayments.depositAmount}
                             onChange={handleChange('depositAmount')}
-                            onChange={e => this.setState({ depositAmount: e.target.value })}
+                            // onChange={e => this.setState({ depositAmount: e.target.value })}
                             margin="normal"
                         />
                     </Grid>
@@ -179,10 +170,10 @@ class NominationPayments extends React.Component {
                             id="date"
                             label="Diposited Date"
                             type="date"
-                            value={this.state.depositeDate}
+                            value={NominationPayments.depositeDate}
                             // defaultValue="2017-05-24"
                             onChange={handleChange('depositeDate')}
-                            onChange={e => this.setState({ depositeDate: e.target.value })}
+                            // onChange={e => this.setState({ depositeDate: e.target.value })}
                             className={classes.textField}
                             InputLabelProps={{
                                 shrink: true,
@@ -281,6 +272,18 @@ NominationPayments.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(NominationPayments);
+const mapStateToProps = ({Nomination}) => {
+    const {handleChangePayment} = Nomination;
+    // const NominationPayments = Nomination.getNominationPayments;
+    return {handleChangePayment};
+  };
+
+  const mapActionsToProps = {
+    handleChangePayment
+  };
+  
+ 
+  
+  export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(NominationPayments));
 
 
