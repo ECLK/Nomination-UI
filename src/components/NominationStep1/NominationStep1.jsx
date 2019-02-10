@@ -9,15 +9,8 @@ import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import PropTypes from "prop-types";
 import AddIcon from '@material-ui/icons/Add';
-
-
-
-
-
-
-
-
-
+import { getNominationCandidates } from '../../modules/nomination/state/NominationAction';
+import { connect } from 'react-redux';
 
 const styles = theme => ({
     root: {
@@ -56,16 +49,16 @@ class CustomizedTable extends React.Component {
     }
 
     componentDidMount() {
-        const { customProps } = this.props;
-
-        axios.get(`nominations/${customProps}/candidates`)
-            .then(res => {
-                const nominations = res.data;
-                const candidateCount = res.data.length;
-                localStorage.setItem('candidate', res.data.length)
-                this.setState({ nominations });
-                this.setState({ candidateCount });
-            })
+        const { customProps,getNominationCandidates } = this.props;
+        getNominationCandidates(customProps);
+        // axios.get(`nominations/${customProps}/candidates`)
+        //     .then(res => {
+        //         const nominations = res.data;
+        //         const candidateCount = res.data.length;
+        //         localStorage.setItem('candidate', res.data.length)
+        //         this.setState({ nominations });
+        //         this.setState({ candidateCount });
+        //     })
     }
 
 
@@ -79,7 +72,11 @@ class CustomizedTable extends React.Component {
     };
 
     render() {
-        const rows = this.state.nominations;
+        const { CandidateList } = this.props;
+        const rows = CandidateList;
+        console.log("CandidateList",CandidateList);
+        
+
 
 
         const columns = [
@@ -196,5 +193,17 @@ class CustomizedTable extends React.Component {
 }
 
 
-export default withStyles(styles)(CustomizedTable);
+const mapStateToProps = ({Nomination}) => {
+    const {getNominationCandidates} = Nomination;
+    const CandidateList = Nomination.getNominationCandidates;
+    return {getNominationCandidates,CandidateList};
+  };
+
+  const mapActionsToProps = {
+    getNominationCandidates
+  };
+  
+ 
+  
+  export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(CustomizedTable));
 

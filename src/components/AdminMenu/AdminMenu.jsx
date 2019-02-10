@@ -77,7 +77,7 @@ class ResponsiveDrawer extends React.Component {
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="Home" />
             </ListItem>
-            <ListItem button key="Nomination" component={Link} to='#'>
+            <ListItem button key="Nomination" component={Link} to='/admin/nomination-review'>
               <ListItemIcon><NominationIcon /></ListItemIcon>
               <ListItemText primary="Nomination review" />
             </ListItem>

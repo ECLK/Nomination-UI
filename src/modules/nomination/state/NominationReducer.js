@@ -6,7 +6,8 @@ import {
   NOMINATIONS_LOADED,
   ON_NOMINATION_APPROVAL_CHANGE,
   GET_NOMINATION_PAYMENTS,
-  HANDLE_CHANGE_PAYMENT
+  HANDLE_CHANGE_PAYMENT,
+  GET_NOMINATION_CANDIDATES
 } from "./NominationTypes";
 
 const initialState = {
@@ -15,7 +16,8 @@ const initialState = {
   candidatePayments:[],
   nominations: [],
   getNominationPayments:[],
-  paymentState:[]
+  paymentState:[],
+  getNominationCandidates:[]
 };
 
 const findIndex = (nominations, id) => {
@@ -55,12 +57,18 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         getNominationPayments: action.payload
-      };  
+      }; 
+    case GET_NOMINATION_CANDIDATES:
+      return {
+        ...state,
+        getNominationCandidates: action.payload
+      };   
     case HANDLE_CHANGE_PAYMENT:
       return {
         ...state,
         paymentState: action.payload
-      }; 
+      };
+       
 
 
   }

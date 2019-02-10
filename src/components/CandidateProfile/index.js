@@ -7,8 +7,8 @@ import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
 import Hidden from '@material-ui/core/Hidden';
 import Notifier, { openSnackbar } from '../Notifier';
-
-
+import { getNominationCandidates } from '../../modules/nomination/state/NominationAction';
+import { connect } from 'react-redux';
 
 
 const styles = theme => ({
@@ -115,7 +115,7 @@ class TextFields extends React.Component {
         fullName: '',
         preferredName: '',
         nominationId: '',
-        dateOfBirth: '',
+        dateOfBirth: 876768,
         gender: 'Select',
         occupation:'',
         address:'',
@@ -155,6 +155,8 @@ class TextFields extends React.Component {
         // console.log(e.currentTarget.value);
         // debugger;
         // this.refs.btn.setAttribute("disabled", "disabled");
+        const { customProps,getNominationCandidates } = this.props;
+
 
         e.preventDefault();
        
@@ -173,7 +175,8 @@ class TextFields extends React.Component {
             // openSnackbar({ message: 'Candidate Added Sccessfully...' });
             setTimeout(() => {
                 openSnackbar({ message: 'Candidate Added Sccessfully...' });
-            }, 6000);
+            }, 1000);
+            getNominationCandidates(customProps);
             // resultElement.innerHTML = generateSuccessHTMLOutput(response);
             // alert("sucsess",response);
             // this.onCloseModal();
@@ -400,4 +403,13 @@ TextFields.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TextFields);
+const mapStateToProps = ({Nomination}) => {
+    const {getNominationCandidates} = Nomination;
+    return {getNominationCandidates};
+  };
+
+  const mapActionsToProps = {
+    getNominationCandidates
+  };
+  
+  export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(TextFields));
