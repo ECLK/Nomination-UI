@@ -11,6 +11,8 @@ import Button from '@material-ui/core/Button';//--
 import Typography from '@material-ui/core/Typography';//--
 import {postElection } from './state/ElectionAction';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom'
+
 
 const styles = theme => ({
     container: {
@@ -52,7 +54,14 @@ class CallElection extends React.Component {
     state = {
         electionName: '',
         ElectionModule: '',
+        goToConfig: false,
+
     };
+
+    constructor(props){
+        super(props);
+        this.handleNext = this.handleNext.bind(this);
+    }
 
     handleSubmit = (e) => {
         const {postElection} = this.props;
@@ -68,8 +77,15 @@ class CallElection extends React.Component {
         });
     };
 
+    handleNext() {
+        this.setState({goToConfig:true});
+    }
+
     render() {
         const {classes} = this.props;
+
+        if (this.state.goToConfig) return <Redirect to="/admin/active-election" />;
+
 
         return (
                     <form className={classes.container} onSubmit={this.handleSubmit} noValidate autoComplete="off">
@@ -120,7 +136,7 @@ class CallElection extends React.Component {
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <Button type='submit' size="small">Next</Button>
+                    <Button type='submit' onClick={this.handleNext} size="small">Next</Button>
                 </CardActions>
             </Card>
                     </form>

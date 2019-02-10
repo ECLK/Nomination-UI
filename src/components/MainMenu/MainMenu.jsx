@@ -75,10 +75,10 @@ class ResponsiveDrawer extends React.Component {
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="Home" />
             </ListItem>
-            <ListItem button key="Nomination" component={Link} to='/nomination' selected={this.props.page === "Nomination"} >
+            {/* <ListItem button key="Nomination" component={Link} to='/nomination' selected={this.props.page === "Nomination"} >
               <ListItemIcon><NominationIcon /></ListItemIcon>
               <ListItemText primary="Nomination" />
-            </ListItem>
+            </ListItem> */}
             <ListItem button key="Objection" component={Link} to='/objection'>
               <ListItemIcon><ObjectionIcon /></ListItemIcon>
               <ListItemText primary="Objection" />

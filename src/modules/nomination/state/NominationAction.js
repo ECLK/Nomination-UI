@@ -5,7 +5,8 @@ import {
   NOMINATIONS_LOADED,
   ON_NOMINATION_APPROVAL_CHANGE,
   GET_NOMINATION_PAYMENTS,
-  HANDLE_CHANGE_PAYMENT
+  HANDLE_CHANGE_PAYMENT,
+  GET_NOMINATION_CANDIDATES
 
 } from "./NominationTypes";
 import {API_BASE_URL} from "../../../config.js";
@@ -109,6 +110,31 @@ export function getNominationPayments(customProps) {
     .then(response => {
       const getNominationPayments = response.data;
        dispatch(nominationPaymentLoaded(getNominationPayments));
+    }).catch(err => {
+          console.log(err)
+    });
+  };
+}
+
+const nominationCandidateLoaded = (getNominationCandidates) => {
+  return {
+    type: GET_NOMINATION_CANDIDATES,
+    payload: getNominationCandidates,
+  };
+};
+
+export function getNominationCandidates(customProps) {
+  return function (dispatch) {
+     
+    const response = axios
+    .get(
+      `${API_BASE_URL}/nominations/${customProps}/candidates`,
+    )
+    .then(response => {
+      const getNominationCandidates = response.data;
+       dispatch(
+         nominationCandidateLoaded(getNominationCandidates)
+         );
     }).catch(err => {
           console.log(err)
     });
