@@ -1,4 +1,11 @@
-import {ELECTION_LOAD_SUCCESS, ELECTIONS_LOADING, POST_ACTIVE_ELECTION_DATA,POST_ELECTION} from "./ElectionTypes";
+import {
+    ELECTION_LOAD_SUCCESS, 
+    ELECTIONS_LOADING, 
+    POST_ACTIVE_ELECTION_DATA,
+    POST_ELECTION,
+    GET_ELECTION_MODULE,
+    SET_ELECTION_TIME_LINE
+} from "./ElectionTypes";
 import {API_BASE_URL} from "../../../config.js";
 import axios from "axios";
 
@@ -84,9 +91,9 @@ export function postElection(elections) {
             {...electionData}
       )
       .then(response => {
-        console.log(response.data);
-
+        console.log("response.data",response.data);
        let res = {
+        election_id:response.data.id,
         electionName: response.data.name,
         ElectionModule: response.data.module_id,
         created_by: response.data.created_by,
@@ -100,6 +107,52 @@ export function postElection(elections) {
       });
     };
   }
+
+
+const electionModuleLoaded = (getElectionModules) => {
+    return {
+      type: GET_ELECTION_MODULE,
+      payload: getElectionModules,
+    };
+  };
+  
+  export function getElectionModules() {
+    return function (dispatch) {
+       
+      const response = axios
+      .get(
+        `${API_BASE_URL}/modules/APPROVE/all`,
+      )
+      .then(response => {
+        const getElectionModules = response.data;
+        console.log("getElectionModules",getElectionModules);
+         dispatch(
+            electionModuleLoaded(getElectionModules)
+           );
+      }).catch(err => {
+        const getElectionModules = [];
+        dispatch(
+          electionModuleLoaded(getElectionModules)
+          );
+            console.log(err)
+      });
+    };
+  }
+
+  export function setElectionTimeLine(timeLineData) {
+      debugger;
+     let electionTimeLine = {
+        nominationStart: timeLineData.nominationStart,
+        nominationEnd: timeLineData.nominationEnd,
+        objectionStart: timeLineData.objectionStart,
+        objectionEnd: timeLineData.objectionEnd
+    };
+
+    return {
+        type: SET_ELECTION_TIME_LINE,
+        payload: electionTimeLine
+    };
+}
 
 
 
