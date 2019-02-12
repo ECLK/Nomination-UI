@@ -60,10 +60,11 @@ class CallElection extends React.Component {
 
     constructor(props){
         super(props);
-        this.handleNext = this.handleNext.bind(this);
     }
 
     handleSubmit = (e) => {
+        this.setState({goToConfig:true});
+
         const {postElection} = this.props;
       
         e.preventDefault();
@@ -77,9 +78,7 @@ class CallElection extends React.Component {
         });
     };
 
-    handleNext() {
-        this.setState({goToConfig:true});
-    }
+ 
 
     render() {
         const {classes} = this.props;
@@ -136,7 +135,7 @@ class CallElection extends React.Component {
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <Button type='submit' onClick={this.handleNext} size="small">Next</Button>
+                    <Button type='submit' size="small">Next</Button>
                 </CardActions>
             </Card>
                     </form>

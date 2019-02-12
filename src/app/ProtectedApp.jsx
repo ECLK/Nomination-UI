@@ -14,7 +14,7 @@ import Admin_CallElection from 'pages/ADMIN/Call-election/Call-election'
 import Admin_CandidateConfig from 'pages/ADMIN/Candidate-config/Candidate-config'
 
 import Admin_NominationProcessConfig from 'pages/ADMIN/NominationProcess-config/NominationProcess-config'
-import ActiveElectionForm from 'pages/ADMIN/ActiveElectionForm/ActiveElectionForm';
+import ActiveElectionForm from 'modules/election/ActiveElectionPage';
 
 // import NominationReview from 'pages/ADMIN/Nomination_review/Nomination_review';
 import NominationReview from 'modules/nomination/Nomination_review';

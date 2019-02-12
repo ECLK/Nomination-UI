@@ -39,7 +39,34 @@ const styles = theme => ({
 	class ControlledExpansionPanels extends React.Component {
 		state = {
 			expanded: null,
-			division: [],
+			division: [//TODO : remove this dummy array after demo period
+				{
+				code: "14",
+				electionId: "43680f3e-97ac-4257-b27a-5f3b452da2e6",
+				id: "1a29913e-3bc4-4a48-a35e-88f8a874e623",
+				name: "Trincomalee",
+				noOfCandidates: 7,
+				nomination : [
+						{
+							id: "07d4d5d9-fd83-473f-836c-a5a565d75ed1",
+							status: "DRAFT"
+						}
+				]					
+			},
+			{
+				code: "1",
+				electionId: "43680f3e-97ac-4257-b27a-5f3b452da2e6",
+				id: "65fa860e-2928-4602-9b1e-2a7cb09ea83e",
+				name: "Colombo",
+				noOfCandidates: 22,
+				nomination : [
+					{
+						id: "135183e2-a0ca-44a0-9577-0d2b16c3217f",
+						status: "DRAFT"
+					}
+			]
+			}
+			],
 			nominationId:'dummyId'
 		};
 

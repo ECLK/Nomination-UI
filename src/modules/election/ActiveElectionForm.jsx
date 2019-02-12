@@ -8,17 +8,17 @@ import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import ElectionTimeLine from '../ElectionTimeLine/ElectionTimeLine';
-import ElectionPayment from '../ElectionPayment/ElectionPayment';
-import ElectionWeightage from '../ElectionWeightage/ElectionWeightage';
-import axios from 'axios';
-
+import ElectionTimeLine from '../../components/ElectionTimeLine/ElectionTimeLine';
+import ElectionPayment from '../../components/ElectionPayment/ElectionPayment';
+import ElectionWeightage from '../../components/ElectionWeightage/ElectionWeightage';
+import { setElectionTimeLine } from './state/ElectionAction';
+import { connect } from 'react-redux';
 
 
 const styles = theme => ({
   root: {
     width: '90%',
-    paddingLeft: 240
+    paddingLeft: 24
   },
   button: {
     marginTop: theme.spacing.unit,
@@ -52,6 +52,15 @@ class VerticalLinearStepper extends React.Component {
   };
 
   handleNext = () => {
+    let activeStep;
+
+    const { setElectionTimeLine } = this.props;
+
+
+    if(activeStep === 1){
+      alert("de");
+      setElectionTimeLine(this.state);
+    }
     this.setState(state => ({
       activeStep: state.activeStep + 1,
     }));
@@ -75,8 +84,8 @@ class VerticalLinearStepper extends React.Component {
   };
 
   handleSubmit = () => {
-    const { postActiveElections, nominationStart, nominationEnd, objectionStart,objectionEnd,depositAmount,WeightagePrefarence,WeightageVote } = this.props;
-    postActiveElections();
+    // const { postActiveElections } = this.props;
+    // postActiveElections();
   };
 
   handleChange = input => e => {
@@ -172,12 +181,12 @@ VerticalLinearStepper.propTypes = {
 };
 
 const mapStateToProps = ({ Election }) => {
-  const {  postActiveElections, nominationStart, nominationEnd, objectionStart,objectionEnd,depositAmount,WeightagePrefarence,WeightageVote  } = Election;
-  return {  postActiveElections, nominationStart, nominationEnd, objectionStart,objectionEnd,depositAmount,WeightagePrefarence,WeightageVote  }
+  const { setElectionTimeLine  } = Election;
+  return {  setElectionTimeLine }
 };
 
 const mapActionsToProps = {
-  postActiveElections
+  setElectionTimeLine
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(VerticalLinearStepper));

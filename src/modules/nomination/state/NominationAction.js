@@ -136,6 +136,10 @@ export function getNominationCandidates(customProps) {
          nominationCandidateLoaded(getNominationCandidates)
          );
     }).catch(err => {
+      const getNominationCandidates = [];
+      dispatch(
+        nominationCandidateLoaded(getNominationCandidates)
+        );
           console.log(err)
     });
   };

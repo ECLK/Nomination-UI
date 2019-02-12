@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import AdminMenu from 'components/AdminMenu/AdminMenu';
-import ActiveElectionForm from 'components/ActiveElectionForm/ActiveElectionForm';
+import AdminMenu from '../../components/AdminMenu/AdminMenu';
+import ActiveElectionForm from './ActiveElectionForm';
 import axios from 'axios';
 
 
@@ -77,6 +77,9 @@ const styles = theme => ({
     },
     h5: {
         marginBottom: theme.spacing.unit * 2,
+    },
+    electionForm: {
+        paddingLeft: 24,
     }
 });
 
@@ -111,7 +114,7 @@ class Dashboard extends React.Component {
             <div className={classes.root}>
                 <CssBaseline />
                 <AdminMenu title="Elections Commission of Sri Lanka"></AdminMenu>
-                <ActiveElectionForm title="Elections Commission of Sri Lanka"></ActiveElectionForm>
+                <ActiveElectionForm className={classes.electionForm}  title="Elections Commission of Sri Lanka"></ActiveElectionForm>
 
             </div>
         );
