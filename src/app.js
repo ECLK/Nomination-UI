@@ -22,7 +22,7 @@ const styles = theme => ({
 
 const LoadableProtectedApp = lazy(() => import("./ProtectedApp"));
 
-class Index extends React.Component {
+class App extends React.Component {
   state = {
     open: false
   };
@@ -62,8 +62,8 @@ class Index extends React.Component {
   }
 }
 
-Index.propTypes = {
+App.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withRoot(withStyles(styles)(Index));
+export default withRoot(withStyles(styles)(App));
