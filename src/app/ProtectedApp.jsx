@@ -74,6 +74,7 @@ export default class Protected extends Component {
 
                     <Route path='/admin/nominationProcess-config' component={(this.state.isLoggedIn) ? Admin_NominationProcessConfig : Login} />
                     <Route path='/admin/active-election' component={(this.state.isLoggedIn) ? ActiveElectionForm : Login} />
+                    <Route path='/admin/allow-nomination' component={(this.state.isLoggedIn) ? AllowNomination : Login} />
 
                     <Route path='/admin/nomination-review' component={(this.state.isLoggedIn) ? NominationReview : Login} />
                     <Route path='/admin/payment-review' component={(this.state.isLoggedIn) ? PaymentReview : Login} />
