@@ -8,6 +8,7 @@ import DatePickers from "../components/DatePicker";
 import Progress from "../components/Progress/Progress";
 import Table from "../components/common/Table";
 import ExpansionPanel from "../components/common/ExpansionPanel";
+import FileUploadComponent from "../components/common/FileUpload";
 
 import { tableHeadings, tableData, expansionPanelData } from "./_data";
 
@@ -22,3 +23,5 @@ storiesOf("ExpansionPanel", module).add("default", () => (
 storiesOf("DatePicker", module).add("default", () => <DatePickers />);
 
 storiesOf("Progress", module).add("default", () => <Progress />);
+
+storiesOf("FileUpload", module).add("default", () => <FileUploadComponent />);

@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "@99xt/react-fileupload": "^1.0.2",
     "@material-ui/core": "latest",
     "@material-ui/icons": "latest",
     "axios": "^0.18.0",
