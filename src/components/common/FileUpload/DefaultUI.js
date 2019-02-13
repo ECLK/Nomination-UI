@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const styles = {
+const defaultStyles = {
   border: "2px dashed #ccc",
   textAlign: "center",
   padding: "50px"
@@ -23,7 +23,7 @@ const statusTargetedStyles = {
 };
 
 const DefaultUI = ({ status }) => (
-  <div style={{ ...styles, ...statusTargetedStyles[status] }}>
+  <div style={{ ...defaultStyles, ...statusTargetedStyles[status] }}>
     <p>Drag and drop an image file here or click.</p>
   </div>
 );
