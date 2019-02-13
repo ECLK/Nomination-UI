@@ -1,13 +1,14 @@
 import React from "react";
 
 import { storiesOf } from "@storybook/react";
-// import { action } from "@storybook/addon-actions";
+import { action } from "@storybook/addon-actions";
 // import { linkTo } from "@storybook/addon-links";
 
 import DatePickers from "../components/DatePicker";
 import Progress from "../components/Progress/Progress";
 import Table from "../components/common/Table";
 import ExpansionPanel from "../components/common/ExpansionPanel";
+import FileUpload from "../components/common/FileUpload/";
 
 import { tableHeadings, tableData, expansionPanelData } from "./_data";
 
@@ -22,3 +23,12 @@ storiesOf("ExpansionPanel", module).add("default", () => (
 storiesOf("DatePicker", module).add("default", () => <DatePickers />);
 
 storiesOf("Progress", module).add("default", () => <Progress />);
+
+storiesOf("FileUpload", module).add("default", () => (
+  <FileUpload
+    allowedTypes={[]}
+    allowedSize={15}
+    multiple={false}
+    onUploadFiles={action("onUploadFiles triggered.")}
+  />
+));
