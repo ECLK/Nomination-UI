@@ -1,8 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import classnames from "classnames";
 
-const defaultStyles = {
+const styles = {
   border: "2px dashed #ccc",
   textAlign: "center",
   padding: "50px"
@@ -23,14 +22,14 @@ const statusTargetedStyles = {
   }
 };
 
-const DefaultComponent = ({ status }) => (
-  <div style={{ ...defaultStyles, ...statusTargetedStyles[status] }}>
+const DefaultUI = ({ status }) => (
+  <div style={{ ...styles, ...statusTargetedStyles[status] }}>
     <p>Drag and drop an image file here or click.</p>
   </div>
 );
 
-DefaultComponent.propTypes = {
+DefaultUI.propTypes = {
   status: PropTypes.string.isRequired
 };
 
-export default DefaultComponent;
+export default DefaultUI;
