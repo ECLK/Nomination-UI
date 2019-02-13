@@ -1,24 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
-
 import AdminMenu from 'components/AdminMenu/AdminMenu';
 import CreateElection from 'components/CreateElection/CreateElection';
-import CallElection from 'components/CallElection/CallElection';
+import CallElection from '../../../modules/election/CallElection';
 import ElectionModule from 'components/ElectionModule/ElectionModule';
 import ActiveElection from 'components/ActiveElection/ActiveElection.jsx';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';//---
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';///-
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
 import Paper from '@material-ui/core/Paper';
-
-
-
+import {getElectionModules} from '../../../modules/election/state/ElectionAction';
+import {connect} from 'react-redux';
 
 
 
@@ -40,7 +36,13 @@ const styles = theme => ({
     },
     xxxxx:{
         wide:'full'
-    }
+    },
+    panel_wrapper: {
+        "min-width": 800,
+      },
+      heading: {
+        padding: 14,
+      },
 
 
 });
@@ -52,6 +54,8 @@ class Home extends React.Component {
         state = {
             open: true,
             expanded:null,
+            expandedPanelIndex: -1,
+            electionModules:[]
         };
 
     handleChange = panel => (event, expanded) => {
@@ -60,10 +64,49 @@ class Home extends React.Component {
         });
     };
 
+    togglePanel = panelIndex => (event, didExpand) => {
+        this.setState({
+          expandedPanelIndex: didExpand ? panelIndex : -1,
+        });
+      };
+    
+    componentDidMount() {
+        const {getElectionModules} = this.props;
+        getElectionModules();
+      }
+
 
     render() {
-        const {classes} = this.props;
-        const { expanded } = this.state;
+        const {classes,electionModules} = this.props;
+        const { expanded,expandedPanelIndex } = this.state;
+        console.log("electionModules",electionModules);
+
+        const electionModuleElements = electionModules.map((electionModule, i) => (
+            <ExpansionPanel expanded={expandedPanelIndex === i} onChange={this.togglePanel(i)}>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+                <Grid container classname={classes.panel_wrapper} spacing={16}>
+                  <Grid item xs="3">
+                    <Typography className={classes.heading}>{electionModule.id}</Typography>
+                  </Grid>
+                  <Grid item xs="6">
+                    <Typography className={classes.heading}>({electionModule.name})</Typography>
+                  </Grid>
+                  <Grid item xs="3">
+                        
+                  </Grid>
+                </Grid>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Grid container classname={classes.panel_wrapper} spacing={24}>
+                <Grid item xs={12}>
+                    <Paper className={classes.paper}> <ElectionModule></ElectionModule></Paper>
+                </Grid>                
+                </Grid>
+                <br />
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          ));
+
         return (
             <div>
                 <AdminMenu title="Elections Commission of Sri Lanka"></AdminMenu>
@@ -83,6 +126,9 @@ class Home extends React.Component {
                         </Grid>
                     </Grid>
                     <br />
+                    <div style={{width: '100%'}}>
+                        {electionModuleElements}
+                    </div>
                     <ExpansionPanel>
                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                             <Typography className={classes.heading}>Election Module</Typography>
@@ -123,4 +169,16 @@ Home.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Home);
+
+const mapStateToProps = ({Election}) => {
+    const {getElectionModules} = Election;
+    const electionModules = Election.allElectionModules;
+
+    return {getElectionModules,electionModules};
+  };
+  
+  const mapActionsToProps = {
+    getElectionModules,
+  };
+  
+  export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Home));

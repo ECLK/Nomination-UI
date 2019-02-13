@@ -10,13 +10,23 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AdminMenu from 'components/AdminMenu/AdminMenu';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import { Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+// import CandidateForm from './CandidateForm';
+// import DivisionConfig from './DivisionConfig';
+// import ElectionConfig from './ElectionConfig';
+
+import NominationStep1 from '../NominationStep1/NominationStep1';
+import NominationStep2 from '../NominationStep2';
+import NominationStep3 from '../NominationStep3/NominationStep3';
+import { postNominationPayments } from '../../modules/nomination/state/NominationAction';
 
 
 const styles = theme => ({
     root: {
         padding: 24,
-        paddingLeft: 264,
+        paddingLeft: 26,
     },
     button: {
         marginRight: theme.spacing.unit,
@@ -27,35 +37,67 @@ const styles = theme => ({
     },
     pageContent: {
         padding: 24,
+    },
+    paperContent:{
+        padding: 24,
     }
 });
 
 function getSteps() {
-    return ['Candidate Form Configuration', 'Division Configuration', 'Election Configuration'];
+  return ['Candidate Details', 'Payment Details', 'Review'];
 }
 
-function getStepContent(step) {
-    switch (step) {
-        case 0:
-            return 'Candidate Form Configuration';
-        case 1:
-            return 'Division Configuration';
-        case 2:
-            return 'Election Configuration';
-        default:
-            return 'Unknown step';
-    }
-}
 
-class ElectionConfig extends React.Component {
-    state = {
+
+class NominationForm extends React.Component {
+    // state = {
+    //     activeStep: 0,
+    //     skipped: new Set(),
+    // };
+    constructor(props) {
+      super(props)
+  
+      this.state = {
         activeStep: 0,
-        skipped: new Set(),
-    };
+        completed: {},
+        props:'',
+        language:'',
+          depositor:'',
+          depositAmount:'',
+          depositeDate:'12345',
+          filePath:'upload',
+          status:'PENDING',
+          skipped: new Set(),
+          nominationId:this.props.customProps,
+      
+      }
+    }
+
+    handleChange = (name) => event => {
+        this.setState({
+                [name]:event.target.value,
+        });   
+      };
+
+    getStepContent(step){
+        const { nominationPayments, customProps } = this.props;
+      
+          switch (step) {
+              case 0:
+                  return <NominationStep1 customProps={customProps}/>;
+              case 1:
+                  return <NominationStep2 nominationPayments={nominationPayments} handleChange={this.handleChange} />;
+              case 2:
+                  return <NominationStep3 />;
+              default:
+                  return 'Unknown step';
+          }
+      }
 
     isStepOptional = step => step === 1;
 
     handleNext = () => {
+      const {postNominationPayments}=this.props;
         const { activeStep } = this.state;
         let { skipped } = this.state;
         if (this.isStepSkipped(activeStep)) {
@@ -66,6 +108,9 @@ class ElectionConfig extends React.Component {
             activeStep: activeStep + 1,
             skipped,
         });
+        if (activeStep === 2){
+          postNominationPayments(this.state);   
+      }
     };
 
     handleBack = () => {
@@ -137,7 +182,11 @@ class ElectionConfig extends React.Component {
                                                 );
                                             })}
                                         </Stepper>
-                                        <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+                                        <Grid className={classes.paperContent} container spacing={24}>
+                                            <Grid item xs={12}>
+                                            {this.getStepContent(activeStep,this.props)}
+                                            </Grid>
+                                        </Grid>
                                         <div>
                                             <Button
                                                 disabled={activeStep === 0}
@@ -179,8 +228,18 @@ class ElectionConfig extends React.Component {
     }
 }
 
-ElectionConfig.propTypes = {
-    classes: PropTypes.object,
+NominationForm.propTypes = {
+  classes: PropTypes.object,
 };
 
-export default withStyles(styles)(ElectionConfig);
+
+const mapStateToProps = ({Nomination}) => {
+  const {nominationPayments} = Nomination;
+  return {nominationPayments};
+};
+
+const mapActionsToProps = {
+  postNominationPayments 
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(NominationForm));

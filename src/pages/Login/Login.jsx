@@ -70,8 +70,11 @@ class Login extends React.Component {
         if (username.length > 0){
             if (username.includes("user")) {
                 sessionStorage.setItem('role', 'user');
+                this.props.history.push('/home');
+
             } else if (username.includes("admin")) {
                 sessionStorage.setItem('role', 'admin');
+                this.props.history.push('/admin');
             }
         }
 
@@ -130,8 +133,15 @@ class Login extends React.Component {
                         >
                             Sign in
                         </Button>
+                        <Paper className={classes.paper}>
+                        <pre><b>Default Login Credentials </b></pre>
+                        <pre>admin username : admin</pre>
+                        <pre>user username  : user</pre>
+                        <pre>password       : pass</pre>
+                        </Paper>
                     </form>
                 </Paper>
+                
             </main>
         );
     }

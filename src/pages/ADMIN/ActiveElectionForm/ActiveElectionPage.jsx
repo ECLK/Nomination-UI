@@ -2,11 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import MainMenu from 'components/MainMenu/MainMenu';
-import NominationForm from 'components/NominationForm';
-import {getNominationPayments } from './state/NominationAction';
-import { connect } from 'react-redux';
-
+import AdminMenu from '../../components/AdminMenu/AdminMenu';
+import ActiveElectionForm from './ActiveElectionForm';
+import axios from 'axios';
 
 
 const drawerWidth = 240;
@@ -83,20 +81,20 @@ const styles = theme => ({
 });
 
 class Dashboard extends React.Component {
-  
-    constructor(props) {
-        super(props)
-    
-        this.state = {
-            nominationId:''
-        }
-      }
-    
-   async componentDidMount() {
-        const { getNominationPayments } = this.props;
-       await getNominationPayments(this.props.location.state.id);
+    state = {
+        open: true,
+        nominations: []
 
-    }
+    };
+    
+    
+      componentDidMount() {
+        axios.get(`http://localhost:9001/ec-election/nominations/1/candidates`)
+          .then(res => {
+            const nominations = res.data;
+            this.setState({ nominations });
+          })
+      }
 
     handleDrawerOpen = () => {
         this.setState({ open: true });
@@ -107,14 +105,13 @@ class Dashboard extends React.Component {
     };
 
     render() {
-        
-        const { classes,NominationPayments } = this.props;
+        const { classes } = this.props;
+
         return (
             <div className={classes.root}>
-            
                 <CssBaseline />
-                <MainMenu title="Elections Commission of Sri Lanka"></MainMenu>
-                <NominationForm NominationPayments = {NominationPayments}  customProps = {this.props.location.state.id} nominationStatus = {this.props.location.state.status} title="Elections Commission of Sri Lanka"></NominationForm>
+                <AdminMenu title="Elections Commission of Sri Lanka"></AdminMenu>
+                <ActiveElectionForm title="Elections Commission of Sri Lanka"></ActiveElectionForm>
 
             </div>
         );
@@ -125,26 +122,10 @@ Dashboard.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
+export default withStyles(styles)(Dashboard);
 
 
 
-const mapStateToProps = ({Nomination}) => {
-    // const {nominationPayments} = Nomination;
-    const {getNominationPayments} = Nomination;
-    const NominationPayments = Nomination.getNominationPayments;
 
-    
 
-    // const {updateNominationPayments} = Nomination;
-  
-    
-    return {getNominationPayments,NominationPayments};
-  };
-  
-  const mapActionsToProps = {
-    // postNominationPayments,
-    getNominationPayments,
-    // updateNominationPayments
-  };
-  
-  export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Dashboard));
+
