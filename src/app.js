@@ -1,4 +1,5 @@
 import React, { Suspense, lazy } from "react";
+import { Provider } from "react-redux";
 import PropTypes from "prop-types";
 import {
   BrowserRouter as Router,
@@ -10,7 +11,10 @@ import { withStyles } from "@material-ui/core/styles";
 import withRoot from "withRoot";
 //import Loadable from 'react-loadable';
 
-import Progress from "components/Progress/Progress";
+import store from "state/store";
+import AuthRoute from "modules/auth/AuthRoute";
+
+import Progress from "components/common/Progress";
 import Login from "pages/Login/Login";
 
 const styles = theme => ({
@@ -20,9 +24,29 @@ const styles = theme => ({
   }
 });
 
-const LoadableProtectedApp = lazy(() => import("./ProtectedApp"));
+const Home = () => <p>Home yy</p>;
 
 class App extends React.Component {
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <Provider store={store}>
+        <Router>
+          <div className={classes.root}>
+            <Switch>
+              <AuthRoute exact path="/" component={Home} access="private" />
+            </Switch>
+          </div>
+        </Router>
+      </Provider>
+    );
+  }
+}
+
+const LoadableProtectedApp = lazy(() => import("./ProtectedApp"));
+
+class Appx extends React.Component {
   state = {
     open: false
   };
