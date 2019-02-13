@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import ElectionTimeLine from '../../components/ElectionTimeLine/ElectionTimeLine';
 import ElectionPayment from '../../components/ElectionPayment/ElectionPayment';
 import ElectionWeightage from '../../components/ElectionWeightage/ElectionWeightage';
-import { setElectionTimeLine } from './state/ElectionAction';
+import { setElectionTimeLine,postActiveElections } from './state/ElectionAction';
 import { connect } from 'react-redux';
 
 
@@ -55,19 +55,14 @@ class VerticalLinearStepper extends React.Component {
     let activeStep;
 
     const { setElectionTimeLine } = this.props;
-
-
-    if(activeStep === 1){
-      alert("de");
-      setElectionTimeLine(this.state);
-    }
+   
     this.setState(state => ({
       activeStep: state.activeStep + 1,
     }));
-
-    // if(this.activeStep === 2){
-    //   this.handleSubmit();
-    //   }
+   
+    if(this.state.activeStep === 0 || this.state.activeStep === 1 || this.state.activeStep === 2){
+      setElectionTimeLine(this.state);
+    }
 
   };
 
@@ -84,8 +79,8 @@ class VerticalLinearStepper extends React.Component {
   };
 
   handleSubmit = () => {
-    // const { postActiveElections } = this.props;
-    // postActiveElections();
+    const { postActiveElections,CallElectionData,electionData } = this.props;
+    postActiveElections(CallElectionData,electionData);
   };
 
   handleChange = input => e => {
@@ -181,12 +176,16 @@ VerticalLinearStepper.propTypes = {
 };
 
 const mapStateToProps = ({ Election }) => {
-  const { setElectionTimeLine  } = Election;
-  return {  setElectionTimeLine }
+  const { setElectionTimeLine,postActiveElections  } = Election;
+  const CallElectionData  = Election.CallElectionData;
+  const electionData  = Election.electionData;
+
+  return {  setElectionTimeLine,CallElectionData,electionData,postActiveElections }
 };
 
 const mapActionsToProps = {
-  setElectionTimeLine
+  setElectionTimeLine,
+  postActiveElections
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(VerticalLinearStepper));

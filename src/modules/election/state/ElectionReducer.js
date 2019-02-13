@@ -4,7 +4,10 @@ import {
     POST_ACTIVE_ELECTION_DATA,
     POST_ELECTION,
     GET_ELECTION_MODULE,
-    SET_ELECTION_TIME_LINE
+    SET_ELECTION_TIME_LINE,
+    POST_CALL_ELECTION,
+    SAVE_ELECTION_TIME_LINE,
+    SAVE_ELECTION_CONFIG
 } from "./ElectionTypes";
 import {REQUEST_STATE} from "../../../lib/request_redux_state";
 
@@ -21,8 +24,10 @@ const initialState = {
     elections:[],
     electionData:[],
     allElectionModules:[],
-    electionTimeLine:[]
-
+    CallElectionData:[],
+    PostedCallElectionData:[],
+    PostedCallElectionTimeLine:[],
+    PostedCallElectionConfig:[],
 };
 
 export default function reducer(state = initialState, action) {
@@ -56,7 +61,22 @@ export default function reducer(state = initialState, action) {
         case SET_ELECTION_TIME_LINE:
             return {
               ...state,
-              electionTimeLine: action.payload
+              CallElectionData: action.payload
+            };
+        case POST_CALL_ELECTION:
+            return {
+              ...state,
+              PostedCallElectionData: action.payload
+            };
+        case SAVE_ELECTION_TIME_LINE:
+            return {
+              ...state,
+              PostedCallElectionTimeLine: action.payload
+            };
+        case SAVE_ELECTION_CONFIG:
+            return {
+              ...state,
+              PostedCallElectionConfig: action.payload
             };
     }
     return state;
