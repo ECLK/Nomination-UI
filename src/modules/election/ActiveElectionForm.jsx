@@ -11,7 +11,9 @@ import Typography from '@material-ui/core/Typography';
 import ElectionTimeLine from '../../components/ElectionTimeLine/ElectionTimeLine';
 import ElectionPayment from '../../components/ElectionPayment/ElectionPayment';
 import ElectionWeightage from '../../components/ElectionWeightage/ElectionWeightage';
-import { setElectionTimeLine,postActiveElections } from './state/ElectionAction';
+import AllowNomination from './AllowNomination';
+
+import { setCallElectionData,postCallElectionData } from './state/ElectionAction';
 import { connect } from 'react-redux';
 
 
@@ -33,7 +35,7 @@ const styles = theme => ({
 });
 
 function getSteps() {
-  return ['TIME LINE', 'PAYMENT', 'WEIGHTAGE'];
+  return ['TIME LINE', 'PAYMENT', 'WEIGHTAGE', 'ALLOW NOMINATION'];
 }
 
 
@@ -54,14 +56,14 @@ class VerticalLinearStepper extends React.Component {
   handleNext = () => {
     let activeStep;
 
-    const { setElectionTimeLine } = this.props;
+    const { setCallElectionData } = this.props;
    
     this.setState(state => ({
       activeStep: state.activeStep + 1,
     }));
    
     if(this.state.activeStep === 0 || this.state.activeStep === 1 || this.state.activeStep === 2){
-      setElectionTimeLine(this.state);
+      setCallElectionData(this.state);
     }
 
   };
@@ -79,8 +81,8 @@ class VerticalLinearStepper extends React.Component {
   };
 
   handleSubmit = () => {
-    const { postActiveElections,CallElectionData,electionData } = this.props;
-    postActiveElections(CallElectionData,electionData);
+    const { postCallElectionData,CallElectionData,electionData } = this.props;
+    postCallElectionData(CallElectionData,electionData);
   };
 
   handleChange = input => e => {
@@ -101,6 +103,11 @@ class VerticalLinearStepper extends React.Component {
         />;
       case 2:
         return <ElectionWeightage
+        handleChange={this.handleChange}
+        values={values}
+        />;
+      case 3:
+        return <AllowNomination
         handleChange={this.handleChange}
         values={values}
         />;
@@ -176,16 +183,16 @@ VerticalLinearStepper.propTypes = {
 };
 
 const mapStateToProps = ({ Election }) => {
-  const { setElectionTimeLine,postActiveElections  } = Election;
+  const { setCallElectionData,postCallElectionData  } = Election;
   const CallElectionData  = Election.CallElectionData;
   const electionData  = Election.electionData;
 
-  return {  setElectionTimeLine,CallElectionData,electionData,postActiveElections }
+  return {  setCallElectionData,CallElectionData,electionData,postCallElectionData }
 };
 
 const mapActionsToProps = {
-  setElectionTimeLine,
-  postActiveElections
+  setCallElectionData,
+  postCallElectionData
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(VerticalLinearStepper));

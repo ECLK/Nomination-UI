@@ -75,14 +75,22 @@ class NominationForm extends React.Component {
     
   }
 
-  componentDidMount() {
+  componentDidUpdate (oldState){
     const {NominationPayments} = this.props;
-    console.log("NominationPayments",NominationPayments);
-    this.setState({depositor:NominationPayments.depositor});   
-    this.setState({depositAmount:NominationPayments.depositAmount});   
-    this.setState({depositeDate:NominationPayments.depositeDate});   
+    if(oldState.NominationPayments !== NominationPayments){
 
+      this.setState({depositor:NominationPayments.depositor});   
+      this.setState({depositAmount:NominationPayments.depositAmount});   
+      this.setState({depositeDate:NominationPayments.depositeDate});      }
   }
+  // componentDidMount() {
+  //   const {NominationPayments} = this.props;
+  //   console.log("NominationPayments",NominationPayments);
+  //   this.setState({depositor:NominationPayments.depositor});   
+  //   this.setState({depositAmount:NominationPayments.depositAmount});   
+  //   this.setState({depositeDate:NominationPayments.depositeDate});   
+
+  // }
 
   //   componentDidMount() {
   //     // const { customProps, NominationPayments } = this.props;

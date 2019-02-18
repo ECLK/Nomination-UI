@@ -1,39 +1,15 @@
 import {
     ELECTION_LOAD_SUCCESS, 
     ELECTIONS_LOADING, 
-    POST_ACTIVE_ELECTION_DATA,
     POST_ELECTION,
     GET_ELECTION_MODULE,
-    SET_ELECTION_TIME_LINE,
     POST_CALL_ELECTION,
-    SAVE_ELECTION_TIME_LINE,
-    SAVE_ELECTION_CONFIG
+    POST_CALL_ELECTION_DATA,
+    SET_CALL_ELECTION_DATA,
 } from "./ElectionTypes";
 import {API_BASE_URL} from "../../../config.js";
 import axios from "axios";
 
-// import store from '../store';
-
-
-// export function postActiveElections() {
-
-//     return function (dispatch) {
-//         const response = axios
-//             .post(
-//                 `${API_BASE_URL}/activeElections`,
-//                 {
-//                     firstName: 'Fred',
-//                     lastName: 'Flintstone'
-//                   }
-//             )
-//             .then(response => {
-//                 dispatch({
-//                     type: POST_ACTIVE_ELECTION_DATA,
-//                     payload: response.data
-//                 })
-//             });
-//     };
-// }
 
 function electionsLoadSuccess(elections) {
     return {
@@ -142,7 +118,8 @@ const electionModuleLoaded = (getElectionModules) => {
     };
   }
 
-  export function setElectionTimeLine(electionData) {
+  export function setCallElectionData(electionData) {
+
      let CallElectionData = {
          
         nominationStart: electionData.nominationStart,
@@ -151,23 +128,24 @@ const electionModuleLoaded = (getElectionModules) => {
         objectionEnd: electionData.objectionEnd,
         depositAmount: electionData.depositAmount,
         WeightagePrefarence: electionData.WeightagePrefarence,
-        WeightageVote: electionData.WeightageVote
+        WeightageVote: electionData.WeightageVote,
+        rowData: electionData.rowData,
 
     };
 
     return {
-        type: SET_ELECTION_TIME_LINE,
+        type: SET_CALL_ELECTION_DATA,
         payload: CallElectionData
     };
 }
 
-export const setCallElectionData = (val) => {
+export const setCallElection = (val) => {
     return {
         type: POST_CALL_ELECTION,
         payload: val
     }
 }
-export function postCallElectionData(elections) {
+export function postActiveElections(elections) {
     return function (dispatch) {
 
         let CallelectionData = {
@@ -195,7 +173,7 @@ export function postCallElectionData(elections) {
         updated_at: response.data.updated_at
        }
 
-         dispatch(setCallElectionData(res));
+         dispatch(setCallElection(res));
       }).catch(err => {
             console.log(err)
       });
@@ -204,87 +182,103 @@ export function postCallElectionData(elections) {
 
   //----------- Start of save Call Election Data ----------------
 
-  export function postActiveElections(CallElectionData,electionData) {
+  export function postCallElectionData(CallElectionData,electionData) {
     //TODO: yujith, config ids should get from the front end and the array should be dynamic
-    let timeLineData = [
-                         {
-                            electionTimeLineConfigId: '0f62755e-9784-4046-9804-8d4deed36f2a',//nominationStart
-                            value: CallElectionData.nominationStart,
-                            electionId: electionData.election_id,
-                         },
-                         {
-                            electionTimeLineConfigId: 'c06a789c-405c-4e7a-8df2-66766284589b',//nominationEnd
-                            value: CallElectionData.nominationEnd,
-                            electionId: CallElectionData.objectionStart,
-                         },
-                         {
-                            electionTimeLineConfigId: '675ec08b-2937-4222-94a6-0143a94763f1',//objectionStart
-                            value: CallElectionData.objectionStart,
-                            electionId: electionData.election_id,
-                         },
-                         {
-                            electionTimeLineConfigId: '64ae3e95-591a-4bf9-8a5b-10803e0eca82',//objectionEnd
-                            value: CallElectionData.objectionEnd,
-                            electionId: electionData.election_id,
-                         },
-                       ];
 
-    let confData = [
-                        {
-                            electionConfigId: '1',
-                           value: CallElectionData.depositAmount,
-                           electionId: electionData.election_id,
-                        },
-                        {
-                            electionConfigId: '2',
-                           value: CallElectionData.WeightageVote,
-                           electionId: CallElectionData.objectionStart,
-                        },
-                        {
-                            electionConfigId: '3',
-                           value: CallElectionData.WeightagePrefarence,
-                           electionId: electionData.election_id,
-                        }
-                      ];
-     
-      
-    return dispatch => Promise.all([
-      dispatch(saveActiveElectionTimeLine(timeLineData)),
-      dispatch(saveActiveElectionConfig(confData)),
-    ]);
+    let allElectionData = {
+            "timeLineData" :[
+                              {
+                                electionTimeLineConfigId: '0f62755e-9784-4046-9804-8d4deed36f2a',//nominationStart
+                                value: CallElectionData.nominationStart,
+                                electionId: electionData.election_id,
+                              },
+                              {
+                                electionTimeLineConfigId: 'c06a789c-405c-4e7a-8df2-66766284589b',//nominationEnd
+                                value: CallElectionData.nominationEnd,
+                                electionId: CallElectionData.objectionStart,
+                              },
+                              {
+                                electionTimeLineConfigId: '675ec08b-2937-4222-94a6-0143a94763f1',//objectionStart
+                                value: CallElectionData.objectionStart,
+                                electionId: electionData.election_id,
+                              },
+                              {
+                                electionTimeLineConfigId: '64ae3e95-591a-4bf9-8a5b-10803e0eca82',//objectionEnd
+                                value: CallElectionData.objectionEnd,
+                                electionId: electionData.election_id,
+                              },
+                            ],
+            "confData" :  [      
+                                      {
+                                          electionConfigId: '1',
+                                         value: CallElectionData.depositAmount,
+                                         electionId: electionData.election_id,
+                                      },
+                                      {
+                                          electionConfigId: '2',
+                                         value: CallElectionData.WeightageVote,
+                                         electionId: CallElectionData.objectionStart,
+                                      },
+                                      {
+                                          electionConfigId: '3',
+                                         value: CallElectionData.WeightagePrefarence,
+                                         electionId: electionData.election_id,
+                                      }
+                                    
+                           ],
+              "nominationAllowData" :   CallElectionData.rowData       
+                            
+                          }
+
+                          debugger;
+
+                      
+                      return function (dispatch) {
+                        const response = axios
+                        .post(
+                          `${API_BASE_URL}/activeElections/TimeLine`,
+                              {...allElectionData}
+                        )
+                        .then(
+                            response => response.json()
+                          ).then(
+                            json => dispatch({ type: POST_CALL_ELECTION_DATA, payload: json }),
+                            err => console.log(err)
+                          );
+                        };
   }
 
-  export function saveActiveElectionTimeLine(timeLineData) {
-    return function (dispatch) {
-    const response = axios
-    .post(
-      `${API_BASE_URL}/activeElections/TimeLine`,
-          {...timeLineData}
-    )
-    .then(
-        response => response.json()
-      ).then(
-        json => dispatch({ type: SAVE_ELECTION_TIME_LINE, payload: json }),
-        err => console.log(err)
-      );
-    };
-  }
+  // export function saveActiveElectionTimeLine(timeLineData) {
+  //   return function (dispatch) {
+  //   const response = axios
+  //   .post(
+  //     `${API_BASE_URL}/activeElections/TimeLine`,
+  //         {...timeLineData}
+  //   )
+  //   .then(
+  //       response => response.json()
+  //     ).then(
+  //       json => dispatch({ type: SET_CALL_ELECTION_DATA, payload: json }),
+  //       err => console.log(err)
+  //     );
+  //   };
+  // }
   
-  export function saveActiveElectionConfig(confData) {
-    return function (dispatch) {
-        const response = axios
-        .post(
-          `${API_BASE_URL}/activeElections/Config`,
-              {...confData}
-        )
-      .then(
-        response => response.json()
-      ).then(
-        json => dispatch({ type: SAVE_ELECTION_CONFIG,  payload: json  }),
-        err => console.log(err)
-      );
-    };
-  }
+  // export function saveActiveElectionConfig(confData) {
+  //   return function (dispatch) {
+  //       const response = axios
+  //       .post(
+  //         `${API_BASE_URL}/activeElections/Config`,
+  //             {...confData}
+  //       )
+  //     .then(
+  //       response => response.json()
+  //     ).then(
+  //       json => dispatch({ type: SAVE_ELECTION_CONFIG,  payload: json  }),
+  //       err => console.log(err)
+  //     );
+  //   };
+  // }
 
 //----------- End of save Call Election Data ----------------
 

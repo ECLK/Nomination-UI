@@ -23,6 +23,8 @@ import ObjectionReview from 'pages/ADMIN/Objection_review/Objection_review';
 import ElectionReview from 'pages/ADMIN/Election_review/Election_review';
 
 import CreateElection from 'modules/election-model/CreateElection';
+import AllowNomination from 'pages/ADMIN/Nomination/AllowNomination';
+
 
 
 

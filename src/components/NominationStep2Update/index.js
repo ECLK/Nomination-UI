@@ -100,6 +100,7 @@ class NominationPayments extends React.Component {
         }
       }
 
+      
    
     
     // handleChange = (name) => event => {
