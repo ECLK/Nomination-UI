@@ -27,13 +27,18 @@ const styles = theme => ({
 		fontSize: theme.typography.pxToRem(15),
 		color: theme.palette.text.secondary,
 	},
-	list: {
-		padding: 0,
+	listItem: {
+        padding: 0,
+        flexWrap: 'wrap'
 	},
 	button: {
 		margin: theme.spacing.unit,
-		width: '100%',
-	}
+        width: '100%',
+        marginLeft: 0
+    },
+    listItemText: {
+        width: '50%'
+    }
 	});
 
 	class ControlledExpansionPanels extends React.Component {
@@ -106,14 +111,14 @@ const styles = theme => ({
 
 								{/* details in a list format */}
 								<List>
-									<ListItem className={classes.list} key={index}>
-										<ListItemText primary="No of Candidates" />
+									<ListItem className={classes.listItem} key={index}>
+										<ListItemText className={classes.listItemText} primary="No of Candidates" />
 										<Typography>{division.noOfCandidates}</Typography>
 									</ListItem>
 									{
 										division.nomination.map((nomination, index) =>
-											<ListItem className={classes.list} key={index}>
-												<ListItemText primary="Status" />
+											<ListItem className={classes.listItem} key={index}>
+												<ListItemText className={classes.listItemText} primary="Status" />
 												<Typography>{nomination.status}</Typography>
 												<div>
 												{
