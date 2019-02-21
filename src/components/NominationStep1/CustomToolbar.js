@@ -122,7 +122,7 @@ class CustomToolbar extends React.Component {
               Save & New
             </Button>
             <Button  variant="contained" onClick={this.onCloseModal} type="submit" value="Submit&Clouse" color="default" className={classes.submit}>
-              Save & Clouse
+              Save & Close
             </Button>
           </DialogActions> */}
         </Dialog>
