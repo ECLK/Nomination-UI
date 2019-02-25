@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
 import Notifier, { openSnackbar } from '../Notifier';
+import { getNominationCandidates } from '../../modules/nomination/state/NominationAction';
+import { connect } from 'react-redux';
 
 const styles = theme => ({
     container: {
@@ -169,7 +171,7 @@ class TextFields extends React.Component {
         }
 
     handleSubmit = (e) => {
-        const { index } = this.props;
+        const { index,getNominationCandidates,customProps } = this.props;
         e.preventDefault();
         axios({
             method: 'put',
@@ -182,8 +184,9 @@ class TextFields extends React.Component {
         })
         .then(function (response) {
             setTimeout(() => {
-                openSnackbar({ message: 'Candidate Added Sccessfully...' });
-            }, 6000);
+                openSnackbar({ message: 'Candidate Updated Sccessfully...' });
+            }, 5000);
+            getNominationCandidates(customProps);
           })
           .catch(function (error) {
               alert("error",error);
@@ -406,4 +409,14 @@ TextFields.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TextFields);
+const mapStateToProps = ({Nomination}) => {
+    const {getNominationCandidates} = Nomination;
+    return {getNominationCandidates};
+  };
+
+  const mapActionsToProps = {
+    getNominationCandidates
+  };
+  
+  export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(TextFields));
+

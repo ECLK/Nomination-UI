@@ -161,9 +161,9 @@ class NominationForm extends React.Component {
       activeStep,
     });
     
-    if (activeStep === 2 && NominationPayments.id==''){
+    if (activeStep === 2 && NominationPayments==''){
       postNominationPayments(this.state);   
-  }else if(activeStep === 2 && NominationPayments.id!==''){
+  }else if(activeStep === 2 && NominationPayments!==''){
     updateNominationPayments(NominationPayments.id,this.state);   
   }
   };
