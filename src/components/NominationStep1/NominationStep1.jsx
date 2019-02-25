@@ -1,10 +1,13 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import MUIDataTable from "mui-datatables";
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import CustomToolbar from "./CustomToolbar";
+import CustomToolbarEdit from "./CustomToolbarEdit";
 import PropTypes from "prop-types";
 import { getNominationCandidates } from '../../modules/nomination/state/NominationAction';
 import { connect } from 'react-redux';
+
 
 const styles = theme => ({
     root: {
@@ -52,6 +55,19 @@ class CustomizedTable extends React.Component {
     handleDrawerClose = () => {
         this.setState({ open: false });
     };
+
+    getMuiTheme = () => createMuiTheme({
+        overrides: {
+          MUIDataTableBodyCell: {
+            root: {
+              backgroundColor: "#FFF",
+              '&:nth-child(9)': {
+                width: 150
+              }
+            }
+          }
+        }
+      })
 
     render() {
         const { CandidateList } = this.props;
@@ -124,7 +140,7 @@ class CustomizedTable extends React.Component {
                   filter: true,
                   customBodyRender: (value, tableMeta, updateValue) => {
                     return (
-                        <CustomToolbar
+                        <CustomToolbarEdit
                 value={value}
                 index={tableMeta.rowData[0]}
                 change={event => updateValue(event)}
@@ -138,6 +154,7 @@ class CustomizedTable extends React.Component {
                 }
             },
         ]
+
 
         const outputData = rows.map(Object.values);
         const { customProps } = this.props;
@@ -153,12 +170,14 @@ class CustomizedTable extends React.Component {
         };
 
         return (
+            <MuiThemeProvider theme={this.getMuiTheme()}>
             <MUIDataTable
                 title={"Nomination Candidate list"}
                 data={data}
                 columns={columns}
                 options={options}
             />
+            </MuiThemeProvider>
         );
     }
 }
