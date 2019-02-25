@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import axios from 'axios';
 import "react-datepicker/dist/react-datepicker.css";
-import Select from '@material-ui/core/Select';
-
+import { handleChangePayment } from '../../modules/nomination/state/NominationAction';
+import { connect } from 'react-redux';
 
 
 
@@ -84,87 +82,59 @@ const designation = [
       label: '¥',
     },
   ];
+  
 class NominationPayments extends React.Component {
-    state = {
-      open: true,
-   
-    //   candidateCount:localStorage.getItem('candidate')
+  
+    constructor(props) {
+        super(props)
 
-    };
-    
-
-    
-
-    componentDidMount() {
-    //     console.log(this)
-    //     var candidateCount = localStorage.getItem('candidate');
-    //   axios.get(`nominations/135183e2-a0ca-44a0-9577-0d2b16c3217f/payments`)
-    //     .then(res => {
-    //       const payments = res.data;
-    //       const depositor=res.data.depositor;
-    //       const depositAmount=res.data.depositAmount;
-    //       const depositeDate=res.data.depositeDate;
-    //       const paymentStatus=res.data.paymentStatus;
-
-
-    //       console.log("payments",payments);
-    //       this.setState({ depositor });
-    //       this.setState({ depositAmount });
-    //       this.setState({ depositeDate });
-    //       this.setState({ paymentStatus });
-    //     })
-    // setPaymentStatus();
-
-    // const { handleSubmit } = this.props;
-       
-}
-
-// handleChanged = name => event => {
-//     const {handleChange} = this.props;
-
-//     this.setState({
-//       [name]: event.target.value,
-//     });
-//     {handleChange('depositeDate')}
-//   };
-
-      
-
-
+        this.state = {
+            open: true,
+            depositor:'',
+            depositAmount:'',
+            depositeDate:'',  
+        }
+      }
     
     render() {
-        const {classes, depositor,handleChange,getNominationPayments} = this.props;
+        const {classes, depositor,handleChange,NominationPayments,NumberFormatCustom,CandidateList} = this.props;
+        const {  numberformat } = this.state;
         return (
             <form className={classes.container} noValidate autoComplete="off">
-                <Grid container direction="row" justify="flex-start" alignItems="stretch" spacing={8}>
+                <Grid container direction="row" justify="flex-start" alignItems="stretch" spacing={8}>                
+                    <Grid item lg={3}>
+                        <TextField
+                            id="formatted-numberformat-input"
+                            label="Deposited Amount"
+                            className={classes.textField}
+                            prefix={'Rs '}
+                            value={NominationPayments.depositAmount}
+                            onChange={handleChange('depositAmount')}
+                            margin="normal"
+                            InputProps={{
+                                inputComponent: NumberFormatCustom,
+                              }}
+                        />
+                    </Grid>
                     <Grid item lg={3}>
                     <TextField
                             label="Depositor Name"
-                            value={getNominationPayments.depositor}
-                            onChange={handleChange("depositor")}
-                        />  
-                    </Grid>
-                    <Grid item lg={3}>
-                        <TextField
-                            id="standard-name"
-                            label="Deposited Amount"
                             className={classes.textField}
-                            value={getNominationPayments.amount}
-                            onChange={handleChange('depositAmount')}
+                            value={NominationPayments.depositor}
+                            onChange={handleChange("depositor")}
                             margin="normal"
-                        />
+                        />  
                     </Grid>
                     <Grid item lg={3}>
                         <TextField
                             id="standard-name"
                             label="Candidate Count"
                             className={classes.textField}
-                            value={localStorage.getItem('candidate')}
+                            value={CandidateList.length}
                             onChange={handleChange('candidateCount')}
                             margin="normal"
                         />
-                    </Grid>
-
+                    </Grid>                   
                 </Grid>
                 <Grid container spacing={8}>
                     <Grid item lg={3}>
@@ -172,8 +142,7 @@ class NominationPayments extends React.Component {
                             id="date"
                             label="Diposited Date"
                             type="date"
-                            value={getNominationPayments.depositeDate}
-                            // defaultValue="2017-05-24"
+                            value={NominationPayments.depositeDate}
                             onChange={handleChange('depositeDate')}
                             className={classes.textField}
                             InputLabelProps={{
@@ -181,89 +150,8 @@ class NominationPayments extends React.Component {
                             }}
                             margin="normal"
                         />
-                    </Grid>
-                    <Grid item lg={3}>
-                         {/* <TextField
-                            id="standard-select-currency"
-                            select
-                            label="Designation"
-                            className={classes.textField}
-                            value={nominationPayments.designation}
-                             onChange={this.handleChanged}
-                            SelectProps={{
-                                MenuProps: {
-                                className: classes.menu,
-                                },
-                            }}
-                            // helperText="Please select your currency"
-                            margin="normal"
-                            >
-                            {designation.map(option => (
-                                <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                                </MenuItem>
-                            ))}
-                            </TextField>    */}
-                            {/* <TextField
-                            id="standard-select-designation"
-                            select
-                            label="Select"
-                            className={classes.textField}
-                            value={this.state.designation}
-                            onChange={this.handleChanged('designation')}
-                            SelectProps={{
-                                MenuProps: {
-                                className: classes.menu,
-                                },
-                            }}
-                            helperText="Please select your designation"
-                            margin="normal"
-                            >
-                            {designation.map(option => (
-                                <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                                </MenuItem>
-                            ))}
-                            </TextField>     */}
-                            
-                    </Grid>
-                    {/* <Grid item lg={3}>
-                         <TextField
-                            id="standard-select-currency"
-                            select
-                            label="Select"
-                            className={classes.textField}
-                            value={nominationPayments.paymentStatus}
-                            onChange={handleChange('paymentStatus')}
-                            SelectProps={{
-                                MenuProps: {
-                                className: classes.menu,
-                                },
-                            }}
-                            // helperText="Please select your currency"
-                            margin="normal"
-                            >
-                            {paymentStatus.map(option => (
-                                <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                                </MenuItem>
-                            ))}
-                            </TextField>       
-                    </Grid> */}
+                    </Grid>                             
                 </Grid>
-               
-
-                {/* <Grid container spacing={8}>
-                    <Grid item lg={3}>
-                    <Button variant="contained" color="primary" className={classes.button}>
-                        Cancel
-                    </Button>
-                    <Button variant="contained" color="secondary" className={classes.button}>
-                        Send
-                    </Button>
-                    </Grid>
-                </Grid> */}
-
             </form>
         );
     }
@@ -273,6 +161,19 @@ NominationPayments.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(NominationPayments);
+const mapStateToProps = ({Nomination}) => {
+    const {handleChangePayment} = Nomination;
+    const CandidateList = Nomination.getNominationCandidates;
+
+    return {handleChangePayment,CandidateList};
+  };
+
+  const mapActionsToProps = {
+    handleChangePayment
+  };
+  
+ 
+  
+  export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(NominationPayments));
 
 

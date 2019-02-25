@@ -13,11 +13,6 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 
-
-
-
-
-
 const defaultToolbarStyles = {
   iconButton: {
   },
@@ -71,9 +66,6 @@ const DialogActions = withStyles(theme => ({
 
 class CustomToolbar extends React.Component {
  
-  // state = {
-  //   open: false
-  // };
   constructor(props) {
     super(props);
     this.state = { open: false };

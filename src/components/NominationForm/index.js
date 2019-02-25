@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import NumberFormat from 'react-number-format';
 import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -14,8 +15,7 @@ import { postNominationPayments, updateNominationPayments } from '../../modules/
 import { connect } from 'react-redux';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import axios from "axios";
-
+import moment from 'moment';
 
 
 const styles = theme => ({
@@ -47,14 +47,17 @@ function getSteps() {
   return ['Candidate Details', 'Payment Details', 'Review'];
 }
 
+// NumberFormatCustom.propTypes = {
+//   inputRef: PropTypes.func.isRequired,
+//   onChange: PropTypes.func.isRequired,
+// };
+
 
 
 class NominationForm extends React.Component {
  
   constructor(props) {
     super(props)
-    // const { NominationPayments } = this.props;
-
 
     this.state = {
       activeStep: 0,
@@ -81,21 +84,12 @@ class NominationForm extends React.Component {
 
       this.setState({depositor:NominationPayments.depositor});   
       this.setState({depositAmount:NominationPayments.depositAmount});   
-      this.setState({depositeDate:NominationPayments.depositeDate});      }
+      var ddate = parseInt(NominationPayments.depositeDate);
+      this.setState({depositeDate:moment(Date(NominationPayments.depositeDate)).format('YYYY-MM-DD')});}
+      console.log({depositeDate:moment(Date(ddate)).format('YYYY-MM-DD')});
+      console.log(NominationPayments.depositeDate);
+
   }
-  // componentDidMount() {
-  //   const {NominationPayments} = this.props;
-  //   console.log("NominationPayments",NominationPayments);
-  //   this.setState({depositor:NominationPayments.depositor});   
-  //   this.setState({depositAmount:NominationPayments.depositAmount});   
-  //   this.setState({depositeDate:NominationPayments.depositeDate});   
-
-  // }
-
-  //   componentDidMount() {
-  //     // const { customProps, NominationPayments } = this.props;
-  //     // getNominationPayments(customProps);
-  // }
 
 
   handleChange = (name) => event => {
@@ -103,6 +97,25 @@ class NominationForm extends React.Component {
             [name]:event.target.value,
     });   
   };
+  NumberFormatCustom(props) {
+    const { inputRef, onChange, ...other } = props;
+  
+    return (
+      <NumberFormat
+        {...other}
+        getInputRef={inputRef}
+        onValueChange={values => {
+          onChange({
+            target: {
+              value: values.value,
+            },
+          });
+        }}
+        thousandSeparator
+        prefix="Rs "
+      />
+    );
+  }
 
 
   getStepContent(step,props) {
@@ -113,9 +126,9 @@ class NominationForm extends React.Component {
         return <NominationStep1 customProps={customProps}/>;
       case 1:
       if(nominationStatus==="DRAFT"){
-        return <NominationStep2Update NominationPayments={this.state} customProps={customProps}  handleChange={this.handleChange} />;
+        return <NominationStep2Update NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
       }else if(nominationStatus==="SUBMIT"){
-        return <NominationStep2 nominationPayments={nominationPayments} handleChange={this.handleChange} />;
+        return <NominationStep2 NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
       }else{
         return <NominationStep2 nominationPayments={nominationPayments} handleChange={this.handleChange} />;
       }
@@ -133,7 +146,7 @@ class NominationForm extends React.Component {
   
 
   handleNext = () => {
-    const {postNominationPayments, nominationStatus, customProps}=this.props;
+    const {postNominationPayments,updateNominationPayments,NominationPayments, nominationStatus, customProps}=this.props;
     let activeStep;
    
     if (this.isLastStep() && !this.allStepsCompleted()) {
@@ -147,10 +160,11 @@ class NominationForm extends React.Component {
     this.setState({
       activeStep,
     });
-    if (activeStep === 2 && nominationStatus === "DRAFT"){
+    
+    if (activeStep === 2 && NominationPayments.id==''){
       postNominationPayments(this.state);   
-  }else{
-    updateNominationPayments(customProps,this.state);   
+  }else if(activeStep === 2 && NominationPayments.id!==''){
+    updateNominationPayments(NominationPayments.id,this.state);   
   }
   };
 

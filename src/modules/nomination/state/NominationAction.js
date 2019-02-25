@@ -6,7 +6,8 @@ import {
   ON_NOMINATION_APPROVAL_CHANGE,
   GET_NOMINATION_PAYMENTS,
   HANDLE_CHANGE_PAYMENT,
-  GET_NOMINATION_CANDIDATES
+  GET_NOMINATION_CANDIDATES,
+  UPDATE_NOMINATION_PAYMENTS
 
 } from "./NominationTypes";
 import {API_BASE_URL} from "../../../config.js";
@@ -222,26 +223,33 @@ export function postNominationPayments(candidatePayments) {
     };
   }
 
+  export const setUpdatedPaymentData = (val) => {
+    return {
+        type: PUT_NOMINATION_PAYMENTS,
+        payload: val
+    }
+}
+
   export function updateNominationPayments(customProps,candidatePayments) {
     return function (dispatch) {
       
       let nominationPayments = {
         depositor: candidatePayments.depositor,
         amount: candidatePayments.depositAmount,
-        depositDate: candidatePayments.depositeDate,
+        depositDate:Date.parse(candidatePayments.depositeDate),
         filePath: candidatePayments.filePath,
         status: candidatePayments.status,
         nominationId: candidatePayments.nominationId
     };
-       
+       console.log("nominationPayments00",nominationPayments);
       const response = axios
       .put(
         `${API_BASE_URL}/nominations/${customProps}/payments`,
         {...nominationPayments}
       )
       .then(response => {
-        const getNominationPayments = response.data;
-         dispatch(nominationPaymentLoaded(getNominationPayments));
+        const updateNominationPayments = response.data;
+         dispatch(setUpdatedPaymentData(updateNominationPayments));
       }).catch(err => {
             console.log(err)
       });
