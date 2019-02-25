@@ -389,7 +389,7 @@ class TextFields extends React.Component {
                             Save & New
                         </Button>
                         <Button  variant="contained" onClick = { this.handleChangeButton }  type="submit" value="Submit&Clouse" color="default" className={classes.submit}>
-                            Save & Clouse
+                            Save & Close
                         </Button>
                     </Grid>
                 </Grid>
