@@ -171,7 +171,20 @@ class TextFields extends React.Component {
         }
 
     handleSubmit = (e) => {
+        
         const { index,getNominationCandidates,customProps } = this.props;
+            var postData = {
+                        nic: this.state.nic,
+                        fullName: this.state.fullName,
+                        preferredName: this.state.preferredName,
+                        dateOfBirth:  Date.parse(this.state.dateOfBirth),
+                        gender: this.state.gender,
+                        occupation:this.state.occupation,
+                        address:this.state.address,
+                        electoralDivisionName: this.state.electoralDivisionName,
+                        electoralDivisionCode: this.state.electoralDivisionCode,
+                        counsilName: this.state.counsilName,
+                }
         e.preventDefault();
         axios({
             method: 'put',
@@ -180,7 +193,7 @@ class TextFields extends React.Component {
                 'Content-Type': 'application/json',
             },
             url: `/candidates/${index}`,
-            data: this.state
+            data: postData
         })
         .then(function (response) {
             setTimeout(() => {

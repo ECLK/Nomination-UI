@@ -7,6 +7,7 @@ import {
   GET_NOMINATION_PAYMENTS,
   HANDLE_CHANGE_PAYMENT,
   GET_NOMINATION_CANDIDATES,
+  DELETE_NOMINATION_CANDIDATE,
   UPDATE_NOMINATION_PAYMENTS
 
 } from "./NominationTypes";
@@ -187,12 +188,14 @@ export function postNominationPayments(candidatePayments) {
         let nominationPayments = {
             depositor: candidatePayments.depositor,
             amount: candidatePayments.depositAmount,
-            depositDate: candidatePayments.depositeDate,
+            depositDate: Date.parse(candidatePayments.depositeDate),
             filePath: candidatePayments.filePath,
             status: candidatePayments.status,
+            createdBy:candidatePayments.depositor,//TODO: yujith,change this to session user after session user created
+            createdAt:Date.parse(new Date()),
+            updatedAt:Date.parse(new Date()),
             nominationId: candidatePayments.nominationId
         };
-        console.log(candidatePayments);
        
       const response = axios
       .post(
@@ -200,23 +203,7 @@ export function postNominationPayments(candidatePayments) {
             {...nominationPayments}
       )
       .then(response => {
-        console.log(response.data);
-        var d = new Date(response.data.depositDate);
-        var theyear = d.getFullYear();
-        var themonth = d.getMonth() + 1;
-        var thetoday = d.getDate();
-        var newDate = (theyear + "-" + themonth + "-" + thetoday);
-
-       let res = {
-        depositor: response.data.depositor,
-        amount: response.data.amount,
-        depositDate: newDate,
-        filePath: response.data.filePath,
-        status: response.data.status,
-        nominationId: response.data.nominationId
-       }
-
-         dispatch(setData(res));
+         dispatch(setData(response.data));
       }).catch(err => {
             console.log(err)
       });
@@ -239,9 +226,9 @@ export function postNominationPayments(candidatePayments) {
         depositDate:Date.parse(candidatePayments.depositeDate),
         filePath: candidatePayments.filePath,
         status: candidatePayments.status,
+        updatedAt:Date.parse(new Date()),
         nominationId: candidatePayments.nominationId
     };
-       console.log("nominationPayments00",nominationPayments);
       const response = axios
       .put(
         `${API_BASE_URL}/nominations/${customProps}/payments`,
@@ -255,6 +242,38 @@ export function postNominationPayments(candidatePayments) {
       });
     };
   }
+
+//--------------- Start of Delete Nomination Candidate -------------
+export const setDeleteData = (getNominationCandidateDeleted) => {
+  return {
+      type: DELETE_NOMINATION_CANDIDATE,
+      payload: getNominationCandidateDeleted
+  }
+}
+
+export function deleteNominationCandidate(customProps) {
+    return function (dispatch) {
+       
+      const response = axios
+      .delete(
+        `${API_BASE_URL}/nominations/${customProps}/candidates`,
+      )
+      .then(response => {
+        const getNominationCandidateDeleted = response.data;
+         dispatch(
+          setDeleteData(getNominationCandidateDeleted)
+           );
+      }).catch(err => {
+        const getNominationCandidateDeleted = [];
+        dispatch(
+          setDeleteData(getNominationCandidateDeleted)
+          );
+            console.log(err)
+      });
+    };
+  }
+//--------------- End of Delete Nomination Candidate -------------
+
 
 
 

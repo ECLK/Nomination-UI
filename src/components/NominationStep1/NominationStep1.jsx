@@ -1,12 +1,15 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import MUIDataTable from "mui-datatables";
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import CustomToolbar from "./CustomToolbar";
 import CustomToolbarEdit from "./CustomToolbarEdit";
+import CustomToolbarDelete from "./CustomToolbarDelete";
 import PropTypes from "prop-types";
 import { getNominationCandidates } from '../../modules/nomination/state/NominationAction';
 import { connect } from 'react-redux';
+import Grid from '@material-ui/core/Grid';
+
+
 
 
 const styles = theme => ({
@@ -23,6 +26,9 @@ const styles = theme => ({
             backgroundColor: theme.palette.background.default,
         },
     },
+    grid: {
+        alignItems:"left"
+        },
 });
 
 class CustomizedTable extends React.Component {
@@ -56,21 +62,8 @@ class CustomizedTable extends React.Component {
         this.setState({ open: false });
     };
 
-    getMuiTheme = () => createMuiTheme({
-        overrides: {
-          MUIDataTableBodyCell: {
-            root: {
-              backgroundColor: "#FFF",
-              '&:nth-child(9)': {
-                width: 150
-              }
-            }
-          }
-        }
-      })
-
     render() {
-        const { CandidateList } = this.props;
+        const {classes, CandidateList } = this.props;
         const rows = CandidateList;
         
         const columns = [
@@ -140,17 +133,30 @@ class CustomizedTable extends React.Component {
                   filter: true,
                   customBodyRender: (value, tableMeta, updateValue) => {
                     return (
+                        <Grid container  className={classes.grid}  direction="row" justify="flex-start" alignItems="stretch" spacing={12}>
+                        <Grid  item lg={6}>
                         <CustomToolbarEdit
-                value={value}
-                index={tableMeta.rowData[0]}
-                change={event => updateValue(event)}
-                customProps={customProps}
-                modalType="Update"
-
-              />
-                         
+                            className={classes.grid}
+                            value={value}
+                            index={tableMeta.rowData[0]}
+                            change={event => updateValue(event)}
+                            customProps={customProps}
+                            modalType="Update"
+                        />  
+                        </Grid>
+                        <Grid item lg={6}>
+                        <CustomToolbarDelete
+                         className={classes.grid}
+                        value={value}
+                        index={tableMeta.rowData[0]}
+                        change={event => updateValue(event)}
+                        customProps={customProps}
+                        modalType="Delete"
+                    /> 
+                    </Grid>
+                    </Grid>
                     );
-                  },         
+                  },        
                 }
             },
         ]
@@ -170,14 +176,12 @@ class CustomizedTable extends React.Component {
         };
 
         return (
-            <MuiThemeProvider theme={this.getMuiTheme()}>
             <MUIDataTable
                 title={"Nomination Candidate list"}
                 data={data}
                 columns={columns}
                 options={options}
             />
-            </MuiThemeProvider>
         );
     }
 }

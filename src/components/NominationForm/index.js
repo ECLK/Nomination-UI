@@ -85,9 +85,8 @@ class NominationForm extends React.Component {
       this.setState({depositor:NominationPayments.depositor});   
       this.setState({depositAmount:NominationPayments.depositAmount});   
       var ddate = parseInt(NominationPayments.depositeDate);
-      this.setState({depositeDate:moment(Date(NominationPayments.depositeDate)).format('YYYY-MM-DD')});}
-      console.log({depositeDate:moment(Date(ddate)).format('YYYY-MM-DD')});
-      console.log(NominationPayments.depositeDate);
+      this.setState({depositeDate:moment(new Date(NominationPayments.depositeDate)).format('YYYY-MM-DD')});}
+     
 
   }
 
