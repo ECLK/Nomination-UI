@@ -21,25 +21,25 @@ import NominationReview from 'modules/nomination/Nomination_review';
 import PaymentReview from 'modules/payment/Payment_review';
 import ObjectionReview from 'pages/ADMIN/Objection_review/Objection_review';
 import ElectionReview from 'pages/ADMIN/Election_review/Election_review';
-
+import ElectionProcessReview from 'modules/election/Election_process_review';
 import CreateElection from 'modules/election-model/CreateElection';
 
 
 
 export default class Protected extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
             isLoggedIn: false,
         }
-        
+
         // dummy login process just to determine the logged in user role as 'user' or 'admin'
-        if (sessionStorage.getItem('role') !== null){
-            if (sessionStorage.getItem('role').includes('user')){
+        if (sessionStorage.getItem('role') !== null) {
+            if (sessionStorage.getItem('role').includes('user')) {
                 this.state.isLoggedIn = true;
-            } else if (sessionStorage.getItem('role').includes('admin')){
+            } else if (sessionStorage.getItem('role').includes('admin')) {
                 this.state.isLoggedIn = true;
             }
         }
@@ -62,9 +62,9 @@ export default class Protected extends Component {
                     {/* <Route path='/nomination' component={Nomination} /> */}
                     <Route path='/objection' component={(this.state.isLoggedIn) ? Objection : Login} />
                     <Route path='/profile' component={(this.state.isLoggedIn) ? Profile : Login} />
-
+                    <Route path='/election-process-review' component={(this.state.isLoggedIn) ? ElectionProcessReview : Login} />
                     <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login} />
-                    
+
                     <Redirect exact from='/admin' to='/admin/home' />
                     <Route path='/admin/home' component={(this.state.isLoggedIn) ? Admin_home : Login} />
                     <Route path='/admin/call-election' component={(this.state.isLoggedIn) ? Admin_CallElection : Login} />
