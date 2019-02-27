@@ -5,11 +5,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
-import Hidden from '@material-ui/core/Hidden';
 import Notifier, { openSnackbar } from '../Notifier';
-
-
-
+import { getNominationCandidates } from '../../modules/nomination/state/NominationAction';
+import { connect } from 'react-redux';
 
 const styles = theme => ({
     container: {
@@ -127,8 +125,6 @@ class TextFields extends React.Component {
 
     componentDidMount() {
         const { index,customProps } = this.props;
-
-            console.log(this)
       axios.get(`nominations/${customProps}/candidates/${index}`)
         .then(res => {
           const payments = res.data;
@@ -143,7 +139,6 @@ class TextFields extends React.Component {
           const electoralDivisionCode=res.data[0].electoralDivisionCode;
           const counsilName=res.data[0].counsilName;
           
-        //   console.log("payments",payments);
           this.setState({ nic });
           this.setState({ fullName });
           this.setState({ preferredName });
@@ -154,15 +149,10 @@ class TextFields extends React.Component {
           this.setState({ electoralDivisionName });
           this.setState({ electoralDivisionCode });
           this.setState({ counsilName });
-          debugger;
 
         })
-
-
     }
     
-
-
     handleChange = name => event => {
         const { customProps } = this.props;
         this.setState({
@@ -176,43 +166,43 @@ class TextFields extends React.Component {
     handleChangeButton = (e) => {
         const { onCloseModal } = this.props;
         if(e.currentTarget.value==="Submit&Clouse"){
-            onCloseModal();
-            
-
+            onCloseModal();           
         }
         }
-
 
     handleSubmit = (e) => {
-        // console.log(e.currentTarget.value);
-        // debugger;
-        // this.refs.btn.setAttribute("disabled", "disabled");
-
+        
+        const { index,getNominationCandidates,customProps } = this.props;
+            var postData = {
+                        nic: this.state.nic,
+                        fullName: this.state.fullName,
+                        preferredName: this.state.preferredName,
+                        dateOfBirth:  Date.parse(this.state.dateOfBirth),
+                        gender: this.state.gender,
+                        occupation:this.state.occupation,
+                        address:this.state.address,
+                        electoralDivisionName: this.state.electoralDivisionName,
+                        electoralDivisionCode: this.state.electoralDivisionCode,
+                        counsilName: this.state.counsilName,
+                }
         e.preventDefault();
-       
         axios({
-            method: 'post',
+            method: 'put',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            url: 'nominations/candidates',
-            data: this.state
+            url: `/candidates/${index}`,
+            data: postData
         })
         .then(function (response) {
-            // return response.json();
-            // console.log("ffff",response.json());
-            // openSnackbar({ message: 'Candidate Added Sccessfully...' });
             setTimeout(() => {
-                openSnackbar({ message: 'Candidate Added Sccessfully...' });
-            }, 6000);
-            // resultElement.innerHTML = generateSuccessHTMLOutput(response);
-            // alert("sucsess",response);
-            // this.onCloseModal();
+                openSnackbar({ message: 'Candidate Updated Sccessfully...' });
+            }, 5000);
+            getNominationCandidates(customProps);
           })
           .catch(function (error) {
               alert("error",error);
-            // resultElement.innerHTML = generateErrorHTMLOutput(error);
           });
     };
 
@@ -432,4 +422,14 @@ TextFields.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TextFields);
+const mapStateToProps = ({Nomination}) => {
+    const {getNominationCandidates} = Nomination;
+    return {getNominationCandidates};
+  };
+
+  const mapActionsToProps = {
+    getNominationCandidates
+  };
+  
+  export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(TextFields));
+

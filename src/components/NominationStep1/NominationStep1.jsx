@@ -1,16 +1,16 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import axios from 'axios';
 import MUIDataTable from "mui-datatables";
 import CustomToolbar from "./CustomToolbar";
-import Button from '@material-ui/core/Button';
-import Switch from "@material-ui/core/Switch";
-import FormControl from "@material-ui/core/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import CustomToolbarEdit from "./CustomToolbarEdit";
+import CustomToolbarDelete from "./CustomToolbarDelete";
 import PropTypes from "prop-types";
-import AddIcon from '@material-ui/icons/Add';
 import { getNominationCandidates } from '../../modules/nomination/state/NominationAction';
 import { connect } from 'react-redux';
+import Grid from '@material-ui/core/Grid';
+
+
+
 
 const styles = theme => ({
     root: {
@@ -26,9 +26,10 @@ const styles = theme => ({
             backgroundColor: theme.palette.background.default,
         },
     },
+    grid: {
+        alignItems: "left"
+    },
 });
-
-
 
 class CustomizedTable extends React.Component {
 
@@ -51,17 +52,7 @@ class CustomizedTable extends React.Component {
     componentDidMount() {
         const { customProps, getNominationCandidates } = this.props;
         getNominationCandidates(customProps);
-        // axios.get(`nominations/${customProps}/candidates`)
-        //     .then(res => {
-        //         const nominations = res.data;
-        //         const candidateCount = res.data.length;
-        //         localStorage.setItem('candidate', res.data.length)
-        //         this.setState({ nominations });
-        //         this.setState({ candidateCount });
-        //     })
     }
-
-
 
     handleDrawerOpen = () => {
         this.setState({ open: true });
@@ -72,12 +63,9 @@ class CustomizedTable extends React.Component {
     };
 
     render() {
-        const { CandidateList } = this.props;
+        const { classes, CandidateList } = this.props;
         const rows = CandidateList;
         console.log("CandidateList", CandidateList);
-
-
-
 
         const columns = [
             {
@@ -146,30 +134,37 @@ class CustomizedTable extends React.Component {
                     filter: true,
                     customBodyRender: (value, tableMeta, updateValue) => {
                         return (
-                            <CustomToolbar
-                                value={value}
-                                index={tableMeta.rowData[0]}
-                                change={event => updateValue(event)}
-                                customProps={customProps}
-                                modalType="Update"
-
-                            />
-
+                            <Grid container className={classes.grid} direction="row" justify="flex-start" alignItems="stretch" spacing={12}>
+                                <Grid item lg={6}>
+                                    <CustomToolbarEdit
+                                        className={classes.grid}
+                                        value={value}
+                                        index={tableMeta.rowData[0]}
+                                        change={event => updateValue(event)}
+                                        customProps={customProps}
+                                        modalType="Update"
+                                    />
+                                </Grid>
+                                <Grid item lg={6}>
+                                    <CustomToolbarDelete
+                                        className={classes.grid}
+                                        value={value}
+                                        index={tableMeta.rowData[0]}
+                                        change={event => updateValue(event)}
+                                        customProps={customProps}
+                                        modalType="Delete"
+                                    />
+                                </Grid>
+                            </Grid>
                         );
                     },
                 }
             },
-
-
-
         ]
-        // rows = rows.concat('true');
+
 
         const outputData = rows.map(Object.values);
-
-        console.log("output", outputData);
         const { customProps } = this.props;
-
         const data = outputData;
         const options = {
             filterType: "dropdown",
@@ -192,7 +187,6 @@ class CustomizedTable extends React.Component {
     }
 }
 
-
 const mapStateToProps = ({ Nomination }) => {
     const { getNominationCandidates } = Nomination;
     const CandidateList = Nomination.getNominationCandidates;
@@ -202,8 +196,6 @@ const mapStateToProps = ({ Nomination }) => {
 const mapActionsToProps = {
     getNominationCandidates
 };
-
-
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(CustomizedTable));
 

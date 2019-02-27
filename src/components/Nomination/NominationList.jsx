@@ -27,13 +27,25 @@ const styles = theme => ({
 		fontSize: theme.typography.pxToRem(15),
 		color: theme.palette.text.secondary,
 	},
-	list: {
-		padding: 0,
+	listItem: {
+        padding: 0,
+        flexWrap: 'wrap'
 	},
 	button: {
 		margin: theme.spacing.unit,
-		width: '100%',
-	}
+        width: '100%',
+        marginLeft: 0
+    },
+    listItemText: {
+        width: '50%'
+    },
+    list: {
+        width: '100%'
+    },
+    rightText: {
+        width: '50%',
+        textAlign: 'right'
+    }
 	});
 
 	class ControlledExpansionPanels extends React.Component {
@@ -80,7 +92,6 @@ const styles = theme => ({
 			axios.get(`elections/${sessionStorage.getItem('election_id')}/teams/5eedb70e-a4da-48e0-b971-e06cd19ecc70/divisions`)
 				.then(res => {
 					const division = res.data;
-					console.log("division",res.data);
 					this.setState({ division });
 			});
 	}
@@ -99,22 +110,22 @@ const styles = theme => ({
 					this.state.division.map((division, index) =>
 						<ExpansionPanel key={index} expanded={expanded === 'panel' + division.code} onChange={this.handleChange('panel' + division.code)}>
 							<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-								<Typography className={classes.heading}>{division.name}</Typography>
+								<Typography className={classes.heading}>{division.name} - [{division.code}]</Typography>
 								<Typography className={classes.secondaryHeading}>[{division.code}]</Typography>
 							</ExpansionPanelSummary>
 							<ExpansionPanelDetails>
 
 								{/* details in a list format */}
-								<List>
-									<ListItem className={classes.list} key={index}>
-										<ListItemText primary="No of Candidates" />
-										<Typography>{division.noOfCandidates}</Typography>
+								<List className={classes.list}>
+									<ListItem className={classes.listItem} key={index}>
+										<ListItemText className={classes.listItemText} primary="No of Candidates" />
+										<Typography className={classes.rightText}>{division.noOfCandidates}</Typography>
 									</ListItem>
 									{
 										division.nomination.map((nomination, index) =>
-											<ListItem className={classes.list} key={index}>
-												<ListItemText primary="Status" />
-												<Typography>{nomination.status}</Typography>
+											<ListItem className={classes.listItem} key={index}>
+												<ListItemText className={classes.listItemText} primary="Status" />
+												<Typography className={classes.rightText}>{nomination.status}</Typography>
 												<div>
 												{
 

@@ -4,7 +4,9 @@ import {
     POST_ACTIVE_ELECTION_DATA,
     POST_ELECTION,
     GET_ELECTION_MODULE,
-    SET_ELECTION_TIME_LINE
+    POST_CALL_ELECTION,
+    POST_CALL_ELECTION_DATA,
+    SET_CALL_ELECTION_DATA,
 } from "./ElectionTypes";
 import { REQUEST_STATE } from "../../../lib/request_redux_state";
 
@@ -17,21 +19,18 @@ const initialState = {
     depositAmount: 'Amount',
     WeightagePrefarence: '%',
     WeightageVote: '%',
+    rowData: [],
     requestState: REQUEST_STATE.NOT_STARTED,
     elections: [],
     electionData: [],
     allElectionModules: [],
-    electionTimeLine: []
-
+    CallElectionData: [],
+    PostedCallElection: [],
+    PostedCallElectionData: [],
 };
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        case POST_ACTIVE_ELECTION_DATA:
-            return {
-                ...state,
-                modalOpen: action.payload
-            };
         case ELECTIONS_LOADING:
             return {
                 ...state,
@@ -53,10 +52,20 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 allElectionModules: action.payload
             };
-        case SET_ELECTION_TIME_LINE:
+        case SET_CALL_ELECTION_DATA://set election data to the state
             return {
                 ...state,
-                electionTimeLine: action.payload
+                CallElectionData: action.payload
+            };
+        case POST_CALL_ELECTION://save on ELECTION table
+            return {
+                ...state,
+                PostedCallElection: action.payload
+            };
+        case POST_CALL_ELECTION_DATA://save timeline, electionConfig, allow nominaton
+            return {
+                ...state,
+                PostedCallElectionData: action.payload
             };
     }
     return state;
