@@ -23,6 +23,7 @@
     "react-jss": "latest",
     "react-loadable": "latest",
     "react-moment": "^0.8.4",
+    "react-number-format": "^4.0.6",
     "react-popup": "^0.9.3",
     "react-redux": "^6.0.0",
     "react-responsive-modal": "^3.5.1",
@@ -32,6 +33,7 @@
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.7",
     "redux-thunk": "^2.3.0",
+    "underscore": "^1.9.1",
     "update": "^0.7.4",
     "yarn-install": "^1.0.0"
   },

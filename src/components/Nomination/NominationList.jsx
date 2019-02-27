@@ -92,7 +92,6 @@ const styles = theme => ({
 			axios.get(`elections/${sessionStorage.getItem('election_id')}/teams/5eedb70e-a4da-48e0-b971-e06cd19ecc70/divisions`)
 				.then(res => {
 					const division = res.data;
-					console.log("division",res.data);
 					this.setState({ division });
 			});
 	}
@@ -111,7 +110,7 @@ const styles = theme => ({
 					this.state.division.map((division, index) =>
 						<ExpansionPanel key={index} expanded={expanded === 'panel' + division.code} onChange={this.handleChange('panel' + division.code)}>
 							<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-								<Typography className={classes.heading}>{division.name}</Typography>
+								<Typography className={classes.heading}>{division.name} - [{division.code}]</Typography>
 								<Typography className={classes.secondaryHeading}>[{division.code}]</Typography>
 							</ExpansionPanelSummary>
 							<ExpansionPanelDetails>

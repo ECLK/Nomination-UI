@@ -97,6 +97,7 @@ class TextFields extends React.Component {
                     <TextField
                             label="Weightage % Vote-Based"
                             value={this.state.WeightageVote}
+                            name="WeightageVote"
                             onChange={handleChange('WeightageVote')}
                             defaultValue={values.WeightageVote}
 
@@ -107,6 +108,7 @@ class TextFields extends React.Component {
                             id="standard-name"
                             label="Weightage % Prefarence-Based"
                             className={classes.textField}
+                            name="WeightagePrefarence"
                             value={this.state.WeightagePrefarence}
                             defaultValue={values.WeightagePrefarence}
                             onChange={handleChange('WeightagePrefarence')}
