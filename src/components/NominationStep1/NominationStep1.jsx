@@ -36,7 +36,7 @@ class CustomizedTable extends React.Component {
         value: PropTypes.string.isRequired,
         index: PropTypes.number.isRequired,
         change: PropTypes.func.isRequired
-      };
+    };
 
     constructor(props) {
         super(props);
@@ -49,7 +49,7 @@ class CustomizedTable extends React.Component {
     }
 
     componentDidMount() {
-        const { customProps,getNominationCandidates } = this.props;
+        const { customProps, getNominationCandidates } = this.props;
         getNominationCandidates(customProps);
         // axios.get(`nominations/${customProps}/candidates`)
         //     .then(res => {
@@ -74,8 +74,8 @@ class CustomizedTable extends React.Component {
     render() {
         const { CandidateList } = this.props;
         const rows = CandidateList;
-        console.log("CandidateList",CandidateList);
-        
+        console.log("CandidateList", CandidateList);
+
 
 
 
@@ -143,24 +143,24 @@ class CustomizedTable extends React.Component {
             {
                 name: "Action",
                 options: {
-                  filter: true,
-                  customBodyRender: (value, tableMeta, updateValue) => {
-                    return (
-                        <CustomToolbar
-                value={value}
-                index={tableMeta.rowData[0]}
-                change={event => updateValue(event)}
-                customProps={customProps}
-                modalType="Update"
+                    filter: true,
+                    customBodyRender: (value, tableMeta, updateValue) => {
+                        return (
+                            <CustomToolbar
+                                value={value}
+                                index={tableMeta.rowData[0]}
+                                change={event => updateValue(event)}
+                                customProps={customProps}
+                                modalType="Update"
 
-              />
-                         
-                    );
-                  },         
+                            />
+
+                        );
+                    },
                 }
             },
-           
-           
+
+
 
         ]
         // rows = rows.concat('true');
@@ -193,17 +193,17 @@ class CustomizedTable extends React.Component {
 }
 
 
-const mapStateToProps = ({Nomination}) => {
-    const {getNominationCandidates} = Nomination;
+const mapStateToProps = ({ Nomination }) => {
+    const { getNominationCandidates } = Nomination;
     const CandidateList = Nomination.getNominationCandidates;
-    return {getNominationCandidates,CandidateList};
-  };
+    return { getNominationCandidates, CandidateList };
+};
 
-  const mapActionsToProps = {
+const mapActionsToProps = {
     getNominationCandidates
-  };
-  
- 
-  
-  export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(CustomizedTable));
+};
+
+
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(CustomizedTable));
 

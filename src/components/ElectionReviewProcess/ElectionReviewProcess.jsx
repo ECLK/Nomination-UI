@@ -7,17 +7,19 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-
+import { Link } from 'react-router-dom'
 
 const styles = {
     card: {
         width: 300,
         margin: 20,
-        cursor: 'pointer'
+        cursor: 'pointer',
+
     },
 
     container: {
         // backgroundColor: "red",
+
     },
 
     bullet: {
@@ -49,27 +51,29 @@ function SimpleCard(props) {
 
     return (
         <Card className={classes.card} md={3} xs={6} sm={3}>
-            <CardContent >
-                <Grid className={classes.container} container spacing={24}>
-                    <Grid item >
-                        <Typography className={classes.text_a} component="p">
-                            <b>Parliament 208 Election</b>
-                        </Typography>
-                        <br />
-                        <Typography className={classes.text_a} component="p">
-                            No of Divisions : 15
+            <Link to="/election-process-review/1" >
+                <CardContent >
+                    <Grid className={classes.container} container spacing={24}>
+                        <Grid item >
+                            <Typography className={classes.text_a} component="p">
+                                <b>Parliament 208 Election</b>
+                            </Typography>
+                            <br />
+                            <Typography className={classes.text_a} component="p">
+                                No of Divisions : 15
                         </Typography>
 
-                        <Typography className={classes.text_a} component="p">
-                            No of Teams : 07
-                            <Button size="small">View</Button>
-                        </Typography>
+                            <Typography className={classes.text_a} component="p">
+                                No of Teams : 07
+
+                            </Typography>
+                        </Grid>
+
                     </Grid>
 
-                </Grid>
-
-            </CardContent>
-        </Card>
+                </CardContent>
+            </Link>
+        </Card >
     );
 }
 

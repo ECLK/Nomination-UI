@@ -22,6 +22,7 @@ import PaymentReview from 'modules/payment/Payment_review';
 import ObjectionReview from 'pages/ADMIN/Objection_review/Objection_review';
 import ElectionReview from 'pages/ADMIN/Election_review/Election_review';
 import ElectionProcessReview from 'modules/election/Election_process_review';
+import ElectionProcessReviewDetails from 'modules/election/Election_process_review_details';
 import CreateElection from 'modules/election-model/CreateElection';
 
 
@@ -62,7 +63,8 @@ export default class Protected extends Component {
                     {/* <Route path='/nomination' component={Nomination} /> */}
                     <Route path='/objection' component={(this.state.isLoggedIn) ? Objection : Login} />
                     <Route path='/profile' component={(this.state.isLoggedIn) ? Profile : Login} />
-                    <Route path='/election-process-review' component={(this.state.isLoggedIn) ? ElectionProcessReview : Login} />
+                    <Route path='/election-process-review' exact component={(this.state.isLoggedIn) ? ElectionProcessReview : Login} />
+                    <Route path='/election-process-review/:id' component={(this.state.isLoggedIn) ? ElectionProcessReviewDetails : Login} />
                     <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login} />
 
                     <Redirect exact from='/admin' to='/admin/home' />
@@ -79,8 +81,6 @@ export default class Protected extends Component {
                     <Route path='/admin/payment-review' component={(this.state.isLoggedIn) ? PaymentReview : Login} />
                     <Route path='/admin/objection-review' component={(this.state.isLoggedIn) ? ObjectionReview : Login} />
                     <Route path='/admin/election-review' component={(this.state.isLoggedIn) ? ElectionReview : Login} />
-
-
 
                     {/* <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login}/>
                     <Route path='/objection' component={(this.state.isLoggedIn) ? Objection : Login} />
