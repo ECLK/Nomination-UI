@@ -23,7 +23,17 @@ const theme = createMuiTheme({
   },
   drawer: {
     width: 240,
-  }
+  },
+  overrides: {
+    MUIDataTableBodyCell: {
+      root: {
+        backgroundColor: "#FFF",
+        '&:nth-child(9)': {
+          width: 150
+        }
+      }
+    }
+  },
 });
 
 // Create a JSS instance with the default preset of plugins.

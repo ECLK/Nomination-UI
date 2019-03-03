@@ -1,7 +1,7 @@
 import React from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import AddIcon from "@material-ui/icons/Add";
+import EditIcon from "@material-ui/icons/Edit";
 import { withStyles } from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
 import Modal from "react-responsive-modal";
@@ -16,6 +16,9 @@ import Typography from '@material-ui/core/Typography';
 const defaultToolbarStyles = {
   iconButton: {
   },
+  editIcon: {
+    marginLeft: 3
+  }
 };
 const styles = {
   fontFamily: "sans-serif",
@@ -86,9 +89,9 @@ class CustomToolbar extends React.Component {
     const { open } = this.state;
     return (
       <React.Fragment>
-        <Tooltip title={"Add Candidate"}>
+        <Tooltip title={"Edit"}>
           <IconButton className={classes.iconButton} onClick={this.onOpenModal} >
-            <AddIcon className={classes.deleteIcon} />
+            <EditIcon className={classes.editIcon} />
           </IconButton>
         </Tooltip>
       <div>

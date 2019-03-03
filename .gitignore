@@ -101,5 +101,3 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
-package-lock.json
-package-lock.json

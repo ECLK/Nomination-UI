@@ -1,9 +1,14 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import axios from 'axios';
 import MUIDataTable from "mui-datatables";
 import CustomToolbar from "./CustomToolbar";
-import Button from '@material-ui/core/Button';
+import CustomToolbarEdit from "./CustomToolbarEdit";
+import CustomToolbarDelete from "./CustomToolbarDelete";
+import PropTypes from "prop-types";
+import { getNominationCandidates } from '../../modules/nomination/state/NominationAction';
+import { connect } from 'react-redux';
+import Grid from '@material-ui/core/Grid';
+
 
 
 
@@ -21,11 +26,18 @@ const styles = theme => ({
             backgroundColor: theme.palette.background.default,
         },
     },
+    grid: {
+        alignItems:"left"
+        },
 });
 
-
-
 class CustomizedTable extends React.Component {
+
+    static propTypes = {
+        value: PropTypes.string.isRequired,
+        index: PropTypes.number.isRequired,
+        change: PropTypes.func.isRequired
+      };
 
     constructor(props) {
         super(props);
@@ -38,19 +50,9 @@ class CustomizedTable extends React.Component {
     }
 
     componentDidMount() {
-        const { customProps } = this.props;
-
-        axios.get(`nominations/${customProps}/candidates`)
-            .then(res => {
-                const nominations = res.data;
-                const candidateCount = res.data.length;
-                localStorage.setItem('candidate', res.data.length)
-                this.setState({ nominations });
-                this.setState({ candidateCount });
-            })
+        const { customProps,getNominationCandidates } = this.props;
+        getNominationCandidates(customProps);
     }
-
-
 
     handleDrawerOpen = () => {
         this.setState({ open: true });
@@ -61,9 +63,9 @@ class CustomizedTable extends React.Component {
     };
 
     render() {
-        const rows = this.state.nominations;
-
-
+        const {classes, CandidateList } = this.props;
+        const rows = CandidateList;
+        
         const columns = [
             {
                 name: "ID",
@@ -125,32 +127,50 @@ class CustomizedTable extends React.Component {
                     display: true
                 }
             },
-            // {
-            //     name: "Location",
-            //     options: {
-            //       filter: true,
-            //       customBodyRender: (value, tableMeta, updateValue) => {
-            //         return (
-            //           'test'
-            //         );
-            //       },         
-            //     }
-            //   },
-           
-
+            {
+                name: "Action",
+                options: {
+                  filter: true,
+                  customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <Grid container  className={classes.grid}  direction="row" justify="flex-start" alignItems="stretch" spacing={12}>
+                        <Grid  item lg={6}>
+                        <CustomToolbarEdit
+                            className={classes.grid}
+                            value={value}
+                            index={tableMeta.rowData[0]}
+                            change={event => updateValue(event)}
+                            customProps={customProps}
+                            modalType="Update"
+                        />  
+                        </Grid>
+                        <Grid item lg={6}>
+                        <CustomToolbarDelete
+                         className={classes.grid}
+                        value={value}
+                        index={tableMeta.rowData[0]}
+                        change={event => updateValue(event)}
+                        customProps={customProps}
+                        modalType="Delete"
+                    /> 
+                    </Grid>
+                    </Grid>
+                    );
+                  },        
+                }
+            },
         ]
 
-        const outputData = rows.map(Object.values);
-        console.log("output", outputData);
-        const { customProps } = this.props;
 
+        const outputData = rows.map(Object.values);
+        const { customProps } = this.props;
         const data = outputData;
         const options = {
             filterType: "dropdown",
             responsive: "scroll",
             customToolbar: () => {
                 return (
-                    <CustomToolbar customProps={customProps} />
+                    <CustomToolbar customProps={customProps} modalType="Add" />
                 );
             }
         };
@@ -166,6 +186,15 @@ class CustomizedTable extends React.Component {
     }
 }
 
+const mapStateToProps = ({Nomination}) => {
+    const {getNominationCandidates} = Nomination;
+    const CandidateList = Nomination.getNominationCandidates;
+    return {getNominationCandidates,CandidateList};
+  };
 
-export default withStyles(styles)(CustomizedTable);
+  const mapActionsToProps = {
+    getNominationCandidates
+  };
+  
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(CustomizedTable));
 

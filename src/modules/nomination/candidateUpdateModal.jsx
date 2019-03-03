@@ -13,6 +13,11 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 
+
+
+
+
+
 const defaultToolbarStyles = {
   iconButton: {
   },
@@ -64,8 +69,11 @@ const DialogActions = withStyles(theme => ({
 }))(MuiDialogActions);
 
 
-class CustomToolbar extends React.Component {
+class CandidateUpdateModal extends React.Component {
  
+  // state = {
+  //   open: false
+  // };
   constructor(props) {
     super(props);
     this.state = { open: false };
@@ -82,15 +90,16 @@ class CustomToolbar extends React.Component {
   };
 
   render() {
-    const { classes, customProps ,index,modalType } = this.props;
+    const { classes, customProps } = this.props;
     const { open } = this.state;
+
     return (
       <React.Fragment>
-        <Tooltip title={"Add Candidate"}>
+        {/* <Tooltip title={"custom icon"}>
           <IconButton className={classes.iconButton} onClick={this.onOpenModal} >
             <AddIcon className={classes.deleteIcon} />
           </IconButton>
-        </Tooltip>
+        </Tooltip> */}
       <div>
         <Dialog
           onClose={this.onCloseModal}
@@ -98,11 +107,11 @@ class CustomToolbar extends React.Component {
           open={this.state.open}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.onCloseModal}>
-            {modalType} Candidate
+            Add Candidate
           </DialogTitle>
           <DialogContent>
             <Typography gutterBottom>
-            <CandidateTabContainer onCloseModal={this.onCloseModal} customProps={customProps} index={index}/>
+            <CandidateTabContainer onCloseModal={this.onCloseModal} customProps={customProps} />
             </Typography>
           </DialogContent>
           {/* <DialogActions>
@@ -128,4 +137,4 @@ class CustomToolbar extends React.Component {
 
 }
 
-export default withStyles(defaultToolbarStyles, { name: "CustomToolbar" })(CustomToolbar);
+export default withStyles(defaultToolbarStyles, { name: "CandidateUpdateModal" })(CandidateUpdateModal);

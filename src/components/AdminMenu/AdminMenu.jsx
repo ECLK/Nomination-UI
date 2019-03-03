@@ -21,6 +21,10 @@ import MoneyIcon from '@material-ui/icons/AttachMoney';
 import ProfileIcon from '@material-ui/icons/AccountBox';
 import NominationIcon from '@material-ui/icons/Description';
 import ObjectionIcon from '@material-ui/icons/PanTool';
+import Button from '@material-ui/core/Button';
+import { Redirect } from 'react-router-dom'
+
+
 
 const drawerWidth = 240;
 
@@ -54,19 +58,31 @@ const styles = theme => ({
     flexGrow: 1,
     padding: theme.spacing.unit * 3,
   },
+  logoutBtn: {
+    marginLeft: theme.spacing.unit * 140,
+  },
+  
 });
 
 class ResponsiveDrawer extends React.Component {
   state = {
     mobileOpen: false,
+    goToLogin: false,
   };
 
   handleDrawerToggle = () => {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
 
+  handleLogout = () => {
+    this.setState({goToLogin:true});
+  };
+ 
+
   render() {
     const { classes, theme } = this.props;
+    if (this.state.goToLogin) return <Redirect to="/login" />;
+
 
     const drawer = (
       <div>
@@ -77,7 +93,7 @@ class ResponsiveDrawer extends React.Component {
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="Home" />
             </ListItem>
-            <ListItem button key="Nomination" component={Link} to='#'>
+            <ListItem button key="Nomination" component={Link} to='/admin/nomination-review'>
               <ListItemIcon><NominationIcon /></ListItemIcon>
               <ListItemText primary="Nomination review" />
             </ListItem>
@@ -119,6 +135,8 @@ class ResponsiveDrawer extends React.Component {
             <Typography variant="h6" color="inherit" noWrap>
               {this.props.title}
             </Typography>
+            <Button className={classes.logoutBtn}  onClick={this.handleLogout} color="inherit">Logout</Button>
+
           </Toolbar>
         </AppBar>
         <nav className={classes.drawer}>

@@ -1,7 +1,7 @@
 import React from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import AddIcon from "@material-ui/icons/Add";
+import TrashIcon from "@material-ui/icons/Delete";
 import { withStyles } from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
 import Modal from "react-responsive-modal";
@@ -12,11 +12,22 @@ import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import Slide from '@material-ui/core/Slide';
+import { deleteNominationCandidate } from '../../modules/nomination/state/NominationAction';
+import { connect } from 'react-redux';
+
 
 const defaultToolbarStyles = {
   iconButton: {
   },
+  deleteIcon: {
+    justifyContent: 'center'
+  }
 };
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
 const styles = {
   fontFamily: "sans-serif",
   textAlign: "center"
@@ -80,43 +91,46 @@ class CustomToolbar extends React.Component {
   onCloseModal = () => {
     this.setState({ open: false });
   };
+  handleRemove = () => {
+    const {index,deleteNominationCandidate} = this.props;
+    deleteNominationCandidate(index);   
+  };
 
   render() {
     const { classes, customProps ,index,modalType } = this.props;
     const { open } = this.state;
     return (
       <React.Fragment>
-        <Tooltip title={"Add Candidate"}>
+        <Tooltip title={"Delete"}>
           <IconButton className={classes.iconButton} onClick={this.onOpenModal} >
-            <AddIcon className={classes.deleteIcon} />
+            <TrashIcon className={classes.deleteIcon} />
           </IconButton>
         </Tooltip>
-      <div>
+        <div>
         <Dialog
-          onClose={this.onCloseModal}
-          aria-labelledby="customized-dialog-title"
           open={this.state.open}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={this.handleClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
         >
-          <DialogTitle id="customized-dialog-title" onClose={this.onCloseModal}>
-            {modalType} Candidate
+          <DialogTitle id="alert-dialog-slide-title">
+            {"Are You Sure?"}
           </DialogTitle>
           <DialogContent>
-            <Typography gutterBottom>
-            <CandidateTabContainer onCloseModal={this.onCloseModal} customProps={customProps} index={index}/>
-            </Typography>
+            <DialogContentText id="alert-dialog-slide-description">
+              Want To Delete This Record!
+            </DialogContentText>
           </DialogContent>
-          {/* <DialogActions>
-        
+          <DialogActions>
+            <Button onClick={this.handleRemove} color="primary">
+              OK
+            </Button>
             <Button onClick={this.onCloseModal} color="primary">
               Cancel
             </Button>
-            <Button variant="contained" type="submit" value="Submit&New" color="primary" className={classes.submit}>
-              Save & New
-            </Button>
-            <Button  variant="contained" onClick={this.onCloseModal} type="submit" value="Submit&Clouse" color="default" className={classes.submit}>
-              Save & Close
-            </Button>
-          </DialogActions> */}
+          </DialogActions>
         </Dialog>
       </div>
       </React.Fragment>
@@ -128,4 +142,14 @@ class CustomToolbar extends React.Component {
 
 }
 
-export default withStyles(defaultToolbarStyles, { name: "CustomToolbar" })(CustomToolbar);
+const mapStateToProps = ({Nomination}) => {
+  const {deleteNominationCandidate} = Nomination;
+  
+  return {deleteNominationCandidate};
+};
+
+const mapActionsToProps = {
+  deleteNominationCandidate
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(defaultToolbarStyles)(CustomToolbar));

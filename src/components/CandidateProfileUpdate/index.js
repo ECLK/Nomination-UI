@@ -5,11 +5,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
-import Hidden from '@material-ui/core/Hidden';
 import Notifier, { openSnackbar } from '../Notifier';
 import { getNominationCandidates } from '../../modules/nomination/state/NominationAction';
 import { connect } from 'react-redux';
-
 
 const styles = theme => ({
     container: {
@@ -115,22 +113,46 @@ class TextFields extends React.Component {
         fullName: '',
         preferredName: '',
         nominationId: '',
-        dateOfBirth: 876768,
+        dateOfBirth: '',
         gender: 'Select',
         occupation:'',
         address:'',
         electoralDivisionName: 'Select',
         electoralDivisionCode: 'Select',
-        counsilName: 'cb',
+        counsilName: '',
 
     };
 
     componentDidMount() {
+        const { index,customProps } = this.props;
+      axios.get(`nominations/${customProps}/candidates/${index}`)
+        .then(res => {
+          const payments = res.data;
+          const nic=res.data[0].nic;
+          const fullName=res.data[0].fullName;
+          const preferredName=res.data[0].preferredName;
+          const dateOfBirth=res.data[0].dateOfBirth;
+          const gender=res.data[0].gender;
+          const occupation=res.data[0].occupation;
+          const address=res.data[0].address;
+          const electoralDivisionName=res.data[0].electoralDivisionName;
+          const electoralDivisionCode=res.data[0].electoralDivisionCode;
+          const counsilName=res.data[0].counsilName;
+          
+          this.setState({ nic });
+          this.setState({ fullName });
+          this.setState({ preferredName });
+          this.setState({ dateOfBirth });
+          this.setState({ gender });
+          this.setState({ occupation });
+          this.setState({ address });
+          this.setState({ electoralDivisionName });
+          this.setState({ electoralDivisionCode });
+          this.setState({ counsilName });
 
+        })
     }
     
-
-
     handleChange = name => event => {
         const { customProps } = this.props;
         this.setState({
@@ -144,46 +166,43 @@ class TextFields extends React.Component {
     handleChangeButton = (e) => {
         const { onCloseModal } = this.props;
         if(e.currentTarget.value==="Submit&Clouse"){
-            onCloseModal();
-            
-
+            onCloseModal();           
         }
         }
-
 
     handleSubmit = (e) => {
-        // console.log(e.currentTarget.value);
-        // debugger;
-        // this.refs.btn.setAttribute("disabled", "disabled");
-        const { customProps,getNominationCandidates } = this.props;
-
-
+        
+        const { index,getNominationCandidates,customProps } = this.props;
+            var postData = {
+                        nic: this.state.nic,
+                        fullName: this.state.fullName,
+                        preferredName: this.state.preferredName,
+                        dateOfBirth:  Date.parse(this.state.dateOfBirth),
+                        gender: this.state.gender,
+                        occupation:this.state.occupation,
+                        address:this.state.address,
+                        electoralDivisionName: this.state.electoralDivisionName,
+                        electoralDivisionCode: this.state.electoralDivisionCode,
+                        counsilName: this.state.counsilName,
+                }
         e.preventDefault();
-       
         axios({
-            method: 'post',
+            method: 'put',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            url: 'nominations/candidates',
-            data: this.state
+            url: `/candidates/${index}`,
+            data: postData
         })
         .then(function (response) {
-            // return response.json();
-            // console.log("ffff",response.json());
-            // openSnackbar({ message: 'Candidate Added Sccessfully...' });
             setTimeout(() => {
-                openSnackbar({ message: 'Candidate Added Sccessfully...' });
-            }, 1000);
+                openSnackbar({ message: 'Candidate Updated Sccessfully...' });
+            }, 5000);
             getNominationCandidates(customProps);
-            // resultElement.innerHTML = generateSuccessHTMLOutput(response);
-            // alert("sucsess",response);
-            // this.onCloseModal();
           })
           .catch(function (error) {
               alert("error",error);
-            // resultElement.innerHTML = generateErrorHTMLOutput(error);
           });
     };
 
@@ -385,11 +404,11 @@ class TextFields extends React.Component {
                 <Grid container spacing={12}>
                     <Grid className={classes.label}  item lg={12}>
                     <br /><br />
-                        <Button variant="contained" type="submit" value="Submit&New" color="primary" className={classes.submit}>
-                            Save & New
+                        <Button variant="contained"  onClick={onCloseModal} value="Submit&New" color="primary" className={classes.submit}>
+                            Cancel
                         </Button>
                         <Button  variant="contained" onClick = { this.handleChangeButton }  type="submit" value="Submit&Clouse" color="default" className={classes.submit}>
-                            Save & Close
+                            Update
                         </Button>
                     </Grid>
                 </Grid>
@@ -413,3 +432,4 @@ const mapStateToProps = ({Nomination}) => {
   };
   
   export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(TextFields));
+

@@ -2,8 +2,13 @@ import update from 'immutability-helper';
 import {
   GET_NOMINATIONS,
   POST_NOMINATION_PAYMENTS,
+  PUT_NOMINATION_PAYMENTS,
   NOMINATIONS_LOADED,
   ON_NOMINATION_APPROVAL_CHANGE,
+  GET_NOMINATION_PAYMENTS,
+  HANDLE_CHANGE_PAYMENT,
+  GET_NOMINATION_CANDIDATES,
+  DELETE_NOMINATION_CANDIDATE
 } from "./NominationTypes";
 
 const initialState = {
@@ -11,6 +16,10 @@ const initialState = {
   all_nominations: [3],
   candidatePayments:[],
   nominations: [],
+  getNominationPayments:[],
+  paymentState:[],
+  getNominationCandidates:[],
+  getNominationCandidateDeleted:[]
 };
 
 const findIndex = (nominations, id) => {
@@ -20,12 +29,16 @@ const findIndex = (nominations, id) => {
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case GET_NOMINATIONS:
-      debugger;
       return {
         ...state,
         all_nominations: action.payload
       };
     case POST_NOMINATION_PAYMENTS:
+      return {
+        ...state,
+        candidatePayments: action.payload
+      };
+    case PUT_NOMINATION_PAYMENTS:
       return {
         ...state,
         candidatePayments: action.payload
@@ -42,6 +55,27 @@ export default function reducer(state = initialState, action) {
         ...state,
         nominations: update(nominations, {[index]: {approval_status: {$set: action.payload.status}}})
       }
+    case GET_NOMINATION_PAYMENTS:
+      return {
+        ...state,
+        getNominationPayments: action.payload
+      }; 
+    case GET_NOMINATION_CANDIDATES:
+      return {
+        ...state,
+        getNominationCandidates: action.payload
+      };  
+    case DELETE_NOMINATION_CANDIDATE:
+      return {
+        ...state,
+        getNominationCandidateDeleted: action.payload
+      };   
+    case HANDLE_CHANGE_PAYMENT:
+      return {
+        ...state,
+        paymentState: action.payload
+      };
+       
 
 
   }

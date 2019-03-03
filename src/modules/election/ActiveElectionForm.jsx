@@ -8,17 +8,19 @@ import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import ElectionTimeLine from '../ElectionTimeLine/ElectionTimeLine';
-import ElectionPayment from '../ElectionPayment/ElectionPayment';
-import ElectionWeightage from '../ElectionWeightage/ElectionWeightage';
-import axios from 'axios';
+import ElectionTimeLine from '../../components/ElectionTimeLine/ElectionTimeLine';
+import ElectionPayment from '../../components/ElectionPayment/ElectionPayment';
+import ElectionWeightage from '../../components/ElectionWeightage/ElectionWeightage';
+import AllowNomination from './AllowNomination';
 
+import { setCallElectionData,postCallElectionData } from './state/ElectionAction';
+import { connect } from 'react-redux';
 
 
 const styles = theme => ({
   root: {
     width: '90%',
-    paddingLeft: 240
+    paddingLeft: 24
   },
   button: {
     marginTop: theme.spacing.unit,
@@ -33,7 +35,7 @@ const styles = theme => ({
 });
 
 function getSteps() {
-  return ['TIME LINE', 'PAYMENT', 'WEIGHTAGE'];
+  return ['TIME LINE', 'PAYMENT', 'WEIGHTAGE', 'ALLOW NOMINATION'];
 }
 
 
@@ -52,13 +54,17 @@ class VerticalLinearStepper extends React.Component {
   };
 
   handleNext = () => {
+    let activeStep;
+
+    const { setCallElectionData } = this.props;
+   
     this.setState(state => ({
       activeStep: state.activeStep + 1,
     }));
-
-    // if(this.activeStep === 2){
-    //   this.handleSubmit();
-    //   }
+   
+    if(this.state.activeStep === 0 || this.state.activeStep === 1 || this.state.activeStep === 2){
+      setCallElectionData(this.state);
+    }
 
   };
 
@@ -75,8 +81,8 @@ class VerticalLinearStepper extends React.Component {
   };
 
   handleSubmit = () => {
-    const { postActiveElections, nominationStart, nominationEnd, objectionStart,objectionEnd,depositAmount,WeightagePrefarence,WeightageVote } = this.props;
-    postActiveElections();
+    const { postCallElectionData,CallElectionData,electionData } = this.props;
+    postCallElectionData(CallElectionData,electionData);
   };
 
   handleChange = input => e => {
@@ -97,6 +103,11 @@ class VerticalLinearStepper extends React.Component {
         />;
       case 2:
         return <ElectionWeightage
+        handleChange={this.handleChange}
+        values={values}
+        />;
+      case 3:
+        return <AllowNomination
         handleChange={this.handleChange}
         values={values}
         />;
@@ -172,12 +183,16 @@ VerticalLinearStepper.propTypes = {
 };
 
 const mapStateToProps = ({ Election }) => {
-  const {  postActiveElections, nominationStart, nominationEnd, objectionStart,objectionEnd,depositAmount,WeightagePrefarence,WeightageVote  } = Election;
-  return {  postActiveElections, nominationStart, nominationEnd, objectionStart,objectionEnd,depositAmount,WeightagePrefarence,WeightageVote  }
+  const { setCallElectionData,postCallElectionData  } = Election;
+  const CallElectionData  = Election.CallElectionData;
+  const electionData  = Election.electionData;
+
+  return {  setCallElectionData,CallElectionData,electionData,postCallElectionData }
 };
 
 const mapActionsToProps = {
-  postActiveElections
+  setCallElectionData,
+  postCallElectionData
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(VerticalLinearStepper));
