@@ -43,6 +43,7 @@ export default function reducer(state = initialState, action) {
         nominations: update(nominations, {[index]: {approval_status: {$set: action.payload.status}}})
       }
 
+
   }
   return state;
 }
