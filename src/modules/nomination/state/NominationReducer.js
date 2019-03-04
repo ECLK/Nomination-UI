@@ -66,9 +66,10 @@ export default function reducer(state = initialState, action) {
         getNominationCandidates: action.payload
       };  
     case DELETE_NOMINATION_CANDIDATE:
+      const toDelete = state.getNominationCandidates.findIndex(x => x.id === action.payload.candidateId);
       return {
         ...state,
-        getNominationCandidateDeleted: action.payload
+        getNominationCandidates: update(state.getNominationCandidates, { $splice: [[toDelete, 1]] } )
       };   
     case HANDLE_CHANGE_PAYMENT:
       return {
