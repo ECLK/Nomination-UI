@@ -13,7 +13,7 @@ import ElectionPayment from '../../components/ElectionPayment/ElectionPayment';
 import ElectionWeightage from '../../components/ElectionWeightage/ElectionWeightage';
 import AllowNomination from './AllowNomination';
 
-import { setCallElectionData,postCallElectionData } from './state/ElectionAction';
+import { setCallElectionData, postCallElectionData } from './state/ElectionAction';
 import { connect } from 'react-redux';
 
 
@@ -43,26 +43,33 @@ function getSteps() {
 class VerticalLinearStepper extends React.Component {
   state = {
     activeStep: 0,
-    nominationStart:'2017-05-24T10:30',
-    nominationEnd:'2017-05-24T10:30',
-    objectionStart:'2017-05-24T10:30',
-    objectionEnd:'2017-05-24T10:30',
-    depositAmount:'Amount',
-    WeightagePrefarence:'%',
-    WeightageVote:'%',
-    values:''
+    nominationStart: '2017-05-24T10:30',
+    nominationEnd: '2017-05-24T10:30',
+    objectionStart: '2017-05-24T10:30',
+    objectionEnd: '2017-05-24T10:30',
+    depositAmount: 'Amount',
+    WeightagePrefarence: '%',
+    WeightageVote: '%',
+    values: ''
   };
 
   handleNext = () => {
     let activeStep;
 
+    const { setElectionTimeLine } = this.props;
+
+
+    if (activeStep === 1) {
+      alert("de");
+      setElectionTimeLine(this.state);
+    }
     const { setCallElectionData } = this.props;
-   
+
     this.setState(state => ({
       activeStep: state.activeStep + 1,
     }));
-   
-    if(this.state.activeStep === 0 || this.state.activeStep === 1 || this.state.activeStep === 2){
+
+    if (this.state.activeStep === 0 || this.state.activeStep === 1 || this.state.activeStep === 2) {
       setCallElectionData(this.state);
     }
 
@@ -81,35 +88,35 @@ class VerticalLinearStepper extends React.Component {
   };
 
   handleSubmit = () => {
-    const { postCallElectionData,CallElectionData,electionData } = this.props;
-    postCallElectionData(CallElectionData,electionData);
+    const { postCallElectionData, CallElectionData, electionData } = this.props;
+    postCallElectionData(CallElectionData, electionData);
   };
 
   handleChange = input => e => {
-    this.setState({[input]:e.target.value});
+    this.setState({ [input]: e.target.value });
   }
 
-  getStepContent(step,values) {
+  getStepContent(step, values) {
     switch (step) {
       case 0:
         return <ElectionTimeLine
-        handleChange={this.handleChange}
-                 values={values}
-                 />;
+          handleChange={this.handleChange}
+          values={values}
+        />;
       case 1:
         return <ElectionPayment
-        handleChange={this.handleChange}
-                 values={values}
+          handleChange={this.handleChange}
+          values={values}
         />;
       case 2:
         return <ElectionWeightage
-        handleChange={this.handleChange}
-        values={values}
+          handleChange={this.handleChange}
+          values={values}
         />;
       case 3:
         return <AllowNomination
-        handleChange={this.handleChange}
-        values={values}
+          handleChange={this.handleChange}
+          values={values}
         />;
       default:
         return 'Unknown step';
@@ -120,21 +127,21 @@ class VerticalLinearStepper extends React.Component {
     const { classes } = this.props;
     const steps = getSteps();
     const { activeStep } = this.state;
-    const { nominationStart,nominationEnd,objectionStart,objectionEnd,depositAmount,WeightageVote,WeightagePrefarence } = this.state;
-    const values = { nominationStart,nominationEnd,objectionStart,objectionEnd,depositAmount,WeightageVote,WeightagePrefarence }
+    const { nominationStart, nominationEnd, objectionStart, objectionEnd, depositAmount, WeightageVote, WeightagePrefarence } = this.state;
+    const values = { nominationStart, nominationEnd, objectionStart, objectionEnd, depositAmount, WeightageVote, WeightagePrefarence }
 
-   
+
 
     return (
       <div className={classes.root}>
         <Stepper activeStep={activeStep} orientation="vertical">
           {steps.map((label, index) => {
             return (
-              
+
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
                 <StepContent>
-                  <Typography>{this.getStepContent(activeStep,values)}</Typography>
+                  <Typography>{this.getStepContent(activeStep, values)}</Typography>
                   <div className={classes.actionsContainer}>
                     <div>
                       <Button
@@ -149,7 +156,7 @@ class VerticalLinearStepper extends React.Component {
                         color="primary"
                         onClick={this.handleNext}
                         className={classes.button}
-                        // onClick={activeStep === 3 ? this.handleSubmit : this.handleNext}
+                      // onClick={activeStep === 3 ? this.handleSubmit : this.handleNext}
 
                       >
                         {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
@@ -183,11 +190,12 @@ VerticalLinearStepper.propTypes = {
 };
 
 const mapStateToProps = ({ Election }) => {
-  const { setCallElectionData,postCallElectionData  } = Election;
-  const CallElectionData  = Election.CallElectionData;
-  const electionData  = Election.electionData;
 
-  return {  setCallElectionData,CallElectionData,electionData,postCallElectionData }
+  const { setCallElectionData, postCallElectionData } = Election;
+  const CallElectionData = Election.CallElectionData;
+  const electionData = Election.electionData;
+
+  return { setCallElectionData, CallElectionData, electionData, postCallElectionData }
 };
 
 const mapActionsToProps = {

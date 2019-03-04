@@ -23,6 +23,9 @@ import ObjectionReview from "modules/objections/Objection_review";
 import ElectionReview from "pages/ADMIN/Election_review/Election_review";
 
 import CreateElection from "modules/election-model/CreateElection";
+import ElectionProcessReview from 'modules/election/Election_process_review';
+import ElectionProcessReviewDetails from 'modules/election/Election_process_review_details';
+
 
 export default class Protected extends Component {
   constructor(props) {
@@ -119,6 +122,12 @@ export default class Protected extends Component {
           <Route
             path="/admin/election-review"
             component={this.state.isLoggedIn ? ElectionReview : Login}
+          />
+          <Route path='/election-process-review'
+            exact component={(this.state.isLoggedIn) ? ElectionProcessReview : Login}
+          />
+          <Route
+            path='/election-process-review/:id' component={(this.state.isLoggedIn) ? ElectionProcessReviewDetails : Login}
           />
 
           {/* <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login}/>

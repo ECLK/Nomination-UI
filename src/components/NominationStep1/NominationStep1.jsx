@@ -30,8 +30,8 @@ const styles = theme => ({
         },
     },
     grid: {
-        alignItems:"left"
-        },
+        alignItems: "left"
+    },
 });
 
 
@@ -42,7 +42,7 @@ class CustomizedTable extends React.Component {
         value: PropTypes.string.isRequired,
         index: PropTypes.number.isRequired,
         change: PropTypes.func.isRequired
-      };
+    };
 
     constructor(props) {
         super(props);
@@ -55,7 +55,7 @@ class CustomizedTable extends React.Component {
     }
 
     componentDidMount() {
-        const { customProps,getNominationCandidates } = this.props;
+        const { customProps, getNominationCandidates } = this.props;
         getNominationCandidates(customProps);
     }
 
@@ -68,9 +68,10 @@ class CustomizedTable extends React.Component {
     };
 
     render() {
-        const {classes, CandidateList } = this.props;
+        const { classes, CandidateList } = this.props;
         const rows = CandidateList;
-        
+        console.log("CandidateList", CandidateList);
+
         const columns = [
             {
                 name: "ID",
@@ -135,33 +136,33 @@ class CustomizedTable extends React.Component {
             {
                 name: "Action",
                 options: {
-                  filter: true,
-                  customBodyRender: (value, tableMeta, updateValue) => {
-                    return (
-                        <Grid container  className={classes.grid}  direction="row" justify="flex-start" alignItems="stretch" spacing={12}>
-                        <Grid  item lg={6}>
-                        <CustomToolbarEdit
-                            className={classes.grid}
-                            value={value}
-                            index={tableMeta.rowData[0]}
-                            change={event => updateValue(event)}
-                            customProps={customProps}
-                            modalType="Update"
-                        />  
-                        </Grid>
-                        <Grid item lg={6}>
-                        <CustomToolbarDelete
-                         className={classes.grid}
-                        value={value}
-                        index={tableMeta.rowData[0]}
-                        change={event => updateValue(event)}
-                        customProps={customProps}
-                        modalType="Delete"
-                    /> 
-                    </Grid>
-                    </Grid>
-                    );
-                  },        
+                    filter: true,
+                    customBodyRender: (value, tableMeta, updateValue) => {
+                        return (
+                            <Grid container className={classes.grid} direction="row" justify="flex-start" alignItems="stretch" spacing={12}>
+                                <Grid item lg={6}>
+                                    <CustomToolbarEdit
+                                        className={classes.grid}
+                                        value={value}
+                                        index={tableMeta.rowData[0]}
+                                        change={event => updateValue(event)}
+                                        customProps={customProps}
+                                        modalType="Update"
+                                    />
+                                </Grid>
+                                <Grid item lg={6}>
+                                    <CustomToolbarDelete
+                                        className={classes.grid}
+                                        value={value}
+                                        index={tableMeta.rowData[0]}
+                                        change={event => updateValue(event)}
+                                        customProps={customProps}
+                                        modalType="Delete"
+                                    />
+                                </Grid>
+                            </Grid>
+                        );
+                    },
                 }
             },
         ]
@@ -192,15 +193,15 @@ class CustomizedTable extends React.Component {
     }
 }
 
-const mapStateToProps = ({Nomination}) => {
-    const {getNominationCandidates} = Nomination;
+const mapStateToProps = ({ Nomination }) => {
+    const { getNominationCandidates } = Nomination;
     const CandidateList = Nomination.getNominationCandidates;
-    return {getNominationCandidates,CandidateList};
-  };
+    return { getNominationCandidates, CandidateList };
+};
 
-  const mapActionsToProps = {
+const mapActionsToProps = {
     getNominationCandidates
-  };
-  
+};
+
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(CustomizedTable));
 
