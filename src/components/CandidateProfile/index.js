@@ -156,8 +156,19 @@ class TextFields extends React.Component {
         // debugger;
         // this.refs.btn.setAttribute("disabled", "disabled");
         const { customProps,getNominationCandidates } = this.props;
-
-
+        var postData = {
+            nic: this.state.nic,
+            fullName: this.state.fullName,
+            preferredName: this.state.preferredName,
+            dateOfBirth:  Date.parse(this.state.dateOfBirth),
+            gender: this.state.gender,
+            occupation:this.state.occupation,
+            address:this.state.address,
+            electoralDivisionName: this.state.electoralDivisionName,
+            electoralDivisionCode: this.state.electoralDivisionCode,
+            nominationId: this.state.nominationId,
+            counsilName: this.state.counsilName,
+    }
         e.preventDefault();
        
         axios({
@@ -167,7 +178,7 @@ class TextFields extends React.Component {
                 'Content-Type': 'application/json',
             },
             url: 'nominations/candidates',
-            data: this.state
+            data: postData
         })
         .then(function (response) {
             // return response.json();

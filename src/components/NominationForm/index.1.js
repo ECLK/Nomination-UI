@@ -47,6 +47,12 @@ function getSteps() {
   return ['Candidate Details', 'Payment Details', 'Review'];
 }
 
+// NumberFormatCustom.propTypes = {
+//   inputRef: PropTypes.func.isRequired,
+//   onChange: PropTypes.func.isRequired,
+// };
+
+
 
 class NominationForm extends React.Component {
  
@@ -66,7 +72,10 @@ class NominationForm extends React.Component {
         nominationId:this.props.customProps,
         payments:[],
     
-    }    
+    }
+    
+    // this.handleChange = this.handleChange.bind(this);
+    
   }
 
   componentDidUpdate (oldState){
@@ -77,14 +86,16 @@ class NominationForm extends React.Component {
       this.setState({depositAmount:NominationPayments.depositAmount});   
       var ddate = parseInt(NominationPayments.depositeDate);
       this.setState({depositeDate:moment(new Date(NominationPayments.depositeDate)).format('YYYY-MM-DD')});}
+     
+
   }
+
 
   handleChange = (name) => event => {
     this.setState({
             [name]:event.target.value,
     });   
   };
-
   NumberFormatCustom(props) {
     const { inputRef, onChange, ...other } = props;
   
@@ -283,6 +294,8 @@ NominationForm.propTypes = {
 const mapStateToProps = ({Nomination}) => {
   const {nominationPayments} = Nomination;
   const NominationPayments = Nomination.getNominationPayments;
+
+  // const {getNominationPayments} = Nomination;
   const {updateNominationPayments} = Nomination;
 
   
@@ -291,6 +304,7 @@ const mapStateToProps = ({Nomination}) => {
 
 const mapActionsToProps = {
   postNominationPayments,
+  // getNominationPayments,
   updateNominationPayments
 };
 

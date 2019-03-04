@@ -12,6 +12,9 @@ import Grid from '@material-ui/core/Grid';
 
 
 
+
+
+
 const styles = theme => ({
     root: {
         width: '100%',
@@ -30,6 +33,8 @@ const styles = theme => ({
         alignItems:"left"
         },
 });
+
+
 
 class CustomizedTable extends React.Component {
 
@@ -170,11 +175,12 @@ class CustomizedTable extends React.Component {
             responsive: "scroll",
             customToolbar: () => {
                 return (
-                    <CustomToolbar customProps={customProps} modalType="Add" />
+                    <CustomToolbar customProps={customProps} modalType="Add"  />
                 );
             }
         };
 
+       
         return (
             <MUIDataTable
                 title={"Nomination Candidate list"}

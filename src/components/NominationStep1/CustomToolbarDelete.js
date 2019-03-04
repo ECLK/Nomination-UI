@@ -14,7 +14,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Slide from '@material-ui/core/Slide';
-import { deleteNominationCandidate } from '../../modules/nomination/state/NominationAction';
+import { deleteNominationCandidate,getNominationCandidates } from '../../modules/nomination/state/NominationAction';
 import { connect } from 'react-redux';
 
 
@@ -92,8 +92,10 @@ class CustomToolbar extends React.Component {
     this.setState({ open: false });
   };
   handleRemove = () => {
-    const {index,deleteNominationCandidate} = this.props;
-    deleteNominationCandidate(index);   
+    const {index,deleteNominationCandidate,getNominationCandidates,customProps} = this.props;
+    deleteNominationCandidate(index);  
+    this.onCloseModal();           
+    // getNominationCandidates(customProps);
   };
 
   render() {
@@ -124,7 +126,7 @@ class CustomToolbar extends React.Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleRemove} color="primary">
+            <Button value="OK" onClick={this.handleRemove} color="primary">
               OK
             </Button>
             <Button onClick={this.onCloseModal} color="primary">
@@ -144,12 +146,14 @@ class CustomToolbar extends React.Component {
 
 const mapStateToProps = ({Nomination}) => {
   const {deleteNominationCandidate} = Nomination;
-  
-  return {deleteNominationCandidate};
+  const {getNominationCandidates} = Nomination;
+
+  return {deleteNominationCandidate,getNominationCandidates};
 };
 
 const mapActionsToProps = {
-  deleteNominationCandidate
+  deleteNominationCandidate,
+  getNominationCandidates
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(defaultToolbarStyles)(CustomToolbar));
