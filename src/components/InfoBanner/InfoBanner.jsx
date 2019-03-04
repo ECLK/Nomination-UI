@@ -32,7 +32,7 @@ class InfoBanner extends React.Component {
 							{this.props.election.name}
 						</Typography>
 						<Typography variant="subtitle1" gutterBottom>
-							<b>Nomination Start Date:</b> <Timestamp time={this.props.election.electionTimeLine[0].value} format='full' /> --- <b>Nomination End Date:</b> <Timestamp time={this.props.election.electionTimeLine[3].value} format='full' />
+							<b>Nomination Start Date:</b> <Timestamp time={this.props.election.electionTimeLine[0].value} format='full' /> --- <b>Nomination End Date:</b> <Timestamp time={this.props.election.electionTimeLine[2].value} format='full' />
 						</Typography>
 					</Paper>
 				</Grid>

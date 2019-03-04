@@ -9,6 +9,8 @@ import CardActions from '@material-ui/core/CardActions';//--
 import CardContent from '@material-ui/core/CardContent';//--
 import Button from '@material-ui/core/Button';//--
 import Typography from '@material-ui/core/Typography';//--
+import { Redirect } from 'react-router-dom'
+
 const styles = theme => ({
     container: {
         display: 'flex',
@@ -44,8 +46,13 @@ const ElectionModule = [
 class FilledTextFields extends React.Component {
     state = {
         ModuleName: 'Parliamentary ',
-
+        goToConfig: false,
     };
+
+    constructor(props){
+        super(props);
+        this.handleNext = this.handleNext.bind(this);
+    }
 
     handleChange = name => event => {
         this.setState({
@@ -53,8 +60,14 @@ class FilledTextFields extends React.Component {
         });
     };
 
+    handleNext() {
+        this.setState({goToConfig:true});
+    }
+
     render() {
         const {classes} = this.props;
+
+        if (this.state.goToConfig) return <Redirect to="/admin/create-election" />;
 
         return (
 
@@ -84,7 +97,7 @@ class FilledTextFields extends React.Component {
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <Button size="small">Next</Button>
+                    <Button size="small" onClick={this.handleNext}>Next</Button>
                 </CardActions>
             </Card>
         );

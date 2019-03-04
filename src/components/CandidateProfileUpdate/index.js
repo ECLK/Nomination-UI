@@ -5,7 +5,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
-
+import Notifier, { openSnackbar } from '../Notifier';
+import { getNominationCandidates } from '../../modules/nomination/state/NominationAction';
+import { connect } from 'react-redux';
 
 const styles = theme => ({
     container: {
@@ -30,7 +32,14 @@ const styles = theme => ({
         display: 'none',
     },
     label: {
-        marginLeft: theme.spacing.unit*5,
+        marginLeft: theme.spacing.unit*15,
+    },
+    label: {
+        marginLeft: theme.spacing.unit*30,
+        padingTop:theme.spacing.unit*30
+    },
+    submit: {
+        marginLeft: theme.spacing.unit
     },
 
 });
@@ -110,60 +119,102 @@ class TextFields extends React.Component {
         address:'',
         electoralDivisionName: 'Select',
         electoralDivisionCode: 'Select',
-        counsilName: 'cb',
+        counsilName: '',
 
     };
 
     componentDidMount() {
+        const { index,customProps } = this.props;
+      axios.get(`nominations/${customProps}/candidates/${index}`)
+        .then(res => {
+          const payments = res.data;
+          const nic=res.data[0].nic;
+          const fullName=res.data[0].fullName;
+          const preferredName=res.data[0].preferredName;
+          const dateOfBirth=res.data[0].dateOfBirth;
+          const gender=res.data[0].gender;
+          const occupation=res.data[0].occupation;
+          const address=res.data[0].address;
+          const electoralDivisionName=res.data[0].electoralDivisionName;
+          const electoralDivisionCode=res.data[0].electoralDivisionCode;
+          const counsilName=res.data[0].counsilName;
+          
+          this.setState({ nic });
+          this.setState({ fullName });
+          this.setState({ preferredName });
+          this.setState({ dateOfBirth });
+          this.setState({ gender });
+          this.setState({ occupation });
+          this.setState({ address });
+          this.setState({ electoralDivisionName });
+          this.setState({ electoralDivisionCode });
+          this.setState({ counsilName });
 
-
-
-
+        })
     }
-
-
+    
     handleChange = name => event => {
+        const { customProps } = this.props;
+        this.setState({
+            nominationId: customProps
+        });
         this.setState({
             [name]: event.target.value,
         });
     };
-
+    
+    handleChangeButton = (e) => {
+        const { onCloseModal } = this.props;
+        if(e.currentTarget.value==="Submit&Clouse"){
+            onCloseModal();           
+        }
+        }
 
     handleSubmit = (e) => {
+        
+        const { index,getNominationCandidates,customProps } = this.props;
+            var postData = {
+                        nic: this.state.nic,
+                        fullName: this.state.fullName,
+                        preferredName: this.state.preferredName,
+                        dateOfBirth:  Date.parse(this.state.dateOfBirth),
+                        gender: this.state.gender,
+                        occupation:this.state.occupation,
+                        address:this.state.address,
+                        electoralDivisionName: this.state.electoralDivisionName,
+                        electoralDivisionCode: this.state.electoralDivisionCode,
+                        counsilName: this.state.counsilName,
+                }
+                // debugger;
         e.preventDefault();
-        console.log('send data');
-        console.log("=========",this.state);
-
         axios({
-            method: 'post',
+            method: 'put',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            url: 'nominations/candidates',
-            data: this.state
+            url: `/candidates/${index}`,
+            data: postData
         })
         .then(function (response) {
-            // return response.json();
-            // console.log("ffff",response.json());
-            // resultElement.innerHTML = generateSuccessHTMLOutput(response);
-            alert("sucsess",response);
-            // this.onCloseModal();
+            setTimeout(() => {
+                openSnackbar({ message: 'Candidate Updated Sccessfully...' });
+            }, 5000);
+            getNominationCandidates(customProps);
           })
           .catch(function (error) {
               alert("error",error);
-            // resultElement.innerHTML = generateErrorHTMLOutput(error);
           });
     };
 
     render() {
-        const {classes} = this.props;
-
+        const {classes , onCloseModal} = this.props;
         return (
             <form className={classes.container} onSubmit={this.handleSubmit} noValidate autoComplete="off">
 
-                <Grid container spacing={8}>
-                    <Grid item lg={4}>
+                <Grid container spacing={12}>
+                <Notifier />
+                    <Grid item lg={6}>
                         <TextField
 
                             id="standard-name"
@@ -177,7 +228,7 @@ class TextFields extends React.Component {
                         />
                     </Grid>
 
-                    <Grid item lg={4}>
+                    <Grid item lg={6}>
                         <TextField
                             id="standard-name"
                             label="Full Name"
@@ -190,8 +241,8 @@ class TextFields extends React.Component {
                     </Grid>
 
                 </Grid>
-                <Grid container spacing={8}>
-                    <Grid item lg={4}>
+                <Grid container spacing={12}>
+                    <Grid item lg={6}>
                         <TextField
 
                             id="standard-name"
@@ -202,21 +253,22 @@ class TextFields extends React.Component {
                             margin="normal"
                         />
                     </Grid>
-
-                    <Grid item lg={4}>
-                        <TextField
-                            id="standard-name"
-                            label="nomination Id"
-                            value={this.state.nominationId}
-                            onChange={this.handleChange('nominationId')}
-                            className={classes.textField}
-                            margin="normal"
+                    {/* <Hidden xsUp> */}
+                    <Grid item lg={6}>
+                    <TextField
+                        id="standard-name"
+                        label="Occupation"
+                        className={classes.textField}
+                        value={this.state.occupation}
+                        onChange={this.handleChange('occupation')}
+                        margin="normal"
                         />
                     </Grid>
+                    {/* </Hidden> */}
 
                 </Grid>
-                <Grid container spacing={8}>
-                    <Grid item lg={4}>
+                <Grid container spacing={12}>
+                    <Grid item lg={6}>
                         <TextField
                             id="date"
                             label="Date of Birth"
@@ -234,7 +286,7 @@ class TextFields extends React.Component {
 
                     </Grid>
 
-                    <Grid item lg={4}>
+                    <Grid item lg={6}>
                     <TextField
                             id="standard-select-currency-native"
                             select
@@ -265,21 +317,9 @@ class TextFields extends React.Component {
 
                 </Grid>
 
-                <Grid container spacing={8}>
-                    <Grid item lg={4}>
-                        <TextField
-
-                            id="standard-name"
-                            label="Occupation"
-                            className={classes.textField}
-                            value={this.state.occupation}
-                            onChange={this.handleChange('occupation')}
-                            margin="normal"
-                        />
-                    </Grid>
-
-                    <Grid item lg={4}>
-                        <TextField
+                <Grid container spacing={12}>
+                    <Grid item lg={6}>
+                    <TextField
                             id="standard-multiline-flexible"
                             label="Address"
                             multiline
@@ -289,8 +329,11 @@ class TextFields extends React.Component {
                             className={classes.textField}
                             margin="normal"
                         />
+                    </Grid>
+
+                    <Grid item lg={6}>
+                        
                         <TextField
-                            hidden
                             id="standard-multiline-flexible"
                             label="Counsil Name  "
                             multiline
@@ -303,8 +346,8 @@ class TextFields extends React.Component {
                     </Grid>
 
                 </Grid>
-                <Grid container spacing={8}>
-                    <Grid item lg={4}>
+                <Grid container spacing={12}>
+                    <Grid item lg={6}>
                     <TextField
                             id="standard-select-currency-native"
                             select
@@ -331,7 +374,7 @@ class TextFields extends React.Component {
                         </TextField>
                     </Grid>
 
-                    <Grid item lg={4}>
+                    <Grid item lg={6}>
                     <TextField
                             id="standard-select-currency-native"
                             select
@@ -359,13 +402,14 @@ class TextFields extends React.Component {
                     </Grid>
 
                 </Grid>
-                <Grid container spacing={8}>
-                    <Grid className={classes.label}  item lg={3}>
-                        <Button variant="contained" color="primary" className={classes.button}>
+                <Grid container spacing={12}>
+                    <Grid className={classes.label}  item lg={12}>
+                    <br /><br />
+                        <Button variant="contained"  onClick={onCloseModal} value="Submit&New" color="primary" className={classes.submit}>
                             Cancel
                         </Button>
-                        <Button  variant="contained" type="submit" value="Submit" color="secondary" className={classes.submit}>
-                            Save
+                        <Button  variant="contained" onClick = { this.handleChangeButton }  type="submit" value="Submit&Clouse" color="default" className={classes.submit}>
+                            Update
                         </Button>
                     </Grid>
                 </Grid>
@@ -379,4 +423,14 @@ TextFields.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TextFields);
+const mapStateToProps = ({Nomination}) => {
+    const {getNominationCandidates} = Nomination;
+    return {getNominationCandidates};
+  };
+
+  const mapActionsToProps = {
+    getNominationCandidates
+  };
+  
+  export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(TextFields));
+
