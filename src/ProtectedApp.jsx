@@ -19,7 +19,7 @@ import ActiveElectionForm from "modules/election/ActiveElectionPage";
 // import NominationReview from 'pages/ADMIN/Nomination_review/Nomination_review';
 import NominationReview from "modules/nomination/Nomination_review";
 import PaymentReview from "modules/payment/Payment_review";
-import ObjectionReview from "pages/ADMIN/Objection_review/Objection_review";
+import ObjectionReview from "modules/objections/Objection_review";
 import ElectionReview from "pages/ADMIN/Election_review/Election_review";
 
 import CreateElection from "modules/election-model/CreateElection";
