@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AdminMenu from 'components/AdminMenu/AdminMenu';
-import getNominations from "./state/ElectionAction";
+import { getAllElectionReviews } from "./state/ElectionAction.js";
+import { connect } from 'react-redux';
+import Typography from '@material-ui/core/Typography'
+import Card from '@material-ui/core/Card';//--
+import ElectionReviewProcess from '../../components/ElectionReviewProcess/ElectionReviewProcess.jsx';
 
 
 const drawerWidth = 240;
@@ -87,10 +91,10 @@ class Dashboard extends React.Component {
 
 
     componentDidMount() {
-        const { getNominations, all_nominations } = this.props;
-        getNominations();
+        const { allElectionModules, getAllElectionReviews } = this.props;
+        getAllElectionReviews();
 
-        console.log(all_nominations)
+        console.log(allElectionModules)
     }
 
     handleDrawerOpen = () => {
@@ -102,12 +106,29 @@ class Dashboard extends React.Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, allElectionModules } = this.props;
 
         return (
             <div className={classes.root}>
                 <CssBaseline />
                 <AdminMenu title="Elections Commission of Sri Lanka"></AdminMenu>
+                <div style={{ width: '100%' }}>
+                    <Typography variant="h5" component="h2">
+                        Election process review
+                </Typography>
+
+                    <div className={classes.container}>
+
+
+                        <div style={{ width: '100%', display: 'flex' }}>
+                            {allElectionModules.map(row => <ElectionReviewProcess />)}
+                        </div>
+
+
+                        <br />
+
+                    </div>
+                </div>
             </div>
         );
     }
@@ -117,13 +138,13 @@ Dashboard.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = ({ Nomination }) => {
-    const { all_nominations } = Nomination;
-    return { all_nominations }
+const mapStateToProps = ({ Election }) => {
+    const { allElectionModules } = Election;
+    return { allElectionModules }
 };
 
 const mapActionsToProps = {
-    getNominations
+    getAllElectionReviews
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Dashboard));

@@ -14,7 +14,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
 import ProfileIcon from '@material-ui/icons/AccountBox';
 import NominationIcon from '@material-ui/icons/Description';
@@ -69,9 +69,9 @@ class ResponsiveDrawer extends React.Component {
   handleDrawerToggle = () => {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
-  
+
   handleLogout = () => {
-    this.setState({goToLogin:true});
+    this.setState({ goToLogin: true });
   };
 
   render() {
@@ -84,28 +84,33 @@ class ResponsiveDrawer extends React.Component {
         <div className={classes.toolbar} />
         <Divider />
         <List>
-            <ListItem button key="Home" component={Link} to='/home' selected={this.props.page === "Home"} >
-              <ListItemIcon><HomeIcon /></ListItemIcon>
-              <ListItemText primary="Home" />
-            </ListItem>
-            {/* <ListItem button key="Nomination" component={Link} to='/nomination' selected={this.props.page === "Nomination"} >
+          <ListItem button key="Home" component={Link} to='/home' selected={this.props.page === "Home"} >
+            <ListItemIcon><HomeIcon /></ListItemIcon>
+            <ListItemText primary="Home" />
+          </ListItem>
+          {/* <ListItem button key="Nomination" component={Link} to='/nomination' selected={this.props.page === "Nomination"} >
               <ListItemIcon><NominationIcon /></ListItemIcon>
               <ListItemText primary="Nomination" />
             </ListItem> */}
-            <ListItem button key="Objection" component={Link} to='/objection'>
-              <ListItemIcon><ObjectionIcon /></ListItemIcon>
-              <ListItemText primary="Objection" />
-            </ListItem>
+          <ListItem button key="Objection" component={Link} to='/objection'>
+            <ListItemIcon><ObjectionIcon /></ListItemIcon>
+            <ListItemText primary="Objection" />
+          </ListItem>
+          <ListItem button key="Election Process Review" component={Link} to='/election-process-review'>
+            <ListItemIcon><ObjectionIcon /></ListItemIcon>
+            <ListItemText primary="Election Process Review" />
+          </ListItem>
+
         </List>
         <Divider />
         <List>
-            <ListItem button key="Profile" component={Link} to='/profile'>
-              <ListItemIcon><ProfileIcon /></ListItemIcon>
-              <ListItemText primary="Profile" />
-            </ListItem>
-          
+          <ListItem button key="Profile" component={Link} to='/profile'>
+            <ListItemIcon><ProfileIcon /></ListItemIcon>
+            <ListItemText primary="Profile" />
+          </ListItem>
+
         </List>
-      </div>
+      </div >
     );
 
     return (
@@ -124,7 +129,7 @@ class ResponsiveDrawer extends React.Component {
             <Typography variant="h6" color="inherit" noWrap>
               {this.props.title}
             </Typography>
-            <Button className={classes.logoutBtn}  onClick={this.handleLogout} color="inherit">Logout</Button>
+            <Button className={classes.logoutBtn} onClick={this.handleLogout} color="inherit">Logout</Button>
 
           </Toolbar>
         </AppBar>
