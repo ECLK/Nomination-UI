@@ -106,6 +106,11 @@ class ResponsiveDrawer extends React.Component {
                 <ListItemIcon><MoneyIcon/></ListItemIcon>
                 <ListItemText primary="Payment Review"/>
             </ListItem>
+            <ListItem button key="Election_review" component={Link} to='/election-process-review'
+                      selected={this.props.page === "Home"}>
+                <ListItemIcon><NominationIcon/></ListItemIcon>
+                <ListItemText primary="Election Review"/>
+            </ListItem>
 
         </List>
         <Divider />
