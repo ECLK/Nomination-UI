@@ -96,10 +96,6 @@ class ResponsiveDrawer extends React.Component {
             <ListItemIcon><ObjectionIcon /></ListItemIcon>
             <ListItemText primary="Objection" />
           </ListItem>
-          <ListItem button key="Election Process Review" component={Link} to='/election-process-review'>
-            <ListItemIcon><ObjectionIcon /></ListItemIcon>
-            <ListItemText primary="Election Process Review" />
-          </ListItem>
 
         </List>
         <Divider />
