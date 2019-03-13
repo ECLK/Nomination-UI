@@ -1,5 +1,7 @@
 import {
     CREATE_ELECTION_MODULE,
+    UPDATE_ELECTION_MODULE,
+    SAVE_ELECTION_MODULE,
 } from "./ElectionTypes";
 import { API_BASE_URL } from "../../../config.js";
 import axios from "axios";
@@ -92,6 +94,37 @@ export function postCallElectionData(CallElectionData, electionData) {
             }).catch(err => {
                 console.log(err)
             });
+// import store from '../store';
+    }
+}
+
+export const createElection = function createElection(electionName) {
+    
+    return function (dispatch) {
+        dispatch({
+            type: CREATE_ELECTION_MODULE,
+            payload: electionName
+        })
+    };
+}
+
+export const updateElection = function updateElection(election) {
+
+    return function (dispatch) {
+        dispatch({
+            type: UPDATE_ELECTION_MODULE,
+            payload: election
+        })
+    };
+}
+
+export const saveElection = function saveElection() {
+
+    return function (dispatch) {
+        dispatch({
+            type: SAVE_ELECTION_MODULE,
+            payload: {} 
+        })
     };
 }
 

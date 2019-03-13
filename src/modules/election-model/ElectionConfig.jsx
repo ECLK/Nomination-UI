@@ -59,31 +59,26 @@ class ElectionConfig extends React.Component {
         eligibilityCheckList: [],
     };
 
+    constructor(){
+        super();
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(name){
+        return function(event){ 
+            debugger;
+            this.props.electionChanged({ ...this.props.electionModule, [name]: event.target.value });
+        }.bind(this);
+    }
+
     render() {
         const classes = styles();
         const handleChange = name => event => {
             this.setState({ ...this.state, [name]: event.target.value });
         };
 
-        const addDivision = () => {
-            const division = {
-                code: this.state.code,
-                name: this.state.name,
-                noOfCandidates: this.state.noOfCandidates
-            }
-            const divisions = this.state.divisions;
-            divisions.push(division);
-            this.setState({ ...this.state, divisions, code: "", name: "", noOfCandidates: "" });
-        }
-
-        const removeDivision = (index) => () => {
-            const divisions = this.state.divisions;
-            divisions.splice(index, 1);
-            this.setState({ ...this.state, divisions });
-        }
-
         const handleEligibility = (value) => () => {
-            this.state.eligibilityCheckList.push(value);
+            this.setState(this.state.eligibilityCheckList.push(value));
         }
         let authority = this.state.authority;
 
@@ -126,13 +121,13 @@ class ElectionConfig extends React.Component {
                             >
                                 <FormControlLabel
                                     control={
-                                        <Radio onChange={handleChange('checkedA')} value="checkedA" />
+                                        <Radio onChange={this.handleChange('checkedA')} value="checkedA" />
                                     }
                                     label="Pure vote-based"
                                 />
                                 <FormControlLabel
                                     control={
-                                        <Radio onChange={handleChange('checkedA')} value="checkedA" />
+                                        <Radio onChange={this.handleChange('checkedA')} value="checkedA" />
                                     }
                                     label="Pure preference-based"
                                 />
