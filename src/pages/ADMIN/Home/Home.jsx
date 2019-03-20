@@ -75,6 +75,7 @@ class Home extends React.Component {
     
     componentDidMount() {
         const {getElectionModules} = this.props;
+        
         getElectionModules();
       }
 
@@ -89,7 +90,32 @@ class Home extends React.Component {
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
                 <Grid container classname={classes.panel_wrapper} spacing={16}>
                   <Grid item xs="3">
-                    <Typography className={classes.heading}>{electionModule.id}</Typography>
+                    {/* <Typography className={classes.heading}>{electionModule.id}</Typography> */}
+                  </Grid>
+                  <Grid item xs="6">
+                    <Typography className={classes.heading}>({electionModule.name})</Typography>
+                  </Grid>
+                  <Grid item xs="3">
+                        
+                  </Grid>
+                </Grid>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Grid container classname={classes.panel_wrapper} spacing={24}>
+                <Grid item xs={12}>
+                    <Paper className={classes.paper}> <ElectionModule></ElectionModule></Paper>
+                </Grid>                
+                </Grid>
+                <br />
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          ));
+          const callElectionElements = electionModules.map((electionModule, i) => (
+            <ExpansionPanel expanded={expandedPanelIndex === i} onChange={this.togglePanel(i)}>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+                <Grid container classname={classes.panel_wrapper} spacing={16}>
+                  <Grid item xs="3">
+                    {/* <Typography className={classes.heading}>{electionModule.id}</Typography> */}
                   </Grid>
                   <Grid item xs="6">
                     <Typography className={classes.heading}>({electionModule.name})</Typography>
@@ -125,13 +151,26 @@ class Home extends React.Component {
                             <CreateElection></CreateElection>
                         </Grid>
                         <Grid item xs={5} >
-                            <CallElection></CallElection>
+                            <CallElection electionModules={electionModules}></CallElection>
+                        </Grid>
+                    </Grid>
+                    <Grid container className={classes.root} spacing={32}>
+
+                        <Grid item xs={5} >
+                        <div style={{width: '100%'}}>
+                        {electionModuleElements}
+                        </div>
+                        </Grid>
+                        <Grid item xs={5} >
+                        <div style={{width: '100%'}}>
+                        {callElectionElements}
+                        </div>
                         </Grid>
                     </Grid>
                     <br />
-                    <div style={{width: '100%'}}>
-                        {/* {electionModuleElements} */}
-                    </div>
+                    {/* <div style={{width: '100%'}}>
+                        {electionModuleElements}
+                    </div> */}
                     {/* <ExpansionPanel>
                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                             <Typography className={classes.heading}>Election Module</Typography>
