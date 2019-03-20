@@ -67,7 +67,12 @@ class FilledTextFields extends React.Component {
     render() {
         const {classes} = this.props;
 
-        if (this.state.goToConfig) return <Redirect to="/admin/create-election" />;
+        if (this.state.goToConfig) return <Redirect
+            to={{
+            pathname: '/admin/create-election',
+            state: { name: this.state.ModuleName }
+          }}
+        />;
 
         return (
 
@@ -91,12 +96,6 @@ class FilledTextFields extends React.Component {
 
 
                     </form>
-
-                    {/* <Typography className={classes.textCallElection} component="p">
-                        <br />
-                         Module ID :PA1112
-
-                    </Typography> */}
                 </CardContent>
                 <CardActions>
                     <Button size="small" onClick={this.handleNext}>Next</Button>

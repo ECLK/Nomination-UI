@@ -41,6 +41,15 @@ class DivisionConfig extends React.Component {
         divisions: []
     };
 
+    constructor(){
+        super();
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(event){
+        this.props.electionChanged({ ...this.props.electionModule, [event.target.value]: event.target.checked });
+    }
+
     render() {
         const classes = styles();
         const handleChange = name => event => {

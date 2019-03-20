@@ -24,11 +24,19 @@ const styles = theme => ({
 class CandidateForm extends React.Component {
     state = {};
 
+    constructor(){
+        super();
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(event){
+        this.props.electionChanged({ ...this.props.electionModule, [event.target.value]: event.target.checked });
+    }
+
     render() {
         const classes = styles();
-        const handleChange = name => event => {
-            this.setState({ ...this.state, [name]: event.target.checked });
-        };
+        const electionModule = this.props.electionModule;
+
         let middle = (CandidateFormConfig.length)/2;
         middle += ((CandidateFormConfig.length)%2)?1:0;
         const columnOne = CandidateFormConfig.slice(0, middle);
@@ -45,7 +53,7 @@ class CandidateForm extends React.Component {
                 <FormGroup>
                     { columnOne.map((element)=>{
                         return (<FormControlLabel
-                        control={<Checkbox checked={this.state[element.value]} onChange={handleChange(element.value)} value={element.value} />}
+                        control={<Checkbox checked={electionModule[element.value]} onChange={this.handleChange} value={element.value} />}
                         label={element.label}
                         />);
                     }) }
@@ -55,7 +63,7 @@ class CandidateForm extends React.Component {
                 <FormGroup>
                     { columnTwo.map((element)=>{
                         return (<FormControlLabel
-                        control={<Checkbox checked={this.state[element.value]} onChange={handleChange(element.value)} value={element.value} />}
+                        control={<Checkbox checked={electionModule[element.value]} onChange={this.handleChange} value={element.value} />}
                         label={element.label}
                         />);
                     }) }
@@ -70,7 +78,7 @@ class CandidateForm extends React.Component {
                 <FormGroup>
                     { scolumnOne.map((element)=>{
                         return (<FormControlLabel
-                        control={<Checkbox checked={this.state[element.value]} onChange={handleChange(element.value)} value={element.value} />}
+                        control={<Checkbox checked={electionModule[element.value]} onChange={this.handleChange} value={element.value} />}
                         label={element.label}
                         />);
                     }) }
@@ -80,7 +88,7 @@ class CandidateForm extends React.Component {
                 <FormGroup>
                     { scolumnTwo.map((element)=>{
                         return (<FormControlLabel
-                        control={<Checkbox checked={this.state[element.value]} onChange={handleChange(element.value)} value={element.value} />}
+                        control={<Checkbox checked={electionModule[element.value]} onChange={this.handleChange} value={element.value} />}
                         label={element.label}
                         />);
                     }) }

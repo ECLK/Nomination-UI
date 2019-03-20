@@ -14,6 +14,8 @@ import { Redirect } from 'react-router-dom';
 import CandidateForm from './CandidateForm';
 import DivisionConfig from './DivisionConfig';
 import ElectionConfig from './ElectionConfig';
+import { createElection, updateElection } from './state/ElectionAction';
+import { connect } from 'react-redux';
 
 
 const styles = theme => ({
@@ -31,7 +33,7 @@ const styles = theme => ({
     pageContent: {
         padding: 24,
     },
-    paperContent:{
+    paperContent: {
         padding: 24,
     }
 });
@@ -40,34 +42,54 @@ function getSteps() {
     return ['Candidate Form Configuration', 'Division Configuration', 'Election Configuration'];
 }
 
-function getStepContent(step) {
-    switch (step) {
-        case 0:
-            return <CandidateForm />;
-        case 1:
-            return <DivisionConfig />;
-        case 2:
-            return <ElectionConfig />;
-        default:
-            return 'Unknown step';
-    }
-}
-
 class CreateElection extends React.Component {
     state = {
         activeStep: 0,
         skipped: new Set(),
     };
 
+    constructor() {
+        super();
+        this.handleElectionChange = this.handleElectionChange.bind(this);
+    }
+
+    getStepContent(step) {
+        switch (step) {
+            case 0:
+                return <CandidateForm
+                    electionModule={this.props.new_election_module}
+                    electionChanged={this.handleElectionChange}
+                />;
+            case 1:
+                return <DivisionConfig
+                    electionModule={this.props.new_election_module}
+                    electionChanged={this.handleElectionChange}
+                />;
+            case 2:
+                return <ElectionConfig
+                    electionModule={this.props.new_election_module}
+                    electionChanged={this.handleElectionChange}
+                />;
+            default:
+                return 'Unknown step';
+        }
+    }
+
+    handleElectionChange(electionModule) {
+        const { updateElection } = this.props;
+        updateElection(electionModule);
+    }
+
+    componentDidMount() {
+        const { createElection } = this.props;
+        createElection(this.props.location.state.name);
+    }
+
     isStepOptional = step => step === 1;
 
     handleNext = () => {
         const { activeStep } = this.state;
         let { skipped } = this.state;
-        if (this.isStepSkipped(activeStep)) {
-            skipped = new Set(skipped.values());
-            skipped.delete(activeStep);
-        }
         this.setState({
             activeStep: activeStep + 1,
             skipped,
@@ -80,38 +102,11 @@ class CreateElection extends React.Component {
         }));
     };
 
-    handleSkip = () => {
-        const { activeStep } = this.state;
-        if (!this.isStepOptional(activeStep)) {
-            // You probably want to guard against something like this,
-            // it should never occur unless someone's actively trying to break something.
-            throw new Error("You can't skip a step that isn't optional.");
-        }
-
-        this.setState(state => {
-            const skipped = new Set(state.skipped.values());
-            skipped.add(activeStep);
-            return {
-                activeStep: state.activeStep + 1,
-                skipped,
-            };
-        });
-    };
-
-    handleReset = () => {
-        this.setState({
-            activeStep: 0,
-        });
-    };
-
-    isStepSkipped(step) {
-        return this.state.skipped.has(step);
-    }
-
     render() {
         const { classes } = this.props;
         const steps = getSteps();
         const { activeStep } = this.state;
+        const electionModule = this.props.new_election_module;
 
         return (
             <div className={classes.root}>
@@ -120,7 +115,7 @@ class CreateElection extends React.Component {
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
                         <Typography variant="h5" component="h3">
-                            -- Election Configuration Wizard
+                            {electionModule.name} Election Configuration Wizard
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
@@ -133,9 +128,6 @@ class CreateElection extends React.Component {
                                             {steps.map((label, index) => {
                                                 const props = {};
                                                 const labelProps = {};
-                                                if (this.isStepSkipped(index)) {
-                                                    props.completed = false;
-                                                }
                                                 return (
                                                     <Step key={label} {...props}>
                                                         <StepLabel {...labelProps}>{label}</StepLabel>
@@ -145,7 +137,7 @@ class CreateElection extends React.Component {
                                         </Stepper>
                                         <Grid className={classes.paperContent} container spacing={24}>
                                             <Grid item xs={12}>
-                                                {getStepContent(activeStep)}
+                                                {this.getStepContent(activeStep, electionModule)}
                                             </Grid>
                                         </Grid>
                                         <div>
@@ -193,4 +185,15 @@ CreateElection.propTypes = {
     classes: PropTypes.object,
 };
 
-export default withStyles(styles)(CreateElection);
+
+const mapStateToProps = ({ ElectionModel }) => {
+    const { new_election_module } = ElectionModel;
+    return { new_election_module };
+};
+
+const mapActionsToProps = {
+    createElection,
+    updateElection
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(CreateElection));
