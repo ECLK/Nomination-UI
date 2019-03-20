@@ -1,6 +1,7 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import PropTypes from "prop-types";
 import DefaultUI from "./DefaultUI";
+import axios from "axios";
 
 class FileUpload extends Component {
   constructor(props) {
@@ -9,6 +10,7 @@ class FileUpload extends Component {
 
     this.state = {
       status: "ready",
+      progress: 0,
       allowedTypes,
       allowedSize,
       multiple
@@ -109,34 +111,56 @@ class FileUpload extends Component {
     if (error) {
       data.error = errorMessages;
       data.files = null;
+      this.reset();
+    } else {
+      const formData = new FormData();
+      this.setState({status: "uploading", progress: 0});
+      formData.append("file", data.files[0]);
+      axios.post('http://localhost:9001/ec-election/file-upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+
+        onUploadProgress: (progressEvent) => {
+          let percentCompleted = (progressEvent.loaded * 100) / progressEvent.total;
+          this.setState(
+            {progress: percentCompleted}
+          );
+          console.log(percentCompleted);
+        }
+
+
+      }).then((response) => {
+        this.setState(
+          {
+            status: "uploaded",
+            name: response.name
+          }
+        );
+      });
     }
 
-    const { onUploadFiles } = this.props;
-    onUploadFiles(data);
+    // const { onUploadFiles } = this.props;
+    // onUploadFiles(data);
 
-    this.reset();
+
   };
 
   render() {
     const { renderUI } = this.props;
-    const { status } = this.state;
+    const {status, progress} = this.state;
     const props = {
-      status
+      status,
+      progress,
     };
 
     return (
       <div onClick={this.clickFileInput}>
-        <div
-          onDragEnter={this.onDragEnter}
-          onDragOver={this.onDragOver}
-          onDrop={this.onDrop}
-          style={{ position: "relative" }}
-        >
-          {renderUI && typeof renderUI === "function" ? (
-            renderUI(props)
-          ) : (
-            <DefaultUI {...props} />
-          )}
+        <div onDragEnter={this.onDragEnter}
+             onDragOver={this.onDragOver}
+             onDrop={this.onDrop}
+             style={{position: "relative"}}>
+          {renderUI && typeof renderUI === "function" ? (renderUI(props)) : (<DefaultUI {...props} />)}
 
           <input
             ref={fpi => (this.fileUploadInput = fpi)}
@@ -161,7 +185,6 @@ FileUpload.propTypes = {
   allowedTypes: PropTypes.array,
   allowedSize: PropTypes.number,
   multiple: PropTypes.bool,
-  onUploadFiles: PropTypes.func.isRequired,
   renderUI: PropTypes.func
 };
 
