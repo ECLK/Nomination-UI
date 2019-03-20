@@ -43,6 +43,9 @@ const styles = theme => ({
       heading: {
         padding: 14,
       },
+      root: {
+        display: 'flex',
+    },
 
 
 });
@@ -109,27 +112,27 @@ class Home extends React.Component {
 
         return (
             <div>
-                <AdminMenu title="Elections Commission of Sri Lanka"></AdminMenu>
+                <AdminMenu title="Election Commission of Sri Lanka"></AdminMenu>
 
                 <div className={classes.container}>
                     <Typography variant="h5" component="h2">
                         Election Home
                     </Typography>
                     <br />
-                    <Grid container spacing={24}>
+                    <Grid container className={classes.root} spacing={32}>
 
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={5} >
                             <CreateElection></CreateElection>
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={5} >
                             <CallElection></CallElection>
                         </Grid>
                     </Grid>
                     <br />
                     <div style={{width: '100%'}}>
-                        {electionModuleElements}
+                        {/* {electionModuleElements} */}
                     </div>
-                    <ExpansionPanel>
+                    {/* <ExpansionPanel>
                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                             <Typography className={classes.heading}>Election Module</Typography>
                         </ExpansionPanelSummary>
@@ -154,7 +157,7 @@ class Home extends React.Component {
                             </Grid>
 
                         </ExpansionPanelDetails>
-                    </ExpansionPanel>
+                    </ExpansionPanel> */}
 
 
 

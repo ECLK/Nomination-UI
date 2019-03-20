@@ -25,7 +25,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import PersonIcon from '@material-ui/icons/Person';
-import MoneyIcon from '@material-ui/icons/AttachMoney';
+import MoneyIcon from '@material-ui/icons/Payment';
+import Security from '@material-ui/icons/Security';
 import {REQUEST_STATE} from "../../lib/request_redux_state";
 
 const drawerWidth = 240;
@@ -91,7 +92,6 @@ class PaymentReview extends React.Component {
             if (!this.state.selectedElection && elections.length > 0) { // TODO : add || find(selected, elections) < 0
                 this.selectElection(elections[0].election_id);
             }
-            console.log("kkk");
         }
     }
 
@@ -120,6 +120,8 @@ class PaymentReview extends React.Component {
         const paymentElements = selectedPayments.map((payment, i) => (
             <ExpansionPanel key={payment.payment_id} expanded={expandedPanelIndex === i} onChange={this.togglePanel(i)}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+                <Typography className={classes.heading}>{payment.deposit_id}</Typography>
+
                     <Typography className={classes.heading}>{payment.depositor}</Typography>
 
 
@@ -134,6 +136,8 @@ class PaymentReview extends React.Component {
                         label="Received"
                         onClick={PaymentReview.blockPropagation}
                     />
+                    <Typography className={classes.heading}>{payment.approved_by}</Typography>
+
 
                     {/*<Typography className={classes.secondaryHeading}>I am an expansion panel</Typography>*/}
                 </ExpansionPanelSummary>
@@ -143,19 +147,25 @@ class PaymentReview extends React.Component {
                             <ListItemIcon>
                                 <PersonIcon/>
                             </ListItemIcon>
-                            <ListItemText primary={payment.depositor} secondary="Depositor"/>
+                            <ListItemText primary={payment.depositor} secondary="Name of Depositor"/>
                         </ListItem>
                         <ListItem>
                             <ListItemIcon>
                                 <MoneyIcon/>
                             </ListItemIcon>
-                            <ListItemText primary={payment.deposit_amount} secondary="Deposited Amount"/>
+                            <ListItemText primary={"Rs "+payment.deposit_amount} secondary="Security Deposit Amount"/>
+                        </ListItem>
+                        <ListItem>
+                            <ListItemIcon>
+                                <Security/>
+                            </ListItemIcon>
+                            <ListItemText primary={payment.deposit_id} secondary="Security Deposit ID"/>
                         </ListItem>
                         <ListItem>
                             <ListItemIcon>
                                 <DateRangeIcon/>
                             </ListItemIcon>
-                            <ListItemText primary={payment.deposit_date} secondary="Deposited Date"/>
+                            <ListItemText primary={payment.deposit_date} secondary="Date of Deposit"/>
                         </ListItem>
                     </List>
                 </ExpansionPanelDetails>
@@ -165,7 +175,7 @@ class PaymentReview extends React.Component {
         return (
             <div className={classes.root}>
                 <CssBaseline/>
-                <AdminMenu title="Elections Commission of Sri Lanka"></AdminMenu>
+                <AdminMenu title="Election Commission of Sri Lanka"></AdminMenu>
                 <Typography variant="h5" component="h2">
                     Payment review
                 </Typography>

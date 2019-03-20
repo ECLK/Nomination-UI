@@ -30,6 +30,9 @@ const styles = theme => ({
     formControl: {
         margin: 12,
     },
+    textField: {
+        width: 300,
+    },
 });
 
 
@@ -67,8 +70,9 @@ class DivisionConfig extends React.Component {
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
                         <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="common-name">Division Common Name</InputLabel>
-                            <Input id="common-name" value={this.state.division} onChange={handleChange('division')} />
+                            <InputLabel className={classes.textField} htmlFor="common-name">Division Common Name</InputLabel>
+                           <Input className={classes.textField} id="common-name" value={this.state.division} onChange={handleChange('division')} />
+                           <FormHelperText>(e.g. Province)</FormHelperText>
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>
@@ -76,13 +80,13 @@ class DivisionConfig extends React.Component {
                     </Grid>
                     <Grid item xs={2}>
                         <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="common-name">Code</InputLabel>
+                            <InputLabel htmlFor="common-name">Division Code</InputLabel>
                             <Input id="common-name" value={this.state.code} onChange={handleChange('code')} />
                         </FormControl>
                     </Grid>
                     <Grid item xs={2}>
                         <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="common-name">Name</InputLabel>
+                            <InputLabel htmlFor="common-name">Division Name </InputLabel>
                             <Input id="common-name" value={this.state.name} onChange={handleChange('name')} />
                         </FormControl>
                     </Grid>

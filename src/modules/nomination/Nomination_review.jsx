@@ -232,11 +232,13 @@ class NominationReview extends React.Component {
       <ExpansionPanel expanded={expandedPanelIndex === i} onChange={this.togglePanel(i)}>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
           <Grid container classname={classes.panel_wrapper} spacing={16}>
-            <Grid item xs="3">
-              <Typography className={classes.heading}>{nomination.nomination_id}</Typography>
-            </Grid>
-            <Grid item xs="6">
+            <Grid item xs="4">
+              {/* <Typography className={classes.heading}>{nomination.nomination_id}</Typography> */}
               <Typography className={classes.heading}>({nomination.party} | {nomination.district})</Typography>
+
+            </Grid>
+            <Grid item xs="5">
+              {/* <Typography className={classes.heading}>({nomination.party} | {nomination.district})</Typography> */}
             </Grid>
             <Grid item xs="3">
                   <Button
@@ -297,7 +299,7 @@ class NominationReview extends React.Component {
                         <Alarm className={classes.orange_icon} />}
                     </ListItemIcon>
                     <ListItemText className={classes.capitalize_text}
-                                  primary={nomination.objection_status}
+                                  primary={nomination.payment_status === "paid" ? "Objection Reviewed" : "Objection Reviewe Pending"}
                                   secondary="Objection Status" />
                   </ListItem>
                 </List>
@@ -315,7 +317,7 @@ class NominationReview extends React.Component {
     return (
       <div className={classes.root}>
         <CssBaseline />
-        <AdminMenu title="Elections Commission of Sri Lanka"></AdminMenu>
+        <AdminMenu title="Election Commission of Sri Lanka"></AdminMenu>
         <Typography variant="h5" component="h2">
           Nomination review
         </Typography>

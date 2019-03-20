@@ -110,8 +110,8 @@ class Dashboard extends React.Component {
         return (
             <div className={classes.root}>
                 <CssBaseline />
-                <AdminMenu title="Elections Commission of Sri Lanka"></AdminMenu>
-                <ActiveElectionForm title="Elections Commission of Sri Lanka"></ActiveElectionForm>
+                <AdminMenu title="Election Commission of Sri Lanka"></AdminMenu>
+                <ActiveElectionForm title="Election Commission of Sri Lanka"></ActiveElectionForm>
 
             </div>
         );

@@ -38,21 +38,21 @@ export const getNominations = function getNominations() {
       });*/
     const nominations = [{
       nomination_id: "21539ee7-7220-4570-8973-099aff3f7423",
-      district: "colombo",
-      party: "Party 1",
+      district: "Colombo",
+      party: "United National Party ( UNP )",
       candidates: [{
-        nic: "852784826v",
-        name_in_sinhala: "Some name in sinhala",
-        name_in_english: "Some name in english",
+        nic: "912970350V",
+        name_in_sinhala: "නිමල් පෙරේරා",
+        name_in_english: "Nimal Perera",
         name_in_tamil: "திஸ் ஐஸ் மீ நமே",
         occupation: "doctor",
         address: "Colombo 07"
       }, {
-        nic: "431235234V",
-        name_in_sinhala: "මුදියන්සේ අප්පුහාමිලාගේ උක්කුං",
-        name_in_english: "Mudiyanse Appuhamilage Ukkun",
+        nic: "823467970V",
+        name_in_sinhala: "චමල් දිසානායක​",
+        name_in_english: "Chamal Disanayake",
         name_in_tamil: "திஸ் ஐஸ் மீ நமே",
-        occupation: "bus conductor",
+        occupation: "Lowyer",
         address: "Colombo 12"
       }],
       payment_status: "paid",
@@ -60,8 +60,68 @@ export const getNominations = function getNominations() {
       objection_status: "verified",
     }, {
       nomination_id: "1fd1fdef-e77e-43c4-bf7f-334274c1a5fb",
-      district: "gampaha",
-      party: "Some other party",
+      district: "Gampaha",
+      party: "United People's Freedom Alliance ( UPFA )",
+      candidates: [{
+        nic: "2131435245",
+        name_in_sinhala: "Some name in sinhala",
+        name_in_english: "Some name in english",
+        name_in_tamil: "திஸ் ஐஸ் மீ நமே",
+        occupation: "-",
+        address: "Somewhere in Gampaha"
+      }, {
+        nic: "874263423V",
+        name_in_sinhala: "Some name in sinhala",
+        name_in_english: "Some name in english",
+        name_in_tamil: "திஸ் ஐஸ் மீ நமே",
+        occupation: "-",
+        address: "Anuradhapura new town"
+      }, {
+        nic: "676545632C",
+        name_in_sinhala: "Some name in sinhala",
+        name_in_english: "Some name in english",
+        name_in_tamil: "திஸ் ஐஸ் மீ நமே",
+        occupation: "doctor",
+        address: "Never been in Gampaha"
+      }],
+      payment_status: "pending",
+      approval_status: "reject",
+      objection_status: "pending",
+    },
+    {
+      nomination_id: "1fd1fdef-e77e-43c4-bf7f-334274c1a5fb",
+      district: "Kalutara",
+      party: "Janatha Vimukthi Peramuna ( JVP )",
+      candidates: [{
+        nic: "2131435245",
+        name_in_sinhala: "Some name in sinhala",
+        name_in_english: "Some name in english",
+        name_in_tamil: "திஸ் ஐஸ் மீ நமே",
+        occupation: "-",
+        address: "Somewhere in Gampaha"
+      }, {
+        nic: "874263423V",
+        name_in_sinhala: "Some name in sinhala",
+        name_in_english: "Some name in english",
+        name_in_tamil: "திஸ் ஐஸ் மீ நமே",
+        occupation: "-",
+        address: "Anuradhapura new town"
+      }, {
+        nic: "676545632C",
+        name_in_sinhala: "Some name in sinhala",
+        name_in_english: "Some name in english",
+        name_in_tamil: "திஸ் ஐஸ் மீ நமே",
+        occupation: "doctor",
+        address: "Never been in Gampaha"
+      }],
+      payment_status: "pending",
+      approval_status: "reject",
+      objection_status: "pending",
+    },
+    {
+      nomination_id: "1fd1fdef-e77e-43c4-bf7f-334274c1a5fb",
+      district: "Gampaha",
+      party: "United National Party ( UNP )",
       candidates: [{
         nic: "2131435245",
         name_in_sinhala: "Some name in sinhala",

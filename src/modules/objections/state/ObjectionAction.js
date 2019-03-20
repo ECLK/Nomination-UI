@@ -25,16 +25,22 @@ export const getObjections = () => {
     const objections = [{
       objection_id: "75553fd3-f7fc-4ec6-b963-3fc1c3cbe0d3",
       created_date: "2018-12-23",
-      created_by: "party secretary",
-      nomination_id: "1fd1fdef-e77e-43c4-bf7f-334274c1a5fb",
+      created_by: "Party secretary",
+      objected_by: "United People's Freedom Alliance ( UPFA )",
+      nomination: "United National Party ( UNP ) | Gampaha",
       notes: "",
+      objection_criteria: "Age is below 35",
+      objection: "Falsified Birth Certificate",
       status: "approved",
     }, {
       objection_id: "5a3ac5eb-368c-4c47-a479-d69a1b64297e",
       created_date: "2018-12-25",
-      created_by: "party secretary's grand daughter",
-      nomination_id: "21539ee7-7220-4570-8973-099aff3f7423",
+      created_by: "Party secretary",
+      objected_by: "United National Party ( UNP )",
+      nomination: "United People's Freedom Alliance ( UPFA )",
       notes: "",
+      objection_criteria: "convicte",
+      objection: "convicted of felony",
       status: "approved",
     }];
 
