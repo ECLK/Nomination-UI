@@ -152,9 +152,10 @@ export function setElectionTimeLine(timeLineData) {
 }
 
 export function setCallElectionData(electionData) {
-
     let CallElectionData = {
 
+        electionName: electionData.electionName,
+        electionModule: electionData.electionModule,
         nominationStart: electionData.nominationStart,
         nominationEnd: electionData.nominationEnd,
         objectionStart: electionData.objectionStart,
@@ -216,69 +217,80 @@ export function postActiveElections(elections) {
 
 //----------- Start of save Call Election Data ----------------
 
+export const setPostCallElectionData = (val) => {
+    return {
+        type: POST_CALL_ELECTION,
+        payload: val
+    }
+}
+
+
 export function postCallElectionData(CallElectionData, electionData) {
     //TODO: yujith, config ids should get from the front end and the array should be dynamic
-
+   
     let allElectionData = {
+        "name":CallElectionData.electionName,
+        "module_id":CallElectionData.electionModule,
+
+        "created_by":"admin",
+        "created_at":"234234",
+        "updated_at":"234344",
         "timeLineData": [
             {
                 electionTimeLineConfigId: '0f62755e-9784-4046-9804-8d4deed36f2a',//nominationStart
-                value: CallElectionData.nominationStart,
+                value: Date.parse(CallElectionData.nominationStart),
                 electionId: electionData.election_id,
             },
             {
                 electionTimeLineConfigId: 'c06a789c-405c-4e7a-8df2-66766284589b',//nominationEnd
-                value: CallElectionData.nominationEnd,
-                electionId: CallElectionData.objectionStart,
+                value: Date.parse(CallElectionData.nominationEnd),
+                electionId: electionData.election_id,
             },
             {
                 electionTimeLineConfigId: '675ec08b-2937-4222-94a6-0143a94763f1',//objectionStart
-                value: CallElectionData.objectionStart,
+                value: Date.parse(CallElectionData.objectionStart),
                 electionId: electionData.election_id,
             },
             {
                 electionTimeLineConfigId: '64ae3e95-591a-4bf9-8a5b-10803e0eca82',//objectionEnd
-                value: CallElectionData.objectionEnd,
+                value: Date.parse(CallElectionData.objectionEnd),
                 electionId: electionData.election_id,
             },
         ],
-        "confData": [
-            {
-                electionConfigId: '1',
-                value: CallElectionData.depositAmount,
-                electionId: electionData.election_id,
-            },
-            {
-                electionConfigId: '2',
-                value: CallElectionData.WeightageVote,
-                electionId: CallElectionData.objectionStart,
-            },
-            {
-                electionConfigId: '3',
-                value: CallElectionData.WeightagePrefarence,
-                electionId: electionData.election_id,
-            }
+        // "confData": [
+        //     {
+        //         electionConfigId: '1',
+        //         value: CallElectionData.depositAmount,
+        //         electionId: electionData.election_id,
+        //     },
+        //     {
+        //         electionConfigId: '2',
+        //         value: CallElectionData.WeightageVote,
+        //         electionId: electionData.election_id,
+        //     },
+        //     {
+        //         electionConfigId: '3',
+        //         value: CallElectionData.WeightagePrefarence,
+        //         electionId: electionData.election_id,
+        //     }
 
-        ],
+        // ],
         "nominationAllowData": CallElectionData.rowData
 
     }
 
-    debugger;
-
-
     return function (dispatch) {
         const response = axios
             .post(
-                `${API_BASE_URL}/activeElections/TimeLine`,
+                `${API_BASE_URL}/activeElectionsData`,
                 { ...allElectionData }
             )
-            .then(
-                response => response.json()
-            ).then(
-                json => dispatch({ type: POST_CALL_ELECTION_DATA, payload: json }),
-                err => console.log(err)
-            );
+            .then(response => {
+                console.log("response.data", response.data);
+                dispatch(setPostCallElectionData(response));
+            }).catch(err => {
+                console.log(err)
+            });
     };
 }
 

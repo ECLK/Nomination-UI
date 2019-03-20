@@ -86,7 +86,8 @@ const styles = theme => ({
 class Dashboard extends React.Component {
     state = {
         open: true,
-        nominations: []
+        nominations: [],
+
 
     };
     
@@ -113,8 +114,8 @@ class Dashboard extends React.Component {
         return (
             <div className={classes.root}>
                 <CssBaseline />
-                <AdminMenu title="Elections Commission of Sri Lanka"></AdminMenu>
-                <ActiveElectionForm className={classes.electionForm}  title="Elections Commission of Sri Lanka"></ActiveElectionForm>
+                <AdminMenu title="Election Commission of Sri Lanka"></AdminMenu>
+                <ActiveElectionForm className={classes.electionForm}  title="Election Commission of Sri Lanka"></ActiveElectionForm>
 
             </div>
         );

@@ -155,7 +155,7 @@ class NominationForm extends React.Component {
         return (
             <div className={classes.root}>
                 <CssBaseline />
-                <AdminMenu title="Elections Commission of Sri Lanka"></AdminMenu>
+                <AdminMenu title="Election Commission of Sri Lanka"></AdminMenu>
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
                         <Typography variant="h5" component="h3">

@@ -9,16 +9,16 @@ import CardActions from '@material-ui/core/CardActions';//--
 import CardContent from '@material-ui/core/CardContent';//--
 import Button from '@material-ui/core/Button';//--
 import Typography from '@material-ui/core/Typography';//--
-import {postElection } from './state/ElectionAction';
+import {setCallElectionData } from './state/ElectionAction';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
 
 
 const styles = theme => ({
-    container: {
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
+    // container: {
+    //     display: 'flex',
+    //     flexWrap: 'wrap',
+    // },
     textField: {
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
@@ -64,11 +64,13 @@ class CallElection extends React.Component {
 
     handleSubmit = (e) => {
         this.setState({goToConfig:true});
+        const { setCallElectionData } = this.props;
 
-        const {postElection} = this.props;
+
+        // const {postElection} = this.props;
       
         e.preventDefault();
-        postElection(this.state);
+        setCallElectionData(this.state);
        
     };
 
@@ -110,7 +112,7 @@ class CallElection extends React.Component {
 
                             className={classes.textField}
                             value={this.state.currency}
-                            onChange={this.handleChange('ElectionModule')}
+                            onChange={this.handleChange('electionModule')}
                             SelectProps={{
                                 native: true,
                                 MenuProps: {
@@ -129,10 +131,10 @@ class CallElection extends React.Component {
                             ))}
                         </TextField>
 
-                    <Typography className={classes.textCallElection} component="p">
+                    {/* <Typography className={classes.textCallElection} component="p">
                         Election ID :EL2018111112
 
-                    </Typography>
+                    </Typography> */}
                 </CardContent>
                 <CardActions>
                     <Button type='submit' size="small">Next</Button>
@@ -149,12 +151,12 @@ CallElection.propTypes = {
 
 
 const mapStateToProps = ({Election}) => {
-    const {postElection} = Election;    
-    return {postElection};
+    const {setCallElectionData} = Election;    
+    return {setCallElectionData};
   };
   
   const mapActionsToProps = {
-    postElection,
+    setCallElectionData,
   };
   
   export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(CallElection));

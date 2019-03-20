@@ -16,6 +16,8 @@ import { connect } from 'react-redux';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import moment from 'moment';
+import { Formik } from "formik";
+import * as Yup from "yup"
 
 
 const styles = theme => ({
@@ -48,6 +50,15 @@ function getSteps() {
 }
 
 
+const validationSchema = Yup.object({
+  depositAmount: Yup.string("Enter a name")
+  .required("Name is required"),
+  depositor: Yup.string("Enter your email")
+  .email("Enter a valid email")
+  .required("Email is required")
+});
+  
+  
 class NominationForm extends React.Component {
  
   constructor(props) {
@@ -71,7 +82,7 @@ class NominationForm extends React.Component {
 
   componentDidUpdate (oldState){
     const {NominationPayments} = this.props;
-    if(oldState.NominationPayments !== NominationPayments){
+    if(oldState.NominationPayments !== NominationPayments ){
 
       this.setState({depositor:NominationPayments.depositor});   
       this.setState({depositAmount:NominationPayments.depositAmount});   
@@ -107,16 +118,39 @@ class NominationForm extends React.Component {
 
 
   getStepContent(step,props) {
-    console.log("test",this.state);
+    const values = { depositAmount: "", depositor: "" };
     const { nominationPayments,NominationPayments, customProps,nominationStatus } = this.props;
+    
     switch (step) {
       case 0:
         return <NominationStep1 customProps={customProps}/>;
       case 1:
       if(nominationStatus==="DRAFT"){
+        // return <Formik
+        //      render={props => <NominationStep2Update 
+        //       NominationPayments={this.state} 
+        //       customProps={customProps} 
+        //       NumberFormatCustom={this.NumberFormatCustom}
+        //       handleChange={this.handleChange} 
+        //        {...props} />}
+        //        initialValues={values}
+        //        validationSchema={validationSchema}
+        //    />
         return <NominationStep2Update NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
       }else if(nominationStatus==="SUBMIT"){
-        return <NominationStep2 NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
+      //   return <Formik
+      //   render={props => <NominationStep2
+      //    NominationPayments={this.state} 
+      //    customProps={customProps} 
+      //    NumberFormatCustom={this.NumberFormatCustom}
+      //    handleChange={this.handleChange} 
+      //     {...props} />}
+      //     initialValues={values}
+      //     validationSchema={validationSchema}
+      // />
+debugger;
+      return <NominationStep2 NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
+        // return <NominationStep2 NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
       }else{
         return <NominationStep2 nominationPayments={nominationPayments} handleChange={this.handleChange} />;
       }

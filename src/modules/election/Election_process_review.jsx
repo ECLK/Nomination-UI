@@ -8,6 +8,10 @@ import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography'
 import Card from '@material-ui/core/Card';//--
 import ElectionReviewProcess from '../../components/ElectionReviewProcess/ElectionReviewProcess.jsx';
+import { Link } from 'react-router-dom'
+import CardContent from '@material-ui/core/CardContent';
+import Grid from '@material-ui/core/Grid';
+
 
 
 const drawerWidth = 240;
@@ -80,7 +84,13 @@ const styles = theme => ({
     },
     h5: {
         marginBottom: theme.spacing.unit * 2,
-    }
+    },
+    card: {
+        width: 300,
+        margin: 5,
+        cursor: 'pointer',
+
+    },
 });
 
 class Dashboard extends React.Component {
@@ -107,21 +117,57 @@ class Dashboard extends React.Component {
 
     render() {
         const { classes, allElectionModules } = this.props;
-
+        const allElection = [
+            { index: "0",noOfDevision: "09", election: "Provincial Council Election 2019", noOfTeams: "15" },
+            { index: "1",noOfDevision: "25", election: "Local Authority Election 2019", noOfTeams: "08" },
+            { index: "2",noOfDevision: "01", election: "Presidential Election 2019", noOfTeams: "10" },
+            { index: "3",noOfDevision: "23", election: "Parliamentary Election 2019", noOfTeams: "07" }
+        ];
         return (
             <div className={classes.root}>
                 <CssBaseline />
-                <AdminMenu title="Elections Commission of Sri Lanka"></AdminMenu>
+                <AdminMenu title="Election Commission of Sri Lanka"></AdminMenu>
                 <div style={{ width: '100%' }}>
-                    <Typography variant="h5" component="h2">
-                        Election process review
+                    <Typography style={{ marginBottom: '50px', marginLeft: '20px' }} variant="h5" component="h2">
+                        Election Review
                 </Typography>
 
                     <div className={classes.container}>
 
 
                         <div style={{ width: '100%', display: 'flex' }}>
-                            {allElectionModules.map(row => <ElectionReviewProcess />)}
+                            {/* {allElectionModules.map(row => <ElectionReviewProcess />)} */}
+                            <Grid container className={classes.root} spacing={64}>
+                            {
+                            allElection.map(row => 
+                        <Grid item xs={3}>
+                            <Card style={{marginLeft: ((row.index==0) ? '30px' : '0'),margin: ((row.index!==0) ? '20px' : '0') }} md={3} xs={6} sm={3}>
+                                <Link style={{ textDecoration: 'none' }} to="/election-process-review/1" >
+                                    <CardContent >
+                                        <Grid className={classes.container} container spacing={24}>
+                                            <Grid item >
+                                                <Typography className={classes.text_a} component="p">
+                                                    <b>{row.election}</b>
+                                                </Typography>
+                                                <br />
+                                                <Typography className={classes.text_a} component="p">
+                                                    No of Divisions : {row.noOfDevision}
+                                            </Typography>
+
+                                                <Typography className={classes.text_a} component="p">
+                                                    No of Teams : {row.noOfTeams}
+
+                                                </Typography>
+                                            </Grid>
+
+                                        </Grid>
+
+                                    </CardContent>
+                                </Link>
+                            </Card >
+                        </Grid>
+                            )}
+                        </Grid>   
                         </div>
 
 

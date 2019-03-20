@@ -25,6 +25,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import InfoIcon from '@material-ui/icons/Info';
 import PersonIcon from '@material-ui/icons/Person';
+import AttachIcon from '@material-ui/icons/AttachFile';
+import CriteriaIcon from '@material-ui/icons/Toc';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
@@ -81,7 +83,15 @@ const styles = theme => ({
   },
   objection_notes_btn: {
     marginRight: '10%',
+  },
+  buttonGroup: {
+    marginLeft: '35%',
+  },
+  iconButton: {
+    marginRight: '60%',
   }
+  
+  
 });
 
 class ObjectionReview extends React.Component{
@@ -150,10 +160,14 @@ class ObjectionReview extends React.Component{
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
           <Grid container classname={classes.panel_wrapper} spacing={16}>
             <Grid item xs="8">
-              <Typography className={classes.heading}>{objection.objection_id}</Typography>
+              {/* <Typography className={classes.heading}>{objection.objection_id}</Typography> */}
+              <Typography className={classes.heading}>{objection.created_date}</Typography>
+
             </Grid>
             <Grid item xs="4">
-              <Button
+            <Typography className={classes.heading}>{"Objected By : "+objection.objected_by}</Typography>
+
+              {/* <Button
                 variant={ objection.status==="approved" ? "contained" : "outlined" }
                 disabled={ objection.status==="approved" }
                 onClick={ () => { this.changeObjectionStatus(objection.objection_id, APPROVAL_STATE.APPROVED ) }}
@@ -169,7 +183,7 @@ class ObjectionReview extends React.Component{
                 className={classNames(classes.button, classes.red_button)}>
                 {objection.status==="rejected" ? "Rejected" : "Reject"}
                 <Block className={classes.left_icon} />
-              </Button>
+              </Button> */}
             </Grid>
           </Grid>
         </ExpansionPanelSummary>
@@ -196,15 +210,38 @@ class ObjectionReview extends React.Component{
                   <ListItemIcon>
                     <InfoIcon/>
                   </ListItemIcon>
-                  <ListItemText primary={objection.nomination_id} secondary="Objected Nomination Id"/>
+                  <ListItemText primary={objection.nomination} secondary="Objected Nomination"/>
                   </Button>
                 </ListItem>
               </List>
             </Grid>
             <Grid item xs="6">
+              <ListItem>
+                  <ListItemIcon>
+                    <CriteriaIcon/>
+                  </ListItemIcon>
+                  <ListItemText primary={objection.objection_criteria} secondary="Objection Criteria"/>
+                  <IconButton className={classes.iconButton} color="primary"  aria-label="Add to shopping cart">
+                  <AttachIcon />
+                </IconButton>
+                </ListItem>
+                
               <TextField
                 id="outlined-textarea"
-                label="Notes"
+                label="Objection"
+                rows="8"
+                rowsMax="14"
+                value={objection.objection}
+                onChange={this.handleNoteChange(objection.objection_id)}
+                placeholder="Placeholder"
+                multiline
+                className={classes.notes}
+                margin="normal"
+                variant="outlined"
+              />
+              <TextField
+                id="outlined-textarea"
+                label="Comments"
                 rows="8"
                 rowsMax="14"
                 value={objection.notes}
@@ -215,11 +252,27 @@ class ObjectionReview extends React.Component{
                 margin="normal"
                 variant="outlined"
               />
-              <Typography align="right">
+              <Typography className={classes.buttonGroup}>
                 <Button className={classNames(classes.button, classes.objection_notes_btn, classes.green_button)}
                                                  onClick={ () => { this.saveNote(); }} >
-                  <Done className={classes.left_icon} /> Save / Update Note
+                  <Done className={classes.left_icon} /> Save 
                 </Button>
+                <Button
+                variant={ objection.status==="approved" ? "contained" : "outlined" }
+                disabled={ objection.status==="approved" }
+                onClick={ () => { this.changeObjectionStatus(objection.objection_id, APPROVAL_STATE.APPROVED ) }}
+                className={classNames(classes.button, classes.green_button)}>
+                {objection.status==="approved" ? "Approved" : "Approve"}
+                <Done className={classes.left_icon} />
+              </Button>
+              <Button
+                variant={ objection.status==="rejected" ? "contained" : "outlined" }
+                disabled={ objection.status==="rejected" }
+                onClick={ () => { this.changeObjectionStatus(objection.objection_id, APPROVAL_STATE.REJECTED ) }}
+                className={classNames(classes.button, classes.red_button)}>
+                {objection.status==="rejected" ? "Rejected" : "Reject"}
+                <Block className={classes.left_icon} />
+              </Button>
               </Typography>
             </Grid>
           </Grid>
@@ -231,7 +284,7 @@ class ObjectionReview extends React.Component{
     return (
       <div className={classes.root}>
         <CssBaseline />
-        <AdminMenu title="Elections Commission of Sri Lanka"></AdminMenu>
+        <AdminMenu title="Election Commission of Sri Lanka"></AdminMenu>
         <Typography variant="h5" component="h2">
           Objection Review
         </Typography>

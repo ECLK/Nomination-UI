@@ -45,26 +45,35 @@ const styles = {
 
 };
 
+
+
 function SimpleCard(props) {
     const { classes } = props;
     const bull = <span className={classes.bullet}>•</span>;
+    const allElection = [
+        { noOfDevision: "09", election: "Provincial Council 2019", noOfTeams: "15" },
+        // { noOfDevision: "25", election: "Local Authority 2019", noOfTeams: "08" },
+        // { noOfDevision: "01", election: "Presidential Election", noOfTeams: "10" },
+        // { noOfDevision: "23", election: "Parliamentary Election", noOfTeams: "07" }
+    ];
 
     return (
+        allElection.map(row => 
         <Card className={classes.card} md={3} xs={6} sm={3}>
             <Link to="/election-process-review/1" >
                 <CardContent >
                     <Grid className={classes.container} container spacing={24}>
                         <Grid item >
                             <Typography className={classes.text_a} component="p">
-                                <b>Parliament 208 Election</b>
+                                <b>{row.election}</b>
                             </Typography>
                             <br />
                             <Typography className={classes.text_a} component="p">
-                                No of Divisions : 15
+                                No of Divisions : {row.noOfDevision}
                         </Typography>
 
                             <Typography className={classes.text_a} component="p">
-                                No of Teams : 07
+                                No of Teams : {row.noOfTeams}
 
                             </Typography>
                         </Grid>
@@ -74,6 +83,7 @@ function SimpleCard(props) {
                 </CardContent>
             </Link>
         </Card >
+        )
     );
 }
 
