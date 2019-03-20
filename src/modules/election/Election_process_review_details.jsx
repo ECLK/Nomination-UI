@@ -132,7 +132,7 @@ class Dashboard extends React.Component {
         return (
             <div className={classes.root}>
                 <CssBaseline />
-                <AdminMenu title="Elections Commission of Sri Lanka"></AdminMenu>
+                <AdminMenu title="Election Commission of Sri Lanka"></AdminMenu>
                 <div style={{ width: '100%' }}>
                     <Typography variant="h5" component="h2">
                         Election process review(Parlimenttary 2018 Election)

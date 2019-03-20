@@ -85,16 +85,18 @@ class FilledTextFields extends React.Component {
                             onChange={this.handleChange('ModuleName')}
                             margin="normal"
                             variant="filled"
+                            style={{marginBottom:'28px'}}
+
                         />
 
 
                     </form>
 
-                    <Typography className={classes.textCallElection} component="p">
+                    {/* <Typography className={classes.textCallElection} component="p">
                         <br />
                          Module ID :PA1112
 
-                    </Typography>
+                    </Typography> */}
                 </CardContent>
                 <CardActions>
                     <Button size="small" onClick={this.handleNext}>Next</Button>

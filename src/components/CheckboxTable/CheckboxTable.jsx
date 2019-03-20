@@ -51,6 +51,8 @@ class CheckboxTableGrid extends React.Component {
             depositAmount:CallElectionData.depositAmount,
             WeightagePrefarence:CallElectionData.WeightagePrefarence,
             WeightageVote:CallElectionData.WeightageVote,
+            electionName:CallElectionData.electionName,
+            electionModule:CallElectionData.electionModule,
         };
     }
 
@@ -82,7 +84,7 @@ class CheckboxTableGrid extends React.Component {
 
     // this will handle the change of checkbox and update the state.checkboxGrid variable, which is the source to the grid.
     handleChange = (row, col, data) => (event, value) => {
-        const { setCallElectionData } = this.props;
+        const { setCallElectionData,electionData } = this.props;
 
         let checkboxGrid = Array.from(this.state.checkboxGrid);
         let params = {
@@ -110,6 +112,8 @@ class CheckboxTableGrid extends React.Component {
 
 
     setRows = (params) => {
+        const { electionData } = this.props;
+
         let checkboxGrid = Array.from(this.state.checkboxGrid);
         for (let i = 0; i < this.props.cols.length; i++) {
             checkboxGrid[params.row][i + 1] = params.event.target.checked;
@@ -117,7 +121,7 @@ class CheckboxTableGrid extends React.Component {
                 let allow_party = {
                     'division_id': this.props.cols[i].id,
                     'team_id': this.props.rows[params.row - 1].id,
-                    'election_id': '',
+                    'election_id': electionData.election_id,
                     'id': params.row + '-' + (i + 1)
                 }
                 this.state.rowData.push(allow_party);
@@ -129,6 +133,8 @@ class CheckboxTableGrid extends React.Component {
     }
 
     setColumns = (params) => {
+        const { electionData } = this.props;
+
         let checkboxGrid = Array.from(this.state.checkboxGrid);
         for (let i = 0; i < this.props.rows.length; i++) {
             checkboxGrid[i + 1][params.col] = params.event.target.checked;
@@ -136,7 +142,7 @@ class CheckboxTableGrid extends React.Component {
                 let allow_party = {
                     'division_id': this.props.cols[params.col - 1].id,
                     'team_id': this.props.rows[i].id,
-                    'election_id': '',
+                    'election_id': electionData.election_id,
                     'id': (i + 1) + '-' + params.col
                 }
                 this.state.rowData.push(allow_party);
@@ -148,6 +154,7 @@ class CheckboxTableGrid extends React.Component {
 
 
     setValue = (value, params) => {
+        const { electionData } = this.props;
         let checkboxGrid = Array.from(this.state.checkboxGrid);
         switch (value) {
             case 'rows':
@@ -180,7 +187,7 @@ class CheckboxTableGrid extends React.Component {
                     let allow_party = {
                         'division_id': this.props.cols[params.col-1].id,
                         'team_id': this.props.rows[params.row-1].id,
-                        'election_id': '',
+                        'election_id': electionData.election_id,
                         'id': (params.row-1) + '-' + (params.col-1)
                     }
                     this.state.rowData.push(allow_party);
@@ -248,8 +255,10 @@ class CheckboxTableGrid extends React.Component {
 const mapStateToProps = ({ Election }) => {
     const { setCallElectionData  } = Election;
     const CallElectionData  = Election.CallElectionData;
+    const electionData = Election.electionData;
 
-    return {  setCallElectionData, CallElectionData }
+
+    return {  setCallElectionData, CallElectionData,electionData }
   };
   
   const mapActionsToProps = {

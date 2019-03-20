@@ -35,32 +35,64 @@ const styles = theme => ({
 });
 
 function getSteps() {
-  return ['TIME LINE', 'PAYMENT', 'WEIGHTAGE', 'ALLOW NOMINATION'];
+  return ['TIME LINE', 'ALLOW NOMINATION'];
 }
 
 
 
 class VerticalLinearStepper extends React.Component {
-  state = {
-    activeStep: 0,
-    nominationStart: '2017-05-24T10:30',
-    nominationEnd: '2017-05-24T10:30',
-    objectionStart: '2017-05-24T10:30',
-    objectionEnd: '2017-05-24T10:30',
-    depositAmount: 'Amount',
-    WeightagePrefarence: '%',
-    WeightageVote: '%',
-    values: ''
-  };
+ 
+  constructor(props){
+    super(props);
+    const {CallElectionData} = this.props;
+
+    this.state = {
+      activeStep: 0,
+      nominationStart: '2017-05-24T10:30',
+      nominationEnd: '2017-05-24T10:30',
+      objectionStart: '2017-05-24T10:30',
+      objectionEnd: '2017-05-24T10:30',
+      // depositAmount: 'Amount',
+      // WeightagePrefarence: '%',
+      // WeightageVote: '%',
+      electionName:CallElectionData.electionName,
+      electionModule:CallElectionData.electionModule,
+      values: '',
+      rowData:''
+    };
+    
+}
+
+// componentDidUpdate (oldState){
+//   const {CallElectionData,setCallElectionData} = this.props;
+//       console.log(CallElectionData.electionName);
+//   if(oldState.setCallElectionData !== setCallElectionData){
+
+//     this.setState({electionName:setCallElectionData.electionName});   
+//     this.setState({electionModule:setCallElectionData.electionModule});   
+//     // var ddate = parseInt(NominationPayments.depositeDate);
+//     // this.setState({depositeDate:moment(new Date(NominationPayments.depositeDate)).format('YYYY-MM-DD')});}
+   
+
+// }}
+
+    // componentDidMount() {
+    //   const { setCallElectionData } = this.props;
+    // console.log(setCallElectionData.electionName);
+    // debugger;
+    //   // axios.get(`http://localhost:9001/ec-election/nominations/1/candidates`)
+    //   //   .then(res => {
+    //   //     const nominations = res.data;
+    //   //     this.setState({ nominations });
+    //   //   })
+    // }
 
   handleNext = () => {
     let activeStep;
-
     const { setElectionTimeLine } = this.props;
 
 
     if (activeStep === 1) {
-      alert("de");
       setElectionTimeLine(this.state);
     }
     const { setCallElectionData } = this.props;
@@ -69,7 +101,7 @@ class VerticalLinearStepper extends React.Component {
       activeStep: state.activeStep + 1,
     }));
 
-    if (this.state.activeStep === 0 || this.state.activeStep === 1 || this.state.activeStep === 2) {
+    if (this.state.activeStep === 0) {
       setCallElectionData(this.state);
     }
 
@@ -103,17 +135,17 @@ class VerticalLinearStepper extends React.Component {
           handleChange={this.handleChange}
           values={values}
         />;
+      // case 1:
+      //   return <ElectionPayment
+      //     handleChange={this.handleChange}
+      //     values={values}
+      //   />;
+      // case 2:
+      //   return <ElectionWeightage
+      //     handleChange={this.handleChange}
+      //     values={values}
+      //   />;
       case 1:
-        return <ElectionPayment
-          handleChange={this.handleChange}
-          values={values}
-        />;
-      case 2:
-        return <ElectionWeightage
-          handleChange={this.handleChange}
-          values={values}
-        />;
-      case 3:
         return <AllowNomination
           handleChange={this.handleChange}
           values={values}
