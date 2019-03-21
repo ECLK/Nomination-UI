@@ -14,7 +14,7 @@ import { Redirect } from 'react-router-dom';
 import CandidateForm from './CandidateForm';
 import DivisionConfig from './DivisionConfig';
 import ElectionConfig from './ElectionConfig';
-import { createElection, updateElection } from './state/ElectionAction';
+import { createElection, updateElection, submitElection } from './state/ElectionAction';
 import { connect } from 'react-redux';
 
 
@@ -46,6 +46,7 @@ class CreateElection extends React.Component {
     state = {
         activeStep: 0,
         skipped: new Set(),
+        goToHome: false,
     };
 
     constructor() {
@@ -90,6 +91,13 @@ class CreateElection extends React.Component {
     handleNext = () => {
         const { activeStep } = this.state;
         let { skipped } = this.state;
+        if(activeStep === 2){
+            this.props.submitElection(this.props.new_election_module);
+            this.setState({
+                goToHome: true
+            });
+            return;
+        }
         this.setState({
             activeStep: activeStep + 1,
             skipped,
@@ -120,7 +128,7 @@ class CreateElection extends React.Component {
                     </Grid>
                     <Grid item xs={12}>
                         <div>
-                            {activeStep === steps.length ? (
+                            {this.state.goToHome ? (
                                 <Redirect to="/admin/home" />
                             ) : (
                                     <Paper className={classes.pageContent} elevation={1}>
@@ -193,7 +201,8 @@ const mapStateToProps = ({ ElectionModel }) => {
 
 const mapActionsToProps = {
     createElection,
-    updateElection
+    updateElection,
+    submitElection
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(CreateElection));
