@@ -14,11 +14,11 @@ export const setPostModuleData = (val) => {
     }
 }
 
-export function postCallElectionData(CallElectionData, electionData) {
+export function postCallElectionData(electionData) {
     //TODO: config ids should get from the front end and the array should be dynamic
 
     let allElectionModuleData = {
-        "moduleId": electionData.module_id,
+        "moduleId": "1268362183761283718236",
         "divisionCommonName":'Provintial',
         "createdBy":'admin',
         "createdAt":'',
@@ -85,7 +85,7 @@ export function postCallElectionData(CallElectionData, electionData) {
     return function (dispatch) {
         const response = axios
             .post(
-                `${API_BASE_URL}/modules/moduleData`,
+                `${API_BASE_URL}/modules`,
                 { ...allElectionModuleData }
             )
             .then(response => {
@@ -94,7 +94,6 @@ export function postCallElectionData(CallElectionData, electionData) {
             }).catch(err => {
                 console.log(err)
             });
-// import store from '../store';
     }
 }
 
@@ -118,15 +117,97 @@ export const updateElection = function updateElection(election) {
     };
 }
 
-export const saveElection = function saveElection() {
+export const saveElection = function saveElection(election) {
 
     return function (dispatch) {
+
         dispatch({
-            type: SAVE_ELECTION_MODULE,
+            type: UPDATE_ELECTION_MODULE,
             payload: {} 
         })
     };
 }
+
+export const submitElection = function saveElection(election) {
+
+    let allElectionModuleData = {
+        "name": election.name,
+        "id": "1268362183761283718236",
+        "divisionCommonName":'Provintial',
+        "createdBy":'admin',
+        "createdAt":'',
+        "updatedAt":'',
+        "candidateFormConfiguration": [
+            {
+                candidateConfigId: '1',
+            },
+            {
+                candidateConfigId: '2',
+            },
+            {
+                candidateConfigId: '3',
+            },
+            {
+                candidateConfigId: '4',
+            },
+        ],
+        "supportingDocuments": [
+            {
+                supportDocConfigId: '15990459-2ea4-413f-b1f7-29a138fd7a97',
+            },
+            {
+                supportDocConfigId: 'fe2c2d7e-66de-406a-b887-1143023f8e72',
+            },
+            {
+                supportDocConfigId: 'ff4c6768-bdbe-4a16-b680-5fecb6b1f747',
+            }
+        ],
+        "divisionConfig":[
+            {
+                divisionName: 'Sample',
+                divisionCode: 'code',
+                noOfCandidates: '1',
+            },
+            {
+                divisionName: 'Sample3',
+                divisionCode: 'code',
+                noOfCandidates: '2',
+            },
+            {
+                divisionName: 'Sample5',
+                divisionCode: 'code',
+                noOfCandidates: '3',
+            }
+        ],
+    "electionConfig": [
+        {
+            electionModuleConfigId: '15990459-2ea4-413f-b1f7-29a138fd7a97',
+            value:'allowed',
+        }
+    ],
+    }
+
+    return function (dispatch) {
+        const response = axios
+            .post(
+                `${API_BASE_URL}/election-modules`,
+                { ...allElectionModuleData }
+            )
+            .then(response => {
+                console.log("response.data", response.data);
+                if(response.data){
+                    election.submited = true;
+                    dispatch({
+                        type: UPDATE_ELECTION_MODULE,
+                        payload: election
+                    });
+                }
+            }).catch(err => {
+                console.log(err)
+            });
+    }
+}
+
 
 
 //----------- End of save Create Election Data ----------------
