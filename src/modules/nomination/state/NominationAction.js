@@ -8,7 +8,8 @@ import {
   HANDLE_CHANGE_PAYMENT,
   GET_NOMINATION_CANDIDATES,
   DELETE_NOMINATION_CANDIDATE,
-  UPDATE_NOMINATION_PAYMENTS
+  UPDATE_NOMINATION_PAYMENTS,
+  POST_NOMINATION_SUPPORT_DOC
 
 } from "./NominationTypes";
 import {API_BASE_URL} from "../../../config.js";
@@ -264,6 +265,35 @@ export function postNominationPayments(candidatePayments) {
       )
       .then(response => {
          dispatch(setData(response.data));
+      }).catch(err => {
+            console.log(err)
+      });
+    };
+  }
+
+  export const setSupportDocData = (val) => {
+    return {
+        type: POST_NOMINATION_SUPPORT_DOC,
+        payload: val
+    }
+}
+
+  export function postNominationSupportDocs(nominationSuppertDocs) {
+   
+    var nominationSuppertDocs = {
+      nominationId:nominationSuppertDocs.nominationId,
+      candidateSupportDocs:nominationSuppertDocs.supportdoc
+    }
+    debugger;
+    return function (dispatch) {
+       
+      const response = axios
+      .post(
+        `${API_BASE_URL}/nominations/support-docs`,
+            {...nominationSuppertDocs}
+      )
+      .then(response => {
+         dispatch(setSupportDocData(response.data));
       }).catch(err => {
             console.log(err)
       });

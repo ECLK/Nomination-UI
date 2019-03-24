@@ -9,6 +9,7 @@ import Progress from "../components/Progress/Progress";
 import Table from "../components/common/Table";
 import ExpansionPanel from "../components/common/ExpansionPanel";
 import FileUpload from "../components/common/FileUpload/";
+import NominationForm from "../components/NominationForm";
 
 import { tableHeadings, tableData, expansionPanelData } from "./_data";
 
@@ -25,7 +26,7 @@ storiesOf("DatePicker", module).add("default", () => <DatePickers />);
 storiesOf("Progress", module).add("default", () => <Progress />);
 
 storiesOf("FileUpload", module).add("default", () => (
-  <FileUpload
+  <NominationForm
     allowedTypes={[]}
     allowedSize={15}
     multiple={false}

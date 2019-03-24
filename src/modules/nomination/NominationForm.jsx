@@ -112,6 +112,8 @@ class Dashboard extends React.Component {
           NominationPayments={NominationPayments}
           customProps={this.props.location.state.id}
           nominationStatus={this.props.location.state.status}
+          division={this.props.location.state.division}
+          candidateCount={this.props.location.state.candidateCount}
           title="Election Commission of Sri Lanka"
         />
       </div>

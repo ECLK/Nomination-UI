@@ -8,7 +8,8 @@ import {
   GET_NOMINATION_PAYMENTS,
   HANDLE_CHANGE_PAYMENT,
   GET_NOMINATION_CANDIDATES,
-  DELETE_NOMINATION_CANDIDATE
+  DELETE_NOMINATION_CANDIDATE,
+  POST_NOMINATION_SUPPORT_DOC
 } from "./NominationTypes";
 
 const initialState = {
@@ -76,8 +77,12 @@ export default function reducer(state = initialState, action) {
         ...state,
         paymentState: action.payload
       };
-       
-
+    case POST_NOMINATION_SUPPORT_DOC:
+      return {
+        ...state,
+        postNominationSupportDocs: action.payload
+      };   
+      
 
   }
   return state;

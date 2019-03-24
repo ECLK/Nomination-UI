@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { array } from 'prop-types';
 import NumberFormat from 'react-number-format';
 import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
@@ -10,12 +10,16 @@ import Typography from '@material-ui/core/Typography';
 import NominationStep1 from '../NominationStep1/NominationStep1';
 import NominationStep2 from '../NominationStep2';
 import NominationStep3 from '../NominationStep3/NominationStep3';
+import NominationStep5 from '../NominationStep5/NominationStep2';
 import NominationStep2Update from '../NominationStep2Update';
-import { postNominationPayments, updateNominationPayments } from '../../modules/nomination/state/NominationAction';
+import { postNominationPayments, updateNominationPayments,postNominationSupportDocs } from '../../modules/nomination/state/NominationAction';
 import { connect } from 'react-redux';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import DoneOutline from '@material-ui/icons/DoneOutline';
+import CloseIcon from '@material-ui/icons/Cancel';
 import moment from 'moment';
+import axios from "axios";
 
 
 const styles = theme => ({
@@ -40,11 +44,15 @@ const styles = theme => ({
 },
 paperContent:{
   padding: 24,
-}
+},
+done: {
+  textAlign: 'right',
+  paddingRight: 8,
+},
 });
 
 function getSteps() {
-  return ['Candidate Details', 'Payment Details', 'Review'];
+  return ['Candidate Details', 'Payment Details', 'Review', 'Nomination Supporting Documents'];
 }
 
 
@@ -52,6 +60,7 @@ class NominationForm extends React.Component {
  
   constructor(props) {
     super(props)
+    const { allowedTypes, allowedSize, multiple } = props;
 
     this.state = {
       activeStep: 0,
@@ -65,9 +74,99 @@ class NominationForm extends React.Component {
         status:'PENDING',
         nominationId:this.props.customProps,
         payments:[],
-    
+        allowedTypes,
+        allowedSize,
+        multiple,
+        status: "ready",
+        filename:'',
+        supportDocId:'3',
+        supportdoc:[]
     }    
   }
+
+  onSelectFiles = evt => {
+   
+    evt.preventDefault();
+    evt.stopPropagation();
+
+    this.setState({
+      status: evt.type,
+      supportDocId: evt.target.id
+    });
+
+    // Fetch files
+    const { files } = evt.target;
+    this.uploadFiles(files);
+  };
+  uploadFiles = files => {
+    let error = false;
+    const errorMessages = [];
+
+    const data = {
+      error: null,
+      files
+    }; 
+
+    const { allowedTypes, allowedSize } = this.state;
+
+    if (files && files.length > 0) {
+      for (let i = 0; i < files.length; i += 1) {
+        const file = files[i];
+
+        // Validate file type
+        if (allowedTypes && allowedTypes.length > 0) {
+          if (!allowedTypes.includes(file.type)) {
+            error = true;
+            errorMessages.push("Invalid file type(s)");
+          }
+        }
+
+        // Validate fileSize
+        if (allowedSize && allowedSize > 0) {
+          if (file.size / 1048576 > allowedSize) {
+            error = true;
+            errorMessages.push("Invalid file size(s)");
+          }
+        }
+      }
+    }
+
+    if (error) {
+      data.error = errorMessages;
+      data.files = null;
+      this.reset();
+    } else {
+      const formData = new FormData();
+      this.setState({status: "uploading", progress: 0});
+      formData.append("file", data.files[0]);
+      axios.post('http://localhost:9001/ec-election/file-upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+
+        onUploadProgress: (progressEvent) => {
+          let percentCompleted = (progressEvent.loaded * 100) / progressEvent.total;
+          this.setState(
+            {progress: percentCompleted}
+          );
+          console.log(percentCompleted);
+        }
+
+
+      }).then((response) => {
+      
+        const obj = {'id':this.state.supportDocId, 'filename':response.data.filename, 'originalname':response.data.originalname};
+        const newArray = this.state.supportdoc.slice(); // Create a copy
+        newArray.push(obj); // Push the object
+        this.setState(
+          {
+            status: "uploaded",
+            supportdoc: newArray
+          }
+        );
+      });
+    }
+  };
 
   componentDidUpdate (oldState){
     const {NominationPayments} = this.props;
@@ -84,6 +183,26 @@ class NominationForm extends React.Component {
             [name]:event.target.value,
     });   
   };
+
+  // handleReset = event => {
+  //   debugger;
+  //   this.setState({
+  //           // [name]:event.target.value,
+  //   });   
+  // };
+
+  handleReset(){
+    debugger;
+    // const obj = {'id':this.state.supportDocId, 'filename':response.data.filename, 'originalname':response.data.originalname};
+    // const newArray = this.state.supportdoc.slice(); // Create a copy
+    // newArray.push(obj); // Push the object
+    // this.setState(
+    //   { 
+    //     status: "uploaded",
+    //     supportdoc: newArray
+    //   }
+    // );
+  }
 
   NumberFormatCustom(props) {
     const { inputRef, onChange, ...other } = props;
@@ -104,11 +223,23 @@ class NominationForm extends React.Component {
       />
     );
   }
-
+   showFlagToStyle = (flag) => (
+    {display: flag ? "" : "none"}
+  );
 
   getStepContent(step,props) {
-    console.log("test",this.state);
-    const { nominationPayments,NominationPayments, customProps,nominationStatus } = this.props;
+    const { classes } = this.props;
+
+    const doneElement = (<div className={classes.done} style={this.showFlagToStyle(this.state.status === "uploaded")}>
+    <DoneOutline  color="secondary"/>
+    {/* <a download={"filename"} href={"ok"}>filename</a> */}
+    </div>);
+      const closeElement = (<div className={classes.done} style={this.showFlagToStyle(this.state.status === "uploaded")}>
+      <CloseIcon  color="red"/>
+      {/* <a download={"filename"} href={"ok"}>filename</a> */}
+      </div>);
+    
+    const { nominationPayments,NominationPayments, customProps,nominationStatus,division,candidateCount } = this.props;
     switch (step) {
       case 0:
         return <NominationStep1 customProps={customProps}/>;
@@ -121,7 +252,9 @@ class NominationForm extends React.Component {
         return <NominationStep2 nominationPayments={nominationPayments} handleChange={this.handleChange} />;
       }
       case 2:
-        return <NominationStep3 />;
+        return <NominationStep5 division={division} candidateCount={candidateCount} NominationPayments={this.state} />;
+      case 3:
+      return <NominationStep3 supportdoc={this.state.supportdoc} closeElement={closeElement} doneElement={doneElement} onSelectFiles={this.onSelectFiles}  />;
       default:
         return 'Unknown step';
     }
@@ -134,7 +267,7 @@ class NominationForm extends React.Component {
   
 
   handleNext = () => {
-    const {postNominationPayments,updateNominationPayments,NominationPayments, nominationStatus, customProps}=this.props;
+    const {postNominationPayments,updateNominationPayments,NominationPayments, nominationStatus, customProps,postNominationSupportDocs}=this.props;
     let activeStep;
    
     if (this.isLastStep() && !this.allStepsCompleted()) {
@@ -149,7 +282,14 @@ class NominationForm extends React.Component {
       activeStep,
     });
     
+    if (activeStep === 0 ){
+        console.log("activeStep",activeStep);
+      postNominationSupportDocs(this.state);   
+  }
+    
     if (activeStep === 2 && NominationPayments==''){
+      console.log("activeStep",activeStep);
+
       postNominationPayments(this.state);   
   }else if(activeStep === 2 && NominationPayments!==''){
     updateNominationPayments(NominationPayments.id,this.state);   
@@ -203,7 +343,7 @@ class NominationForm extends React.Component {
     const { classes } = this.props;
     const steps = getSteps();
     const { activeStep } = this.state;
-    
+   
     return (
       <div className={classes.root}>
       <Paper className={classes.pageContent} elevation={1}>
@@ -247,6 +387,7 @@ class NominationForm extends React.Component {
                 >
                   Back
                 </Button>
+                {activeStep !== 3 ?
                 <Button
                   variant="contained"
                   color="primary"
@@ -254,8 +395,16 @@ class NominationForm extends React.Component {
                   className={classes.button}
                 >
                   Next
-                </Button>
-                {activeStep !== steps.length &&
+                </Button> : ' '
+                }
+              
+                    {activeStep === 3 ? 
+                    <Button variant="contained" color="primary" onClick={this.handleComplete}>
+                      Submit For Approval
+                    </Button> : ' '
+                    }
+                  
+                   {/* {activeStep !== steps.length &&
                   (this.state.completed[this.state.activeStep] ? (
                     <Typography variant="caption" className={classes.completed}>
                       Step {activeStep + 1} already completed
@@ -264,7 +413,7 @@ class NominationForm extends React.Component {
                     <Button variant="contained" color="primary" onClick={this.handleComplete}>
                       {this.completedSteps() === this.totalSteps() - 1 ? 'Finish' : 'Complete Step'}
                     </Button>
-                  ))}
+                  ))} */}
               </div>
             </div>
           )}
@@ -284,14 +433,17 @@ const mapStateToProps = ({Nomination}) => {
   const {nominationPayments} = Nomination;
   const NominationPayments = Nomination.getNominationPayments;
   const {updateNominationPayments} = Nomination;
+  const {postNominationSupportDocs} = Nomination;
 
   
-  return {nominationPayments,updateNominationPayments,NominationPayments};
+  
+  return {nominationPayments,updateNominationPayments,NominationPayments,postNominationSupportDocs};
 };
 
 const mapActionsToProps = {
   postNominationPayments,
-  updateNominationPayments
+  updateNominationPayments,
+  postNominationSupportDocs
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(NominationForm));

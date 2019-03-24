@@ -134,7 +134,7 @@ const styles = theme => ({
 									}
 									{
 										division.nomination.length > 0 &&
-										<Link style={{ textDecoration: 'none' }} to={{ pathname: "nomination", state: { id: nomination.id,status: nomination.status }}}  >
+										<Link style={{ textDecoration: 'none' }} to={{ pathname: "nomination", state: { id: nomination.id,status: nomination.status,division: division.name,candidateCount:division.noOfCandidates }}}  >
 										<Button variant="contained" color="primary"  className={classes.button} >{nomination.status === 'SUBMIT' ? 'VIEW' : 'EDIT'}</Button>
 										</Link>
 									}

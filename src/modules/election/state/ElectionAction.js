@@ -235,28 +235,15 @@ export function postCallElectionData(CallElectionData, electionData) {
         "created_by":"admin",
         "created_at":"234234",
         "updated_at":"234344",
-        "timeLineData": [
+        "timeLineData": 
             {
-                electionTimeLineConfigId: '0f62755e-9784-4046-9804-8d4deed36f2a',//nominationStart
-                value: Date.parse(CallElectionData.nominationStart),
+                nominationStart: Date.parse(CallElectionData.nominationStart),
+                nominationEnd: Date.parse(CallElectionData.nominationEnd),
+                objectionStart: Date.parse(CallElectionData.objectionStart),
+                objectionEnd: Date.parse(CallElectionData.objectionEnd),
                 electionId: electionData.election_id,
-            },
-            {
-                electionTimeLineConfigId: 'c06a789c-405c-4e7a-8df2-66766284589b',//nominationEnd
-                value: Date.parse(CallElectionData.nominationEnd),
-                electionId: electionData.election_id,
-            },
-            {
-                electionTimeLineConfigId: '675ec08b-2937-4222-94a6-0143a94763f1',//objectionStart
-                value: Date.parse(CallElectionData.objectionStart),
-                electionId: electionData.election_id,
-            },
-            {
-                electionTimeLineConfigId: '64ae3e95-591a-4bf9-8a5b-10803e0eca82',//objectionEnd
-                value: Date.parse(CallElectionData.objectionEnd),
-                electionId: electionData.election_id,
-            },
-        ],
+            }
+        ,
         // "confData": [
         //     {
         //         electionConfigId: '1',
