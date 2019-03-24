@@ -95,10 +95,41 @@ class NominationPayments extends React.Component {
             depositeDate:'',  
         }
       }
+
+    //   handleChange = (e) => {
+    //     const evtTarget = e.target;
+    //     const { name } = evtTarget;
+    //     const { handleChange, setFieldTouched } = this.props;
+    //     handleChange(e);
+    //     setFieldTouched(name, true, false);
+    // }
+      
     
     render() {
-        const {classes, depositor,handleChange,NominationPayments,NumberFormatCustom,CandidateList} = this.props;
+        const {classes,NumberFormatCustom,CandidateList,NominationPayments} = this.props;
         const {  numberformat } = this.state;
+        const {
+            values: { depositAmount, depositor },
+            errors,
+            touched,
+            handleChange,
+            isValid,
+          } = this.props;
+    //     const  change = (name, e) => {
+    //         // e.persist();
+    //         // debugger;
+    //         handleChange(e);
+    //         setFieldTouched(name, true, false);
+    //  };
+    //  const change = (e) => {
+    //      const {handleChange} = this.props;
+    //      const evtTraget = e.target;
+    //      const { name } = evtTraget;
+    //      handleChange(e);
+    //      debugger;
+    //     setFieldTouched(name, true, false);
+    //   };
+   debugger;
         return (
             <form className={classes.container} noValidate autoComplete="off">
                 <Grid container direction="row" justify="flex-start" alignItems="stretch" spacing={8}>                
@@ -109,7 +140,11 @@ class NominationPayments extends React.Component {
                             className={classes.textField}
                             prefix={'Rs '}
                             value={NominationPayments.depositAmount}
+                            helperText={touched.depositAmount ? errors.depositAmount : ""}
+                            error={touched.depositAmount && Boolean(errors.depositAmount)}
                             onChange={handleChange('depositAmount')}
+                            // onChange={change.bind(null, "depositAmount")}
+                            // onChange={this.handleChange}
                             margin="normal"
                             InputProps={{
                                 inputComponent: NumberFormatCustom,
@@ -122,6 +157,10 @@ class NominationPayments extends React.Component {
                             className={classes.textField}
                             value={NominationPayments.depositor}
                             onChange={handleChange("depositor")}
+                            // onChange={change.bind(null, "depositor")}
+                            // onChange={this.handleChange}
+                            helperText={touched.depositor ? errors.depositor : ""}
+                            error={touched.depositor && Boolean(errors.depositor)}
                             margin="normal"
                         />  
                     </Grid>
@@ -132,6 +171,8 @@ class NominationPayments extends React.Component {
                             className={classes.textField}
                             value={CandidateList.length}
                             onChange={handleChange('candidateCount')}
+                            // onChange={change.bind(null, "candidateCount")}
+                            // onChange={this.handleChange}
                             margin="normal"
                         />
                     </Grid>                   
@@ -144,6 +185,8 @@ class NominationPayments extends React.Component {
                             type="date"
                             value={NominationPayments.depositeDate}
                             onChange={handleChange('depositeDate')}
+                            // onChange={change.bind(null, "depositeDate")}
+                            // onChange={this.handleChange}
                             className={classes.textField}
                             InputLabelProps={{
                                 shrink: true,
