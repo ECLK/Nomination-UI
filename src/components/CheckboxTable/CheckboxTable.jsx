@@ -63,7 +63,7 @@ class CheckboxTableGrid extends React.Component {
             rowHeaders.push(value.name);
         });
 
-        let columnHeaders = ['', ''];
+        let columnHeaders = ['', 'All'];
         this.props.cols.map((value) => {
             columnHeaders.push(value.name);
         });

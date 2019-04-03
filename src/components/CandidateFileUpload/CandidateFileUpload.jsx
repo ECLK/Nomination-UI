@@ -1,10 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import FileUpload from "../common/FileUpload";
+import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
-import axios from 'axios';
+import Typography from '@material-ui/core/Typography';
+import {postNominationSupportDocs } from '../../modules/nomination/state/NominationAction';
+import { connect } from 'react-redux';
+import DoneOutline from '@material-ui/icons/DoneOutline';
+import CloseIcon from '@material-ui/icons/Cancel';
+import axios from "axios";
+
 
 
 const styles = theme => ({
@@ -12,222 +19,290 @@ const styles = theme => ({
         display: 'flex',
         flexWrap: 'wrap',
     },
-    textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 200,
-    },
-    dense: {
-        marginTop: 19,
-    },
-    menu: {
-        width: 200,
-    },
-    button: {
-        margin: theme.spacing.unit,
-    },
-    input: {
-        display: 'none',
+    divider: {
+      marginBottom:30
     },
     label: {
-        marginLeft: theme.spacing.unit*25,
-    },
-    fileUpload: {
-        marginLeft: theme.spacing.unit*115,
-        width: 200,
-        marginTop: -5,
-
-    },
-
+      marginLeft: theme.spacing.unit*15,
+  },
 });
 
-const gender = [
-    {
-        value: 'MALE',
-        label: 'MALE',
-    },
-    {
-        value: 'FEMALE',
-        label: 'FEMALE',
-    },
 
-];
-class TextFields extends React.Component {
+class CandidateFileUpload extends React.Component {
 
+  constructor(props) {
+        super(props);
+    this.state = {
+        status: "ready",
+        filename:'',
+        supportDocId:'3',
+        supportdoc:[],
+        currentSdocId:''
+    }
+ }
 
-    state = {
-        nic: '',
-        name_sinhala: '',
-        name_tamil: '',
-        name_english: '',
-        date_of_birth: '',
-        gender: '',
-        occupation:'',
-        address:'',
-        selectedFile: null, loaded: 0,
-    };
-
-
-    handleChange = name => event => {
+  handleChange(files) {
         this.setState({
-            [name]: event.target.value,
+          files: files
         });
-    };
+  }
 
-    handleselectedFile = event => {
-        this.setState({
-          selectedFile: event.target.files[0],
-          loaded: 0,
-        })
-      }
-
-
-    send = (e) => {
+  handleSubmit = (e) => {
+    console.log(this.state);
+    var candidateSuppertDocs = {
+      // nominationId:nominationSuppertDocs.nominationId,
+      // candidateId:nominationSuppertDocs.nominationId,
+      candidateSupportDocs:this.state.supportdoc
+    }
+    debugger;
         e.preventDefault();
-        console.log('send data');
+       
         axios({
             method: 'post',
-            url: '',
-            data: this.state
-        });
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            url: 'nominations/candidate/support-docs',
+            data: candidateSuppertDocs
+        })
+        .then(function (response) {
+           console.log(response);
+          })
+          .catch(function (error) {
+              alert("error",error);
+            // resultElement.innerHTML = generateErrorHTMLOutput(error);
+          });
+  
+};
 
 
-    };
+  onSelectFiles = evt => {
+   
+    evt.preventDefault();
+    evt.stopPropagation();
+
+    var array = [...this.state.supportdoc];
+    var index = array.map(
+      function(item){
+        return item.id
+      }
+    ).indexOf(evt.target.id);
+    var count=2;
+    if(evt.target.id==='fe2c2d7e-66de-406a-b887-1143023f8e72'){
+      array.map(item =>(
+        item.id==='fe2c2d7e-66de-406a-b887-1143023f8e72' ? count++ : count
+      )
+      )
+    }
+    if(evt.target.id==='fe2c2d7e-66de-406a-b887-1143023f8e72'){
+      if(index !== -1 && count=== 4){
+        array.splice(index,1)
+      }
+    }else{
+      if(index !== -1){
+        array.splice(index,1)
+      }
+    }
+    
+
+    this.setState({
+      status: evt.type,
+      supportdoc:array,
+      supportDocId: evt.target.id
+    });
+
+    // Fetch files
+    const { files } = evt.target;
+    this.uploadFiles(files);
+  };
+
+  uploadFiles = files => {
+    let error = false;
+    const errorMessages = [];
+
+    const data = {
+      error: null,
+      files
+    }; 
+
+    const { allowedTypes, allowedSize } = this.state;
+
+    if (files && files.length > 0) {
+      for (let i = 0; i < files.length; i += 1) {
+        const file = files[i];
+
+        // Validate file type
+        if (allowedTypes && allowedTypes.length > 0) {
+          if (!allowedTypes.includes(file.type)) {
+            error = true;
+            errorMessages.push("Invalid file type(s)");
+          }
+        }
+
+        // Validate fileSize
+        if (allowedSize && allowedSize > 0) {
+          if (file.size / 1048576 > allowedSize) {
+            error = true;
+            errorMessages.push("Invalid file size(s)");
+          }
+        }
+      }
+    }
+
+    if (error) {
+      data.error = errorMessages;
+      data.files = null;
+      this.reset();
+    } else {
+      const formData = new FormData();
+      this.setState({status: "uploading", progress: 0});
+      formData.append("file", data.files[0]);
+      axios.post('http://localhost:9001/ec-election/file-upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+
+        onUploadProgress: (progressEvent) => {
+          let percentCompleted = (progressEvent.loaded * 100) / progressEvent.total;
+          this.setState(
+            {progress: percentCompleted}
+          );
+          console.log(percentCompleted);
+        }
+
+
+      }).then((response) => {
+
+       
+      
+        const obj = {'id':this.state.supportDocId, 'filename':response.data.filename, 'originalname':response.data.originalname};
+        
+        const newArray = this.state.supportdoc.slice(); // Create a copy
+        newArray.push(obj); // Push the object
+        this.setState(
+          {
+            status: "uploaded",
+            currentSdocId: response.data.originalname,
+            supportdoc: newArray
+          }
+        );
+      });
+    }
+  };
+
+  handleChangeButton = (e) => {
+    const { onCloseModal } = this.props;
+    if(e.currentTarget.value==="Submit&Clouse"){
+        onCloseModal();
+    }
+    }
+
+  handleUpload = (event) => {
+    const data = new FormData();
+    const config = {headers: {'Content-Type': 'multipart/form-data'}};
+    var filesArray = this.state.files;
+  };
+  showFlagToStyle = (flag) => (
+    {display: flag ? "" : "none"}
+  );
 
     render() {
         const {classes} = this.props;
+        var names = ['Jake', 'Jon', 'Thruster'];
+        const supportingDocs = [{
+          "id": "ff4c6768-bdbe-4a16-b680-5fecb6b1f747",
+          "doc": "Birth Certificate",
+        }, {
+          "id": "fe2c2d7e-66de-406a-b887-1143023f8e72",
+          "doc": "National Identity Card (NIC)",
+        }, {
+          "id": "32423",
+          "doc": "Declaration of Assets and Liabilities Form",
+        }, {
+            "id": "15990459-2ea4-413f-b1f7-29a138fd7a97",
+            "doc": "Affidavit",
+          }
+      ];
 
-        return (
-            <form className={classes.container} noValidate autoComplete="off">
+    const doneElement = (<div className={classes.done} style={this.showFlagToStyle(this.state.status === "uploaded")}>
+    <DoneOutline  color="secondary"/>
+    {/* <a download={"filename"} href={"ok"}>filename</a> */}
+    </div>);
+      const closeElement = (<div  className={classes.done} style={this.showFlagToStyle(this.state.status === "uploaded")}>
+      <CloseIcon ref={this.state.currentSdocId} onClick={this.handleRese} color="red"/>
+      {/* <a download={"filename"} href={"ok"}>filename</a> */}
+      </div>);
 
-                <Grid container spacing={8}>
-                    <Grid item lg={4}>
-                            <label
-                            >NIC</label>
-                    </Grid>
+        const supportingDocItems = supportingDocs.map(docs => (
+          <div>
+            <Grid style={{width: '100%'}} container spacing={24}>
+            <Grid item lg={2}>
+            {
+             this.state.supportdoc.map(sdoc => (
+              sdoc.id === docs.id ? doneElement : ' '
+            ))
+          }   
+            </Grid>
+            <Grid item lg={8}>
+            <span>
+              {docs.doc}
+            </span>
+            </Grid>
+            <Grid item lg={2}>
+            <span><FileUpload value={docs.id} doneElement={doneElement} onSelectFiles={this.onSelectFiles} /></span>
+              {
+             this.state.supportdoc.map(sdoc => (
+              sdoc.id === docs.id ? 
+              <Typography variant="caption" gutterBottom>
+            {sdoc.originalname}{closeElement}
+           </Typography>
+               : ' '
+            ))
+          } 
+           
+            {docs.id === 'fe2c2d7e-66de-406a-b887-1143023f8e72' ?
+            
+              <span><FileUpload   style={{textAlign: 'right'}} value={docs.id} doneElement={doneElement} onSelectFiles={this.onSelectFiles} /></span>
+             : ' ' }
+            </Grid>
+            </Grid>
+            <Divider className={classes.divider} variant="middle"/>
+          </div>
+          ));
 
-                    <Grid item lg={4}>
-                        <div className={classes.fileUpload}>
-                            <input type="file" name="" id="" onChange={this.handleselectedFile} />
-                            {/* <button onClick={this.handleUpload}>Upload</button> */}
-                            {/* <div> {Math.round(this.state.loaded,2) } %</div> */}
-                        </div>
-                    </Grid>
-
-                </Grid>
-                <Grid container spacing={8}>
-                    <Grid item lg={4}>
-                        <TextField
-
-                            id="standard-name"
-                            label="Name in Tamil"
-                            className={classes.textField}
-                            value={this.state.name_tamil}
-                            onChange={this.handleChange('name_tamil')}
-                            margin="normal"
-                        />
-                    </Grid>
-
-                   <Grid item lg={4}>
-                        <div className="App">
-                            <input type="file" name="" id="" onChange={this.handleselectedFile} />
-                            {/* <button onClick={this.handleUpload}>Upload</button> */}
-                            {/* <div> {Math.round(this.state.loaded,2) } %</div> */}
-                        </div>
-                    </Grid>
-
-                </Grid>
-                <Grid container spacing={8}>
-                    <Grid item lg={4}>
-                        <TextField
-                            id="date"
-                            label="Date of Birth"
-                            type="date"
-                            defaultValue="2017-05-24"
-                            className={classes.textField}
-                            onChange={this.handleChange('date_of_birth')}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            margin="normal"
-                        />
-
-
-                    </Grid>
-
-                    <Grid item lg={4}>
-                        <TextField
-                            id="standard-select-currency-native"
-                            select
-                            label="Gender"
-                            className={classes.textField}
-
-                            SelectProps={{
-                                native: true,
-                                MenuProps: {
-                                    className: classes.menu,
-                                },
-                            }}
-                           // helperText="Please select your Gender"
-                            margin="normal"
-                        >
-                            {gender.map(option => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </TextField>
-
-
-                    </Grid>
-
-                </Grid>
-
-                <Grid container spacing={8}>
-                    <Grid item lg={4}>
-                        <TextField
-
-                            id="standard-name"
-                            label="Occupation"
-                            className={classes.textField}
-                            value={this.state.occupation}
-                            onChange={this.handleChange('occupation')}
-                            margin="normal"
-                        />
-                    </Grid>
-
-                    <Grid item lg={4}>
-                        <TextField
-                            id="standard-multiline-flexible"
-                            label="Address  "
-                            multiline
-                            rowsMax="4"
-                            value={this.state.address}
-                            onChange={this.handleChange('address')}
-                            className={classes.textField}
-                            margin="normal"
-                        />
-                    </Grid>
-
-                </Grid>
-                <Grid container spacing={8}>
-                    <Grid className={classes.label}  item lg={3}>
-                        <Button variant="contained" color="primary" className={classes.button}>
-                            Cancel
+      return (
+        <form className={classes.container} onSubmit={this.handleSubmit} noValidate autoComplete="off">
+        <div>
+        {supportingDocItems}
+        <Grid container spacing={12}>
+                    <Grid className={classes.label}  item lg={12}>
+                    <br /><br />
+                        <Button variant="contained" type="submit" value="Submit&New" color="primary" className={classes.submit}>
+                            Save & New
                         </Button>
-                        <Button onClick={this.send} variant="contained" color="secondary" className={classes.submit}>
-                            Save
+                        <Button  variant="contained" onClick = { this.handleChangeButton }  type="submit" value="Submit&Clouse" color="default" className={classes.submit}>
+                            Save & Close
                         </Button>
                     </Grid>
                 </Grid>
-
-            </form>
+        </div>
+         </form>
         );
     }
 }
 
-TextFields.propTypes = {
+CandidateFileUpload.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TextFields);
+const mapStateToProps = ({Nomination}) => {
+    const {postNominationSupportDocs} = Nomination;
+    return {postNominationSupportDocs};
+  };
+  
+  const mapActionsToProps = {
+    postNominationSupportDocs
+  };
+  
+  export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(CandidateFileUpload));

@@ -19,6 +19,9 @@ import Grid from '@material-ui/core/Grid';
 import DoneOutline from '@material-ui/icons/DoneOutline';
 import CloseIcon from '@material-ui/icons/Cancel';
 import moment from 'moment';
+import { Redirect } from 'react-router-dom';
+import {API_BASE_URL} from "../../config.js";
+import Notifier, { openSnackbar } from '../Notifier';
 import axios from "axios";
 
 
@@ -52,7 +55,12 @@ done: {
 });
 
 function getSteps() {
-  return ['Candidate Details', 'Payment Details', 'Review', 'Nomination Supporting Documents'];
+  var user_role = sessionStorage.getItem('role');
+  if(user_role!=='ig_user'){
+    return ['Candidate Details', 'Review', 'Nomination Supporting Documents'];
+  }else{
+    return ['Candidate Details', 'Security Deposit Details', 'Review', 'Nomination Supporting Documents'];
+  }
 }
 
 
@@ -80,8 +88,14 @@ class NominationForm extends React.Component {
         status: "ready",
         filename:'',
         supportDocId:'3',
-        supportdoc:[]
+        supportdoc:[],
+        currentSdocId:'',
+        goToHome: false,
     }    
+  }
+
+  componentDidMount(){
+    
   }
 
   onSelectFiles = evt => {
@@ -89,8 +103,33 @@ class NominationForm extends React.Component {
     evt.preventDefault();
     evt.stopPropagation();
 
+    var array = [...this.state.supportdoc];
+    var index = array.map(
+      function(item){
+        return item.id
+      }
+    ).indexOf(evt.target.id);
+    var count=2;
+    if(evt.target.id==='b20dd58c-e5bb-469d-98c9-8711d6da1879'){
+      array.map(item =>(
+        item.id==='b20dd58c-e5bb-469d-98c9-8711d6da1879' ? count++ : count
+      )
+      )
+    }
+    if(evt.target.id==='b20dd58c-e5bb-469d-98c9-8711d6da1879'){
+      if(index !== -1 && count=== 4){
+        array.splice(index,1)
+      }
+    }else{
+      if(index !== -1){
+        array.splice(index,1)
+      }
+    }
+    
+
     this.setState({
       status: evt.type,
+      supportdoc:array,
       supportDocId: evt.target.id
     });
 
@@ -154,13 +193,17 @@ class NominationForm extends React.Component {
 
 
       }).then((response) => {
+
+       
       
         const obj = {'id':this.state.supportDocId, 'filename':response.data.filename, 'originalname':response.data.originalname};
+        
         const newArray = this.state.supportdoc.slice(); // Create a copy
         newArray.push(obj); // Push the object
         this.setState(
           {
             status: "uploaded",
+            currentSdocId: response.data.originalname,
             supportdoc: newArray
           }
         );
@@ -175,7 +218,21 @@ class NominationForm extends React.Component {
       this.setState({depositor:NominationPayments.depositor});   
       this.setState({depositAmount:NominationPayments.depositAmount});   
       var ddate = parseInt(NominationPayments.depositeDate);
-      this.setState({depositeDate:moment(new Date(NominationPayments.depositeDate)).format('YYYY-MM-DD')});}
+      this.setState({depositeDate:moment(new Date(NominationPayments.depositeDate)).format('YYYY-MM-DD')});
+
+      const { customProps } = this.props;
+      axios.get(`${API_BASE_URL}/nominations/${customProps}/support-docs`)
+        .then(res => {
+          const supportdocs = res.data;
+          const supportdoc = supportdocs.map(sdoc => {
+            return{
+            id : sdoc.supportDocConfId,
+            filename : sdoc.filePath,
+            originalname : sdoc.originalName
+           } });
+          this.setState({ supportdoc:supportdoc });
+        })
+    }
   }
 
   handleChange = (name) => event => {
@@ -191,7 +248,8 @@ class NominationForm extends React.Component {
   //   });   
   // };
 
-  handleReset(){
+  handleRese(event){
+    console.log("fds",event.target.ref);
     debugger;
     // const obj = {'id':this.state.supportDocId, 'filename':response.data.filename, 'originalname':response.data.originalname};
     // const newArray = this.state.supportdoc.slice(); // Create a copy
@@ -203,6 +261,7 @@ class NominationForm extends React.Component {
     //   }
     // );
   }
+ 
 
   NumberFormatCustom(props) {
     const { inputRef, onChange, ...other } = props;
@@ -228,36 +287,54 @@ class NominationForm extends React.Component {
   );
 
   getStepContent(step,props) {
+    var user_role = sessionStorage.getItem('role');
+    
+    console.log("this.state.currentSdocId",this.state.currentSdocId);
     const { classes } = this.props;
 
     const doneElement = (<div className={classes.done} style={this.showFlagToStyle(this.state.status === "uploaded")}>
     <DoneOutline  color="secondary"/>
     {/* <a download={"filename"} href={"ok"}>filename</a> */}
     </div>);
-      const closeElement = (<div className={classes.done} style={this.showFlagToStyle(this.state.status === "uploaded")}>
-      <CloseIcon  color="red"/>
+      const closeElement = (<div  className={classes.done} style={this.showFlagToStyle(this.state.status === "uploaded")}>
+      <CloseIcon ref={this.state.currentSdocId} onClick={this.handleRese} color="red"/>
       {/* <a download={"filename"} href={"ok"}>filename</a> */}
       </div>);
     
     const { nominationPayments,NominationPayments, customProps,nominationStatus,division,candidateCount } = this.props;
-    switch (step) {
-      case 0:
-        return <NominationStep1 customProps={customProps}/>;
-      case 1:
-      if(nominationStatus==="DRAFT"){
-        return <NominationStep2Update NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
-      }else if(nominationStatus==="SUBMIT"){
-        return <NominationStep2 NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
-      }else{
-        return <NominationStep2 nominationPayments={nominationPayments} handleChange={this.handleChange} />;
+    if(user_role==='ig_user'){
+      switch (step) {
+        case 0:
+          return <NominationStep1 customProps={customProps}/>;
+        case 1:
+        if(nominationStatus==="DRAFT"){
+          return <NominationStep2Update candidateCount={candidateCount} NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
+        }else if(nominationStatus==="SUBMIT"){
+          return <NominationStep2 candidateCount={candidateCount} NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
+        }else{
+          return <NominationStep2 candidateCount={candidateCount} NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
+          // return <NominationStep2 candidateCount={candidateCount} nominationPayments={nominationPayments} handleChange={this.handleChange} />;
+        }
+        case 2:
+          return <NominationStep5 user_role={user_role} division={division} candidateCount={candidateCount} NominationPayments={this.state} />;
+        case 3:
+        return <NominationStep3 customProps={customProps} supportdoc={this.state.supportdoc} closeElement={closeElement} doneElement={doneElement} onSelectFiles={this.onSelectFiles}  />;
+        default:
+          return 'Unknown step';
       }
-      case 2:
-        return <NominationStep5 division={division} candidateCount={candidateCount} NominationPayments={this.state} />;
-      case 3:
-      return <NominationStep3 supportdoc={this.state.supportdoc} closeElement={closeElement} doneElement={doneElement} onSelectFiles={this.onSelectFiles}  />;
-      default:
-        return 'Unknown step';
+    }else{
+      switch (step) {
+        case 0:
+          return <NominationStep1 customProps={customProps}/>;
+        case 1:
+          return <NominationStep5 user_role={user_role} division={division} candidateCount={candidateCount} NominationPayments={this.state} />;
+        case 2:
+        return <NominationStep3 customProps={customProps} supportdoc={this.state.supportdoc} closeElement={closeElement} doneElement={doneElement} onSelectFiles={this.onSelectFiles}  />;
+        default:
+          return 'Unknown step';
+      }
     }
+   
   }
 
   
@@ -267,7 +344,7 @@ class NominationForm extends React.Component {
   
 
   handleNext = () => {
-    const {postNominationPayments,updateNominationPayments,NominationPayments, nominationStatus, customProps,postNominationSupportDocs}=this.props;
+    const {postNominationPayments,updateNominationPayments,NominationPayments, nominationStatus, customProps,postNominationSupportDocs,candidateCount,NominationCandidates}=this.props;
     let activeStep;
    
     if (this.isLastStep() && !this.allStepsCompleted()) {
@@ -283,14 +360,22 @@ class NominationForm extends React.Component {
     });
     
     if (activeStep === 0 ){
-        console.log("activeStep",activeStep);
-      postNominationSupportDocs(this.state);   
+       if(candidateCount!==NominationCandidates.length){
+         openSnackbar({ message: 
+         'Please complete the nomination form for all candidates before submission...' });
+        }else{
+          openSnackbar({ message: 'Nomination Submitted Sccessfully...' });
+         postNominationSupportDocs(this.state);   
+         this.setState({
+           goToHome: true
+       });
+       }
   }
     
     if (activeStep === 2 && NominationPayments==''){
       console.log("activeStep",activeStep);
 
-      postNominationPayments(this.state);   
+      postNominationPayments(this.state,candidateCount);   
   }else if(activeStep === 2 && NominationPayments!==''){
     updateNominationPayments(NominationPayments.id,this.state);   
   }
@@ -343,11 +428,14 @@ class NominationForm extends React.Component {
     const { classes } = this.props;
     const steps = getSteps();
     const { activeStep } = this.state;
-   
+    var user_role = sessionStorage.getItem('role');
     return (
       <div className={classes.root}>
+      {this.state.goToHome ? (
+                                <Redirect to="/home" />
+                            ) : (
       <Paper className={classes.pageContent} elevation={1}>
-
+ <Notifier />
         <Stepper nonLinear activeStep={activeStep}>
           {steps.map((label, index) => {
             return (
@@ -387,7 +475,7 @@ class NominationForm extends React.Component {
                 >
                   Back
                 </Button>
-                {activeStep !== 3 ?
+                {(activeStep !== 3 && user_role === 'ig_user') || (user_role !== 'ig_user' && activeStep !== 2) ?
                 <Button
                   variant="contained"
                   color="primary"
@@ -398,7 +486,7 @@ class NominationForm extends React.Component {
                 </Button> : ' '
                 }
               
-                    {activeStep === 3 ? 
+                    {activeStep === 3 || (user_role !== 'ig_user' && activeStep === 2) ? 
                     <Button variant="contained" color="primary" onClick={this.handleComplete}>
                       Submit For Approval
                     </Button> : ' '
@@ -419,6 +507,7 @@ class NominationForm extends React.Component {
           )}
         </div>
         </Paper>
+         )}
       </div>
     );
   }
@@ -432,12 +521,13 @@ NominationForm.propTypes = {
 const mapStateToProps = ({Nomination}) => {
   const {nominationPayments} = Nomination;
   const NominationPayments = Nomination.getNominationPayments;
+  const NominationCandidates = Nomination.getNominationCandidates;
   const {updateNominationPayments} = Nomination;
   const {postNominationSupportDocs} = Nomination;
 
   
   
-  return {nominationPayments,updateNominationPayments,NominationPayments,postNominationSupportDocs};
+  return {nominationPayments,updateNominationPayments,NominationPayments,postNominationSupportDocs,NominationCandidates};
 };
 
 const mapActionsToProps = {

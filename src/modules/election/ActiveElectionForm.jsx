@@ -12,8 +12,9 @@ import ElectionTimeLine from '../../components/ElectionTimeLine/ElectionTimeLine
 import ElectionPayment from '../../components/ElectionPayment/ElectionPayment';
 import ElectionWeightage from '../../components/ElectionWeightage/ElectionWeightage';
 import AllowNomination from './AllowNomination';
-
-import { setCallElectionData, postCallElectionData } from './state/ElectionAction';
+import { Redirect } from 'react-router-dom';
+import NotifierRedux from '../../components/Notifier';
+import { setCallElectionData, postCallElectionData,openSnackbar } from './state/ElectionAction';
 import { connect } from 'react-redux';
 
 
@@ -35,7 +36,7 @@ const styles = theme => ({
 });
 
 function getSteps() {
-  return ['TIME LINE', 'ALLOW NOMINATION'];
+  return ['TIMELINE', 'SELECT ELECTORATES'];
 }
 
 
@@ -58,7 +59,8 @@ class VerticalLinearStepper extends React.Component {
       electionName:CallElectionData.electionName,
       electionModule:CallElectionData.electionModule,
       values: '',
-      rowData:''
+      rowData:'',
+      goToHome: false,
     };
     
 }
@@ -120,8 +122,14 @@ class VerticalLinearStepper extends React.Component {
   };
 
   handleSubmit = () => {
-    const { postCallElectionData, CallElectionData, electionData } = this.props;
+    const { postCallElectionData, CallElectionData, electionData,openSnackbar } = this.props;
+    debugger;
+    openSnackbar({ message: CallElectionData.electionName + 'has been submitted for approval ' });
+    
     postCallElectionData(CallElectionData, electionData);
+    this.setState({
+      goToHome: true
+  });
   };
 
   handleChange = input => e => {
@@ -166,6 +174,9 @@ class VerticalLinearStepper extends React.Component {
 
     return (
       <div className={classes.root}>
+        {this.state.goToHome ? (
+                                <Redirect  to="/admin/call-election" />
+                            ) : (
         <Stepper activeStep={activeStep} orientation="vertical">
           {steps.map((label, index) => {
             return (
@@ -200,15 +211,15 @@ class VerticalLinearStepper extends React.Component {
             );
           })}
         </Stepper>
-
+                )}
         {activeStep === steps.length && (
           <Paper square elevation={0} className={classes.resetContainer}>
-            <Typography>All steps completed - Submited for approval</Typography>
+            <Typography>All steps have been completed</Typography>
             <Button onClick={this.handleReset} className={classes.button}>
               Reset
             </Button>
             <Button color="primary" onClick={this.handleSubmit} className={classes.button}>
-              Submit
+            Submit for approval
             </Button>
           </Paper>
         )}
@@ -223,16 +234,17 @@ VerticalLinearStepper.propTypes = {
 
 const mapStateToProps = ({ Election }) => {
 
-  const { setCallElectionData, postCallElectionData } = Election;
+  const { setCallElectionData, postCallElectionData,openSnackbar } = Election;
   const CallElectionData = Election.CallElectionData;
   const electionData = Election.electionData;
 
-  return { setCallElectionData, CallElectionData, electionData, postCallElectionData }
+  return { setCallElectionData, CallElectionData, electionData, postCallElectionData,openSnackbar }
 };
 
 const mapActionsToProps = {
   setCallElectionData,
-  postCallElectionData
+  postCallElectionData,
+  openSnackbar
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(VerticalLinearStepper));

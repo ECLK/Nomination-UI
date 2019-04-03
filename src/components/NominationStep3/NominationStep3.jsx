@@ -35,6 +35,7 @@ class TextFields extends React.Component {
           files: files
         });
   }
+  
 
   handleUpload = (event) => {
     const data = new FormData();
@@ -44,7 +45,6 @@ class TextFields extends React.Component {
 
     render() {
         const {classes,onSelectFiles,doneElement,supportdoc,closeElement} = this.props;
-        var names = ['Jake', 'Jon', 'Thruster'];
         const supportingDocs = [{
           "id": "31232",
           "doc": "Scan of Security Deposit Payment Slip",

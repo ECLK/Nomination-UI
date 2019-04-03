@@ -9,7 +9,9 @@ import {
   GET_NOMINATION_CANDIDATES,
   DELETE_NOMINATION_CANDIDATE,
   UPDATE_NOMINATION_PAYMENTS,
-  POST_NOMINATION_SUPPORT_DOC
+  POST_NOMINATION_SUPPORT_DOC,
+  APPROVED_ELECTIONS,
+  PARTY_LIST_LOADED
 
 } from "./NominationTypes";
 import {API_BASE_URL} from "../../../config.js";
@@ -17,144 +19,169 @@ import axios from "axios";
 import moment from "react-moment";
 // import store from '../store';
 
-const nominationLoaded = (nominations) => {
+const nominationLoaded = (getNominations) => {
   return {
     type: NOMINATIONS_LOADED,
-    payload: nominations,
+    payload: getNominations,
   };
 };
 
-export const getNominations = function getNominations() {
-
+export function getNominations(selectedElection,selectedParty) {
   return function (dispatch) {
-    /*const response = axios
-      .get(
-        `${API_BASE_URL}/nominations`
-      )
-      .then(response => {
-        dispatch({
-          type: GET_NOMINATIONS,
-          payload: response.data
-        })
-      });*/
-    const nominations = [{
-      nomination_id: "21539ee7-7220-4570-8973-099aff3f7423",
-      district: "Colombo",
-      party: "United National Party ( UNP )",
-      candidates: [{
-        nic: "912970350V",
-        name_in_sinhala: "නිමල් පෙරේරා",
-        name_in_english: "Nimal Perera",
-        name_in_tamil: "திஸ் ஐஸ் மீ நமே",
-        occupation: "doctor",
-        address: "Colombo 07"
-      }, {
-        nic: "823467970V",
-        name_in_sinhala: "චමල් දිසානායක​",
-        name_in_english: "Chamal Disanayake",
-        name_in_tamil: "திஸ் ஐஸ் மீ நமே",
-        occupation: "Lowyer",
-        address: "Colombo 12"
-      }],
-      payment_status: "paid",
-      approval_status: "approved",
-      objection_status: "verified",
-    }, {
-      nomination_id: "1fd1fdef-e77e-43c4-bf7f-334274c1a5fb",
-      district: "Gampaha",
-      party: "United People's Freedom Alliance ( UPFA )",
-      candidates: [{
-        nic: "2131435245",
-        name_in_sinhala: "Some name in sinhala",
-        name_in_english: "Some name in english",
-        name_in_tamil: "திஸ் ஐஸ் மீ நமே",
-        occupation: "-",
-        address: "Somewhere in Gampaha"
-      }, {
-        nic: "874263423V",
-        name_in_sinhala: "Some name in sinhala",
-        name_in_english: "Some name in english",
-        name_in_tamil: "திஸ் ஐஸ் மீ நமே",
-        occupation: "-",
-        address: "Anuradhapura new town"
-      }, {
-        nic: "676545632C",
-        name_in_sinhala: "Some name in sinhala",
-        name_in_english: "Some name in english",
-        name_in_tamil: "திஸ் ஐஸ் மீ நமே",
-        occupation: "doctor",
-        address: "Never been in Gampaha"
-      }],
-      payment_status: "pending",
-      approval_status: "reject",
-      objection_status: "pending",
-    },
-    {
-      nomination_id: "1fd1fdef-e77e-43c4-bf7f-334274c1a5fb",
-      district: "Kalutara",
-      party: "Janatha Vimukthi Peramuna ( JVP )",
-      candidates: [{
-        nic: "2131435245",
-        name_in_sinhala: "Some name in sinhala",
-        name_in_english: "Some name in english",
-        name_in_tamil: "திஸ் ஐஸ் மீ நமே",
-        occupation: "-",
-        address: "Somewhere in Gampaha"
-      }, {
-        nic: "874263423V",
-        name_in_sinhala: "Some name in sinhala",
-        name_in_english: "Some name in english",
-        name_in_tamil: "திஸ் ஐஸ் மீ நமே",
-        occupation: "-",
-        address: "Anuradhapura new town"
-      }, {
-        nic: "676545632C",
-        name_in_sinhala: "Some name in sinhala",
-        name_in_english: "Some name in english",
-        name_in_tamil: "திஸ் ஐஸ் மீ நமே",
-        occupation: "doctor",
-        address: "Never been in Gampaha"
-      }],
-      payment_status: "pending",
-      approval_status: "reject",
-      objection_status: "pending",
-    },
-    {
-      nomination_id: "1fd1fdef-e77e-43c4-bf7f-334274c1a5fb",
-      district: "Gampaha",
-      party: "United National Party ( UNP )",
-      candidates: [{
-        nic: "2131435245",
-        name_in_sinhala: "Some name in sinhala",
-        name_in_english: "Some name in english",
-        name_in_tamil: "திஸ் ஐஸ் மீ நமே",
-        occupation: "-",
-        address: "Somewhere in Gampaha"
-      }, {
-        nic: "874263423V",
-        name_in_sinhala: "Some name in sinhala",
-        name_in_english: "Some name in english",
-        name_in_tamil: "திஸ் ஐஸ் மீ நமே",
-        occupation: "-",
-        address: "Anuradhapura new town"
-      }, {
-        nic: "676545632C",
-        name_in_sinhala: "Some name in sinhala",
-        name_in_english: "Some name in english",
-        name_in_tamil: "திஸ் ஐஸ் மீ நமே",
-        occupation: "doctor",
-        address: "Never been in Gampaha"
-      }],
-      payment_status: "pending",
-      approval_status: "reject",
-      objection_status: "pending",
-    }];
-
-    setTimeout(()=>{
-      dispatch(nominationLoaded(nominations));
-    }, 1000);
+     
+    const response = axios
+    .get(
+      `${API_BASE_URL}/nominations/${selectedElection}/pending-nominations/${'NEW'}/team/${selectedParty}`,
+    )
+    .then(response => {
+      console.log(response.data);
+       dispatch(nominationLoaded(response.data));
+    }).catch(err => {
+          console.log(err)
+    });
   };
 }
+
+// const nominationLoaded = (nominations) => {
+//   return {
+//     type: NOMINATIONS_LOADED,
+//     payload: nominations,
+//   };
+// };
+
+// export const getNominations = function getNominations(selectedElection) {
+
+//   return function (dispatch) {
+    
+//     const response = axios
+//       .get(
+//         `${API_BASE_URL}/nominations/${selectedElection}/pending-nominations/NEW`
+//       )
+//       .then(response => {
+//         console.log("response.data",response.data);
+//         debugger;
+//           dispatch(nominationLoaded(response.data));
+//       }).catch(err => {
+//         console.log(err)
+//        });
+//     // const nominations = [{
+//     //   nomination_id: "21539ee7-7220-4570-8973-099aff3f7423",
+//     //   district: "Colombo",
+//     //   party: "United National Party ( UNP )",
+//     //   candidates: [{
+//     //     nic: "912970350V",
+//     //     name_in_sinhala: "නිමල් පෙරේරා",
+//     //     name_in_english: "Nimal Perera",
+//     //     name_in_tamil: "திஸ் ஐஸ் மீ நமே",
+//     //     occupation: "doctor",
+//     //     address: "Colombo 07"
+//     //   }, {
+//     //     nic: "823467970V",
+//     //     name_in_sinhala: "චමල් දිසානායක​",
+//     //     name_in_english: "Chamal Disanayake",
+//     //     name_in_tamil: "திஸ் ஐஸ் மீ நமே",
+//     //     occupation: "Lowyer",
+//     //     address: "Colombo 12"
+//     //   }],
+//     //   payment_status: "paid",
+//     //   approval_status: "approved",
+//     //   objection_status: "verified",
+//     // }, {
+//     //   nomination_id: "1fd1fdef-e77e-43c4-bf7f-334274c1a5fb",
+//     //   district: "Gampaha",
+//     //   party: "United People's Freedom Alliance ( UPFA )",
+//     //   candidates: [{
+//     //     nic: "2131435245",
+//     //     name_in_sinhala: "Some name in sinhala",
+//     //     name_in_english: "Some name in english",
+//     //     name_in_tamil: "திஸ் ஐஸ் மீ நமே",
+//     //     occupation: "-",
+//     //     address: "Somewhere in Gampaha"
+//     //   }, {
+//     //     nic: "874263423V",
+//     //     name_in_sinhala: "Some name in sinhala",
+//     //     name_in_english: "Some name in english",
+//     //     name_in_tamil: "திஸ் ஐஸ் மீ நமே",
+//     //     occupation: "-",
+//     //     address: "Anuradhapura new town"
+//     //   }, {
+//     //     nic: "676545632C",
+//     //     name_in_sinhala: "Some name in sinhala",
+//     //     name_in_english: "Some name in english",
+//     //     name_in_tamil: "திஸ் ஐஸ் மீ நமே",
+//     //     occupation: "doctor",
+//     //     address: "Never been in Gampaha"
+//     //   }],
+//     //   payment_status: "pending",
+//     //   approval_status: "reject",
+//     //   objection_status: "pending",
+//     // },
+//     // {
+//     //   nomination_id: "1fd1fdef-e77e-43c4-bf7f-334274c1a5fb",
+//     //   district: "Kalutara",
+//     //   party: "Janatha Vimukthi Peramuna ( JVP )",
+//     //   candidates: [{
+//     //     nic: "2131435245",
+//     //     name_in_sinhala: "Some name in sinhala",
+//     //     name_in_english: "Some name in english",
+//     //     name_in_tamil: "திஸ் ஐஸ் மீ நமே",
+//     //     occupation: "-",
+//     //     address: "Somewhere in Gampaha"
+//     //   }, {
+//     //     nic: "874263423V",
+//     //     name_in_sinhala: "Some name in sinhala",
+//     //     name_in_english: "Some name in english",
+//     //     name_in_tamil: "திஸ் ஐஸ் மீ நமே",
+//     //     occupation: "-",
+//     //     address: "Anuradhapura new town"
+//     //   }, {
+//     //     nic: "676545632C",
+//     //     name_in_sinhala: "Some name in sinhala",
+//     //     name_in_english: "Some name in english",
+//     //     name_in_tamil: "திஸ் ஐஸ் மீ நமே",
+//     //     occupation: "doctor",
+//     //     address: "Never been in Gampaha"
+//     //   }],
+//     //   payment_status: "pending",
+//     //   approval_status: "reject",
+//     //   objection_status: "pending",
+//     // },
+//     // {
+//     //   nomination_id: "1fd1fdef-e77e-43c4-bf7f-334274c1a5fb",
+//     //   district: "Gampaha",
+//     //   party: "United National Party ( UNP )",
+//     //   candidates: [{
+//     //     nic: "2131435245",
+//     //     name_in_sinhala: "Some name in sinhala",
+//     //     name_in_english: "Some name in english",
+//     //     name_in_tamil: "திஸ் ஐஸ் மீ நமே",
+//     //     occupation: "-",
+//     //     address: "Somewhere in Gampaha"
+//     //   }, {
+//     //     nic: "874263423V",
+//     //     name_in_sinhala: "Some name in sinhala",
+//     //     name_in_english: "Some name in english",
+//     //     name_in_tamil: "திஸ் ஐஸ் மீ நமே",
+//     //     occupation: "-",
+//     //     address: "Anuradhapura new town"
+//     //   }, {
+//     //     nic: "676545632C",
+//     //     name_in_sinhala: "Some name in sinhala",
+//     //     name_in_english: "Some name in english",
+//     //     name_in_tamil: "திஸ் ஐஸ் மீ நமே",
+//     //     occupation: "doctor",
+//     //     address: "Never been in Gampaha"
+//     //   }],
+//     //   payment_status: "pending",
+//     //   approval_status: "reject",
+//     //   objection_status: "pending",
+//     // }];
+
+//     // setTimeout(()=>{
+//     //   dispatch(nominationLoaded(nominations));
+//     // }, 1000);
+//   };
+// }
 
 const nominationPaymentLoaded = (getNominationPayments) => {
   return {
@@ -173,6 +200,53 @@ export function getNominationPayments(customProps) {
     .then(response => {
       const getNominationPayments = response.data;
        dispatch(nominationPaymentLoaded(getNominationPayments));
+    }).catch(err => {
+          console.log(err)
+    });
+  };
+}
+
+const approveElectionLoaded = (approveElections) => {
+  return {
+    type: APPROVED_ELECTIONS,
+    payload: approveElections,
+  };
+};
+
+export function getApproveElections() {
+  return function (dispatch) {
+     
+    const response = axios
+    .get(
+      `${API_BASE_URL}/elections/status/${'APPROVE'}`,
+    )
+    .then(response => {
+      const approveElections = response.data;
+       dispatch(approveElectionLoaded(approveElections));
+    }).catch(err => {
+          console.log(err)
+    });
+  };
+}
+
+//get party list for nomination review
+const partyListLoaded = (partyList) => {
+  return {
+    type: PARTY_LIST_LOADED,
+    payload: partyList,
+  };
+};
+
+export function getTeams() {
+  return function (dispatch) {
+     
+    const response = axios
+    .get(
+      `${API_BASE_URL}/teams`,
+    )
+    .then(response => {
+      const partyList = response.data;
+       dispatch(partyListLoaded(partyList));
     }).catch(err => {
           console.log(err)
     });
@@ -208,12 +282,39 @@ export function getNominationCandidates(customProps) {
   };
 }
 
-export const onChangeApproval = (id, status) => {
+export const onChangeApprovalData = (nominationApprovals) => {
   return {
     type: ON_NOMINATION_APPROVAL_CHANGE,
-    payload: {id, status},
+    payload: nominationApprovals,
   }
 };
+
+export function onChangeApproval(id,status,reviewNote) {
+  return function (dispatch) {
+    let nominationApprovals = {
+      createdBy: 'admin',//TODO: yujith, change this to session user after creating the session
+      createdAt: Date.parse(new Date()),
+      updatedAt: Date.parse(new Date()),
+      status: status,
+      reviewNote:reviewNote,
+      nominationId: id
+    };
+    
+     
+    const response = axios
+    .post(
+      `${API_BASE_URL}/nominations/${id}/approve-nomination`,
+          {...nominationApprovals}
+    )
+    .then(response => {
+      console.log("response",response.data);
+      debugger;
+       dispatch(onChangeApprovalData(response.data));
+    }).catch(err => {
+          console.log(err)
+    });
+  };
+}
 
 // export const handleChangePayment = (paymentState) => {
 //   debugger;
@@ -243,15 +344,15 @@ export const setData = (val) => {
     }
 }
 
-export function postNominationPayments(candidatePayments) {
+export function postNominationPayments(candidatePayments,candidateCount) {
     return function (dispatch) {
 
         let nominationPayments = {
             depositor: candidatePayments.depositor,
-            amount: candidatePayments.depositAmount,
+            amount: candidateCount*500,
             depositDate: Date.parse(candidatePayments.depositeDate),
             filePath: candidatePayments.filePath,
-            status: candidatePayments.status,
+            status: "PENDING",
             createdBy:candidatePayments.depositor,//TODO: yujith,change this to session user after session user created
             createdAt:Date.parse(new Date()),
             updatedAt:Date.parse(new Date()),
@@ -288,8 +389,8 @@ export function postNominationPayments(candidatePayments) {
     return function (dispatch) {
        
       const response = axios
-      .post(
-        `${API_BASE_URL}/nominations/support-docs`,
+      .put(
+        `${API_BASE_URL}/nominations/${nominationSuppertDocs.nominationId}/support-docs`,
             {...nominationSuppertDocs}
       )
       .then(response => {

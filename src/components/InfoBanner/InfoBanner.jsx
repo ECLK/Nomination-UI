@@ -4,7 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import Timestamp from 'react-timestamp';
+import moment from 'moment';
+
 
 const styles = theme => ({
 	root: {
@@ -20,8 +21,11 @@ const styles = theme => ({
 class InfoBanner extends React.Component {
 
 	render() {
-		const { classes } = this.props;
-		console.log(this.props);
+		const { classes ,election } = this.props;
+		
+		var nominationStart = moment(this.props.election.nominationStart).format("DD MMM YYYY hh:mm a") //parse integer
+		var nominationEnd = moment(this.props.election.nominationEnd).format("DD MMM YYYY hh:mm a") //parse integer
+
 
 		return (
 			<div className={classes.root}>
@@ -29,10 +33,10 @@ class InfoBanner extends React.Component {
 				<Grid item xs={12}>
 					<Paper className={classes.paper}>
 						<Typography component="h2" variant="h5" gutterBottom>
-							{this.props.election.name}
+							{election.name}
 						</Typography>
 						<Typography variant="subtitle1" gutterBottom>
-							<b>Nomination Start Date:</b> <Timestamp time={this.props.election.electionTimeLine[0].value} format='full' /> --- <b>Nomination End Date:</b> <Timestamp time={this.props.election.electionTimeLine[2].value} format='full' />
+							<b>Nomination Start Date:</b> {nominationStart}  --- <b>Nomination End Date:</b> {nominationEnd}
 						</Typography>
 					</Paper>
 				</Grid>

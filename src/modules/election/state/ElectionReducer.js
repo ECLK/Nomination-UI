@@ -7,8 +7,12 @@ import {
     POST_CALL_ELECTION,
     POST_CALL_ELECTION_DATA,
     SET_CALL_ELECTION_DATA,
+    ELECTION_REVIEW_DATA,
+    ON_ELECTION_APPROVAL_CHANGE,
+    SNACK_BAR_MESSAGE_LOADED
 } from "./ElectionTypes";
 import { REQUEST_STATE } from "../../../lib/request_redux_state";
+import update from 'immutability-helper';
 
 const initialState = {
     //define the common states only
@@ -27,7 +31,11 @@ const initialState = {
     CallElectionData: [],
     PostedCallElection: [],
     PostedCallElectionData: [],
+    ElectionReviewData:[],
+    snackBarMsg:[]
 };
+
+
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
@@ -67,6 +75,23 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 PostedCallElectionData: action.payload
             };
+        case ELECTION_REVIEW_DATA://save timeline, electionConfig, allow nominaton
+            return {
+                ...state,
+                ElectionReviewData: action.payload
+            };
+        case ON_ELECTION_APPROVAL_CHANGE:
+        const ElectionReviewData = state.ElectionReviewData;
+            return {
+              ...state,
+              ElectionReviewData: update(ElectionReviewData, {approval_status: {$set: action.payload.status}})
+            };
+        case SNACK_BAR_MESSAGE_LOADED://save timeline, electionConfig, allow nominaton
+            return {
+                ...state,
+                snackBarMsg: action.payload
+            };
+            
     }
     return state;
 }

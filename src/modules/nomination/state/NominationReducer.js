@@ -9,7 +9,9 @@ import {
   HANDLE_CHANGE_PAYMENT,
   GET_NOMINATION_CANDIDATES,
   DELETE_NOMINATION_CANDIDATE,
-  POST_NOMINATION_SUPPORT_DOC
+  POST_NOMINATION_SUPPORT_DOC,
+  APPROVED_ELECTIONS,
+  PARTY_LIST_LOADED
 } from "./NominationTypes";
 
 const initialState = {
@@ -20,12 +22,19 @@ const initialState = {
   getNominationPayments:[],
   paymentState:[],
   getNominationCandidates:[],
-  getNominationCandidateDeleted:[]
+  getNominationCandidateDeleted:[],
+  approveElections:[],
+  nominationStatus:[],
+  partyList:[]
 };
 
 const findIndex = (nominations, id) => {
   return nominations.findIndex(x => x.nomination_id === id);
 };
+
+function findApprovalIndex(nominations, id) {
+  return nominations.findIndex(x => x.id === id);
+}
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -51,7 +60,7 @@ export default function reducer(state = initialState, action) {
       };
     case ON_NOMINATION_APPROVAL_CHANGE:
       const nominations = state.nominations;
-      const index = findIndex(nominations, action.payload.id);
+      const index = findApprovalIndex(nominations, action.payload.nominationId);
       return {
         ...state,
         nominations: update(nominations, {[index]: {approval_status: {$set: action.payload.status}}})
@@ -82,6 +91,16 @@ export default function reducer(state = initialState, action) {
         ...state,
         postNominationSupportDocs: action.payload
       };   
+    case APPROVED_ELECTIONS:
+      return {
+        ...state,
+        approveElections: action.payload
+      }; 
+    case PARTY_LIST_LOADED:
+      return {
+        ...state,
+        partyList: action.payload
+      }; 
       
 
   }

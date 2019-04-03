@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AdminMenu from 'components/AdminMenu/AdminMenu';
-import { getAllElectionReviews } from "./state/ElectionAction.js";
+import {APPROVAL_STATE} from  './state/ElectionTypes';
+import { getAllElectionReviews, getElectionReviewData,  onChangeApproval} from "./state/ElectionAction.js";
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography'
 import { Link } from 'react-router-dom'
@@ -20,6 +21,11 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
+import Done from '@material-ui/icons/Done';
+import classNames from 'classnames';
+import Block from '@material-ui/icons/Block';
+import moment from 'moment';
+
 
 const drawerWidth = 240;
 
@@ -101,21 +107,34 @@ const styles = theme => ({
     },
     h5: {
         marginBottom: theme.spacing.unit * 2,
-    }
+    },
+    left_icon: {
+        marginLeft: theme.spacing.unit,
+      },
+      button: {
+        margin: theme.spacing.unit,
+      },
+      green_button: {
+        color: "darkgreen",
+      },
+      red_button: {
+        color: "firebrick",
+      },
 });
 
 class Dashboard extends React.Component {
     state = {
         open: true,
-        nominations: []
+        nominations: [],
+        activeElections:[]
     };
 
 
     componentDidMount() {
-        const { allElectionModules, getAllElectionReviews } = this.props;
+        const { allElectionModules, getAllElectionReviews,getElectionReviewData } = this.props;
         getAllElectionReviews();
 
-        console.log(allElectionModules)
+        getElectionReviewData(this.props.location.state.id);
     }
 
     handleDrawerOpen = () => {
@@ -126,144 +145,179 @@ class Dashboard extends React.Component {
         this.setState({ open: false });
     };
 
-    render() {
-        const { classes, allElectionModules } = this.props;
+    changeElectionStatus = (electionId, status) => {
+        const {onChangeApproval} = this.props;
+        onChangeApproval(electionId, status);
+      };
+      
 
+    render() {
+        const { classes, allElectionModules,ElectionReviewData } = this.props;
+        var Authjority = ' ';
+        var CalculationType = ' ';
+        var WeightageVote = ' ';
+        var WeightagePref = ' ';
+        var NominationSubmissionBy = '';
+        var CandidatePayment = '';
+        (ElectionReviewData.electionConfig ? ElectionReviewData.electionConfig.map((record) => {
+        //     testing = {
+        //         Authjority : record.key==="2353453" ? record.value : " ",
+        //     CalculationType : record.key==="15990459-2ea4-413f-b1f7-29a138fd7a97" ? record.value : " ",
+        //     WeightageVote : record.key==="324324" ? record.value : " ",
+        //     WeightagePref : record.key==="234433" ? record.value : " "
+        // }
+        //       testing = {
+        //         Authjority : record.key==="2353453" ? record.value : " ",
+        //     CalculationType : record.key==="15990459-2ea4-413f-b1f7-29a138fd7a97" ? record.value : " ",
+        //     WeightageVote : record.key==="324324" ? record.value : " ",
+        //     WeightagePref : record.key==="234433" ? record.value : " "
+        // }
+        if(record.key=="2353453"){
+            Authjority = record.value
+        }
+        if(record.key=="15990459-2ea4-413f-b1f7-29a138fd7a97"){
+            CalculationType = record.value
+        }
+        if(record.key=="324324"){
+            WeightageVote = record.value
+        }
+        if(record.key=="234433"){
+            WeightagePref = record.value
+        }
+        if(record.key=="1243123"){
+            NominationSubmissionBy = record.value
+        }
+        if(record.key=="123213"){
+            CandidatePayment = record.value
+        }
+        
+        
+         
+           
+    }): 
+        setEmpty()
+    );
+    function setEmpty(string) {
+            return {};
+          }
+    // setEmpty(){
+    //     return {}
+    // }
+
+        //   var outputObj = { //create a new object with one default value
+        //     time: {
+        //         Authjority: ""
+        //     }
+        //   };
+        //   ElectionReviewData.electionConfig.forEach(function(item) { //iterate the any array and then keep adding key and values to new Object
+        //     outputObj[item] = {
+        //         Authjority: capitalizeFirstLetter(item)
+        //     };
+        //   });
+          
+        //   function capitalizeFirstLetter(string) {
+        //     return string.key==="2353453" ? string.value : "a";
+        //   }
+
+          console.log("outputObj",Authjority);
+        
+
+        // const test = ElectionReviewData.electionConfig ? ElectionReviewData.electionConfig.map((config) => (
+           
+            const test = (  <div>
+            <Grid container spacing={24}>
+                <Grid item xs={6} sm={3}>
+                    <Typography className={classes.text_a} component="p">Authjority: { Authjority }</Typography>
+                </Grid>
+            </Grid>
+            <Grid container spacing={24}>
+                <Grid item xs={12} sm={6}>
+                    <Typography className={classes.text_b} component="p">Calculation Type : { CalculationType  }</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <Grid container spacing={24}>
+                        <Grid item xs={12} sm={6}>
+                            <Typography className={classes.text_b} component="p">Weightage(%):Vote Based</Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Input id="common-name" value={ WeightageVote  } />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={24}>
+                        <Grid item xs={12} sm={6}>
+                            <Typography className={classes.text_b} component="p">Weightage(%):Preference Based</Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Input id="common-name" value={ WeightagePref  } />
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Grid container spacing={24}>
+                <Grid item xs={12} sm={3}>
+                    <Typography className={classes.text_b} component="p">Nomination Submission by</Typography>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <Grid container spacing={24}>
+                        <Grid item xs={12} sm={12}>
+                            <Typography className={classes.text_b} component="p">{NominationSubmissionBy}</Typography>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Grid container spacing={24}>
+                                    <Grid item xs={12} sm={3}>
+                                        <Typography className={classes.text_b} component="p">Deposit Payment</Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={4}>
+                                        <Grid container spacing={24}>
+                                            <Grid item xs={12} sm={6}>
+                                                <Typography className={classes.text_b} component="p">Amount per nominee</Typography>
+                                            </Grid>
+                                            <Grid item xs={12} sm={6}>
+                                                <Input id="common-name" value={'(Rs.) ' + CandidatePayment} />
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+            </div>);
+
+       
+        
         return (
             <div className={classes.root}>
                 <CssBaseline />
                 <AdminMenu title="Election Commission of Sri Lanka"></AdminMenu>
                 <div style={{ width: '100%' }}>
-                    <Typography variant="h5" component="h2">
-                        Election process review(Parlimenttary 2018 Election)
-                </Typography>
+                    <Typography variant="h5" component="h2">Election process review({ElectionReviewData.name})</Typography>
                     <br />
                     <div className={classes.container}>
-
                         <Card className={classes.card}>
                             <CardContent>
                                 <Grid container spacing={24}>
                                     <Grid item xs={6} sm={3}>
-                                        <Typography className={classes.text_a} component="p">
-                                            Election Type: Parlimentary
-                                          </Typography>
+                                        <Typography className={classes.text_a} component="p">Election Type: {ElectionReviewData.moduleName}</Typography>
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={24}>
-                                    <Grid item xs={6} sm={3}>
-                                        <Typography className={classes.text_a} component="p">
-                                            Authjority: Election Admin
-                                          </Typography>
-
-                                    </Grid>
-                                </Grid>
-                                <Grid container spacing={24}>
-
-                                    <Grid item xs={12} sm={6}>
-                                        <Typography className={classes.text_b} component="p">
-                                            Calculation Type : Vote & Prerferntial Based
-                                          </Typography>
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <Grid container spacing={24}>
-                                            <Grid item xs={12} sm={6}>
-                                                <Typography className={classes.text_b} component="p">
-                                                    Weightage(%):Vote Based</Typography>
-                                            </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <Input id="common-name" value={25} />
-                                            </Grid>
-                                        </Grid>
-                                        <Grid container spacing={24}>
-                                            <Grid item xs={12} sm={6}>
-                                                <Typography className={classes.text_b} component="p">
-                                                    Weightage(%):Preference Based</Typography>
-                                            </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <Input id="common-name" value={75} />
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-
-                                </Grid>
-                                <Grid container spacing={24}>
-
-                                    <Grid item xs={12} sm={3}>
-                                        <Typography className={classes.text_b} component="p">
-                                            Nomincation Submission by
-                                          </Typography>
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <Grid container spacing={24}>
-                                            <Grid item xs={12} sm={12}>
-                                                <Typography className={classes.text_b} component="p">
-
-                                                    Party Secretary
-                                                                                               </Typography>
-                                            </Grid>
-
-                                        </Grid>
-                                        <Grid container spacing={24}>
-                                            <Grid item xs={12} sm={12}>
-                                                <Typography className={classes.text_b} component="p">
-                                                    Indipendant Group Leader
-                                                   </Typography>
-                                            </Grid>
-
-                                        </Grid>
-                                    </Grid>
-
-                                </Grid>
-
-                                <Grid container spacing={24}>
-
-                                    <Grid item xs={12} sm={3}>
-                                        <Typography className={classes.text_b} component="p">
-                                            Deposit Payment
-                                          </Typography>
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <Grid container spacing={24}>
-                                            <Grid item xs={12} sm={6}>
-                                                <Typography className={classes.text_b} component="p">
-
-                                                    Amount per nominee
-                                                                                               </Typography>
-                                            </Grid>
-
-
-                                            <Grid item xs={12} sm={6}>
-                                                <Input id="common-name" value={750.00} />
-                                            </Grid>
-
-                                        </Grid>
-                                    </Grid>
-
-                                </Grid>
+                                 {test}
+                                
+                                
                                 <br />
                                 <hr />
                                 <br />
-                                <Typography className={classes.text_a} component="p">
-
-                                    <b>Timeline</b>
-                                </Typography>
+                                <Typography className={classes.text_a} component="p"><b>Timeline</b></Typography>
                                 <br />
                                 <Grid container spacing={24}>
-
                                     <Grid item xs={12} sm={6}>
                                         <Grid container spacing={24}>
                                             <Grid item xs={12} sm={6}>
-                                                <Typography className={classes.text_b} component="p">
-
-                                                    Nomination Start Date
-                                                                                               </Typography>
+                                                <Typography className={classes.text_b} component="p">Nomination Start Date</Typography>
                                             </Grid>
-
-
                                             <Grid item xs={12} sm={6}>
                                                 <TextField
                                                     id="date"
                                                     // label="Birthday"
+                                                    value={moment(ElectionReviewData.nominationStart).format('YYYY-MM-DD')}
                                                     type="date"
                                                     defaultValue="2017-05-24"
                                                     className={classes.textField}
@@ -272,24 +326,19 @@ class Dashboard extends React.Component {
                                                     }}
                                                 />
                                             </Grid>
-
                                         </Grid>
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
                                         <Grid container spacing={24}>
                                             <Grid item xs={12} sm={6}>
-                                                <Typography className={classes.text_b} component="p">
-
-                                                    Objection Start Date
-                                                                                               </Typography>
+                                                <Typography className={classes.text_b} component="p">Objection Start Date</Typography>
                                             </Grid>
-
-
                                             <Grid item xs={12} sm={6}>
                                                 <TextField
                                                     id="date"
                                                     // label="Birthday"
                                                     type="date"
+                                                    value={moment(ElectionReviewData.objectionStart).format('YYYY-MM-DD')}
                                                     defaultValue="2017-05-24"
                                                     className={classes.textField}
                                                     InputLabelProps={{
@@ -297,27 +346,20 @@ class Dashboard extends React.Component {
                                                     }}
                                                 />
                                             </Grid>
-
                                         </Grid>
                                     </Grid>
-
                                 </Grid>
                                 <Grid container spacing={24}>
-
                                     <Grid item xs={12} sm={6}>
                                         <Grid container spacing={24}>
                                             <Grid item xs={12} sm={6}>
-                                                <Typography className={classes.text_b} component="p">
-
-                                                    Nomination Start Date
-                                                                                               </Typography>
+                                                <Typography className={classes.text_b} component="p"> Nomination End Date</Typography>
                                             </Grid>
-
-
                                             <Grid item xs={12} sm={6}>
                                                 <TextField
                                                     id="date"
                                                     // label="Birthday"
+                                                    value={moment(ElectionReviewData.nominationEnd).format('YYYY-MM-DD')}
                                                     type="date"
                                                     defaultValue="2017-05-24"
                                                     className={classes.textField}
@@ -326,48 +368,37 @@ class Dashboard extends React.Component {
                                                     }}
                                                 />
                                             </Grid>
-
                                         </Grid>
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
                                         <Grid container spacing={24}>
                                             <Grid item xs={12} sm={6}>
-                                                <Typography className={classes.text_b} component="p">
-
-                                                    Objection Start Date
-                                                                                               </Typography>
+                                                <Typography className={classes.text_b} component="p">Objection End Date </Typography>
                                             </Grid>
-
-
                                             <Grid item xs={12} sm={6}>
                                                 <TextField
                                                     id="date"
                                                     // label="Birthday"
                                                     type="date"
                                                     defaultValue="2017-05-24"
+                                                    value={moment(ElectionReviewData.objectionEnd).format('YYYY-MM-DD')}
                                                     className={classes.textField}
                                                     InputLabelProps={{
                                                         shrink: true,
                                                     }}
                                                 />
                                             </Grid>
-
                                         </Grid>
                                     </Grid>
-
                                 </Grid>
                                 <br />
                                 <br />
                                 <hr />
                                 <br />
-                                <Typography className={classes.text_a} component="p">
-
-                                    <b>Eligibility</b>
-                                </Typography>
+                                <Typography className={classes.text_a} component="p"><b>Eligibility</b> </Typography>
                                 <br />
                                 <br />
                                 <Grid container spacing={24}>
-
                                     <Table className={classes.candidates_table}>
                                         <TableHead>
                                             <TableCell align="left">Eligibility(List)</TableCell>
@@ -399,16 +430,28 @@ class Dashboard extends React.Component {
                                             <Button size="medium">Back</Button>
                                         </Link>
                                     </Grid>
-                                    <Grid item xs={4} sm={1}>
-
-                                        <Button size="medium">Approve</Button>
+                                    <Grid style={{marginRight:15}} item xs={4} sm={1}>
+                                    <Button 
+                                        variant={ ElectionReviewData.approval_status==="APPROVE" ? "contained" : "outlined" }
+                                        disabled={ ElectionReviewData.approval_status==="APPROVE" }
+                                        onClick={ () => { this.changeElectionStatus(ElectionReviewData.id, APPROVAL_STATE.APPROVE ) }}
+                                        className={classNames(classes.button, classes.green_button)}>
+                                        {ElectionReviewData.approval_status==="APPROVE" ? "Approved" : "Approve"}
+                                        <Done className={classes.left_icon} />
+                                    </Button>
                                     </Grid>
                                     <Grid item xs={4} sm={1}>
-
-
-                                        <Button size="medium">Reject</Button>
+                                    <Button
+                                        variant={ ElectionReviewData.approval_status==="REJECT" ? "contained" : "outlined" }
+                                        disabled={ ElectionReviewData.approval_status==="REJECT" }
+                                        onClick={ () => { this.changeElectionStatus(ElectionReviewData.id, APPROVAL_STATE.REJECT ) }}
+                                        className={classNames(classes.button, classes.red_button)}>
+                                        {ElectionReviewData.approval_status==="REJECT" ? "Rejected" : "Reject"}
+                                        <Block className={classes.left_icon} />
+                                    </Button>
                                     </Grid>
-
+                                    <Grid item xs="3">
+                                </Grid>
 
                                 </Grid>
                             </CardContent>
@@ -427,11 +470,19 @@ Dashboard.propTypes = {
 
 const mapStateToProps = ({ Election }) => {
     const { allElectionModules } = Election;
-    return { allElectionModules }
+    const { getElectionReviewData } = Election;
+    const  ElectionReviewData  = Election.ElectionReviewData;
+
+    
+
+    return { allElectionModules,getElectionReviewData ,ElectionReviewData}
 };
 
 const mapActionsToProps = {
-    getAllElectionReviews
+    getAllElectionReviews,
+    getElectionReviewData,
+    onChangeApproval,
+
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Dashboard));
