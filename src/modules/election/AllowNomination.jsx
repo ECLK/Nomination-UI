@@ -66,22 +66,22 @@ class AllowNomination extends React.Component {
             },
             {
                 id: '3ab3cf77-a468-41a8-821a-8aa6f38222ad',
-                name: 'Mathale'
+                name: 'Matale'
             }
         ];
 
         let rowHeaders = [{
-            id: 'Party-1-id',
-            name: 'Party-1'
+            id: '1111',
+            name: 'United National Party ( UNP )'
         }, {
-            id: 'Party-2-id',
-            name: 'Party-2'
+            id: '2222',
+            name: 'United Peoples Freedom Alliance ( UPFA )'
         }, {
-            id: 'Party-3-id',
-            name: 'Party-3'
+            id: '3333',
+            name: 'Janatha Vimukthi Peramuna ( JVP )'
         }, {
-            id: 'Party-4-id',
-            name: 'Party-4'
+            id: '4444',
+            name: 'Jana Setha Peramuna'
         }];
 
         let nomination_setup = [
@@ -119,7 +119,7 @@ class AllowNomination extends React.Component {
                         <CardContent>
                             {/* all the content should go here.. */}
                             <form ref="form" onSubmit={this.handleSubmit}>
-                                <CheckboxTable title="Allow Nominations" data={nomination_setup} cols={columnHeaders} rows={rowHeaders}></CheckboxTable>
+                                <CheckboxTable title="Select Electorates" data={nomination_setup} cols={columnHeaders} rows={rowHeaders}></CheckboxTable>
                                 {/* <div className={classes.buttons}>
                                     <Button variant="contained" type="small" color="primary" className={classes.button} color="primary">Cancel</Button>
                                     <Button variant="contained" type="submit" color="primary" className={classes.button} color="primary">Submit</Button>

@@ -78,9 +78,9 @@ class Home extends React.Component {
                                 <NominationPanel></NominationPanel>
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <Typography variant="h4" gutterBottom>Objections</Typography>
+                                {/* <Typography variant="h4" gutterBottom>Objections</Typography>
                                 <Divider variant="middle" className={classes.topBottomSpace} />
-                                <ObjectionPanel></ObjectionPanel>
+                                <ObjectionPanel></ObjectionPanel> */}
                             </Grid>
                         </Grid>
                     </div>

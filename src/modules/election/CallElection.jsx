@@ -9,7 +9,7 @@ import CardActions from '@material-ui/core/CardActions';//--
 import CardContent from '@material-ui/core/CardContent';//--
 import Button from '@material-ui/core/Button';//--
 import Typography from '@material-ui/core/Typography';//--
-import {setCallElectionData } from './state/ElectionAction';
+import {setCallElectionData} from './state/ElectionAction';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
 
@@ -61,6 +61,8 @@ class CallElection extends React.Component {
     constructor(props){
         super(props);
     }
+         
+      
 
     handleSubmit = (e) => {
         this.setState({goToConfig:true});
@@ -83,8 +85,8 @@ class CallElection extends React.Component {
  
 
     render() {
-        const {classes} = this.props;
-
+        const {classes,electionModules} = this.props;
+        console.log("electionModules",electionModules);
         if (this.state.goToConfig) return <Redirect to="/admin/active-election" />;
 
 
@@ -124,9 +126,12 @@ class CallElection extends React.Component {
                             margin="normal"
                             variant="filled"
                         >
-                            {ElectionModule.map(option => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
+                        <option >
+                                   -- Select Module --
+                                </option>
+                            {electionModules.map(option => (
+                                <option key={option.id} value={option.id}>
+                                    {option.name}
                                 </option>
                             ))}
                         </TextField>
@@ -151,7 +156,7 @@ CallElection.propTypes = {
 
 
 const mapStateToProps = ({Election}) => {
-    const {setCallElectionData} = Election;    
+    const {setCallElectionData} = Election;  
     return {setCallElectionData};
   };
   

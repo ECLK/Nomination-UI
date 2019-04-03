@@ -6,7 +6,7 @@ import AdminMenu from 'components/AdminMenu/AdminMenu';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
 import {APPROVAL_STATE} from  './state/NominationTypes';
-import {getNominations, onChangeApproval} from './state/NominationAction';
+import {getNominations, onChangeApproval,getApproveElections,getTeams} from './state/NominationAction';
 import Typography from '@material-ui/core/Typography';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -30,80 +30,18 @@ import Button from '@material-ui/core/Button';
 import Alarm from '@material-ui/icons/Alarm';
 import Done from '@material-ui/icons/Done';
 import Block from '@material-ui/icons/Block';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from "@material-ui/core/IconButton";
+import Slide from '@material-ui/core/Slide';
+import TextField from '@material-ui/core/TextField';
 
-
-//ToDo: Remove if not required
 const drawerWidth = 240;
-/*const styles = theme => ({
- root: {
- display: 'flex',
- },
- toolbar: {
- paddingRight: 24, // keep right padding when drawer closed
- },
- toolbarIcon: {
- display: 'flex',
- alignItems: 'center',
- justifyContent: 'flex-end',
- padding: '0 8px',
- ...theme.mixins.toolbar,
- },
- appBar: {
- zIndex: theme.zIndex.drawer + 1,
- transition: theme.transitions.create(['width', 'margin'], {
- easing: theme.transitions.easing.sharp,
- duration: theme.transitions.duration.leavingScreen,
- }),
- },
- appBarShift: {
- marginLeft: drawerWidth,
- width: `calc(100% - ${drawerWidth}px)`,
- transition: theme.transitions.create(['width', 'margin'], {
- easing: theme.transitions.easing.sharp,
- duration: theme.transitions.duration.enteringScreen,
- }),
- },
- menuButton: {
- marginLeft: 12,
- marginRight: 36,
- },
- menuButtonHidden: {
- display: 'none',
- },
- title: {
- flexGrow: 1,
- },
- drawerPaper: {
- position: 'relative',
- whiteSpace: 'nowrap',
- width: drawerWidth,
- transition: theme.transitions.create('width', {
- easing: theme.transitions.easing.sharp,
- duration: theme.transitions.duration.enteringScreen,
- }),
- },
- drawerPaperClose: {
- overflowX: 'hidden',
- transition: theme.transitions.create('width', {
- easing: theme.transitions.easing.sharp,
- duration: theme.transitions.duration.leavingScreen,
- }),
- width: theme.spacing.unit * 7,
- [theme.breakpoints.up('sm')]: {
- width: theme.spacing.unit * 9,
- },
- },
- appBarSpacer: theme.mixins.toolbar,
- content: {
- flexGrow: 1,
- padding: theme.spacing.unit * 3,
- height: '100vh',
- overflow: 'auto',
- },
- h5: {
- marginBottom: theme.spacing.unit * 2,
- }
- });*/
+
 
 const styles = theme => ({
   root: {
@@ -153,7 +91,48 @@ const styles = theme => ({
   },
 
 });
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
+const DialogTitle = withStyles(theme => ({
+  root: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    margin: 0,
+    padding: theme.spacing.unit * 2,
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing.unit,
+    top: theme.spacing.unit,
+    color: theme.palette.grey[500],
+  },
+}))(props => {
+  const { children, classes, onClose } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+const DialogContent = withStyles(theme => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing.unit * 2,
+  },
+}))(MuiDialogContent);
 
+const DialogActions = withStyles(theme => ({
+  root: {
+    borderTop: `1px solid ${theme.palette.divider}`,
+    margin: 0,
+    padding: theme.spacing.unit,
+  },
+}))(MuiDialogActions);
 class NominationReview extends React.Component {
 
   constructor(props) {
@@ -162,13 +141,20 @@ class NominationReview extends React.Component {
       open: true,
       expandedPanelIndex: -1,
       nominations: [],
+      selectedElection:'',
+      open: false,
+      reviewNote:'',
+      nominationId:'',
+      status:'',
+      selectedParty:'All'
     }
   }
 
 
   componentDidMount() {
-    const {getNominations} = this.props;
-    getNominations();
+    const {getNominations,getApproveElections,getTeams} = this.props;
+    getApproveElections();
+    getTeams();
   }
 
   togglePanel = panelIndex => (event, didExpand) => {
@@ -177,28 +163,58 @@ class NominationReview extends React.Component {
     });
   };
 
-  changeNominationStatus = (nominationId, status) => {
+  changeNominationStatus = () => {
     const {onChangeApproval} = this.props;
-    onChangeApproval(nominationId, status);
+    onChangeApproval(this.state.nominationId, this.state.status, this.state.reviewNote);
+    this.onCloseModal();
   };
 
-  render() {
-    const {classes, nominations} = this.props;
-    const {expandedPanelIndex} = this.state;
+handleChangeElection = (event) => {
+  const {getNominations} = this.props;
 
-    const elections = [{
-      "election_id": "32d250c8-b6b0-4aa6-9b14-4817dbb268d9",
-      "election_name": "2019 Parliamentary",
-    }, {
-      "election_id": "a93b50c8-b6b0-4aa6-9b14-4817dbb268d9",
-      "election_name": "2020 Provincial",
-    }];
+  this.setState({ selectedElection: event.target.value, });
+  getNominations(event.target.value,this.state.selectedParty);
+
+};
+handleChangeParty = (event) => {
+  const {getNominations} = this.props;
+  this.setState({ selectedParty: event.target.value, });
+  getNominations(this.state.selectedElection,event.target.value);
+
+};
+
+onOpenModal = (nominationId, status) => {
+  this.setState({ 
+    open: true,
+    nominationId: nominationId,
+    status:status,
+    reviewNote:''
+   });
+};
+onCloseModal = () => {
+  this.setState({ open: false });
+};
+
+handleChange = name => event => {
+  this.setState({
+    [name]: event.target.value,
+  });
+};
+  render() {
+    const {classes, nominations,ApproveElections,partyList} = this.props;
+    const {expandedPanelIndex} = this.state;
+   
 
     let selectedElection = this.state.selectedElection;
     if (!selectedElection) {
-      selectedElection = elections.length > 0 && elections[0].election_id;
-
+      selectedElection = ApproveElections.length > 0 && ApproveElections[0].id;
     }
+
+    let selectedParty = this.state.selectedParty;
+    if (selectedParty !== 'All') {
+      selectedParty = partyList.length > 0 && partyList[0].team_id;
+    }
+    
 
     const CandidateRow = (props) => {
       const { classes, candidate } = props;
@@ -209,13 +225,7 @@ class NominationReview extends React.Component {
                 {candidate.nic}
             </TableCell>
             <TableCell className={classNames(classes.candidate_table_cell, classes.capitalize_text)} align="left">
-                {candidate.name_in_sinhala}
-            </TableCell>
-            <TableCell className={classNames(classes.candidate_table_cell, classes.capitalize_text)} align="left">
-                {candidate.name_in_tamil}
-            </TableCell>
-            <TableCell className={classNames(classes.candidate_table_cell, classes.capitalize_text)} align="left">
-                {candidate.name_in_english}
+                {candidate.name}
             </TableCell>
             <TableCell className={classNames(classes.candidate_table_cell, classes.capitalize_text)} align="left">
                 {candidate.occupation}
@@ -234,28 +244,28 @@ class NominationReview extends React.Component {
           <Grid container classname={classes.panel_wrapper} spacing={16}>
             <Grid item xs="4">
               {/* <Typography className={classes.heading}>{nomination.nomination_id}</Typography> */}
-              <Typography className={classes.heading}>({nomination.party} | {nomination.district})</Typography>
+              <Typography className={classes.heading}>({nomination.party} | {nomination.division_name})</Typography>
 
             </Grid>
             <Grid item xs="5">
-              {/* <Typography className={classes.heading}>({nomination.party} | {nomination.district})</Typography> */}
+              <Typography className={classes.heading}>Total no of candidate : {nomination.candidates.length}</Typography>
             </Grid>
             <Grid item xs="3">
                   <Button
-                    variant={ nomination.approval_status==="approved" ? "contained" : "outlined" }
-                    disabled={ nomination.approval_status==="approved" }
-                    onClick={ () => { this.changeNominationStatus(nomination.nomination_id, APPROVAL_STATE.APPROVED ) }}
+                    variant={ nomination.approval_status==="1ST-APPROVE" ? "contained" : "outlined" }
+                    disabled={ nomination.approval_status==="1ST-APPROVE" }
+                    onClick={ () => { this.onOpenModal(nomination.id, APPROVAL_STATE.APPROVED )}}
                     className={classNames(classes.button, classes.green_button)}>
-                    {nomination.approval_status==="approved" ? "Approved" : "Approve"}
+                    {nomination.approval_status==="1ST-APPROVE" ? "Approved" : "Approve"}
                     <Done className={classes.left_icon} />
                   </Button>
 
                   <Button
-                    variant={ nomination.approval_status==="rejected" ? "contained" : "outlined" }
-                    disabled={ nomination.approval_status==="rejected" }
-                    onClick={ () => { this.changeNominationStatus(nomination.nomination_id, APPROVAL_STATE.REJECTED ) }}
+                    variant={ nomination.approval_status==="REJECT" ? "contained" : "outlined" }
+                    disabled={ nomination.approval_status==="REJECT" }
+                    onClick={ () => { this.onOpenModal(nomination.id, APPROVAL_STATE.REJECTED )}}
                     className={classNames(classes.button, classes.red_button)}>
-                    {nomination.approval_status==="rejected" ? "Rejected" : "Reject"}
+                    {nomination.approval_status==="REJECT" ? "Rejected" : "Reject"}
                     <Block className={classes.left_icon} />
                   </Button>
             </Grid>
@@ -267,9 +277,7 @@ class NominationReview extends React.Component {
               <Table className={classes.candidates_table}>
                 <TableHead>
                   <TableCell align="left">NIC</TableCell>
-                  <TableCell align="left">Name in Sinhala</TableCell>
-                  <TableCell align="left">Name in Tamil</TableCell>
-                  <TableCell align="left">Name in English</TableCell>
+                  <TableCell align="left">Full Name</TableCell>
                   <TableCell align="left">Occupation</TableCell>
                   <TableCell align="left">Address</TableCell>
                 </TableHead>
@@ -290,8 +298,11 @@ class NominationReview extends React.Component {
                         <Alarm className={classes.orange_icon} />}
                     </ListItemIcon>
                     <ListItemText className={classes.capitalize_text}
+                                  primary={nomination.payment_status === "paid" ? "Payment Reviewed" : "Payment Review Pending"}
+                                  secondary="Objection Status" />
+                    {/* <ListItemText className={classes.capitalize_text}
                                   primary={nomination.payment_status}
-                                  secondary="Payment Status"/>
+                                  secondary="Payment Status"/> */}
                   </ListItem>
                   <ListItem>
                     <ListItemIcon>
@@ -299,7 +310,7 @@ class NominationReview extends React.Component {
                         <Alarm className={classes.orange_icon} />}
                     </ListItemIcon>
                     <ListItemText className={classes.capitalize_text}
-                                  primary={nomination.payment_status === "paid" ? "Objection Reviewed" : "Objection Reviewe Pending"}
+                                  primary={nomination.objection_status === "paid" ? "Objection Reviewed" : "Objection Review Pending"}
                                   secondary="Objection Status" />
                   </ListItem>
                 </List>
@@ -311,9 +322,13 @@ class NominationReview extends React.Component {
       </ExpansionPanel>
     ));
 
-    const menuItems = elections.map(election => (
-      <MenuItem value={election.election_id}>{election.election_name}</MenuItem>));
-
+    const menuItems = ApproveElections.map(election => (
+      <MenuItem value={election.id}>{election.name}</MenuItem>
+      ));
+    const partyItems = partyList.map(party => (
+        <MenuItem value={party.team_id}>{party.team_name}</MenuItem>
+        ));
+      
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -335,11 +350,61 @@ class NominationReview extends React.Component {
                 }}
               >
                 {menuItems}
-
+              </Select>
+            </FormControl>
+            <FormControl style={{marginLeft:100}} className={classes.formControl}>
+              <InputLabel htmlFor="election-select">Party</InputLabel>
+              <Select
+                value={this.state.selectedParty}
+                onChange={this.handleChangeParty}
+                inputProps={{
+                  name: 'party',
+                  id: 'party-select',
+                }}
+              >
+              <MenuItem value='All'> All </MenuItem>
+                {partyItems}
               </Select>
             </FormControl>
           </form>
-
+          <div>
+        <Dialog
+          open={this.state.open}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={this.handleClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle id="alert-dialog-slide-title">
+            {"Add a comment before approve or reject"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+            <TextField
+              style={{width:400}}
+              id="outlined-multiline-flexible"
+              label="Add your comment here.."
+              multiline
+              rowsMax="4"
+              value={this.state.reviewNote}
+              onChange={this.handleChange('reviewNote')}
+              className={classes.textField}
+              margin="normal"
+              variant="outlined"
+            />
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button value="OK"  onClick={this.changeNominationStatus} color="primary">
+              Save
+            </Button>
+            <Button onClick={this.onCloseModal} color="primary">
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
           <br/>
           <br/>
 
@@ -361,13 +426,23 @@ NominationReview.propTypes = {
 const mapStateToProps = ({Nomination}) => {
   /*const {all_nominations} = Nomination;
   return {all_nominations}*/
-  const {nominations} = Nomination;
-  return {nominations};
+  const {getApproveElections} = Nomination;
+  const {getTeams} = Nomination;
+
+  const ApproveElections = Nomination.approveElections;
+  const partyList = Nomination.partyList;
+
+  
+  const nominations = Nomination.nominations;
+
+  return {nominations,getApproveElections,ApproveElections,getTeams,partyList};
 };
 
 const mapActionsToProps = {
   getNominations,
+  getApproveElections,
   onChangeApproval,
+  getTeams
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(NominationReview));

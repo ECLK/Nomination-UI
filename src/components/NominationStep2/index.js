@@ -87,37 +87,24 @@ class NominationPayments extends React.Component {
   
     constructor(props) {
         super(props)
-
+        const {candidateCount} = this.props;
         this.state = {
             open: true,
             depositor:'',
-            depositAmount:'',
+            depositAmount:500*candidateCount,
             depositeDate:'',  
         }
       }
     
     render() {
-        const {classes, depositor,handleChange,NominationPayments,NumberFormatCustom,CandidateList} = this.props;
+        const {classes, depositor,handleChange,NominationPayments,NumberFormatCustom,CandidateList,candidateCount} = this.props;
         const {  numberformat } = this.state;
+        const payPerCandidate = 500;
         return (
             <form className={classes.container} noValidate autoComplete="off">
                 <Grid container direction="row" justify="flex-start" alignItems="stretch" spacing={8}>                
                     <Grid item lg={3}>
                         <TextField
-                            id="formatted-numberformat-input"
-                            label="Deposited Amount"
-                            className={classes.textField}
-                            prefix={'Rs '}
-                            value={NominationPayments.depositAmount}
-                            onChange={handleChange('depositAmount')}
-                            margin="normal"
-                            InputProps={{
-                                inputComponent: NumberFormatCustom,
-                              }}
-                        />
-                    </Grid>
-                    <Grid item lg={3}>
-                    <TextField
                             label="Depositor Name"
                             className={classes.textField}
                             value={NominationPayments.depositor}
@@ -127,20 +114,8 @@ class NominationPayments extends React.Component {
                     </Grid>
                     <Grid item lg={3}>
                         <TextField
-                            id="standard-name"
-                            label="Candidate Count"
-                            className={classes.textField}
-                            value={CandidateList.length}
-                            onChange={handleChange('candidateCount')}
-                            margin="normal"
-                        />
-                    </Grid>                   
-                </Grid>
-                <Grid container spacing={8}>
-                    <Grid item lg={3}>
-                        <TextField
                             id="date"
-                            label="Diposited Date"
+                            label="Deposited Date"
                             type="date"
                             value={NominationPayments.depositeDate}
                             onChange={handleChange('depositeDate')}
@@ -149,8 +124,52 @@ class NominationPayments extends React.Component {
                                 shrink: true,
                             }}
                             margin="normal"
+                        /> 
+                    </Grid>
+                                     
+                </Grid>
+                <Grid container spacing={8}>
+                    <Grid item lg={3}>
+                    <TextField
+                            id="formatted-numberformat-input"
+                            label="Amount Per Candidate"
+                            className={classes.textField}
+                            prefix={'Rs '}
+                            value={payPerCandidate}
+                            margin="normal"
+                            InputProps={{
+                                inputComponent: NumberFormatCustom,
+                                readOnly: true,
+                              }}
+                            
                         />
-                    </Grid>                             
+                    </Grid>
+                    <Grid item lg={3}>
+                        <TextField
+                            id="standard-name"
+                            label="Candidate Count"
+                            className={classes.textField}
+                            value={candidateCount}
+                            onChange={handleChange('candidateCount')}
+                            margin="normal"
+                        />
+                    </Grid>  
+                    <Grid item lg={3}>
+                    <TextField
+                            id="formatted-numberformat-input"
+                            label="Total Payable Amount"
+                            className={classes.textField}
+                            prefix={'Rs '}
+                            // value={NominationPayments.depositAmount}
+                            value={payPerCandidate*candidateCount}
+                            onChange={handleChange('depositAmount')}
+                            margin="normal"
+                            InputProps={{
+                                inputComponent: NumberFormatCustom,
+                              }}
+                        />
+                    </Grid> 
+                                                
                 </Grid>
             </form>
         );

@@ -326,7 +326,7 @@ class TextFields extends React.Component {
                         
                         <TextField
                             id="standard-multiline-flexible"
-                            label="Counsil Name  "
+                            label="Council Name"
                             multiline
                             rowsMax="4"
                             value={this.state.counsilName}
@@ -342,7 +342,7 @@ class TextFields extends React.Component {
                     <TextField
                             id="standard-select-currency-native"
                             select
-                            label="Electoral Devision"
+                            label="Electoral Division"
                             className={classes.textField}
                             value={this.state.electoralDivisionName}
 
@@ -369,7 +369,7 @@ class TextFields extends React.Component {
                     <TextField
                             id="standard-select-currency-native"
                             select
-                            label="Electoral Devision Code"
+                            label="Electoral Division Code"
                             className={classes.textField}
                             value={this.state.electoralDivisionCode}
 

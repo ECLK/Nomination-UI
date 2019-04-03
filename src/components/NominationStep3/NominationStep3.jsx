@@ -4,11 +4,17 @@ import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import FileUpload from "../common/FileUpload";
 import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+
 
 const styles = theme => ({
     container: {
         display: 'flex',
         flexWrap: 'wrap',
+    },
+    divider: {
+      marginBottom:30
     },
 
 });
@@ -18,15 +24,18 @@ class TextFields extends React.Component {
 
   constructor(props) {
         super(props);
-    this.state = {}
-  }
+       const {status} = this.props;
+    this.state = {
+      status: status,
+    }
+ }
 
   handleChange(files) {
         this.setState({
           files: files
         });
   }
-
+  
 
   handleUpload = (event) => {
     const data = new FormData();
@@ -35,18 +44,62 @@ class TextFields extends React.Component {
   };
 
     render() {
-        const {classes} = this.props;
-        var names = ['Jake', 'Jon', 'Thruster'];
+        const {classes,onSelectFiles,doneElement,supportdoc,closeElement} = this.props;
+        const supportingDocs = [{
+          "id": "31232",
+          "doc": "Scan of Security Deposit Payment Slip",
+        }, {
+          "id": "b20dd58c-e5bb-469d-98c9-8711d6da1879",
+          "doc": "Completed & Signed Nomination Form",
+        }, {
+          "id": "3fac66f2-302c-4d27-b9ae-1d004037a9ba",
+          "doc": "Declaration of Female Representation",
+        }
+      ];
+
+        const supportingDocItems = supportingDocs.map(docs => (
+          <div>
+          <Grid container spacing={12}>
+          <Grid item lg={2}>
+
+          {
+             supportdoc.map(sdoc => (
+              sdoc.id === docs.id ? doneElement : ' '
+            ))
+          }           
+          
+            </Grid>
+            <Grid item lg={4}>
+              <span>
+              {docs.doc}
+            </span>
+            </Grid>
+            <Grid item lg={1}>
+              <span><FileUpload value={docs.id} doneElement={doneElement} onSelectFiles={onSelectFiles} /></span>
+              {
+             supportdoc.map(sdoc => (
+              sdoc.id === docs.id ? 
+              <Typography variant="caption" gutterBottom>
+            {sdoc.originalname}{closeElement}
+           </Typography>
+               : ' '
+            ))
+          } 
+            </Grid>
+            {docs.id === 'b20dd58c-e5bb-469d-98c9-8711d6da1879' ?
+            <Grid item lg={5}>
+              <span><FileUpload   style={{textAlign: 'right'}} value={docs.id} doneElement={doneElement} onSelectFiles={onSelectFiles} /></span>
+            </Grid> : ' ' }
+          </Grid>
+          <Divider className={classes.divider} variant="middle"/>
+          </div>
+          ));
+
       return (
         <div>
-
-          <span>Download form : </span> <a download={"nomination.pdf"}>nomination.pdf</a> <br/>
-          <span>Signed form : </span><FileUpload/> <br/>
-          <Divider variant="middle"/>
-          <br/>
-          <span>Supporting doc 1 : </span><FileUpload/> <br/>
-          <span>Supporting doc 1 : </span><FileUpload/> <br/>
-        </div>);
+        {supportingDocItems}
+        </div>
+        );
     }
 }
 

@@ -11,6 +11,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
 import { Link } from 'react-router-dom'
 
 
@@ -45,7 +46,11 @@ const styles = theme => ({
     rightText: {
         width: '50%',
         textAlign: 'right'
-    }
+	},
+	expansion: {
+        backgroundColor: '#c4e200',
+        width: "100%"
+    },
 	});
 
 	class ControlledExpansionPanels extends React.Component {
@@ -89,7 +94,7 @@ const styles = theme => ({
 		};
 
 		componentWillMount() {
-			axios.get(`elections/${sessionStorage.getItem('election_id')}/teams/5eedb70e-a4da-48e0-b971-e06cd19ecc70/divisions`)
+			axios.get(`elections/${sessionStorage.getItem('election_id')}/teams/1111/divisions`)
 				.then(res => {
 					const division = res.data;
 					this.setState({ division });
@@ -104,28 +109,40 @@ const styles = theme => ({
 		const { classes } = this.props;
 		const {props} = this;
 		const { expanded } = this.state;
+
+
 		return (
 			<div className={classes.root}>
 				{
 					this.state.division.map((division, index) =>
 						<ExpansionPanel key={index} expanded={expanded === 'panel' + division.code} onChange={this.handleChange('panel' + division.code)}>
-							<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-								<Typography className={classes.heading}>{division.name} - [{division.code}]</Typography>
-								<Typography className={classes.secondaryHeading}>[{division.code}]</Typography>
+							{division.nomination.map((nomination) => (
+							<ExpansionPanelSummary style={nomination.status === 'SUBMIT' ? {backgroundColor: '#b368c9'} : nomination.status === 'NEW' ? {backgroundColor: '#e9dced'} : {backgroundColor: '#e1b3ef'}} expandIcon={<ExpandMoreIcon />}>
+								<Typography  className={classes.heading}>{division.name}</Typography>
+								<Typography style={{textAlign: "right"}} className={classes.secondaryHeading}>Division Code : {division.code}</Typography>
 							</ExpansionPanelSummary>
+							))}
 							<ExpansionPanelDetails>
 
 								{/* details in a list format */}
 								<List className={classes.list}>
 									<ListItem className={classes.listItem} key={index}>
 										<ListItemText className={classes.listItemText} primary="No of Candidates" />
-										<Typography className={classes.rightText}>{division.noOfCandidates}</Typography>
+										<Typography className={classes.rightText}>
+										<Chip style={{paddingLeft: 5,paddingRight:5,fontSize:20}}
+											label={division.currentCandidateCount+ " / " + division.noOfCandidates} 
+										/> 
+										</Typography>
 									</ListItem>
 									{
 										division.nomination.map((nomination, index) =>
 											<ListItem className={classes.listItem} key={index}>
 												<ListItemText className={classes.listItemText} primary="Status" />
-												<Typography className={classes.rightText}>{nomination.status}</Typography>
+												<Typography className={classes.rightText}>
+												<Chip style={{marginTop: 5,paddingLeft: 5,paddingRight:5,fontSize:15}}
+													label={nomination.status === 'SUBMIT' ? 'SUBMITTED' : nomination.status === 'NEW' ? 'NEW' : 'DRAFT'}
+												/>
+												</Typography>
 												<div>
 												{
 
@@ -134,8 +151,8 @@ const styles = theme => ({
 									}
 									{
 										division.nomination.length > 0 &&
-										<Link style={{ textDecoration: 'none' }} to={{ pathname: "nomination", state: { id: nomination.id,status: nomination.status }}}  >
-										<Button variant="contained" color="primary"  className={classes.button} >{nomination.status === 'SUBMIT' ? 'VIEW' : 'EDIT'}</Button>
+										<Link style={{ textDecoration: 'none' }} to={{ pathname: "nomination", state: { id: nomination.id,status: nomination.status,division: division.name,candidateCount:division.noOfCandidates }}}  >
+										<Button variant="contained" color="primary"  className={classes.button} >{nomination.status === 'SUBMIT' ? 'VIEW' : nomination.status === 'NEW' ? 'CREATE' : 'EDIT'}</Button>
 										</Link>
 									}
 									</div>

@@ -82,7 +82,6 @@ class Home extends React.Component {
 
     render() {
         const {classes,electionModules} = this.props;
-        debugger;
         const { expanded,expandedPanelIndex } = this.state;
         console.log("electionModules",electionModules);
 
@@ -94,7 +93,7 @@ class Home extends React.Component {
                     {/* <Typography className={classes.heading}>{electionModule.id}</Typography> */}
                   </Grid>
                   <Grid item xs="6">
-                    <Typography className={classes.heading}>{'Module Name : '+electionModule.name}</Typography>
+                    <Typography className={classes.heading}>({electionModule.name})</Typography>
                   </Grid>
                   <Grid item xs="3">
                         
@@ -104,69 +103,65 @@ class Home extends React.Component {
               <ExpansionPanelDetails>
                 <Grid container classname={classes.panel_wrapper} spacing={24}>
                 <Grid item xs={12}>
-                    <Paper className={classes.paper}> <ElectionModule createdBy={electionModules}></ElectionModule></Paper>
+                    <Paper className={classes.paper}> <ElectionModule></ElectionModule></Paper>
                 </Grid>                
                 </Grid>
                 <br />
               </ExpansionPanelDetails>
             </ExpansionPanel>
           ));
-        //   const callElectionElements = electionModules.map((electionModule, i) => (
-        //     <ExpansionPanel expanded={expandedPanelIndex === i} onChange={this.togglePanel(i)}>
-        //       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-        //         <Grid container classname={classes.panel_wrapper} spacing={16}>
-        //           <Grid item xs="3">
-        //             {/* <Typography className={classes.heading}>{electionModule.id}</Typography> */}
-        //           </Grid>
-        //           <Grid item xs="6">
-        //             <Typography className={classes.heading}>({electionModule.name})</Typography>
-        //           </Grid>
-        //           <Grid item xs="3">
+          const callElectionElements = electionModules.map((electionModule, i) => (
+            <ExpansionPanel expanded={expandedPanelIndex === i} onChange={this.togglePanel(i)}>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+                <Grid container classname={classes.panel_wrapper} spacing={16}>
+                  <Grid item xs="3">
+                    {/* <Typography className={classes.heading}>{electionModule.id}</Typography> */}
+                  </Grid>
+                  <Grid item xs="6">
+                    <Typography className={classes.heading}>({electionModule.name})</Typography>
+                  </Grid>
+                  <Grid item xs="3">
                         
-        //           </Grid>
-        //         </Grid>
-        //       </ExpansionPanelSummary>
-        //       <ExpansionPanelDetails>
-        //         <Grid container classname={classes.panel_wrapper} spacing={24}>
-        //         <Grid item xs={12}>
-        //             <Paper className={classes.paper}> <ElectionModule></ElectionModule></Paper>
-        //         </Grid>                
-        //         </Grid>
-        //         <br />
-        //       </ExpansionPanelDetails>
-        //     </ExpansionPanel>
-        //   ));
+                  </Grid>
+                </Grid>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Grid container classname={classes.panel_wrapper} spacing={24}>
+                <Grid item xs={12}>
+                    <Paper className={classes.paper}> <ElectionModule></ElectionModule></Paper>
+                </Grid>                
+                </Grid>
+                <br />
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          ));
 
         return (
             <div>
                 <AdminMenu title="Election Commission of Sri Lanka"></AdminMenu>
 
                 <div className={classes.container}>
-                
-                    <Typography variant="h5" component="h2">
+                    {/* <Typography variant="h5" component="h2">
                         Election Home
-                    </Typography>
+                    </Typography> */}
                     <br />
                     <Grid container className={classes.root} spacing={32}>
 
                         <Grid item xs={5} >
                             {/* <CreateElection></CreateElection> */}
-                            <Typography variant="h5" component="h2">
-                        Created Elections
-                    </Typography>
+                            <CallElection electionModules={electionModules}></CallElection>
+
                         </Grid>
                         <Grid item xs={5} >
                             {/* <CallElection electionModules={electionModules}></CallElection> */}
-                            <Typography variant="h5" component="h2">
-                        {/* Active Elections */}
-                    </Typography>
                         </Grid>
                     </Grid>
                     <Grid container className={classes.root} spacing={32}>
 
                         <Grid item xs={5} >
                         <div style={{width: '100%'}}>
-                        {electionModuleElements}
+                        {/* {electionModuleElements} */}
+                        {callElectionElements}
                         </div>
                         </Grid>
                         <Grid item xs={5} >

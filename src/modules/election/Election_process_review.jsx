@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AdminMenu from 'components/AdminMenu/AdminMenu';
-import { getAllElectionReviews } from "./state/ElectionAction.js";
+import { getAllElectionReviews,getElectionReviewData } from "./state/ElectionAction.js";
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography'
 import Card from '@material-ui/core/Card';//--
@@ -11,6 +11,7 @@ import ElectionReviewProcess from '../../components/ElectionReviewProcess/Electi
 import { Link } from 'react-router-dom'
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 
 
 
@@ -103,13 +104,22 @@ class Dashboard extends React.Component {
     componentDidMount() {
         const { allElectionModules, getAllElectionReviews } = this.props;
         getAllElectionReviews();
-
+        
         console.log(allElectionModules)
     }
 
     handleDrawerOpen = () => {
         this.setState({ open: true });
     };
+    getElectionReviewData = (id) => {
+        const { getElectionReviewData } = this.props;
+
+        getElectionReviewData(id);
+
+    };
+    // getElectionReviewData(id){
+    //     debugger;
+    // }
 
     handleDrawerClose = () => {
         this.setState({ open: false });
@@ -121,7 +131,7 @@ class Dashboard extends React.Component {
             { index: "0",noOfDevision: "09", election: "Provincial Council Election 2019", noOfTeams: "15" },
             { index: "1",noOfDevision: "25", election: "Local Authority Election 2019", noOfTeams: "08" },
             { index: "2",noOfDevision: "01", election: "Presidential Election 2019", noOfTeams: "10" },
-            { index: "3",noOfDevision: "23", election: "Parliamentary Election 2019", noOfTeams: "07" }
+            { index: "3",noOfDevision: "23", election: "Parliamentary Election 2019", noOfTeams: "07" },
         ];
         return (
             <div className={classes.root}>
@@ -139,32 +149,33 @@ class Dashboard extends React.Component {
                             {/* {allElectionModules.map(row => <ElectionReviewProcess />)} */}
                             <Grid container className={classes.root} spacing={64}>
                             {
-                            allElection.map(row => 
+                            allElectionModules.map(row => 
                         <Grid item xs={3}>
-                            <Card style={{marginLeft: ((row.index==0) ? '30px' : '0'),margin: ((row.index!==0) ? '20px' : '0') }} md={3} xs={6} sm={3}>
-                                <Link style={{ textDecoration: 'none' }} to="/election-process-review/1" >
+                                        <Button onClick={this.getElectionReviewData(row.id)}>
+                            <Card style={{width:350,marginLeft: ((row.index==0) ? '30px' : '0'),margin: ((row.index!==0) ? '20px' : '0') }} md={3} xs={6} sm={3}>
+                                <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: row.id }}} >
                                     <CardContent >
                                         <Grid className={classes.container} container spacing={24}>
-                                            <Grid item >
+                                            <Grid style={{textAlign:'left'}} item >
                                                 <Typography className={classes.text_a} component="p">
-                                                    <b>{row.election}</b>
+                                                    <b>{row.name}</b>
                                                 </Typography>
                                                 <br />
                                                 <Typography className={classes.text_a} component="p">
-                                                    No of Divisions : {row.noOfDevision}
+                                                    No of Divisions : {7}
                                             </Typography>
 
                                                 <Typography className={classes.text_a} component="p">
-                                                    No of Teams : {row.noOfTeams}
+                                                    No of Parties/IG : {4}
 
                                                 </Typography>
                                             </Grid>
 
                                         </Grid>
-
                                     </CardContent>
                                 </Link>
                             </Card >
+                                        </Button>
                         </Grid>
                             )}
                         </Grid>   
@@ -186,11 +197,15 @@ Dashboard.propTypes = {
 
 const mapStateToProps = ({ Election }) => {
     const { allElectionModules } = Election;
-    return { allElectionModules }
+    const { getElectionReviewData } = Election;
+
+    
+    return { allElectionModules,getElectionReviewData }
 };
 
 const mapActionsToProps = {
-    getAllElectionReviews
+    getAllElectionReviews,
+    getElectionReviewData
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Dashboard));

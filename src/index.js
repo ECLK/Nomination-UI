@@ -10,6 +10,13 @@ import * as serviceWorker from "./serviceWorker";
 axios.defaults.baseURL = API_BASE_URL;
 axios.defaults.headers.post["Content-Type"] =
   "application/x-www-form-urlencoded";
+ 
+  axios.get(`elections/forDemo`)
+   .then(res => {
+       const electionId = res.data[0].ID;
+       sessionStorage.setItem("election_id", electionId);
+      });  
+
 
 ReactDOM.render(<App />, document.getElementById("root"));
 
@@ -19,4 +26,5 @@ ReactDOM.render(<App />, document.getElementById("root"));
 serviceWorker.unregister();
 
 // Set session data
-sessionStorage.setItem("election_id", ELECTION_ID);
+// sessionStorage.setItem("election_id", ELECTION_ID);
+

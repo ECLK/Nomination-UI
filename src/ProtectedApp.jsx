@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Login from "pages/Login/Login";
+import NotifierRedux from 'components/NotifierRedux';
 
 // import NominationForm from 'pages/USER/NominationForm/NominationForm';
 import NominationForm from "modules/nomination/NominationForm";
@@ -10,6 +11,9 @@ import Objection from "pages/USER/Objection/Objection";
 import Profile from "pages/USER/Profile/Profile";
 
 import Admin_home from "pages/ADMIN/Home/Home";
+import CreateElectionCard from "pages/ADMIN/createElection";
+import CallElectionCard from "pages/ADMIN/callElection";
+
 import Admin_CallElection from "pages/ADMIN/Call-election/Call-election";
 import Admin_CandidateConfig from "pages/ADMIN/Candidate-config/Candidate-config";
 
@@ -41,6 +45,10 @@ export default class Protected extends Component {
         this.state.isLoggedIn = true;
       } else if (sessionStorage.getItem("role").includes("admin")) {
         this.state.isLoggedIn = true;
+      } else if (sessionStorage.getItem("ig_role").includes("ig_role")) {
+        this.state.isLoggedIn = true;
+      } else if (sessionStorage.getItem("party_user").includes("party_user")) {
+        this.state.isLoggedIn = true;
       }
     }
   }
@@ -55,6 +63,7 @@ export default class Protected extends Component {
             PS: anything on password field.
             */
       <div>
+        <NotifierRedux />
         <Switch>
           <Redirect exact from="/" to="/home" />
           <Route
@@ -83,9 +92,17 @@ export default class Protected extends Component {
             component={this.state.isLoggedIn ? Admin_home : Login}
           />
           <Route
+            path="/admin/create-election-home"
+            component={this.state.isLoggedIn ? CreateElectionCard : Login}
+          />
+          <Route
+            path="/admin/call-election"
+            component={this.state.isLoggedIn ? CallElectionCard : Login}
+          />
+          {/* <Route
             path="/admin/call-election"
             component={this.state.isLoggedIn ? Admin_CallElection : Login}
-          />
+          /> */}
           <Route
             path="/admin/candidate-config"
             component={this.state.isLoggedIn ? Admin_CandidateConfig : Login}
@@ -127,7 +144,7 @@ export default class Protected extends Component {
             exact component={(this.state.isLoggedIn) ? ElectionProcessReview : Login}
           />
           <Route
-            path='/election-process-review/:id' component={(this.state.isLoggedIn) ? ElectionProcessReviewDetails : Login}
+            path='/election-process-review-detail' component={(this.state.isLoggedIn) ? ElectionProcessReviewDetails : Login}
           />
 
           {/* <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login}/>

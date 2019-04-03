@@ -2,18 +2,20 @@ import React from "react";
 import LinearProgress from '@material-ui/core/LinearProgress';
 import DoneOutline from '@material-ui/icons/DoneOutline';
 import PropTypes from "prop-types";
+import AttachIcon from '@material-ui/icons/AttachFile';
+
 
 const defaultStyles = {
-  border: "2px dashed #ccc",
+  border: "#ccc",
   textAlign: "center",
-  padding: "50px",
-  height: "150px",
-  "min-width": "400px",
+  padding: "10px",
+  height: "50px",
+  width: "10px",
 };
 
 const statusTargetedStyles = {
   ready: {
-    backgroundColor: "#fff"
+    backgroundColor: "#a80b71"
   },
   dragenter: {
     backgroundColor: "#eee"
@@ -33,9 +35,10 @@ const showFlagToStyle = (flag) => (
 const DefaultUI = ({status, progress}) => {
   const uploading = status === "uploading";
 
-  return <div style={{...defaultStyles, ...statusTargetedStyles[status]}}>
+  // return <AttachIcon style={{...defaultStyles, ...statusTargetedStyles[status]}}>
+  return <AttachIcon>
     <p style={showFlagToStyle(status === "ready")}>
-      Drag and drop an image file here or click.
+      {/* Drag and drop an image file here or click. */}
     </p>
     <div style={showFlagToStyle(status === "uploaded")}>
       <DoneOutline color="secondary"/>
@@ -43,7 +46,7 @@ const DefaultUI = ({status, progress}) => {
     </div>
     <p style={showFlagToStyle(uploading)}> Uploading... </p>
     {uploading && <LinearProgress variant="determinate" value={progress}/> }
-  </div>
+  </AttachIcon>
 };
 
 DefaultUI.propTypes = {

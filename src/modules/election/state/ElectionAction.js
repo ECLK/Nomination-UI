@@ -7,6 +7,9 @@ import {
     POST_CALL_ELECTION,
     POST_CALL_ELECTION_DATA,
     SET_CALL_ELECTION_DATA,
+    ELECTION_REVIEW_DATA,
+    ON_ELECTION_APPROVAL_CHANGE,
+    SNACK_BAR_MESSAGE_LOADED
 } from "./ElectionTypes";
 import { API_BASE_URL } from "../../../config.js";
 import axios from "axios";
@@ -227,36 +230,24 @@ export const setPostCallElectionData = (val) => {
 
 export function postCallElectionData(CallElectionData, electionData) {
     //TODO: yujith, config ids should get from the front end and the array should be dynamic
+    let newDate = new Date();
    
     let allElectionData = {
         "name":CallElectionData.electionName,
         "module_id":CallElectionData.electionModule,
 
         "created_by":"admin",
-        "created_at":"234234",
+        "created_at":Date.parse(newDate),
         "updated_at":"234344",
-        "timeLineData": [
+        "timeLineData": 
             {
-                electionTimeLineConfigId: '0f62755e-9784-4046-9804-8d4deed36f2a',//nominationStart
-                value: Date.parse(CallElectionData.nominationStart),
+                nominationStart: Date.parse(CallElectionData.nominationStart),
+                nominationEnd: Date.parse(CallElectionData.nominationEnd),
+                objectionStart: Date.parse(CallElectionData.objectionStart),
+                objectionEnd: Date.parse(CallElectionData.objectionEnd),
                 electionId: electionData.election_id,
-            },
-            {
-                electionTimeLineConfigId: 'c06a789c-405c-4e7a-8df2-66766284589b',//nominationEnd
-                value: Date.parse(CallElectionData.nominationEnd),
-                electionId: electionData.election_id,
-            },
-            {
-                electionTimeLineConfigId: '675ec08b-2937-4222-94a6-0143a94763f1',//objectionStart
-                value: Date.parse(CallElectionData.objectionStart),
-                electionId: electionData.election_id,
-            },
-            {
-                electionTimeLineConfigId: '64ae3e95-591a-4bf9-8a5b-10803e0eca82',//objectionEnd
-                value: Date.parse(CallElectionData.objectionEnd),
-                electionId: electionData.election_id,
-            },
-        ],
+            }
+        ,
         // "confData": [
         //     {
         //         electionConfigId: '1',
@@ -335,7 +326,7 @@ export function getAllElectionReviews() {
 
         const response = axios
             .get(
-                `${API_BASE_URL}/modules/APPROVE/all`,
+                `${API_BASE_URL}/elections/status/PENDING`,
             )
             .then(response => {
                 const getElectionModules = response.data;
@@ -353,5 +344,92 @@ export function getAllElectionReviews() {
     };
 }
 
+//Get data for election approve detail page
+
+export const electionReviewDataLoaded = (val) => {
+    return {
+        type: ELECTION_REVIEW_DATA,
+        payload: val
+    }
+}
+export function getElectionReviewData(id) {
+    return function (dispatch) {
+
+        const response = axios
+            .get(
+                `${API_BASE_URL}/elections/${id}`,
+            )
+            .then(response => {
+                const getElectionReviewData = response.data;
+
+                dispatch(
+                    electionReviewDataLoaded(getElectionReviewData)
+                );
+            }).catch(err => {
+                const getElectionReviewData = [];
+                dispatch(
+                    electionReviewDataLoaded(getElectionReviewData)
+                );
+                console.log(err)
+            });
+    };
+}
+
+// change election review status
+export const onChangeApprovalData = (electionApprovals) => {
+    return {
+      type: ON_ELECTION_APPROVAL_CHANGE,
+      payload: electionApprovals,
+    }
+  };
+  
+  export function onChangeApproval(electionId,status) {
+    debugger;
+    return function (dispatch) {
+      let electionApprovals = {
+        updatedAt: Date.parse(new Date()),
+        status: status,
+        electionId: electionId
+      };
+      
+       
+      const response = axios
+      .post(
+        `${API_BASE_URL}/activeElections/${electionId}/approve-active-election`,
+            {...electionApprovals}
+      )
+      .then(response => {
+        console.log("response",response.data);
+        debugger;
+         dispatch(onChangeApprovalData(response.data));
+      }).catch(err => {
+            console.log(err)
+      });
+    };
+  }
+
+
+  export const openSnackbar = ({ message }) => {
+     const data = {
+        open: true,
+        message,
+      }
+    return {
+        type: SNACK_BAR_MESSAGE_LOADED,
+        payload: data,
+      }
+    
+  };
+  export const handleSnackbarClose = () => {
+    const data = {
+       open: false,
+       message:''
+     }
+   return {
+       type: SNACK_BAR_MESSAGE_LOADED,
+       payload: data,
+     }
+   
+ };
 
 
