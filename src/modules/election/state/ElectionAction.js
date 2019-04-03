@@ -9,7 +9,10 @@ import {
     SET_CALL_ELECTION_DATA,
     ELECTION_REVIEW_DATA,
     ON_ELECTION_APPROVAL_CHANGE,
-    SNACK_BAR_MESSAGE_LOADED
+    SNACK_BAR_MESSAGE_LOADED,
+    GET_APPROVE_ELECTIONS,
+    GET_PENDING_ELECTIONS,
+    GET_REJECTED_ELECTIONS
 } from "./ElectionTypes";
 import { API_BASE_URL } from "../../../config.js";
 import axios from "axios";
@@ -144,8 +147,95 @@ export function getElectionModules() {
     };
 }
 
+//Get approve elections
+const approveElectionLoaded = (getApproveElections) => {
+    return {
+        type: GET_APPROVE_ELECTIONS,
+        payload: getApproveElections,
+    };
+};
+
+export function getApproveElections() {
+    return function (dispatch) {
+
+        const response = axios
+            .get(
+                `${API_BASE_URL}/elections/status/APPROVE`,
+            )
+            .then(response => {
+                const getApproveElections = response.data;
+                dispatch(
+                    approveElectionLoaded(getApproveElections)
+                );
+            }).catch(err => {
+                const getApproveElections = [];
+                dispatch(
+                    approveElectionLoaded(getApproveElections)
+                );
+                console.log(err)
+            });
+    };
+}
+//Get pending elections
+const pendingElectionLoaded = (getPendingElections) => {
+    return {
+        type: GET_PENDING_ELECTIONS,
+        payload: getPendingElections,
+    };
+};
+
+export function getPendingElections() {
+    return function (dispatch) {
+
+        const response = axios
+            .get(
+                `${API_BASE_URL}/elections/status/PENDING`,
+            )
+            .then(response => {
+                const getPendingElections = response.data;
+                dispatch(
+                    pendingElectionLoaded(getPendingElections)
+                );
+            }).catch(err => {
+                const getPendingElections = [];
+                dispatch(
+                    pendingElectionLoaded(getPendingElections)
+                );
+                console.log(err)
+            });
+    };
+}
+//Get rejected elections
+const rejectedElectionLoaded = (getRejectedElections) => {
+    return {
+        type: GET_REJECTED_ELECTIONS,
+        payload: getRejectedElections,
+    };
+};
+
+export function getRejectedElections() {
+    return function (dispatch) {
+
+        const response = axios
+            .get(
+                `${API_BASE_URL}/elections/status/REJECT`,
+            )
+            .then(response => {
+                const getRejectedElections = response.data;
+                dispatch(
+                    rejectedElectionLoaded(getRejectedElections)
+                );
+            }).catch(err => {
+                const getRejectedElections = [];
+                dispatch(
+                    rejectedElectionLoaded(getRejectedElections)
+                );
+                console.log(err)
+            });
+    };
+}
+
 export function setElectionTimeLine(timeLineData) {
-    debugger;
     let electionTimeLine = {
         nominationStart: timeLineData.nominationStart,
         nominationEnd: timeLineData.nominationEnd,
@@ -361,7 +451,6 @@ export function getElectionReviewData(id) {
             )
             .then(response => {
                 const getElectionReviewData = response.data;
-
                 dispatch(
                     electionReviewDataLoaded(getElectionReviewData)
                 );

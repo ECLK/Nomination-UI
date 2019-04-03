@@ -58,7 +58,10 @@ class Home extends React.Component {
             open: true,
             expanded:null,
             expandedPanelIndex: -1,
-            electionModules:[]
+            electionModules:[],
+            pendingElections:[],
+            approveElections:[],
+            rejectedElections:[]
         };
 
     handleChange = panel => (event, expanded) => {
@@ -111,31 +114,7 @@ class Home extends React.Component {
               </ExpansionPanelDetails>
             </ExpansionPanel>
           ));
-        //   const callElectionElements = electionModules.map((electionModule, i) => (
-        //     <ExpansionPanel expanded={expandedPanelIndex === i} onChange={this.togglePanel(i)}>
-        //       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-        //         <Grid container classname={classes.panel_wrapper} spacing={16}>
-        //           <Grid item xs="3">
-        //             {/* <Typography className={classes.heading}>{electionModule.id}</Typography> */}
-        //           </Grid>
-        //           <Grid item xs="6">
-        //             <Typography className={classes.heading}>({electionModule.name})</Typography>
-        //           </Grid>
-        //           <Grid item xs="3">
-                        
-        //           </Grid>
-        //         </Grid>
-        //       </ExpansionPanelSummary>
-        //       <ExpansionPanelDetails>
-        //         <Grid container classname={classes.panel_wrapper} spacing={24}>
-        //         <Grid item xs={12}>
-        //             <Paper className={classes.paper}> <ElectionModule></ElectionModule></Paper>
-        //         </Grid>                
-        //         </Grid>
-        //         <br />
-        //       </ExpansionPanelDetails>
-        //     </ExpansionPanel>
-        //   ));
+        
 
         return (
             <div>
@@ -221,14 +200,15 @@ Home.propTypes = {
 
 
 const mapStateToProps = ({Election}) => {
-    const {getElectionModules} = Election;
+    const {getElectionModules,getPendingElections,getApproveElections,getRejectedElections} = Election;
     const electionModules = Election.allElectionModules;
-
+   
     return {getElectionModules,electionModules};
   };
   
   const mapActionsToProps = {
     getElectionModules,
+    
   };
   
   export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Home));

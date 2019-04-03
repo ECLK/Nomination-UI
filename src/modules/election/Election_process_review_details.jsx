@@ -133,7 +133,8 @@ class Dashboard extends React.Component {
     componentDidMount() {
         const { allElectionModules, getAllElectionReviews,getElectionReviewData } = this.props;
         getAllElectionReviews();
-
+        console.log(this.props.location.state.id);
+        debugger;
         getElectionReviewData(this.props.location.state.id);
     }
 
@@ -153,6 +154,7 @@ class Dashboard extends React.Component {
 
     render() {
         const { classes, allElectionModules,ElectionReviewData } = this.props;
+        debugger;
         var Authjority = ' ';
         var CalculationType = ' ';
         var WeightageVote = ' ';
