@@ -81,7 +81,7 @@ class AllowNomination extends React.Component {
             name: 'Janatha Vimukthi Peramuna ( JVP )'
         }, {
             id: '4444',
-            name: 'Jana Setha Peramuna'
+            name: 'Jana Setha Peramuna ( JSP )'
         }];
 
         let nomination_setup = [

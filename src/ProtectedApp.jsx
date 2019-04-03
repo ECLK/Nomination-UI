@@ -144,7 +144,7 @@ export default class Protected extends Component {
             exact component={(this.state.isLoggedIn) ? ElectionProcessReview : Login}
           />
           <Route
-            path='/election-process-review-detail' component={(this.state.isLoggedIn) ? ElectionProcessReviewDetails : Login}
+            path='/admin/election-process-review-detail' component={(this.state.isLoggedIn) ? ElectionProcessReviewDetails : Login}
           />
 
           {/* <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login}/>

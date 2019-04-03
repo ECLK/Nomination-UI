@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AdminMenu from 'components/AdminMenu/AdminMenu';
-import { getAllElectionReviews,getElectionReviewData } from "./state/ElectionAction.js";
+import { getAllElectionReviews, getElectionReviewData } from "./state/ElectionAction.js";
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography'
 import Card from '@material-ui/core/Card';//--
@@ -104,7 +104,7 @@ class Dashboard extends React.Component {
     componentDidMount() {
         const { allElectionModules, getAllElectionReviews } = this.props;
         getAllElectionReviews();
-        
+
         console.log(allElectionModules)
     }
 
@@ -128,10 +128,10 @@ class Dashboard extends React.Component {
     render() {
         const { classes, allElectionModules } = this.props;
         const allElection = [
-            { index: "0",noOfDevision: "09", election: "Provincial Council Election 2019", noOfTeams: "15" },
-            { index: "1",noOfDevision: "25", election: "Local Authority Election 2019", noOfTeams: "08" },
-            { index: "2",noOfDevision: "01", election: "Presidential Election 2019", noOfTeams: "10" },
-            { index: "3",noOfDevision: "23", election: "Parliamentary Election 2019", noOfTeams: "07" },
+            { index: "0", noOfDevision: "09", election: "Provincial Council Election 2019", noOfTeams: "15" },
+            { index: "1", noOfDevision: "25", election: "Local Authority Election 2019", noOfTeams: "08" },
+            { index: "2", noOfDevision: "01", election: "Presidential Election 2019", noOfTeams: "10" },
+            { index: "3", noOfDevision: "23", election: "Parliamentary Election 2019", noOfTeams: "07" },
         ];
         return (
             <div className={classes.root}>
@@ -148,37 +148,37 @@ class Dashboard extends React.Component {
                         <div style={{ width: '100%', display: 'flex' }}>
                             {/* {allElectionModules.map(row => <ElectionReviewProcess />)} */}
                             <Grid container className={classes.root} spacing={64}>
-                            {
-                            allElectionModules.map(row => 
-                        <Grid item xs={3}>
-                                        <Button onClick={this.getElectionReviewData(row.id)}>
-                            <Card style={{width:350,marginLeft: ((row.index==0) ? '30px' : '0'),margin: ((row.index!==0) ? '20px' : '0') }} md={3} xs={6} sm={3}>
-                                <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: row.id }}} >
-                                    <CardContent >
-                                        <Grid className={classes.container} container spacing={24}>
-                                            <Grid style={{textAlign:'left'}} item >
-                                                <Typography className={classes.text_a} component="p">
-                                                    <b>{row.name}</b>
-                                                </Typography>
-                                                <br />
-                                                <Typography className={classes.text_a} component="p">
-                                                    No of Divisions : {7}
-                                            </Typography>
+                                {
+                                    allElectionModules.map(row =>
+                                        <Grid item xs={3}>
+                                            <Button onClick={this.getElectionReviewData(row.id)}>
+                                                <Card style={{ width: 350, marginLeft: ((row.index == 0) ? '30px' : '0'), margin: ((row.index !== 0) ? '20px' : '0') }} md={3} xs={6} sm={3}>
+                                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "admin/election-process-review-detail", state: { id: row.id } }} >
+                                                        <CardContent >
+                                                            <Grid className={classes.container} container spacing={24}>
+                                                                <Grid style={{ textAlign: 'left' }} item >
+                                                                    <Typography className={classes.text_a} component="p">
+                                                                        <b>{row.name}</b>
+                                                                    </Typography>
+                                                                    <br />
+                                                                    <Typography className={classes.text_a} component="p">
+                                                                        No of Divisions : {7}
+                                                                    </Typography>
 
-                                                <Typography className={classes.text_a} component="p">
-                                                    No of Parties/IG : {4}
+                                                                    <Typography className={classes.text_a} component="p">
+                                                                        No of Parties/IG : {4}
 
-                                                </Typography>
-                                            </Grid>
+                                                                    </Typography>
+                                                                </Grid>
 
+                                                            </Grid>
+                                                        </CardContent>
+                                                    </Link>
+                                                </Card >
+                                            </Button>
                                         </Grid>
-                                    </CardContent>
-                                </Link>
-                            </Card >
-                                        </Button>
-                        </Grid>
-                            )}
-                        </Grid>   
+                                    )}
+                            </Grid>
                         </div>
 
 
@@ -199,8 +199,8 @@ const mapStateToProps = ({ Election }) => {
     const { allElectionModules } = Election;
     const { getElectionReviewData } = Election;
 
-    
-    return { allElectionModules,getElectionReviewData }
+
+    return { allElectionModules, getElectionReviewData }
 };
 
 const mapActionsToProps = {

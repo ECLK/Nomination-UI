@@ -9,7 +9,10 @@ import {
     SET_CALL_ELECTION_DATA,
     ELECTION_REVIEW_DATA,
     ON_ELECTION_APPROVAL_CHANGE,
-    SNACK_BAR_MESSAGE_LOADED
+    SNACK_BAR_MESSAGE_LOADED,
+    GET_APPROVE_ELECTIONS,
+    GET_PENDING_ELECTIONS,
+    GET_REJECTED_ELECTIONS
 } from "./ElectionTypes";
 import { REQUEST_STATE } from "../../../lib/request_redux_state";
 import update from 'immutability-helper';
@@ -32,7 +35,10 @@ const initialState = {
     PostedCallElection: [],
     PostedCallElectionData: [],
     ElectionReviewData:[],
-    snackBarMsg:[]
+    snackBarMsg:[],
+    ApprovedElections:[],
+    PendingElections:[],
+    RejectedElections:[]
 };
 
 
@@ -91,7 +97,21 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 snackBarMsg: action.payload
             };
-            
+        case GET_APPROVE_ELECTIONS:
+            return {
+                ...state,
+                ApprovedElections: action.payload
+            }; 
+        case GET_PENDING_ELECTIONS:
+            return {
+                ...state,
+                PendingElections: action.payload
+            }; 
+        case GET_REJECTED_ELECTIONS:
+            return {
+                ...state,
+                RejectedElections: action.payload
+            };   
     }
     return state;
 }
