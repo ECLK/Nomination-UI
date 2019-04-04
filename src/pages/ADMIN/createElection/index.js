@@ -5,6 +5,7 @@ import AdminMenu from 'components/AdminMenu/AdminMenu';
 import CreateElection from 'components/CreateElection/CreateElection';
 import CallElection from '../../../modules/election/CallElection';
 import ElectionModule from 'components/ElectionModule/ElectionModule';
+import ElectionModuleList from 'components/ElectionModuleList';
 import ActiveElection from 'components/ActiveElection/ActiveElection.jsx';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -13,9 +14,16 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';///-
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Paper from '@material-ui/core/Paper';
-import {getElectionModules} from '../../../modules/election/state/ElectionAction';
+import Button from '@material-ui/core/Button';
+import PersonIcon from '@material-ui/icons/Person';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import DateRangeIcon from '@material-ui/icons/DateRange';
+import {getApproveElectionModules, getPendingElectionModules,getRejectedElectionModules} from '../../../modules/election-model/state/ElectionAction';
 import {connect} from 'react-redux';
-
+import { Link } from 'react-router-dom'
+import moment from 'moment';
 
 
 const styles = theme => ({
@@ -57,7 +65,9 @@ class Home extends React.Component {
         state = {
             open: true,
             expanded:null,
-            expandedPanelIndex: -1,
+            expandedPanelIndexApp: -1,
+            expandedPanelIndexPen: -1,
+            expandedPanelIndexRej: -1,
             electionModules:[]
         };
 
@@ -72,69 +82,180 @@ class Home extends React.Component {
           expandedPanelIndex: didExpand ? panelIndex : -1,
         });
       };
+
+      togglePanelApp = panelIndex => (event, didExpand) => {
+        this.setState({
+            expandedPanelIndexApp: didExpand ? panelIndex : -1
+
+        });
+    };
+    togglePanelPen = panelIndex => (event, didExpand) => {
+        this.setState({
+            expandedPanelIndexPen: didExpand ? panelIndex : -1
+
+        });
+    };
+    togglePanelRej = panelIndex => (event, didExpand) => {
+        this.setState({
+            expandedPanelIndexRej: didExpand ? panelIndex : -1
+
+        });
+    };
     
     componentDidMount() {
-        const {getElectionModules} = this.props;
-        
-        getElectionModules();
+        const {getApproveElectionModules, getPendingElectionModules,getRejectedElectionModules} = this.props;
+
+        getApproveElectionModules();
+        getPendingElectionModules();
+        getRejectedElectionModules();
       }
 
 
     render() {
-        const {classes,electionModules} = this.props;
-        const { expanded,expandedPanelIndex } = this.state;
-        console.log("electionModules",electionModules);
+        const {classes,ApprovedElectionModules,PendingElectionModules,RejectedElectionModules} = this.props;
+        const { expandedPanelIndexApp, expandedPanelIndexPen, expandedPanelIndexRej } = this.state;
+        const ElectionModuleApproveElements = (ApprovedElectionModules) ? ApprovedElectionModules.map((election, i) => (
+            <ExpansionPanel expanded={expandedPanelIndexApp === i} onChange={this.togglePanelApp(i)}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Grid container classname={classes.panel_wrapper} spacing={16}>
+                        <Grid item xs="6">
+                            <Typography className={classes.heading}>{election.name}</Typography>
+                        </Grid>
+                        <Grid item xs="3">
+                            {/* <Typography className={classes.heading}>({election.name})</Typography> */}
+                        </Grid>
+                        <Grid item xs="3">
 
-        const electionModuleElements = electionModules.map((electionModule, i) => (
-            <ExpansionPanel expanded={expandedPanelIndex === i} onChange={this.togglePanel(i)}>
-              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                <Grid container classname={classes.panel_wrapper} spacing={16}>
-                  <Grid item xs="3">
-                    {/* <Typography className={classes.heading}>{electionModule.id}</Typography> */}
-                  </Grid>
-                  <Grid item xs="6">
-                    <Typography className={classes.heading}>({electionModule.name})</Typography>
-                  </Grid>
-                  <Grid item xs="3">
-                        
-                  </Grid>
-                </Grid>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <Grid container classname={classes.panel_wrapper} spacing={24}>
-                <Grid item xs={12}>
-                    <Paper className={classes.paper}> <ElectionModule></ElectionModule></Paper>
-                </Grid>                
-                </Grid>
-                <br />
-              </ExpansionPanelDetails>
+                        </Grid>
+                    </Grid>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <Grid container classname={classes.panel_wrapper} spacing={24}>
+                        <Grid item xs={12}>
+                            <Grid container spacing={24}>
+                                <Grid item xs={6} sm={3}>
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            <PersonIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={election.createdBy} secondary="Created By" />
+                                    </ListItem>
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            <DateRangeIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={moment(election.lastModified).format("DD MMM YYYY hh:mm a")} secondary="Last Modified" />
+                                    </ListItem>
+                                </Grid>
+                                <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
+                                    {/* <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: election.id } }} > */}
+                                        <Button  style={{ marginTop: 30 }} variant="contained" color="primary" size="small">Edit</Button>
+                                    {/* </Link> */}
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <br />
+                </ExpansionPanelDetails>
             </ExpansionPanel>
-          ));
-          const callElectionElements = electionModules.map((electionModule, i) => (
-            <ExpansionPanel expanded={expandedPanelIndex === i} onChange={this.togglePanel(i)}>
-              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                <Grid container classname={classes.panel_wrapper} spacing={16}>
-                  <Grid item xs="3">
-                    {/* <Typography className={classes.heading}>{electionModule.id}</Typography> */}
-                  </Grid>
-                  <Grid item xs="6">
-                    <Typography className={classes.heading}>({electionModule.name})</Typography>
-                  </Grid>
-                  <Grid item xs="3">
-                        
-                  </Grid>
-                </Grid>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <Grid container classname={classes.panel_wrapper} spacing={24}>
-                <Grid item xs={12}>
-                    <Paper className={classes.paper}> <ElectionModule></ElectionModule></Paper>
-                </Grid>                
-                </Grid>
-                <br />
-              </ExpansionPanelDetails>
+        )) : '';
+        const ElectionModulePendingElements = (PendingElectionModules) ? PendingElectionModules.map((election, i) => (
+            <ExpansionPanel expanded={expandedPanelIndexPen === i} onChange={this.togglePanelPen(i)}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Grid container classname={classes.panel_wrapper} spacing={16}>
+                        <Grid item xs="6">
+                            <Typography className={classes.heading}>{election.name}</Typography>
+                        </Grid>
+                        <Grid item xs="3">
+                            {/* <Typography className={classes.heading}>({election.name})</Typography> */}
+                        </Grid>
+                        <Grid item xs="3">
+
+                        </Grid>
+                    </Grid>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <Grid container classname={classes.panel_wrapper} spacing={24}>
+                        <Grid item xs={12}>
+                            <Grid container spacing={24}>
+                                <Grid item xs={6} sm={3}>
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            <PersonIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={election.createdBy} secondary="Created By" />
+                                    </ListItem>
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            <DateRangeIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={moment(election.lastModified).format("DD MMM YYYY hh:mm a")} secondary="Last Modified" />
+                                    </ListItem>
+                                </Grid>
+                                <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
+                                    {/* <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: election.id } }} > */}
+                                        <Button  style={{ marginTop: 30 }} variant="contained" color="primary" size="small">Edit</Button>
+                                    {/* </Link> */}
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <br />
+                </ExpansionPanelDetails>
             </ExpansionPanel>
-          ));
+        )) : '';
+        const ElectionModuleRejectedElements = (RejectedElectionModules) ? RejectedElectionModules.map((election, i) => (
+            <ExpansionPanel expanded={expandedPanelIndexRej === i} onChange={this.togglePanelRej(i)}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Grid container classname={classes.panel_wrapper} spacing={16}>
+                        <Grid item xs="6">
+                            <Typography className={classes.heading}>{election.name}</Typography>
+                        </Grid>
+                        <Grid item xs="3">
+                            {/* <Typography className={classes.heading}>({election.name})</Typography> */}
+                        </Grid>
+                        <Grid item xs="3">
+
+                        </Grid>
+                    </Grid>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <Grid container classname={classes.panel_wrapper} spacing={24}>
+                        <Grid item xs={12}>
+                            <Grid container spacing={24}>
+                                <Grid item xs={6} sm={3}>
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            <PersonIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={election.createdBy} secondary="Created By" />
+                                    </ListItem>
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            <DateRangeIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={moment(election.lastModified).format("DD MMM YYYY hh:mm a")} secondary="Last Modified" />
+                                    </ListItem>
+                                </Grid>
+                                <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
+                                    {/* <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: election.id } }} > */}
+                                        <Button  style={{ marginTop: 30 }} variant="contained" color="primary" size="small">Edit</Button>
+                                    {/* </Link> */}
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <br />
+                </ExpansionPanelDetails>
+            </ExpansionPanel>
+        )) : '';
+
 
         return (
             <div>
@@ -156,14 +277,13 @@ class Home extends React.Component {
                     </Grid>
                     <Grid container className={classes.root} spacing={32}>
 
-                        <Grid item xs={5} >
+                        <Grid item xs={8} >
                         <div style={{width: '100%'}}>
-                        {electionModuleElements}
+                        <ElectionModuleList ElectionModuleApproveElements={ElectionModuleApproveElements} ElectionModulePendingElements={ElectionModulePendingElements} ElectionModuleRejectedElements={ElectionModuleRejectedElements}></ElectionModuleList>
                         </div>
                         </Grid>
                         <Grid item xs={5} >
                         <div style={{width: '100%'}}>
-                        {/* {callElectionElements} */}
                         </div>
                         </Grid>
                     </Grid>
@@ -212,15 +332,20 @@ Home.propTypes = {
 };
 
 
-const mapStateToProps = ({Election}) => {
-    const {getElectionModules} = Election;
-    const electionModules = Election.allElectionModules;
+const mapStateToProps = ({ElectionModel}) => {
+    const { getApproveElectionModules, getPendingElectionModules,getRejectedElectionModules } = ElectionModel;
 
-    return {getElectionModules,electionModules};
+    const ApprovedElectionModules = ElectionModel.ApprovedElectionModules;
+    const PendingElectionModules = ElectionModel.PendingElectionModules;
+    const RejectedElectionModules = ElectionModel.RejectedElectionModules;
+   
+    return {getApproveElectionModules,getPendingElectionModules,getRejectedElectionModules,ApprovedElectionModules,PendingElectionModules,RejectedElectionModules};
   };
   
   const mapActionsToProps = {
-    getElectionModules,
+    getApproveElectionModules, 
+    getPendingElectionModules,
+    getRejectedElectionModules
   };
   
   export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Home));
