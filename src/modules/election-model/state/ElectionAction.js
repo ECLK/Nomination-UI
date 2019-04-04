@@ -2,6 +2,9 @@ import {
     CREATE_ELECTION_MODULE,
     UPDATE_ELECTION_MODULE,
     SAVE_ELECTION_MODULE,
+    GET_APPROVED_ELECTION_MODULE,
+    GET_PENDING_ELECTION_MODULE,
+    GET_REJECTED_ELECTION_MODULE
 } from "./ElectionTypes";
 import { API_BASE_URL } from "../../../config.js";
 import axios from "axios";
@@ -206,6 +209,96 @@ export const submitElection = function saveElection(election) {
                 console.log(err)
             });
     }
+}
+
+//get pending election modules
+const pendingElectionModuleLoaded = (getPendingElectionModules) => {
+    return {
+        type: GET_PENDING_ELECTION_MODULE,
+        payload: getPendingElectionModules,
+    };
+};
+
+export function getPendingElectionModules() {
+    return function (dispatch) {
+
+        const response = axios
+            .get(
+                `${API_BASE_URL}/modules/PENDING/all`,
+            )
+            .then(response => {
+                const getPendingElectionModules = response.data;
+                dispatch(
+                    pendingElectionModuleLoaded(getPendingElectionModules)
+                );
+            }).catch(err => {
+                const getPendingElectionModules = [];
+                dispatch(
+                    pendingElectionModuleLoaded(getPendingElectionModules)
+                );
+                console.log(err)
+            });
+    };
+}
+
+//get approve election modules
+const approvedElectionModuleLoaded = (getApprovedElectionModules) => {
+    return {
+        type: GET_APPROVED_ELECTION_MODULE,
+        payload: getApprovedElectionModules,
+    };
+};
+
+export function getApproveElectionModules() {
+    return function (dispatch) {
+
+        const response = axios
+            .get(
+                `${API_BASE_URL}/modules/APPROVE/all`,
+            )
+            .then(response => {
+                const getApprovedElectionModules = response.data;
+                dispatch(
+                    approvedElectionModuleLoaded(getApprovedElectionModules)
+                );
+            }).catch(err => {
+                const getApprovedElectionModules = [];
+                dispatch(
+                    approvedElectionModuleLoaded(getApprovedElectionModules)
+                );
+                console.log(err)
+            });
+    };
+}
+
+//get approve election modules
+const rejectedElectionModuleLoaded = (getRejectedElectionModules) => {
+    return {
+        type: GET_REJECTED_ELECTION_MODULE,
+        payload: getRejectedElectionModules,
+    };
+};
+
+export function getRejectedElectionModules() {
+    return function (dispatch) {
+
+        const response = axios
+            .get(
+                `${API_BASE_URL}/modules/REJECT/all`,
+            )
+            .then(response => {
+                const getRejectedElectionModules = response.data;
+                dispatch(
+                    rejectedElectionModuleLoaded(getRejectedElectionModules)
+                );
+            }).catch(err => {
+                const getRejectedElectionModules = [];
+                dispatch(
+                    rejectedElectionModuleLoaded(getRejectedElectionModules)
+                );
+                console.log(err)
+            });
+    };
 }
 
 
