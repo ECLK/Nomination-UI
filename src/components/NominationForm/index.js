@@ -178,7 +178,7 @@ class NominationForm extends React.Component {
       const formData = new FormData();
       this.setState({status: "uploading", progress: 0});
       formData.append("file", data.files[0]);
-      axios.post('http://localhost:9001/ec-election/file-upload', formData, {
+      axios.post(`${API_BASE_URL}/file-upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },

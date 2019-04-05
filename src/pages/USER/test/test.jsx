@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { API_BASE_URL } from "../../config.js";
 import axios from 'axios';
 
 
@@ -9,7 +9,7 @@ export default class test extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`http://localhost:9001/ec-election/nominations/1/payments`)
+    axios.get(`${API_BASE_URL}/nominations/1/payments`)
       .then(res => {
         const persons = res.data;
         this.setState({ persons });

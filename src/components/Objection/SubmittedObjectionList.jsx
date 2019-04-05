@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import { API_BASE_URL } from "../../config.js";
 import Axios from 'axios';
 
 const styles = theme => ({
@@ -26,7 +27,7 @@ class SimpleList extends React.Component {
 			objection: [],
 		}
 
-		Axios.get(`http://localhost:9001/ec-election/elections/${sessionStorage.getItem('election_id')}/teams/62fcdfa7-3c5a-405f-b344-79089131dd8e/objections`)
+		Axios.get(`${API_BASE_URL}/elections/${sessionStorage.getItem('election_id')}/teams/62fcdfa7-3c5a-405f-b344-79089131dd8e/objections`)
 		.then(res => {
 			const objection = res.data;
 			this.setState({ objection });

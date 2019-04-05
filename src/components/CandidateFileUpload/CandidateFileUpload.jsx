@@ -10,6 +10,7 @@ import {postNominationSupportDocs } from '../../modules/nomination/state/Nominat
 import { connect } from 'react-redux';
 import DoneOutline from '@material-ui/icons/DoneOutline';
 import CloseIcon from '@material-ui/icons/Cancel';
+import { API_BASE_URL } from "../../config.js";
 import axios from "axios";
 
 
@@ -48,10 +49,7 @@ class CandidateFileUpload extends React.Component {
   }
 
   handleSubmit = (e) => {
-    console.log(this.state);
     var candidateSuppertDocs = {
-      // nominationId:nominationSuppertDocs.nominationId,
-      // candidateId:nominationSuppertDocs.nominationId,
       candidateSupportDocs:this.state.supportdoc
     }
     debugger;
@@ -71,7 +69,6 @@ class CandidateFileUpload extends React.Component {
           })
           .catch(function (error) {
               alert("error",error);
-            // resultElement.innerHTML = generateErrorHTMLOutput(error);
           });
   
 };
@@ -158,7 +155,7 @@ class CandidateFileUpload extends React.Component {
       const formData = new FormData();
       this.setState({status: "uploading", progress: 0});
       formData.append("file", data.files[0]);
-      axios.post('http://localhost:9001/ec-election/file-upload', formData, {
+      axios.post(`${API_BASE_URL}/file-upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },

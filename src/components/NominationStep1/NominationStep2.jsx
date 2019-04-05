@@ -7,6 +7,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import { API_BASE_URL } from "../../config.js";
 import axios from 'axios';
 
 
@@ -49,7 +50,7 @@ class CustomizedTable extends React.Component {
   
     componentDidMount() {
       console.log(this)
-      axios.get(`http://localhost:9001/ec-election/nominations/1/candidates`)
+      axios.get(`${API_BASE_URL}/nominations/1/candidates`)
         .then(res => {
           const nominations = res.data;
           const candidateCount = res.data.length;
