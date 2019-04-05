@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import AdminMenu from 'components/AdminMenu/AdminMenu';
+import AdminMenu from '../../components/AdminMenu/AdminMenu';
 import {APPROVAL_STATE} from  './state/ElectionTypes';
 import { getAllElectionReviews, getElectionReviewData,  onChangeApproval} from "./state/ElectionAction.js";
 import { connect } from 'react-redux';
@@ -133,8 +133,6 @@ class Dashboard extends React.Component {
     componentDidMount() {
         const { allElectionModules, getAllElectionReviews,getElectionReviewData } = this.props;
         getAllElectionReviews();
-        console.log(this.props.location.state.id);
-        debugger;
         getElectionReviewData(this.props.location.state.id);
     }
 
@@ -221,7 +219,6 @@ class Dashboard extends React.Component {
         //     return string.key==="2353453" ? string.value : "a";
         //   }
 
-          console.log("outputObj",Authjority);
         
 
         // const test = ElectionReviewData.electionConfig ? ElectionReviewData.electionConfig.map((config) => (
@@ -229,7 +226,7 @@ class Dashboard extends React.Component {
             const test = (  <div>
             <Grid container spacing={24}>
                 <Grid item xs={6} sm={3}>
-                    <Typography className={classes.text_a} component="p">Authjority: { Authjority }</Typography>
+                    <Typography className={classes.text_a} component="p">Authority: { Authjority }</Typography>
                 </Grid>
             </Grid>
             <Grid container spacing={24}>
@@ -269,7 +266,7 @@ class Dashboard extends React.Component {
             </Grid>
             <Grid container spacing={24}>
                                     <Grid item xs={12} sm={3}>
-                                        <Typography className={classes.text_b} component="p">Deposit Payment</Typography>
+                                        <Typography className={classes.text_b} component="p">Security Deposite</Typography>
                                     </Grid>
                                     <Grid item xs={12} sm={4}>
                                         <Grid container spacing={24}>
@@ -291,7 +288,7 @@ class Dashboard extends React.Component {
                 <CssBaseline />
                 <AdminMenu title="Election Commission of Sri Lanka"></AdminMenu>
                 <div style={{ width: '100%' }}>
-                    <Typography variant="h5" component="h2">Election process review({ElectionReviewData.name})</Typography>
+                    <Typography variant="h5" component="h2">{ElectionReviewData.name}</Typography>
                     <br />
                     <div className={classes.container}>
                         <Card className={classes.card}>
@@ -403,23 +400,34 @@ class Dashboard extends React.Component {
                                 <Grid container spacing={24}>
                                     <Table className={classes.candidates_table}>
                                         <TableHead>
-                                            <TableCell align="left">Eligibility(List)</TableCell>
+                                            <TableCell align="left">Eligibility Criteria Check List</TableCell>
 
                                             <TableCell align="left">Select</TableCell>
                                         </TableHead>
                                         <TableBody>
                                             <TableRow >
-                                                <TableCell align="left">Minimum ae should be 35</TableCell>
-
-                                                <TableCell align="left"><Checkbox
-                                                    checked value={true} /></TableCell>
+                                                <TableCell align="left">Minimum age 35 years</TableCell>
+                                                <TableCell align="left"><Checkbox checked value={true} /></TableCell>
                                             </TableRow>
-
                                             <TableRow >
-                                                <TableCell align="left">Another item</TableCell>
-
-                                                <TableCell align="left"><Checkbox
-                                                    value={true} /></TableCell>
+                                                <TableCell align="left">Does not serve as a Judicial Officer</TableCell>
+                                                <TableCell align="left"><Checkbox value={true} /></TableCell>
+                                            </TableRow>
+                                            <TableRow >
+                                                <TableCell align="left">Does not serve as as the Commissioner-General</TableCell>
+                                                <TableCell align="left"><Checkbox checked value={true} /></TableCell>
+                                            </TableRow>
+                                            <TableRow >
+                                                <TableCell align="left">Does not serve as the Auditor-General</TableCell>
+                                                <TableCell align="left"><Checkbox value={true} /></TableCell>
+                                            </TableRow>
+                                            <TableRow >
+                                                <TableCell align="left">Does not serve as a Judicial Officer</TableCell>
+                                                <TableCell align="left"><Checkbox checked value={true} /></TableCell>
+                                            </TableRow>
+                                            <TableRow >
+                                                <TableCell align="left">Is not standing nominated as a candidate for election by more than one recognized political party or independent group in respect of any electoral district</TableCell>
+                                                <TableCell align="left"><Checkbox value={true} /></TableCell>
                                             </TableRow>
                                         </TableBody>
                                     </Table>

@@ -67,6 +67,7 @@ class FilledTextFields extends React.Component {
                             id="filled-name"
                             label="Election Name "
                             className={classes.textField}
+                            helperText="Please type your Election Name"
                             value={this.state.electionName}
                             onChange={this.handleChange('electionName')}
                             margin="normal"

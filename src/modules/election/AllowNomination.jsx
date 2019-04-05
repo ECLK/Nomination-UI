@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import MainMenu from 'components/MainMenu/MainMenu';
+import MainMenu from '../../components/MainMenu/MainMenu';
 import Axios from 'axios';
-import CheckboxTable from 'components/CheckboxTable/CheckboxTable';
+import CheckboxTable from '../../components/CheckboxTable/CheckboxTable';
 import { Button, FormGroup, Paper, Card, CardContent, CardActionArea, CardActions } from '@material-ui/core';
 import { connect } from 'react-redux';
 

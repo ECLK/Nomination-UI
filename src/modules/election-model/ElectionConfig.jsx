@@ -263,7 +263,7 @@ class ElectionConfig extends React.Component {
                             <TableHead>
                                 <TableRow>
                                     <TableCell></TableCell>
-                                    <TableCell>Eligibility Check List</TableCell>
+                                    <TableCell>Eligibility Criteria Check List</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>

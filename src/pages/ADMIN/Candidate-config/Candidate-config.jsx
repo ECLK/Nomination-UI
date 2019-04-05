@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import AdminMenu from 'components/AdminMenu/AdminMenu';
+import AdminMenu from '../../../components/AdminMenu/AdminMenu';
 import Axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography'

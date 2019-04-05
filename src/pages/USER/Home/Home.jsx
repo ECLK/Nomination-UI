@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import MainMenu from 'components/MainMenu/MainMenu';
-import InfoBanner from 'components/InfoBanner/InfoBanner';
-import NominationPanel from 'components/Nomination/NominationList';
+import MainMenu from '../../../components/MainMenu/MainMenu';
+import InfoBanner from '../../../components/InfoBanner/InfoBanner';
+import NominationPanel from '../../../components/Nomination/NominationList';
 import Axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
-import ObjectionPanel from 'components/Objection/SubmittedObjectionList';
+import ObjectionPanel from '../../../components/Objection/SubmittedObjectionList';
 
-//import ObjectionPanel from 'components/Objection/ObjectionList';
+//import ObjectionPanel from '../../../components/Objection/ObjectionList';
 
 
 

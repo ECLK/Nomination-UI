@@ -8,11 +8,11 @@ import {
   Switch
 } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
-import withRoot from "withRoot";
+import withRoot from "./withRoot";
 //import Loadable from 'react-loadable';
 
-import Progress from "components/Progress/Progress";
-import Login from "pages/Login/Login";
+import Progress from "./components/Progress/Progress";
+import Login from "./pages/Login/Login";
 import store from "./state/store";
 
 const styles = theme => ({

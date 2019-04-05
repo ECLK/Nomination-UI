@@ -33,7 +33,7 @@
     "react-redux": "^6.0.0",
     "react-responsive-modal": "^3.5.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "latest",
+    "react-scripts": "^2.1.8",
     "react-timestamp": "^4.4.0",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.7",

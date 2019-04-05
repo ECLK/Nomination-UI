@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import AdminMenu from 'components/AdminMenu/AdminMenu';
-import CallElectionList from 'components/CallElectionList';
+import AdminMenu from '../../../components/AdminMenu/AdminMenu';
+import CallElectionList from '../../../components/CallElectionList';
 import CallElection from '../../../modules/election/CallElection';
-import ElectionModule from 'components/ElectionModule/ElectionModule';
+import ElectionModule from '../../../components/ElectionModule/ElectionModule';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';//---
@@ -109,11 +109,21 @@ class Home extends React.Component {
         getRejectedElections();
     }
 
+    componentDidUpdate (oldState){
+        const { getElectionModules, getPendingElections, getApproveElections, getRejectedElections,PendingElections } = this.props;
+
+        if(oldState.PendingElections !== PendingElections){
+            getElectionModules();
+            getPendingElections();
+            getApproveElections();
+            getRejectedElections();
+        }
+      }
+
 
     render() {
         const { classes, electionModules, ApprovedElections, PendingElections, RejectedElections } = this.props;
         const { expanded, expandedPanelIndexApp, expandedPanelIndexPen, expandedPanelIndexRej } = this.state;
-
         const callElectionApproveElements = ApprovedElections.map((election, i) => (
             <ExpansionPanel expanded={expandedPanelIndexApp === i} onChange={this.togglePanelApp(i)}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
