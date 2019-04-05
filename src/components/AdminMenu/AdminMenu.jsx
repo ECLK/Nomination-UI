@@ -39,10 +39,8 @@ const styles = theme => ({
     },
   },
   appBar: {
-    marginLeft: drawerWidth,
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-    },
+    zIndex: 222222222,
+    display: 'flex'
   },
   menuButton: {
     marginRight: 20,
@@ -59,7 +57,7 @@ const styles = theme => ({
     padding: theme.spacing.unit * 3,
   },
   logoutBtn: {
-    marginLeft: theme.spacing.unit * 140,
+    //flex: 1
   },
   
 });
@@ -148,6 +146,7 @@ class ResponsiveDrawer extends React.Component {
             <Typography variant="h6" color="inherit" noWrap>
               {this.props.title}
             </Typography>
+            <div style={{flex:1}}></div>
             <Button className={classes.logoutBtn}  onClick={this.handleLogout} color="inherit">Logout</Button>
 
           </Toolbar>
@@ -157,12 +156,12 @@ class ResponsiveDrawer extends React.Component {
           <Hidden smUp implementation="css">
             <Drawer
               container={this.props.container}
-              variant="temporary"
+              variant="permanent"
               anchor={theme.direction === 'rtl' ? 'right' : 'left'}
               open={this.state.mobileOpen}
               onClose={this.handleDrawerToggle}
               classes={{
-                paper: classes.drawerPaper,
+               // paper: classes.drawerPaper,
               }}
             >
               {drawer}

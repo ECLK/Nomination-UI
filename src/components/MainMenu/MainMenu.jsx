@@ -35,10 +35,8 @@ const styles = theme => ({
     },
   },
   appBar: {
-    marginLeft: drawerWidth,
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-    },
+    zIndex: 222222222,
+    display: 'flex'
   },
   menuButton: {
     marginRight: 20,
@@ -122,7 +120,7 @@ class ResponsiveDrawer extends React.Component {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" color="inherit" noWrap>
+            <Typography style={{flex:1}} variant="h6" color="inherit" noWrap>
               {this.props.title}
             </Typography>
             <Button className={classes.logoutBtn} onClick={this.handleLogout} color="inherit">Logout</Button>
