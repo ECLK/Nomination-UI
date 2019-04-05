@@ -168,6 +168,7 @@ class Dashboard extends React.Component {
 
                         <div style={{ width: '100%', display: 'flex' }}>
                             {/* {allElectionModules.map(row => <ElectionReviewProcess />)} */}
+                            { (this.state.election.id) ?
                             <Grid container className={classes.root} spacing={64}>
                                 {/* {
                                     allElectionModules.map(row => */}
@@ -216,7 +217,7 @@ class Dashboard extends React.Component {
                                             </Button>
                                         </Grid>
                                     {/* )} */}
-                            </Grid>
+                            </Grid> : ''}
                         </div>
 
 
