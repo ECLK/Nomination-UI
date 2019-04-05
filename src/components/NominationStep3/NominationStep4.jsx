@@ -81,17 +81,14 @@ class TextFields extends React.Component {
       handleUpload(ev) {
         ev.preventDefault();
     
-        console.log("gfffffffffffffffff",this.state.selectedFile);
         const data = new FormData();
         const test = this.state;
 
 
         data.append('file', this.state);
-        // data.append('filename', this.state.filePath);
     
         axios.post('upload', data)
           .then(function (response) {
-        // this.setState({ imageURL: `http://localhost:9001/${body.file}`, uploadStatus: true });
           })
           .catch(function (error) {
             console.log(error);
@@ -99,13 +96,8 @@ class TextFields extends React.Component {
       }
 
      fileSelectHandler = event => {
-        // let filePath = event[0].name;
-        // let supportDocConfDataId = event[0].name;
         let nominationId = event[0];
-
-
         let file = event[0];
-        console.log("WWWWWWWWWWWWWWWWWWWWWWW",nominationId)
 
         // let fileprops = {
         //     "supportDocConfDataId":supportDocConfDataId,
@@ -123,7 +115,6 @@ class TextFields extends React.Component {
         //     selectedFile: event[0].name,
         //     loaded: 0,
         //   })
-          console.log("=========",this.state);
 
         }
 
@@ -143,7 +134,6 @@ class TextFields extends React.Component {
                   }
             );
 
-            console.log("hhhhhhhhhhhhhh",this.state.selectedFile);
         }
 
     render() {

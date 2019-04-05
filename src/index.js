@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import axios from "axios";
 
 import App from "./App";
-import { API_BASE_URL, ELECTION_ID } from "./config";
+import { API_BASE_URL } from "./config";
 import * as serviceWorker from "./serviceWorker";
 
 // Set axios config.

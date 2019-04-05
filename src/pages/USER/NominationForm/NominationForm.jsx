@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import MainMenu from '../../../components/MainMenu/MainMenu';
 import NominationForm from '../../../components/NominationForm/NominationForm';
+import { API_BASE_URL } from "../../../config.js";
 import axios from 'axios';
 
 const drawerWidth = 240;
@@ -88,7 +89,7 @@ class Dashboard extends React.Component {
     
     
     componentDidMount() {
-        axios.get(`http://localhost:9001/ec-election/nominations/1/candidates`)
+        axios.get(`${API_BASE_URL}/nominations/1/candidates`)
             .then(res => {
             const nominations = res.data;
             this.setState({ nominations });

@@ -65,29 +65,6 @@ class VerticalLinearStepper extends React.Component {
     
 }
 
-// componentDidUpdate (oldState){
-//   const {CallElectionData,setCallElectionData} = this.props;
-//       console.log(CallElectionData.electionName);
-//   if(oldState.setCallElectionData !== setCallElectionData){
-
-//     this.setState({electionName:setCallElectionData.electionName});   
-//     this.setState({electionModule:setCallElectionData.electionModule});   
-//     // var ddate = parseInt(NominationPayments.depositeDate);
-//     // this.setState({depositeDate:moment(new Date(NominationPayments.depositeDate)).format('YYYY-MM-DD')});}
-   
-
-// }}
-
-    // componentDidMount() {
-    //   const { setCallElectionData } = this.props;
-    // console.log(setCallElectionData.electionName);
-    // debugger;
-    //   // axios.get(`http://localhost:9001/ec-election/nominations/1/candidates`)
-    //   //   .then(res => {
-    //   //     const nominations = res.data;
-    //   //     this.setState({ nominations });
-    //   //   })
-    // }
 
   handleNext = () => {
     let activeStep;
