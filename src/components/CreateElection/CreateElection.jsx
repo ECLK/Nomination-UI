@@ -45,7 +45,7 @@ const ElectionModule = [
 
 class FilledTextFields extends React.Component {
     state = {
-        ModuleName: 'Parliamentary ',
+        ModuleName: '',
         goToConfig: false,
     };
 
@@ -84,7 +84,8 @@ class FilledTextFields extends React.Component {
                     <form className={classes.container} noValidate autoComplete="off">
                         <TextField
                             id="filled-name"
-                            label="Module Name "
+                            label="Module Name"
+                            helperText="Please type your Module Name"
                             className={classes.textField}
                             value={this.state.ModuleName}
                             onChange={this.handleChange('ModuleName')}

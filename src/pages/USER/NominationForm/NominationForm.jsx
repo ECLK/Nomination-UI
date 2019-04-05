@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import MainMenu from 'components/MainMenu/MainMenu';
-import NominationForm from 'components/NominationForm/NominationForm';
+import MainMenu from '../../../components/MainMenu/MainMenu';
+import NominationForm from '../../../components/NominationForm/NominationForm';
 import axios from 'axios';
 
 const drawerWidth = 240;

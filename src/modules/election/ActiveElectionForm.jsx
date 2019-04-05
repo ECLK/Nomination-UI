@@ -124,7 +124,7 @@ class VerticalLinearStepper extends React.Component {
   handleSubmit = () => {
     const { postCallElectionData, CallElectionData, electionData,openSnackbar } = this.props;
     debugger;
-    openSnackbar({ message: CallElectionData.electionName + 'has been submitted for approval ' });
+    openSnackbar({ message: CallElectionData.electionName + ' has been submitted for approval ' });
     
     postCallElectionData(CallElectionData, electionData);
     this.setState({

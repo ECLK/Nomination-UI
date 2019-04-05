@@ -1,0 +1,11 @@
+version: '3'
+
+services:  
+  nomination_frontend:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - '81:80'
+    environment:
+    - API_BASE=http://localhost:3000

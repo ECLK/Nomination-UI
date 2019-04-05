@@ -7,7 +7,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import AdminMenu from 'components/AdminMenu/AdminMenu';
+import AdminMenu from '../../components/AdminMenu/AdminMenu';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { Redirect } from 'react-router-dom';

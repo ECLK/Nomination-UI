@@ -30,7 +30,7 @@ import CriteriaIcon from '@material-ui/icons/Toc';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
-import AdminMenu from 'components/AdminMenu/AdminMenu';
+import AdminMenu from '../../components/AdminMenu/AdminMenu';
 import {APPROVAL_STATE} from  './state/ObjectionTypes';
 import { getObjections, onChangeApproval, onChangeObjectionNotes } from './state/ObjectionAction';
 

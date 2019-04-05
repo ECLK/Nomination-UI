@@ -1,34 +1,34 @@
 import React, { Component } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import Login from "pages/Login/Login";
-import NotifierRedux from 'components/NotifierRedux';
+import Login from "./pages/Login/Login";
+import NotifierRedux from './components/NotifierRedux';
 
 // import NominationForm from 'pages/USER/NominationForm/NominationForm';
-import NominationForm from "modules/nomination/NominationForm";
+import NominationForm from "./modules/nomination/NominationForm";
 
-import Home from "pages/USER/Home/Home";
-import Objection from "pages/USER/Objection/Objection";
-import Profile from "pages/USER/Profile/Profile";
+import Home from "./pages/USER/Home/Home";
+import Objection from "./pages/USER/Objection/Objection";
+import Profile from "./pages/USER/Profile/Profile";
 
-import Admin_home from "pages/ADMIN/Home/Home";
-import CreateElectionCard from "pages/ADMIN/createElection";
-import CallElectionCard from "pages/ADMIN/callElection";
+import Admin_home from "./pages/ADMIN/Home/Home";
+import CreateElectionCard from "./pages/ADMIN/createElection";
+import CallElectionCard from "./pages/ADMIN/callElection";
 
-import Admin_CallElection from "pages/ADMIN/Call-election/Call-election";
-import Admin_CandidateConfig from "pages/ADMIN/Candidate-config/Candidate-config";
+import Admin_CallElection from "./pages/ADMIN/Call-election/Call-election";
+import Admin_CandidateConfig from "./pages/ADMIN/Candidate-config/Candidate-config";
 
-import Admin_NominationProcessConfig from "pages/ADMIN/NominationProcess-config/NominationProcess-config";
-import ActiveElectionForm from "modules/election/ActiveElectionPage";
+import Admin_NominationProcessConfig from "./pages/ADMIN/NominationProcess-config/NominationProcess-config";
+import ActiveElectionForm from "./modules/election/ActiveElectionPage";
 
 // import NominationReview from 'pages/ADMIN/Nomination_review/Nomination_review';
-import NominationReview from "modules/nomination/Nomination_review";
-import PaymentReview from "modules/payment/Payment_review";
-import ObjectionReview from "modules/objections/Objection_review";
-import ElectionReview from "pages/ADMIN/Election_review/Election_review";
+import NominationReview from "./modules/nomination/Nomination_review";
+import PaymentReview from "./modules/payment/Payment_review";
+import ObjectionReview from "./modules/objections/Objection_review";
+import ElectionReview from "./pages/ADMIN/Election_review/Election_review";
 
-import CreateElection from "modules/election-model/CreateElection";
-import ElectionProcessReview from 'modules/election/Election_process_review';
-import ElectionProcessReviewDetails from 'modules/election/Election_process_review_details';
+import CreateElection from "./modules/election-model/CreateElection";
+import ElectionProcessReview from './modules/election/Election_process_review';
+import ElectionProcessReviewDetails from './modules/election/Election_process_review_details';
 
 
 export default class Protected extends Component {

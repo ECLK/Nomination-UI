@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import MainMenu from "components/MainMenu/MainMenu";
-import NominationForm from "components/NominationForm";
+import MainMenu from "../../components/MainMenu/MainMenu";
+import NominationForm from "../../components/NominationForm";
 import { getNominationPayments } from "./state/NominationAction";
 import { connect } from "react-redux";
 

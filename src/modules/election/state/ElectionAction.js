@@ -328,7 +328,7 @@ export function postCallElectionData(CallElectionData, electionData) {
 
         "created_by":"admin",
         "created_at":Date.parse(newDate),
-        "updated_at":"234344",
+        "updated_at":Date.parse(newDate),
         "timeLineData": 
             {
                 nominationStart: Date.parse(CallElectionData.nominationStart),
@@ -488,8 +488,6 @@ export const onChangeApprovalData = (electionApprovals) => {
             {...electionApprovals}
       )
       .then(response => {
-        console.log("response",response.data);
-        debugger;
          dispatch(onChangeApprovalData(response.data));
       }).catch(err => {
             console.log(err)

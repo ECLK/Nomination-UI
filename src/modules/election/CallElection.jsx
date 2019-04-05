@@ -86,7 +86,6 @@ class CallElection extends React.Component {
 
     render() {
         const {classes,electionModules} = this.props;
-        console.log("electionModules",electionModules);
         if (this.state.goToConfig) return <Redirect to="/admin/active-election" />;
 
 
@@ -100,6 +99,7 @@ class CallElection extends React.Component {
                         <TextField
                             id="filled-name"
                             label="Election Name "
+                            helperText="Please type your Election Name"
                             className={classes.textField}
                             value={this.state.electionName}
                             onChange={this.handleChange('electionName')}
