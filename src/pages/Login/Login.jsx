@@ -141,12 +141,12 @@ class Login extends React.Component {
                         >
                             Sign in
                         </Button>
-                        <!--<Paper className={classes.paper}>
+                        {/*<Paper className={classes.paper}>
                         <pre><b>Default Login Credentials </b></pre>
                         <pre>admin username : admin</pre>
                         <pre>user username  : user</pre>
                         <pre>password       : pass</pre>
-                        </Paper>-->
+                        </Paper>*/}
                     </form>
                 </Paper>
                 
