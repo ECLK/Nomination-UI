@@ -109,16 +109,16 @@ class Home extends React.Component {
         getRejectedElections();
     }
 
-    componentDidUpdate (oldState){
-        const { getElectionModules, getPendingElections, getApproveElections, getRejectedElections,PendingElections } = this.props;
+    // componentDidUpdate (oldState){
+    //     const { getElectionModules, getPendingElections, getApproveElections, getRejectedElections,PendingElections } = this.props;
 
-        if(oldState.PendingElections !== PendingElections){
-            getElectionModules();
-            getPendingElections();
-            getApproveElections();
-            getRejectedElections();
-        }
-      }
+    //     if(oldState.PendingElections !== PendingElections){
+    //         getElectionModules();
+    //         getPendingElections();
+    //         getApproveElections();
+    //         getRejectedElections();
+    //     }
+    //   }
 
 
     render() {
