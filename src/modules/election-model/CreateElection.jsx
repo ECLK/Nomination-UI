@@ -14,7 +14,7 @@ import { Redirect } from 'react-router-dom';
 import CandidateForm from './CandidateForm';
 import DivisionConfig from './DivisionConfig';
 import ElectionConfig from './ElectionConfig';
-import { createElection, updateElection, submitElection } from './state/ElectionAction';
+import { createElection, updateElection, submitElection, getFieldOptions } from './state/ElectionAction';
 import { connect } from 'react-redux';
 
 
@@ -47,6 +47,8 @@ class CreateElection extends React.Component {
         activeStep: 0,
         skipped: new Set(),
         goToHome: false,
+        candidateConfigs: [],
+        candidateSupportingDocs: [],
     };
 
     constructor() {
@@ -60,6 +62,8 @@ class CreateElection extends React.Component {
                 return <CandidateForm
                     electionModule={this.props.new_election_module}
                     electionChanged={this.handleElectionChange}
+                    candidateConfigs={this.state.candidateConfigs}
+                    candidateSupportingDocs={this.state.candidateSupportingDocs}
                 />;
             case 1:
                 return <DivisionConfig
@@ -84,6 +88,10 @@ class CreateElection extends React.Component {
     componentDidMount() {
         const { createElection } = this.props;
         createElection(this.props.location.state.name);
+        // fetch required data
+        getFieldOptions().then((data)=>{
+            this.setState(data);
+        })
     }
 
     isStepOptional = step => step === 1;

@@ -15,7 +15,9 @@ const initialState = {
     new_election_module: { 
         name: "" ,
         nominationSubmission: [],
-        eligibilityCheckList: {}
+        eligibilityCheckList: {},
+        candidateFormConfiguration: [],
+        supportingDocuments: [],
     }
 };
 

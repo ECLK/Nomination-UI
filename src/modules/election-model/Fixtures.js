@@ -1,12 +1,4 @@
-export const CandidateFormConfig = [
-    { value: "NameOfCandidate", label: "Name Of Candidate (Full Name)" },
-    { value: "PreferedName", label: "Preferred Name" },
-    { value: "NIC", label: "National Identity Card (NIC)" },
-    { value: "Date of Birth", label: "Date of Birth" },
-    { value: "Gender", label: "Gender" },
-    { value: "Address", label: "Address" },
-    { value: "Ocupation", label: "Occupation" },
-];
+
 
 export const SupportingDocuments = [
     { value: "CSNF", label: "Completed & Signed Nomination Form" },

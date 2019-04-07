@@ -302,5 +302,19 @@ export function getRejectedElectionModules() {
 }
 
 
+export const getFieldOptions = function getFieldOptions() {
+    let promises = [];
+
+    promises.push(axios.get(`${API_BASE_URL}/field-options/candidate-configs`));
+    promises.push(axios.get(`${API_BASE_URL}/field-options/candidate-supporting-docs`));
+    
+    return axios.all(promises)
+        .then(args =>{
+            return {
+                candidateConfigs: args[0].data,
+                candidateSupportingDocs: args[1].data,
+            }
+        });
+}
 
 //----------- End of save Create Election Data ----------------
