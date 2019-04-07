@@ -9,10 +9,14 @@ import {
 
 const initialState = {
     //define the common states only
-    new_election_module: { name: "" },
     RejectedElectionModules:[],
     PendingElectionModules:[],
-    ApprovedElectionModules:[]
+    ApprovedElectionModules:[],
+    new_election_module: { 
+        name: "" ,
+        nominationSubmission: [],
+        eligibilityCheckList: {}
+    }
 };
 
 export default function reducer(state = initialState, action) {

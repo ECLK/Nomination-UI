@@ -27,6 +27,7 @@ import { EligibilityCheckList } from './Fixtures';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
+import _ from 'lodash';
 
 
 
@@ -62,24 +63,47 @@ class ElectionConfig extends React.Component {
     constructor(){
         super();
         this.handleChange = this.handleChange.bind(this);
+        this.handleNominationSubmission = this.handleNominationSubmission.bind(this);
+        this.handleEligibility = this.handleEligibility.bind(this);
     }
 
-    handleChange(name){
-        return function(event){ 
-            debugger;
-            this.props.electionChanged({ ...this.props.electionModule, [name]: event.target.value });
-        }.bind(this);
+    handleChange(event) {
+        if(event && event.target ){
+            const target = event.target;
+            const value = target.type === 'checkbox' ? target.checked : target.value;
+            const name = target.name;
+        
+            this.props.electionChanged({ ...this.props.electionModule, [name]: value });
+        }
+    }
+
+    handleNominationSubmission(value, event) {
+        const newElectionModule = {...this.props.electionModule};
+        if(event.target.checked){
+            newElectionModule.nominationSubmission.push(value);
+        }else{
+            newElectionModule.nominationSubmission = _.remove(newElectionModule.nominationSubmission, (element)=>{
+                return element !== value;
+            });
+        }
+        this.props.electionChanged(newElectionModule); 
+    }
+
+    handleEligibility(row, event) {
+        const newElectionModule = {...this.props.electionModule};
+        if(event.target.checked){
+            newElectionModule.eligibilityCheckList[row.value] = true;
+        }else{
+            delete newElectionModule.eligibilityCheckList[row.value];
+        }
+        this.props.electionChanged(newElectionModule);
     }
 
     render() {
         const classes = styles();
-        const handleChange = name => event => {
-            this.setState({ ...this.state, [name]: event.target.value });
-        };
 
-        const handleEligibility = (value) => () => {
-            this.setState(this.state.eligibilityCheckList.push(value));
-        }
+        const electionModule = this.props.electionModule;
+        electionModule.eligibilityCheckList = {...electionModule.eligibilityCheckList};
         let authority = this.state.authority;
 
 
@@ -91,21 +115,8 @@ class ElectionConfig extends React.Component {
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
                         <FormControl className={classes.formControl}>
-                            {/* <InputLabel htmlFor="authority">Authority</InputLabel>
-                            <Input id="authority" value={this.state.authority} onChange={handleChange('authority')} /> */}
-                            <InputLabel htmlFor="election-select">Authority</InputLabel>
-                            <Select
-                                style={{width:'200px'}}
-                                value={this.state.authority}
-                                // onChange={this.handleChangeElection}
-                                inputProps={{
-                                name: 'election',
-                                id: 'election-select',
-                                }}
-                            >
-                                {menuItems}
-
-                            </Select>
+                            <InputLabel htmlFor="authority">Authority</InputLabel>
+                            <Input id="authority" name="authority" value={this.state.authority} onChange={this.handleChange} />
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>
@@ -113,30 +124,15 @@ class ElectionConfig extends React.Component {
                             <FormLabel component="legend">Calculation Type</FormLabel>
                             <RadioGroup
                                 aria-label="Gender"
-                                name="gender1"
+                                name="CalculationType"
                                 className={classes.group}
-                                value={"male"}
-                                onChange={handleChange}
+                                onChange={this.handleChange}
+                                value={this.props.electionModule['CalculationType']}
                                 row
                             >
-                                <FormControlLabel
-                                    control={
-                                        <Radio onChange={this.handleChange('checkedA')} value="checkedA" />
-                                    }
-                                    label="Pure vote-based"
-                                />
-                                <FormControlLabel
-                                    control={
-                                        <Radio onChange={this.handleChange('checkedA')} value="checkedA" />
-                                    }
-                                    label="Pure preference-based"
-                                />
-                                <FormControlLabel
-                                    control={
-                                        <Radio onChange={handleChange('checkedA')} value="checkedA" />
-                                    }
-                                    label="Vote &amp; Prefrential Based"
-                                />
+                                <FormControlLabel control={<Radio />} value="pure_vote_based" label="Pure vote-based" />
+                                <FormControlLabel control={<Radio />} value="pure_prefrence_based" label="Pure preference-based" />
+                                <FormControlLabel control={<Radio />} value="vote_and_prefrence" label="Vote &amp; Prefrential Based" />
                             </RadioGroup>
                         </FormControl>
                     </Grid>
@@ -144,30 +140,27 @@ class ElectionConfig extends React.Component {
                         <FormControl component="fieldset">
                             <FormLabel component="legend">Nomination Submission By</FormLabel>
                             <RadioGroup
-                                aria-label="Gender"
-                                name="gender1"
+                                aria-label="Nomination Submission"
                                 className={classes.group}
-                                value={"male"}
-                                onChange={handleChange}
                                 row
                             >
-                                <FormControlLabel
+                                <FormControlLabel 
                                     control={
-                                        <Checkbox onChange={handleChange('checkedA')} value="checkedA" />
+                                        <Checkbox 
+                                            checked={this.props.electionModule.nominationSubmission.includes('Party Secretory')}
+                                            onChange={(e)=>{this.handleNominationSubmission('Party Secretory', e);}} 
+                                        />
                                     }
                                     label="Party Secretory"
                                 />
                                 <FormControlLabel
                                     control={
-                                        <Checkbox onChange={handleChange('checkedA')} value="checkedA" />
+                                        <Checkbox  
+                                            checked={this.props.electionModule.nominationSubmission.includes('Independent Group Leader')} 
+                                            onChange={(e)=>{this.handleNominationSubmission('Independent Group Leader', e);}}
+                                        />
                                     }
                                     label="Independent Group Leader"
-                                />
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox onChange={handleChange('checkedA')} value="checkedA" />
-                                    }
-                                    label="Add New"
                                 />
                             </RadioGroup>
                         </FormControl>
@@ -177,23 +170,25 @@ class ElectionConfig extends React.Component {
                             <FormLabel component="legend">Security Deposit</FormLabel>
                             <RadioGroup
                                 aria-label="Gender"
-                                name="gender1"
+                                name="SecurityDeposit"
                                 className={classes.group}
-                                value={"male"}
-                                onChange={handleChange}
+                                value={this.props.electionModule['SecurityDeposit']}
+                                onChange={this.handleChange}
                                 row
                             >
                                 <FormControlLabel
                                     control={
-                                        <Radio onChange={handleChange('checkedA')} value="checkedA" />
+                                        <Radio />
                                     }
+                                    value="Yes"
                                     label="Security Deposit"
                                 />
                                 <FormControlLabel
                                     control={
-                                        <Radio onChange={handleChange('checkedA')} value="checkedA" />
+                                        <Radio />
                                     }
                                     label="No Security Deposit"
+                                    value="No"
                                 />
                             </RadioGroup>
                         </FormControl>
@@ -202,24 +197,26 @@ class ElectionConfig extends React.Component {
                         <FormControl component="fieldset">
                             <FormLabel component="legend">Objections</FormLabel>
                             <RadioGroup
-                                aria-label="Gender"
-                                name="gender1"
+                                aria-label="Objections"
+                                name="Objections"
                                 className={classes.group}
-                                value={"male"}
-                                onChange={handleChange}
+                                value={this.props.electionModule['Objections']}
+                                onChange={this.handleChange}
                                 row
                             >
                                 <FormControlLabel
                                     control={
-                                        <Radio onChange={handleChange('checkedA')} value="checkedA" />
+                                        <Radio />
                                     }
                                     label="Allowed&nbsp;"
+                                    value="Allowed"
                                 />
                                 <FormControlLabel
                                     control={
-                                        <Radio onChange={handleChange('checkedA')} value="checkedA" />
+                                        <Radio />
                                     }
                                     label="Not Allowed"
+                                    value="NotAllowed"
                                 />
                             </RadioGroup>
                         </FormControl>
@@ -228,24 +225,26 @@ class ElectionConfig extends React.Component {
                         <FormControl component="fieldset">
                             <FormLabel component="legend">Create Alliance</FormLabel>
                             <RadioGroup
-                                aria-label="Gender"
-                                name="gender1"
+                                aria-label="Create Alliance"
+                                name="CreateAlliance"
                                 className={classes.group}
-                                value={"male"}
-                                onChange={handleChange}
+                                value={this.props.electionModule['CreateAlliance']}
+                                onChange={this.handleChange}
                                 row
                             >
                                 <FormControlLabel
                                     control={
-                                        <Radio onChange={handleChange('checkedA')} value="checkedA" />
+                                        <Radio />
                                     }
                                     label="Allowed&nbsp;"
+                                    value="Allowed"
                                 />
                                 <FormControlLabel
                                     control={
-                                        <Radio onChange={handleChange('checkedA')} value="checkedA" />
+                                        <Radio />
                                     }
                                     label="Not Allowed"
+                                    value="NotAllowed"
                                 />
                             </RadioGroup>
                         </FormControl>
@@ -271,8 +270,8 @@ class ElectionConfig extends React.Component {
                                     <TableRow key={row.id}>
                                         <TableCell padding="checkbox" width="20">
                                             <Checkbox
-                                                checked={this.state.eligibilityCheckList.includes(row.value)}
-                                                onChange={handleEligibility(row.value)}
+                                                checked={electionModule.eligibilityCheckList[row.value]}
+                                                onChange={(event)=>{this.handleEligibility(row, event);}}
                                             />
                                         </TableCell>
                                         <TableCell component="th" scope="row">
