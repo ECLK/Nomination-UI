@@ -109,8 +109,8 @@ class CustomizedTable extends React.Component {
             <Typography style={{marginBottom: 40}} component="h2" variant="display1" gutterBottom>
             Nomination - {division} Division
            </Typography>
-           <Typography style={{marginBottom: 40}} component="h2" variant="title" gutterBottom>
-            No of candidate nominated :
+           <Typography style={{marginBottom: 40}} component="h2" variant="headline" gutterBottom>
+            No of Candidate Nominated :
             <Chip style={{paddingLeft: 5,paddingRight:5,fontSize:20}}
                 label={CandidateList.length+ " / " +candidateCount} 
               />  
@@ -128,7 +128,7 @@ class CustomizedTable extends React.Component {
             <Grid item xs="6">
               <Table className={classes.candidates_table}>
                 <TableHead>
-                  <TableCell align="left">Name of candidate</TableCell>
+                  <TableCell align="left">Name of Candidate</TableCell>
                   <TableCell align="left">Address</TableCell>
                   <TableCell align="left">Occupation</TableCell>
                 </TableHead>

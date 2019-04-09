@@ -75,7 +75,7 @@ class CheckboxesGroup extends React.Component {
     return (
       <div className={classes.root}>
         <FormControl component="fieldset" className={classes.formControl}>
-          <FormLabel className={classes.legend} component="legend">Nomination Timeline</FormLabel>
+          <FormLabel className={classes.legend} component="legend">Nomination Period</FormLabel>
           <FormGroup>
           <Typography className={classes.Typography} variant="subtitle1" gutterBottom>
                 Nomination Start
@@ -85,7 +85,7 @@ class CheckboxesGroup extends React.Component {
           </Typography>
            
           </FormGroup>
-          <FormLabel className={classes.legend} component="legend">Objection Timeline</FormLabel>
+          <FormLabel className={classes.legend} component="legend">Objection Period</FormLabel>
           <FormGroup>
           <Typography className={classes.Typography} variant="subtitle1" gutterBottom>
                 Objection Start

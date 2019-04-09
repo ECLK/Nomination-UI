@@ -119,7 +119,7 @@ const styles = theme => ({
 							{division.nomination.map((nomination) => (
 							<ExpansionPanelSummary style={nomination.status === 'SUBMIT' ? {backgroundColor: '#b368c9'} : nomination.status === 'NEW' ? {backgroundColor: '#e9dced'} : {backgroundColor: '#e1b3ef'}} expandIcon={<ExpandMoreIcon />}>
 								<Typography  className={classes.heading}>{division.name}</Typography>
-								<Typography style={{textAlign: "right"}} className={classes.secondaryHeading}>Division Code : {division.code}</Typography>
+								{/* <Typography style={{textAlign: "right"}} className={classes.secondaryHeading}>Division Code : {division.code}</Typography> */}
 							</ExpansionPanelSummary>
 							))}
 							<ExpansionPanelDetails>

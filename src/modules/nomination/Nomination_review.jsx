@@ -259,7 +259,7 @@ class NominationReview extends React.Component {
           <Grid container classname={classes.panel_wrapper} spacing={16}>
             <Grid item xs="4">
               {/* <Typography className={classes.heading}>{nomination.nomination_id}</Typography> */}
-              <Typography className={classes.heading}>({nomination.party} | {nomination.division_name})</Typography>
+              <Typography className={classes.heading}>{nomination.party} | {nomination.division_name}</Typography>
 
             </Grid>
             <Grid item xs="5">
@@ -404,7 +404,7 @@ class NominationReview extends React.Component {
                   <TextField
                     style={{ width: 400 }}
                     id="outlined-multiline-flexible"
-                    label="Please Enter Your Remarks Here"
+                    label="Please enter your remarks here"
                     multiline
                     rowsMax="4"
                     value={this.state.reviewNote}

@@ -76,12 +76,20 @@ class Login extends React.Component {
                 sessionStorage.setItem('role', 'party_user');
                 this.props.history.push('/home');
             }
-            else if (username.includes("user")) {
+            else if (username.includes("users")) {
                 sessionStorage.setItem('role', 'user');
                 this.props.history.push('/home');
             }
             else if (username.includes("admin")) {
                 sessionStorage.setItem('role', 'admin');
+                this.props.history.push('/admin');
+            }
+            else if (username.includes("cg_user")) {
+                sessionStorage.setItem('role', 'cg_user');
+                this.props.history.push('/admin');
+            }
+            else if (username.includes("ac_user")) {
+                sessionStorage.setItem('role', 'ac_user');
                 this.props.history.push('/admin');
             }
         }

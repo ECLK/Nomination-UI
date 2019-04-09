@@ -1,12 +1,4 @@
-export const CandidateFormConfig = [
-    { value: "NameOfCandidate", label: "Name Of Candidate (Full Name)" },
-    { value: "PreferedName", label: "Preferred Name" },
-    { value: "NIC", label: "National Identity Card (NIC)" },
-    { value: "Date of Birth", label: "Date of Birth" },
-    { value: "Gender", label: "Gender" },
-    { value: "Address", label: "Address" },
-    { value: "Ocupation", label: "Occupation" },
-];
+
 
 export const SupportingDocuments = [
     { value: "CSNF", label: "Completed & Signed Nomination Form" },
@@ -19,12 +11,12 @@ export const SupportingDocuments = [
 ];
 
 export const EligibilityCheckList = [
-    { value:"minimumage35", label:"Minimum age 35 years"},
-    { value:"addeligibility", label:"Does not serve as a Judicial Officer"},
-    { value:"addeligibility", label:"Does not serve as as the Commissioner-General"},
-    { value:"addeligibility", label:"Does not serve as the Auditor-General"},
-    { value:"addeligibility", label:"Does not serve as a Judicial Officer"},
-    { value:"addeligibility", label:"Is not standing nominated as a candidate for election by more than one recognized political party or independent group in respect of any electoral district"},
+    { value:"1", label:"Minimum age 35 years"},
+    { value:"2", label:"Does not serve as a Judicial Officer"},
+    { value:"3", label:"Does not serve as as the Commissioner-General"},
+    { value:"4", label:"Does not serve as the Auditor-General"},
+    { value:"5", label:"Does not serve as a Judicial Officer"},
+    { value:"6", label:"Is not standing nominated as a candidate for election by more than one recognized political party or independent group in respect of any electoral district"},
 
 
 ]

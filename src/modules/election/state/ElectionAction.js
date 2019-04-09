@@ -319,6 +319,7 @@ export const setPostCallElectionData = (val) => {
 
 
 export function postCallElectionData(CallElectionData, electionData) {
+
     //TODO: yujith, config ids should get from the front end and the array should be dynamic
     let newDate = new Date();
    
@@ -359,7 +360,7 @@ export function postCallElectionData(CallElectionData, electionData) {
         "nominationAllowData": CallElectionData.rowData
 
     }
-
+debugger;
     return function (dispatch) {
         const response = axios
             .post(
