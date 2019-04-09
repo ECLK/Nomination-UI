@@ -385,7 +385,6 @@ export function postNominationPayments(candidatePayments,candidateCount) {
       nominationId:nominationSuppertDocs.nominationId,
       candidateSupportDocs:nominationSuppertDocs.supportdoc
     }
-    debugger;
     return function (dispatch) {
        
       const response = axios

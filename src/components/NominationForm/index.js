@@ -13,6 +13,7 @@ import NominationStep3 from '../NominationStep3/NominationStep3';
 import NominationStep5 from '../NominationStep5/NominationStep2';
 import NominationStep2Update from '../NominationStep2Update';
 import { postNominationPayments, updateNominationPayments,postNominationSupportDocs } from '../../modules/nomination/state/NominationAction';
+import { openSnackbar } from '../../modules/election/state/ElectionAction';
 import { connect } from 'react-redux';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -21,7 +22,7 @@ import CloseIcon from '@material-ui/icons/Cancel';
 import moment from 'moment';
 import { Redirect } from 'react-router-dom';
 import {API_BASE_URL} from "../../config.js";
-import Notifier, { openSnackbar } from '../Notifier';
+// import Notifier, { openSnackbar } from '../Notifier';
 import axios from "axios";
 
 
@@ -344,7 +345,7 @@ class NominationForm extends React.Component {
   
 
   handleNext = () => {
-    const {postNominationPayments,updateNominationPayments,NominationPayments, nominationStatus, customProps,postNominationSupportDocs,candidateCount,NominationCandidates}=this.props;
+    const {postNominationPayments,updateNominationPayments,NominationPayments, nominationStatus,openSnackbar, customProps,postNominationSupportDocs,candidateCount,NominationCandidates}=this.props;
     let activeStep;
    
     if (this.isLastStep() && !this.allStepsCompleted()) {
@@ -362,9 +363,9 @@ class NominationForm extends React.Component {
     if (activeStep === 0 ){
        if(candidateCount!==NominationCandidates.length){
          openSnackbar({ message: 
-         'Please complete the nomination form for all candidates before submission...' });
+         'Please complete the nomination form for all candidates before submission' });
         }else{
-          openSnackbar({ message: 'Nomination Submitted Sccessfully...' });
+          openSnackbar({ message: 'The nomination form has been submitted successfully' });
          postNominationSupportDocs(this.state);   
          this.setState({
            goToHome: true
@@ -432,10 +433,9 @@ class NominationForm extends React.Component {
     return (
       <div className={classes.root}>
       {this.state.goToHome ? (
-                                <Redirect to="/home" />
+                                <Redirect to="/create-nomination" />
                             ) : (
       <Paper className={classes.pageContent} elevation={1}>
- <Notifier />
         <Stepper nonLinear activeStep={activeStep}>
           {steps.map((label, index) => {
             return (
@@ -518,22 +518,25 @@ NominationForm.propTypes = {
 };
 
 
-const mapStateToProps = ({Nomination}) => {
+const mapStateToProps = ({Nomination,Election}) => {
   const {nominationPayments} = Nomination;
   const NominationPayments = Nomination.getNominationPayments;
   const NominationCandidates = Nomination.getNominationCandidates;
   const {updateNominationPayments} = Nomination;
   const {postNominationSupportDocs} = Nomination;
+  const {openSnackbar} = Election;
 
   
   
-  return {nominationPayments,updateNominationPayments,NominationPayments,postNominationSupportDocs,NominationCandidates};
+  
+  return {nominationPayments,updateNominationPayments,NominationPayments,postNominationSupportDocs,NominationCandidates,openSnackbar};
 };
 
 const mapActionsToProps = {
   postNominationPayments,
   updateNominationPayments,
-  postNominationSupportDocs
+  postNominationSupportDocs,
+  openSnackbar
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(NominationForm));
