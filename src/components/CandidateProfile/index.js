@@ -164,10 +164,12 @@ class TextFields extends React.Component {
             gender: this.state.gender,
             occupation:this.state.occupation,
             address:this.state.address,
-            electoralDivisionName: this.state.electoralDivisionName,
-            electoralDivisionCode: this.state.electoralDivisionCode,
+            electoralDivisionName: 'kalutara',
+            electoralDivisionCode: 'K01',
+            // electoralDivisionName: this.state.electoralDivisionName,
+            // electoralDivisionCode: this.state.electoralDivisionCode,
             nominationId: this.state.nominationId,
-            counsilName: this.state.counsilName,
+            counsilName: 'council',
     }
         e.preventDefault();
        
@@ -324,7 +326,7 @@ class TextFields extends React.Component {
 
                     <Grid item lg={6}>
                         
-                        <TextField
+                        {/* <TextField
                             id="standard-multiline-flexible"
                             label="Council Name"
                             multiline
@@ -333,13 +335,13 @@ class TextFields extends React.Component {
                             onChange={this.handleChange('counsilName')}
                             className={classes.textField}
                             margin="normal"
-                        />
+                        /> */}
                     </Grid>
 
                 </Grid>
                 <Grid container spacing={12}>
                     <Grid item lg={6}>
-                    <TextField
+                    {/* <TextField
                             id="standard-select-currency-native"
                             select
                             label="Electoral Division"
@@ -362,11 +364,11 @@ class TextFields extends React.Component {
                                     {option.label}
                                 </option>
                             ))}
-                        </TextField>
+                        </TextField> */}
                     </Grid>
 
                     <Grid item lg={6}>
-                    <TextField
+                    {/* <TextField
                             id="standard-select-currency-native"
                             select
                             label="Electoral Division Code"
@@ -389,7 +391,7 @@ class TextFields extends React.Component {
                                     {option.label}
                                 </option>
                             ))}
-                        </TextField>
+                        </TextField> */}
                     </Grid>
 
                 </Grid>

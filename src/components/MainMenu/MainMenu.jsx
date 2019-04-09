@@ -21,6 +21,8 @@ import NominationIcon from '@material-ui/icons/Description';
 import ObjectionIcon from '@material-ui/icons/PanTool';
 import Button from '@material-ui/core/Button';
 import { Redirect } from 'react-router-dom'
+import PersonIcon from '@material-ui/icons/PermIdentity';
+import PowerSetting from '@material-ui/icons/PowerSettingsNew';
 
 const drawerWidth = 240;
 
@@ -35,7 +37,7 @@ const styles = theme => ({
     },
   },
   appBar: {
-    zIndex: 222222222,
+    zIndex: 2000,
     display: 'flex'
   },
   menuButton: {
@@ -53,7 +55,6 @@ const styles = theme => ({
     padding: theme.spacing.unit * 3,
   },
   logoutBtn: {
-    marginLeft: theme.spacing.unit * 140,
   },
 });
 
@@ -76,6 +77,8 @@ class ResponsiveDrawer extends React.Component {
     const { classes, theme } = this.props;
     if (this.state.goToLogin) return <Redirect to="/login" />;
 
+    var user_role = sessionStorage.getItem('role');
+
 
     const drawer = (
       <div>
@@ -86,13 +89,17 @@ class ResponsiveDrawer extends React.Component {
             <ListItemIcon><HomeIcon /></ListItemIcon>
             <ListItemText primary="Home" />
           </ListItem>
+          <ListItem button key="Nomination" component={Link} to='/create-nomination' >
+            <ListItemIcon><HomeIcon /></ListItemIcon>
+            <ListItemText primary="Create Nomination" />
+          </ListItem>
           {/* <ListItem button key="Nomination" component={Link} to='/nomination' selected={this.props.page === "Nomination"} >
               <ListItemIcon><NominationIcon /></ListItemIcon>
               <ListItemText primary="Nomination" />
             </ListItem> */}
           <ListItem button key="Objection" component={Link} to='/objection'>
             <ListItemIcon><ObjectionIcon /></ListItemIcon>
-            <ListItemText primary="Objection" />
+            <ListItemText primary="Create Objection" />
           </ListItem>
 
         </List>
@@ -120,10 +127,20 @@ class ResponsiveDrawer extends React.Component {
             >
               <MenuIcon />
             </IconButton>
-            <Typography style={{flex:1}} variant="h6" color="inherit" noWrap>
+            <Typography  variant="h6" color="inherit" noWrap>
               {this.props.title}
             </Typography>
-            <Button className={classes.logoutBtn} onClick={this.handleLogout} color="inherit">Logout</Button>
+
+            <div style={{flex:1}}></div>
+            
+            <Button color="inherit">
+              <PersonIcon style={{marginRight:5}}/>
+              {(user_role==='party_user') ? 'Party User' : (user_role==='ig_user') ? 'IG user' : ''}
+            </Button>
+            <Button onClick={this.handleLogout} color="inherit">
+              <PowerSetting style={{marginRight:5}}/>
+              Logout
+            </Button>
 
           </Toolbar>
         </AppBar>

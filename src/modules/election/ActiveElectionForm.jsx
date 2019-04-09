@@ -46,13 +46,13 @@ class VerticalLinearStepper extends React.Component {
   constructor(props){
     super(props);
     const {CallElectionData} = this.props;
-
+    let newDate = new Date();
     this.state = {
       activeStep: 0,
-      nominationStart: '2017-05-24T10:30',
-      nominationEnd: '2017-05-24T10:30',
-      objectionStart: '2017-05-24T10:30',
-      objectionEnd: '2017-05-24T10:30',
+      nominationStart: Date.parse(newDate),
+      nominationEnd: Date.parse(newDate),
+      objectionStart: Date.parse(newDate),
+      objectionEnd: Date.parse(newDate),
       // depositAmount: 'Amount',
       // WeightagePrefarence: '%',
       // WeightageVote: '%',
@@ -100,7 +100,7 @@ class VerticalLinearStepper extends React.Component {
 
   handleSubmit = () => {
     const { postCallElectionData, CallElectionData, electionData,openSnackbar } = this.props;
-    debugger;
+    
     openSnackbar({ message: CallElectionData.electionName + ' has been submitted for approval ' });
     
     postCallElectionData(CallElectionData, electionData);

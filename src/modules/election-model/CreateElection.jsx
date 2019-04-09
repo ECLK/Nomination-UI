@@ -15,6 +15,7 @@ import CandidateForm from './CandidateForm';
 import DivisionConfig from './DivisionConfig';
 import ElectionConfig from './ElectionConfig';
 import { createElection, updateElection, submitElection, getFieldOptions } from './state/ElectionAction';
+import { openSnackbar } from '../election/state/ElectionAction';
 import { connect } from 'react-redux';
 
 
@@ -101,6 +102,10 @@ class CreateElection extends React.Component {
         let { skipped } = this.state;
         if(activeStep === 2){
             this.props.submitElection(this.props.new_election_module);
+            const {openSnackbar } = this.props;
+
+            openSnackbar({ message: this.props.new_election_module.name + ' has been submitted for approval ' });
+
             this.setState({
                 goToHome: true
             });
@@ -202,15 +207,18 @@ CreateElection.propTypes = {
 };
 
 
-const mapStateToProps = ({ ElectionModel }) => {
+const mapStateToProps = ({ ElectionModel,Election }) => {
+    const { openSnackbar } = Election;
+
     const { new_election_module } = ElectionModel;
-    return { new_election_module };
+    return { new_election_module,openSnackbar };
 };
 
 const mapActionsToProps = {
     createElection,
     updateElection,
-    submitElection
+    submitElection,
+    openSnackbar
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(CreateElection));

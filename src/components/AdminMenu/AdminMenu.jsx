@@ -19,6 +19,9 @@ import {Link} from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
 import MoneyIcon from '@material-ui/icons/AttachMoney';
 import ProfileIcon from '@material-ui/icons/AccountBox';
+import PersonIcon from '@material-ui/icons/PermIdentity';
+import PowerSetting from '@material-ui/icons/PowerSettingsNew';
+
 import NominationIcon from '@material-ui/icons/Description';
 import ObjectionIcon from '@material-ui/icons/PanTool';
 import Button from '@material-ui/core/Button';
@@ -39,7 +42,7 @@ const styles = theme => ({
     },
   },
   appBar: {
-    zIndex: 222222222,
+    zIndex: 2000,
     display: 'flex'
   },
   menuButton: {
@@ -81,46 +84,74 @@ class ResponsiveDrawer extends React.Component {
     const { classes, theme } = this.props;
     if (this.state.goToLogin) return <Redirect to="/login" />;
 
+    var user_role = sessionStorage.getItem('role');
 
     const drawer = (
       <div>
         <div className={classes.toolbar} />
         <Divider />
         <List>
+          {(user_role==='cg_user') ?
+          <div>
             <ListItem button key="Home" component={Link} to='/admin/home' selected={this.props.page === "Home"} >
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="Home" />
-            </ListItem>
-            <ListItem button key="Create_election" component={Link} to='/admin/create-election-home' >
-            <ListItemIcon><NominationIcon/></ListItemIcon>
-              <ListItemText primary="Create Election" />
-            </ListItem>
-            <ListItem button key="Call_election" component={Link} to='/admin/call-election' >
-            <ListItemIcon><NominationIcon/></ListItemIcon>
-              <ListItemText primary="Call Election" />
-            </ListItem>
-            <ListItem button key="Nomination" component={Link} to='/admin/nomination-review'>
-              <ListItemIcon><NominationIcon /></ListItemIcon>
-              <ListItemText primary="Nomination review" />
-            </ListItem>
-            <ListItem button key="Objection_review" component={Link} to='/admin/objection-review' >
-              <ListItemIcon><ObjectionIcon /></ListItemIcon>
-              <ListItemText primary="Objection review" />
-            </ListItem>
-            <ListItem button key="Payment_review" component={Link} to='/admin/payment-review'
-                      selected={this.props.page === "Home"}>
-                <ListItemIcon><MoneyIcon/></ListItemIcon>
-                <ListItemText primary="Payment Review"/>
             </ListItem>
             <ListItem button key="Election_review" component={Link} to='/election-process-review'
                       selected={this.props.page === "Home"}>
                 <ListItemIcon><NominationIcon/></ListItemIcon>
                 <ListItemText primary="Election Review"/>
             </ListItem>
+            <ListItem button key="Nomination" component={Link} to='/admin/nomination-review'>
+              <ListItemIcon><NominationIcon /></ListItemIcon>
+              <ListItemText primary="Nomination Review" />
+            </ListItem>
+            <ListItem button key="Objection_review" component={Link} to='/admin/objection-review' >
+              <ListItemIcon><ObjectionIcon /></ListItemIcon>
+              <ListItemText primary="Objection Review" />
+            </ListItem>
+            <ListItem button key="Payment_review" component={Link} to='/admin/payment-review'
+                      selected={this.props.page === "Home"}>
+                <ListItemIcon><MoneyIcon/></ListItemIcon>
+                <ListItemText primary="Payment Review"/>
+            </ListItem>
+            
+             </div > : (user_role==='ac_user') ?
+              <div>
+              <ListItem button key="Home" component={Link} to='/admin/home' selected={this.props.page === "Home"} >
+                <ListItemIcon><HomeIcon /></ListItemIcon>
+                <ListItemText primary="Home" />
+              </ListItem>
+              <ListItem button key="Call_election" component={Link} to='/admin/call-election' >
+              <ListItemIcon><NominationIcon/></ListItemIcon>
+                <ListItemText primary="Call Election" />
+              </ListItem>
+              <ListItem button key="Nomination" component={Link} to='/admin/nomination-review'>
+                <ListItemIcon><NominationIcon /></ListItemIcon>
+                <ListItemText primary="Nomination Review" />
+              </ListItem>
+              <ListItem button key="Objection_review" component={Link} to='/admin/objection-review' >
+                <ListItemIcon><ObjectionIcon /></ListItemIcon>
+                <ListItemText primary="Objection Review" />
+              </ListItem>
+              <ListItem button key="Payment_review" component={Link} to='/admin/payment-review'
+                        selected={this.props.page === "Home"}>
+                  <ListItemIcon><MoneyIcon/></ListItemIcon>
+                  <ListItemText primary="Payment Review"/>
+              </ListItem>
+              </div > : ' '
+            }
 
         </List>
+       
         <Divider />
+        
         <List>
+        {(user_role==='ac_user') ?
+          <ListItem button key="Create_election" component={Link} to='/admin/create-election-home' >
+            <ListItemIcon><NominationIcon/></ListItemIcon>
+              <ListItemText primary="Create Election" />
+            </ListItem> : ''}
             <ListItem button key="Profile" component={Link} to='/profile'>
               <ListItemIcon><ProfileIcon /></ListItemIcon>
               <ListItemText primary="Profile" />
@@ -147,7 +178,15 @@ class ResponsiveDrawer extends React.Component {
               {this.props.title}
             </Typography>
             <div style={{flex:1}}></div>
-            <Button className={classes.logoutBtn}  onClick={this.handleLogout} color="inherit">Logout</Button>
+            
+            <Button color="inherit">
+              <PersonIcon style={{marginRight:5}}/>
+              {(user_role==='cg_user') ? 'Commissioner-General' : (user_role==='ac_user') ? ' Additional Commissioner' : ''}
+            </Button>
+            <Button className={classes.logoutBtn}  onClick={this.handleLogout} color="inherit">
+            <PowerSetting style={{marginRight:5}}/>
+            Logout
+            </Button>
 
           </Toolbar>
         </AppBar>

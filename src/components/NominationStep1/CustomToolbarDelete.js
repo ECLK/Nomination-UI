@@ -118,11 +118,11 @@ class CustomToolbar extends React.Component {
           aria-describedby="alert-dialog-slide-description"
         >
           <DialogTitle id="alert-dialog-slide-title">
-            {"Are You Sure?"}
+            {/* {"Are You Sure?"} */}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              Want To Delete This Record!
+            Delete Candidate
             </DialogContentText>
           </DialogContent>
           <DialogActions>

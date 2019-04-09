@@ -48,16 +48,17 @@ const styles = theme => ({
 });
 const authorities = [{
     "authority_id": "32d250c8-b6b0-4aa6-9b14-4817dbb268d9",
-    "name": "Secratory",
+    "name": "Officer Incharge of Create Election",
   }, {
     "authority_id": "a93b50c8-b6b0-4aa6-9b14-4817dbb268d9",
-    "name": "2020 Provincial",
+    "name": "Officer Incharge of Calling Election",
   }];
 
 class ElectionConfig extends React.Component {
     state = {
         divisions: [],
         eligibilityCheckList: [],
+        selectedAuthority: '',
     };
 
     constructor(){
@@ -68,6 +69,7 @@ class ElectionConfig extends React.Component {
     }
 
     handleChange(event) {
+        debugger;
         if(event && event.target ){
             const target = event.target;
             const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -116,7 +118,19 @@ class ElectionConfig extends React.Component {
                     <Grid item xs={12}>
                         <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="authority">Authority</InputLabel>
-                            <Input id="authority" name="authority" value={this.state.authority} onChange={this.handleChange} />
+                            <Select
+                                style={{width:'200px'}}
+                                value={this.state.authority}
+                                onChange={this.handleChange}
+                                inputProps={{
+                                name: 'authority',
+                                id: 'authority',
+                                }}
+                            >
+                                {menuItems}
+
+                            </Select>
+                            {/* <Input id="authority" name="authority" value={this.state.authority} onChange={this.handleChange} /> */}
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>
