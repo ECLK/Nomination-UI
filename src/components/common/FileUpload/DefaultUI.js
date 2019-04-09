@@ -3,6 +3,8 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import DoneOutline from '@material-ui/icons/DoneOutline';
 import PropTypes from "prop-types";
 import AttachIcon from '@material-ui/icons/AttachFile';
+import Button from '@material-ui/core/Button';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 
 const defaultStyles = {
@@ -34,9 +36,10 @@ const showFlagToStyle = (flag) => (
 
 const DefaultUI = ({status, progress}) => {
   const uploading = status === "uploading";
-
+        
   // return <AttachIcon style={{...defaultStyles, ...statusTargetedStyles[status]}}>
-  return <AttachIcon>
+  return <Button variant="contained" color="default" style={{margin: 1}}>Attach<CloudUploadIcon style={{marginLeft: 1}} />
+
     <p style={showFlagToStyle(status === "ready")}>
       {/* Drag and drop an image file here or click. */}
     </p>
@@ -46,7 +49,7 @@ const DefaultUI = ({status, progress}) => {
     </div>
     <p style={showFlagToStyle(uploading)}> Uploading... </p>
     {uploading && <LinearProgress variant="determinate" value={progress}/> }
-  </AttachIcon>
+    </Button>
 };
 
 DefaultUI.propTypes = {
