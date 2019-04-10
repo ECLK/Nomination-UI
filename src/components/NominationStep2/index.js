@@ -91,7 +91,7 @@ class NominationPayments extends React.Component {
         this.state = {
             open: true,
             depositor:'',
-            depositAmount:500*candidateCount,
+            depositAmount:2000*candidateCount,
             depositeDate:'',  
         }
       }
