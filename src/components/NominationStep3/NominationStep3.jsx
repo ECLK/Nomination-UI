@@ -75,7 +75,7 @@ class TextFields extends React.Component {
             </span>
             </Grid>
             <Grid item lg={1}>
-              <span><FileUpload value={docs.id} doneElement={doneElement} onSelectFiles={onSelectFiles} /></span>
+              <span ><FileUpload  value={docs.id} doneElement={doneElement} onSelectFiles={onSelectFiles} /></span>
               
             </Grid>
             <Grid item lg={1}>
@@ -89,10 +89,10 @@ class TextFields extends React.Component {
             ))
           } 
             </Grid>
-            {docs.id === 'b20dd58c-e5bb-469d-98c9-8711d6da1879' ?
+            {/* {docs.id === 'b20dd58c-e5bb-469d-98c9-8711d6da1879' ?
             <Grid item lg={5}>
               <span><FileUpload   style={{textAlign: 'right'}} value={docs.id} doneElement={doneElement} onSelectFiles={onSelectFiles} /></span>
-            </Grid> : ' ' }
+            </Grid> : ' ' } */}
           </Grid>
           <Divider className={classes.divider} variant="middle"/>
           </div>

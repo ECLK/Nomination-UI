@@ -31,7 +31,7 @@ export function getNominations(selectedElection,selectedParty) {
      
     const response = axios
     .get(
-      `${API_BASE_URL}/nominations/${selectedElection}/pending-nominations/${'NEW'}/team/${selectedParty}`,
+      `${API_BASE_URL}/nominations/${selectedElection}/pending-nominations/${'SUBMIT'}/team/${selectedParty}`,
     )
     .then(response => {
       console.log(response.data);
@@ -308,7 +308,6 @@ export function onChangeApproval(id,status,reviewNote) {
     )
     .then(response => {
       console.log("response",response.data);
-      debugger;
        dispatch(onChangeApprovalData(response.data));
     }).catch(err => {
           console.log(err)

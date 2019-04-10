@@ -20,7 +20,7 @@ import ProfileIcon from '@material-ui/icons/AccountBox';
 import NominationIcon from '@material-ui/icons/Description';
 import ObjectionIcon from '@material-ui/icons/PanTool';
 import Button from '@material-ui/core/Button';
-import { Redirect } from 'react-router-dom'
+import {withRouter, Redirect } from 'react-router-dom'
 import PersonIcon from '@material-ui/icons/PermIdentity';
 import PowerSetting from '@material-ui/icons/PowerSettingsNew';
 
@@ -85,11 +85,11 @@ class ResponsiveDrawer extends React.Component {
         <div className={classes.toolbar} />
         <Divider />
         <List>
-          <ListItem button key="Home" component={Link} to='/home' selected={this.props.page === "Home"} >
+          <ListItem button key="Home" component={Link} to='/home' selected={this.props.location.pathname === "/home"} >
             <ListItemIcon><HomeIcon /></ListItemIcon>
             <ListItemText primary="Home" />
           </ListItem>
-          <ListItem button key="Nomination" component={Link} to='/create-nomination' >
+          <ListItem button key="Nomination" component={Link} to='/create-nomination' selected={this.props.location.pathname === "/create-nomination"} >
             <ListItemIcon><HomeIcon /></ListItemIcon>
             <ListItemText primary="Create Nomination" />
           </ListItem>
@@ -97,7 +97,7 @@ class ResponsiveDrawer extends React.Component {
               <ListItemIcon><NominationIcon /></ListItemIcon>
               <ListItemText primary="Nomination" />
             </ListItem> */}
-          <ListItem button key="Objection" component={Link} to='/objection'>
+          <ListItem button key="Objection" component={Link} to='/objection' selected={this.props.location.pathname === "/objection"}>
             <ListItemIcon><ObjectionIcon /></ListItemIcon>
             <ListItemText primary="Create Objection" />
           </ListItem>
@@ -105,7 +105,7 @@ class ResponsiveDrawer extends React.Component {
         </List>
         <Divider />
         <List>
-          <ListItem button key="Profile" component={Link} to='/profile'>
+          <ListItem button key="Profile" component={Link} to='/profile' selected={this.props.location.pathname === "/profile"}>
             <ListItemIcon><ProfileIcon /></ListItemIcon>
             <ListItemText primary="Profile" />
           </ListItem>
@@ -185,4 +185,4 @@ ResponsiveDrawer.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(ResponsiveDrawer);
+export default withStyles(styles, { withTheme: true })(withRouter(ResponsiveDrawer));

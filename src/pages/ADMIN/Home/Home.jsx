@@ -99,6 +99,9 @@ const styles = theme => ({
     green_icon: {
         color: "green"
       },
+    orange_icon: {
+        color: "orange"
+      },
     text_a: {
         textAlign: "left"
       },
@@ -175,26 +178,35 @@ class Dashboard extends React.Component {
                                         <Grid item xs={3}>
                                             <Button onClick={this.getElectionReviewData(this.state.election.id)}>
                                                 <Card style={{ width: 350 ,marginLeft:30}} md={3} xs={6} sm={3}>
-                                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: this.state.election.id } }} >
+                                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: this.state.election.id,check:'test' } }} >
                                                         <CardContent >
                                                             {/* <Grid className={classes.container} container spacing={24}> */}
                                                                
                                                                 <Grid container classname={classes.panel_wrapper} spacing={16}>
                                                                     <Grid item xs="8">
-                                                                        
+                                                                        {console.log("this.state.election",this.state.election)}
                                                                     <Typography className={classes.text_a} component="p">
                                                                         <b>{this.state.election.name}</b>
                                                                     </Typography>
                                                                     </Grid>
+                                                                    {(this.state.election.approval_status==='APPROVE') ? 
                                                                     <Grid item xs="4">
                                                                     <Alarm className={classes.green_icon} />
                                                                     <ListItemText style={{textDecorationColor:'green',width:0.5,marginLeft:-1}} primary="Active" />
 
                                                                         {/* <Typography className={classes.heading}>({election.name})</Typography> */}
                                                                     </Grid>
+                                                                   :
+                                                                   <Grid item xs="4">
+                                                                    <Alarm className={classes.orange_icon} />
+                                                                    <ListItemText style={{textDecorationColor:'orange',width:0.5,marginLeft:-1}} primary="PENDING" />
+
+                                                                        {/* <Typography className={classes.heading}>({election.name})</Typography> */}
+                                                                    </Grid>
+                                                                    }
                                                                 </Grid>
                                                                 <Grid container classname={classes.panel_wrapper} spacing={16}>
-                                                                    <Grid item xs="8">
+                                                                    {/* <Grid item xs="8">
                                                                     <Typography className={classes.text_a} component="p">
                                                                         No of Divisions : {7}
                                                                     </Typography>
@@ -203,7 +215,7 @@ class Dashboard extends React.Component {
                                                                         No of Parties/IG : {4}
 
                                                                     </Typography>
-                                                                    </Grid>
+                                                                    </Grid> */}
                                                                     <Grid item xs="4">
 
                                                                         {/* <Typography className={classes.heading}>({election.name})</Typography> */}
