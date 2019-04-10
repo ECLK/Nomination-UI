@@ -64,7 +64,7 @@ class DivisionConfig extends React.Component {
             }
             const divisions = this.state.divisions;
             divisions.push(division);
-            this.setState({...this.state, divisions , code:"", name:"", noOfCandidates:""});
+            this.setState({...this.state, divisions , name:"", code:"", noOfCandidates:""});
         }
 
         const removeDivision = (index) => () => {
@@ -89,14 +89,14 @@ class DivisionConfig extends React.Component {
                     </Grid>
                     <Grid item xs={2}>
                         <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="common-name">Division Code</InputLabel>
-                            <Input id="common-name" value={this.state.code} onChange={handleChange('code')} />
+                            <InputLabel htmlFor="common-name">Division Name </InputLabel>
+                            <Input id="common-name" value={this.state.name} onChange={handleChange('name')} />
                         </FormControl>
                     </Grid>
                     <Grid item xs={2}>
                         <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="common-name">Division Name </InputLabel>
-                            <Input id="common-name" value={this.state.name} onChange={handleChange('name')} />
+                            <InputLabel htmlFor="common-name">Division Code</InputLabel>
+                            <Input id="common-name" value={this.state.code} onChange={handleChange('code')} />
                         </FormControl>
                     </Grid>
                     <Grid item xs={2}>
@@ -114,10 +114,10 @@ class DivisionConfig extends React.Component {
                         this.state.divisions.map((element, index) => {
                             return (<React.Fragment>
                                 <Grid item xs={2}>
-                                    <Typography variant="body1" >{element.code}</Typography>
+                                    <Typography variant="body1" >{element.name}</Typography>
                                 </Grid>
                                 <Grid item xs={2}>
-                                    <Typography variant="body1" >{element.name}</Typography>
+                                    <Typography variant="body1" >{element.code}</Typography>
                                 </Grid>
                                 <Grid item xs={2}>
                                     <Typography variant="body1" >{element.noOfCandidates}</Typography>

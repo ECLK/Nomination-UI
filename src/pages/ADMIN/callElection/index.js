@@ -160,8 +160,8 @@ class Home extends React.Component {
                                     </ListItem>
                                 </Grid>
                                 <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
-                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: election.id } }} >
-                                        <Button onClick={this.getElectionReviewData.bind(this, election.id)} style={{ marginTop: 30 }} variant="contained" color="primary" size="small">Edit</Button>
+                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: election.id,check:'test' } }} >
+                                        <Button onClick={this.getElectionReviewData.bind(this, election.id)} style={{ marginTop: 30 }} variant="contained" color="primary" size="small">View</Button>
                                     </Link>
                                 </Grid>
                             </Grid>
@@ -207,8 +207,8 @@ class Home extends React.Component {
                                     </ListItem>
                                 </Grid>
                                 <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
-                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: election.id } }} >
-                                        <Button onClick={this.getElectionReviewData.bind(this, election.id)} style={{ marginTop: 30 }} variant="contained" color="primary" size="small">Edit</Button>
+                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: election.id,check:'test' } }} >
+                                        <Button onClick={this.getElectionReviewData.bind(this, election.id)} style={{ marginTop: 30 }} variant="contained" color="primary" size="small">View</Button>
                                     </Link>
                                 </Grid>
                             </Grid>
@@ -254,8 +254,8 @@ class Home extends React.Component {
                                     </ListItem>
                                 </Grid>
                                 <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
-                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: election.id } }} >
-                                        <Button onClick={this.getElectionReviewData.bind(this, election.id)} style={{ marginTop: 30 }} variant="contained" color="primary" size="small">Edit</Button>
+                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: election.id,check:'test' } }} >
+                                        <Button onClick={this.getElectionReviewData.bind(this, election.id)} style={{ marginTop: 30 }} variant="contained" color="primary" size="small">View</Button>
                                     </Link>
                                 </Grid>
                             </Grid>

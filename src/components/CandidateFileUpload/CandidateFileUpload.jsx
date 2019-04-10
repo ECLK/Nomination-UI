@@ -232,45 +232,39 @@ class CandidateFileUpload extends React.Component {
       </div>);
 
         const supportingDocItems = supportingDocs.map(docs => (
-          <div>
             <Grid style={{width: '100%'}} container spacing={24}>
-            <Grid item lg={2}>
-            {
-             this.state.supportdoc.map(sdoc => (
-              sdoc.id === docs.id ? doneElement : ' '
-            ))
-          }   
+              <Grid item lg={2}>
+                {
+                  this.state.supportdoc.map(sdoc => (
+                    sdoc.id === docs.id ? doneElement : ' '
+                  ))
+                }   
+              </Grid>
+              <Grid item lg={6}>
+                {docs.doc}
+              </Grid>
+              <Grid item lg={4}>
+                <FileUpload value={docs.id} doneElement={doneElement} onSelectFiles={this.onSelectFiles} />
+                {
+                  this.state.supportdoc.map(sdoc => (
+                    sdoc.id === docs.id ? 
+                    <Typography variant="caption" gutterBottom>
+                  {sdoc.originalname}{closeElement}
+                </Typography>
+                    : ' '
+                  ))
+                } 
+              </Grid>
+
+              <Grid item lg={12}>
+                <Divider className={classes.divider} variant="middle"/>
+              </Grid>
             </Grid>
-            <Grid item lg={8}>
-            <span>
-              {docs.doc}
-            </span>
-            </Grid>
-            <Grid item lg={2}>
-            <span><FileUpload value={docs.id} doneElement={doneElement} onSelectFiles={this.onSelectFiles} /></span>
-              {
-             this.state.supportdoc.map(sdoc => (
-              sdoc.id === docs.id ? 
-              <Typography variant="caption" gutterBottom>
-            {sdoc.originalname}{closeElement}
-           </Typography>
-               : ' '
-            ))
-          } 
-           
-            {docs.id === 'fe2c2d7e-66de-406a-b887-1143023f8e72' ?
             
-              <span><FileUpload   style={{textAlign: 'right'}} value={docs.id} doneElement={doneElement} onSelectFiles={this.onSelectFiles} /></span>
-             : ' ' }
-            </Grid>
-            </Grid>
-            <Divider className={classes.divider} variant="middle"/>
-          </div>
           ));
 
       return (
         <form className={classes.container} onSubmit={this.handleSubmit} noValidate autoComplete="off">
-        <div>
         {supportingDocItems}
         <Grid container spacing={12}>
                     <Grid className={classes.label}  item lg={12}>
@@ -283,7 +277,6 @@ class CandidateFileUpload extends React.Component {
                         </Button>
                     </Grid>
                 </Grid>
-        </div>
          </form>
         );
     }

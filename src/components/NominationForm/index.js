@@ -22,6 +22,7 @@ import CloseIcon from '@material-ui/icons/Cancel';
 import moment from 'moment';
 import { Redirect } from 'react-router-dom';
 import {API_BASE_URL} from "../../config.js";
+import Axios from 'axios';
 // import Notifier, { openSnackbar } from '../Notifier';
 import axios from "axios";
 
@@ -92,11 +93,16 @@ class NominationForm extends React.Component {
         supportdoc:[],
         currentSdocId:'',
         goToHome: false,
+        election:{}
     }    
   }
 
   componentDidMount(){
-    
+    Axios.get(`elections/${sessionStorage.getItem('election_id')}`)
+    .then(res => {
+        const election = res.data;
+        this.setState({ election });
+    });
   }
 
   onSelectFiles = evt => {
@@ -425,8 +431,8 @@ class NominationForm extends React.Component {
   }
 
   render() {
-    
-    const { classes } = this.props;
+    debugger;
+    const { classes,division } = this.props;
     const steps = getSteps();
     const { activeStep } = this.state;
     var user_role = sessionStorage.getItem('role');
@@ -435,6 +441,13 @@ class NominationForm extends React.Component {
       {this.state.goToHome ? (
                                 <Redirect to="/create-nomination" />
                             ) : (
+       <div>
+         <Typography component="h2" variant="headline" gutterBottom style={{marginLeft:5}}>
+             {this.state.election.name}
+        </Typography>
+        <Typography  variant="subheading" gutterBottom style={{marginBottom:25,marginLeft:5}}>
+          {division+" Province"}
+        </Typography>
       <Paper className={classes.pageContent} elevation={1}>
         <Stepper nonLinear activeStep={activeStep}>
           {steps.map((label, index) => {
@@ -507,6 +520,7 @@ class NominationForm extends React.Component {
           )}
         </div>
         </Paper>
+        </div>
          )}
       </div>
     );

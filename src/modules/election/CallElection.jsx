@@ -99,7 +99,7 @@ class CallElection extends React.Component {
                         <TextField
                             id="filled-select-currency-native"
                             select
-                            label="Election Module"
+                            label="Election Template"
 
                             className={classes.textField}
                             value={this.state.currency}

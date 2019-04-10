@@ -83,6 +83,10 @@ class AllowNomination extends React.Component {
             {
                 id: '4',
                 name: 'Southern'
+            },
+            {
+                id: '5',
+                name: 'Eastern'
             }
         ];
 

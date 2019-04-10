@@ -272,7 +272,7 @@ class Dashboard extends React.Component {
             </Grid>
             <Grid container spacing={24}>
                                     <Grid item xs={12} sm={3}>
-                                        <Typography className={classes.text_b} component="p">Security Deposit (sp) </Typography>
+                                        <Typography className={classes.text_b} component="p">Security Deposit </Typography>
                                     </Grid>
                                     <Grid item xs={12} sm={4}>
                                         <Grid container spacing={24}>
@@ -286,6 +286,8 @@ class Dashboard extends React.Component {
                                     </Grid>
                                 </Grid>
             </div>);
+
+            var check = this.props.location.state.check;
 
             if (this.state.goToConfig) return <Redirect
             to={{
@@ -404,7 +406,7 @@ class Dashboard extends React.Component {
                                 <br />
                                 <hr />
                                 <br />
-                                <Typography className={classes.text_a} component="p"><b>Eligibility</b> </Typography>
+                                <Typography className={classes.text_a} component="p"><b>Eligibility Criteria</b> </Typography>
                                 <br />
                                 <br />
                                 <Grid container spacing={24}>
@@ -449,12 +451,21 @@ class Dashboard extends React.Component {
 
                                 </Grid>
                                 <br />
-                                <Grid container spacing={24}>
+                                    
+                                    {(check==='test') ? 
                                     <Grid item xs={4} sm={1}>
-                                        <Link to="/election-process-review" >
-                                            <Button size="medium">Back</Button>
-                                        </Link>
-                                    </Grid>
+                                    <Link to="/admin/call-election" >
+                                        <Button size="medium">Back</Button>
+                                    </Link>
+                                </Grid>
+                                    : (
+                                        <div>
+                                <Grid container spacing={24}>
+                                             <Grid item xs={4} sm={1}>
+                                    <Link to="/election-process-review" >
+                                        <Button size="medium">Back</Button>
+                                    </Link>
+                                </Grid>
                                     <Grid style={{marginRight:15}} item xs={4} sm={1}>
                                     <Button 
                                         variant={ ElectionReviewData.approval_status==="APPROVE" ? "contained" : "outlined" }
@@ -477,8 +488,8 @@ class Dashboard extends React.Component {
                                     </Grid>
                                     <Grid item xs="3">
                                 </Grid>
-
                                 </Grid>
+                                   </div> )}
                             </CardContent>
                         </Card>
 

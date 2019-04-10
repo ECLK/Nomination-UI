@@ -73,8 +73,13 @@ class Home extends React.Component {
                     <div className={classes.root}>
                         <Grid container spacing={24}>
                             <Grid item xs={12} sm={6}>
-                                <Typography variant="h4" gutterBottom>Nominations</Typography>
-                                <Divider variant="middle" className={classes.topBottomSpace} />
+                            <Typography component="h2" variant="headline" gutterBottom style={{marginLeft:5}}>
+                                Create Nomination
+                            </Typography>
+                            <Typography  variant="caption" gutterBottom style={{marginBottom:25,marginLeft:5}}>
+                            {this.state.election.name}
+                            </Typography>                                
+                            <Divider variant="middle" className={classes.topBottomSpace} />
                                 <NominationPanel></NominationPanel>
                             </Grid>
                             <Grid item xs={12} sm={6}>

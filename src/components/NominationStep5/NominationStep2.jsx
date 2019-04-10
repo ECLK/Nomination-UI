@@ -106,10 +106,10 @@ class CustomizedTable extends React.Component {
         <div>
            <Grid container spacing={16}>
             <Grid item xs="6">
-            <Typography style={{marginBottom: 40}} component="h2" variant="display1" gutterBottom>
-            Nomination - {division} Division
+            <Typography  component="h2" variant="headline" gutterBottom>
+             {division} Province
            </Typography>
-           <Typography style={{marginBottom: 40}} component="h2" variant="headline" gutterBottom>
+           <Typography  component="h2" variant="subheading" gutterBottom>
             No of Candidate Nominated :
             <Chip style={{paddingLeft: 5,paddingRight:5,fontSize:20}}
                 label={CandidateList.length+ " / " +candidateCount} 
@@ -119,8 +119,8 @@ class CustomizedTable extends React.Component {
           </Grid>
           <Grid container spacing={16}>
             <Grid item xs="6">
-            <Typography style={{marginBottom: 40}} component="h2" variant="headline" gutterBottom>
-            Nomination Candidate Details
+            <Typography  component="h2" variant="subheading" gutterBottom>
+             Candidate Details
            </Typography>
             </Grid>
           </Grid>
@@ -145,8 +145,8 @@ class CustomizedTable extends React.Component {
            <div>                
           <Grid container spacing={16}>
             <Grid item xs="6">
-            <Typography style={{marginBottom: 10,marginTop: 30}} component="h2" variant="headline" gutterBottom>
-            Nomination Payment Details
+            <Typography style={{marginTop: 10}} component="h2" variant="subheading" gutterBottom>
+             Security Deposit Details
            </Typography>
             </Grid>
           </Grid>

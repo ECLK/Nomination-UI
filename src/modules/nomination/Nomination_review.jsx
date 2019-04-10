@@ -148,7 +148,8 @@ class NominationReview extends React.Component {
       reviewNote: '',
       nominationId: '',
       status: '',
-      selectedParty: 'All'
+      selectedParty: 'All',
+      open:false
     }
   }
 
@@ -198,10 +199,20 @@ class NominationReview extends React.Component {
   onOpenModal = (nominationId, status) => {
     const {nominations} = this.props;
     const index = this.findApprovalIndex(nominationId);
-    console.log("index",nominations[index].reviewNote);
-    debugger;
+    
     this.setState({
       open: true,
+      nominationId: nominationId,
+      status: (nominations[index].approval_status===status) ? '2ND-APPROVE' : status,
+      reviewNote: ''
+    });
+  };
+  onOpenModal2 = (nominationId, status) => {
+    const {nominations} = this.props;
+    const index = this.findApprovalIndex(nominationId);
+    
+    this.setState({
+      open2: true,
       nominationId: nominationId,
       status: status,
       reviewNote: (nominations[index].reviewNote) ? nominations[index].reviewNote : ''
@@ -209,6 +220,9 @@ class NominationReview extends React.Component {
   };
   onCloseModal = () => {
     this.setState({ open: false });
+  };
+  onCloseModal2 = () => {
+    this.setState({ open2: false });
   };
 
   handleChange = name => event => {
@@ -268,11 +282,11 @@ class NominationReview extends React.Component {
             <Grid item xs="3">
             
              
-                <CommentIcon style={{marginRight:10,marginBottom:-2}} onClick={() => { this.onOpenModal(nomination.id, APPROVAL_STATE.APPROVED) }} className={classes.left_icon} />
+                <CommentIcon style={{marginRight:10,marginBottom:-2}} onClick={() => { this.onOpenModal2(nomination.id, APPROVAL_STATE.APPROVED) }} className={classes.left_icon} />
               
               <Button
                 variant={nomination.approval_status === "1ST-APPROVE" ? "contained" : "outlined"}
-                disabled={nomination.approval_status === "1ST-APPROVE"}
+                disabled={nomination.approval_status === "1ST-APPROVEd"}
                 onClick={() => { this.onOpenModal(nomination.id, APPROVAL_STATE.APPROVED) }}
                 className={classNames(classes.button, classes.green_button)}>
                 {nomination.approval_status === "1ST-APPROVE" ? "Approved" : "Approve"}
@@ -281,7 +295,7 @@ class NominationReview extends React.Component {
 
               <Button
                 variant={nomination.approval_status === "REJECT" ? "contained" : "outlined"}
-                disabled={nomination.approval_status === "REJECT"}
+                disabled={nomination.approval_status === "REJECTd"}
                 onClick={() => { this.onOpenModal(nomination.id, APPROVAL_STATE.REJECTED) }}
                 className={classNames(classes.button, classes.red_button)}>
                 {nomination.approval_status === "REJECT" ? "Rejected" : "Reject"}
@@ -325,11 +339,11 @@ class NominationReview extends React.Component {
                   </ListItem>
                   <ListItem>
                     <ListItemIcon>
-                      {nomination.objection_status === "verified" ? <Done className={classes.green_icon} /> :
+                      {nomination.objection_status === "APPROVED" ? <Done className={classes.green_icon} /> :
                         <Alarm className={classes.orange_icon} />}
                     </ListItemIcon>
                     <ListItemText className={classes.capitalize_text}
-                      primary={nomination.objection_status === "paid" ? "Objection Reviewed" : "Objection Review Pending"}
+                      primary={nomination.objection_status === "APPROVED" ? "Objection Reviewed" : "Objection Review Pending"}
                       secondary="Objection Status" />
                   </ListItem>
                 </List>
@@ -353,7 +367,7 @@ class NominationReview extends React.Component {
         <CssBaseline />
         <AdminMenu title="Election Commission of Sri Lanka"></AdminMenu>
         <Typography variant="h5" component="h2">
-          Nomination review
+          Nomination Review
         </Typography>
         <div className={classes.container}>
 
@@ -420,6 +434,43 @@ class NominationReview extends React.Component {
                   Save
             </Button>
                 <Button onClick={this.onCloseModal} color="primary">
+                  Cancel
+            </Button>
+              </DialogActions>
+            </Dialog>
+            <Dialog
+              open={this.state.open2}
+              TransitionComponent={Transition}
+              keepMounted
+              onClose={this.handleClose}
+              aria-labelledby="alert-dialog-slide-title"
+              aria-describedby="alert-dialog-slide-description"
+            >
+             
+              <DialogTitle id="alert-dialog-slide-title">
+              <Remark style={{marginBottom:-4,marginRight:5}} /> {"Remarks"}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-slide-description">
+                  <TextField
+                    style={{ width: 400 }}
+                    id="outlined-multiline-flexible"
+                    label="Please enter your remarks here"
+                    multiline
+                    rowsMax="4"
+                    value={this.state.reviewNote}
+                    onChange={this.handleChange('reviewNote')}
+                    className={classes.textField}
+                    margin="normal"
+                    variant="outlined"
+                  />
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                {/* <Button value="OK" onClick={this.changeNominationStatus} color="primary">
+                  Save
+            </Button> */}
+                <Button onClick={this.onCloseModal2} color="primary">
                   Cancel
             </Button>
               </DialogActions>
