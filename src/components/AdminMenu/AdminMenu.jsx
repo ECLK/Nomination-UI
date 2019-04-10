@@ -181,7 +181,7 @@ class ResponsiveDrawer extends React.Component {
             
             <Button color="inherit">
               <PersonIcon style={{marginRight:5}}/>
-              {(user_role==='cg_user') ? 'Chairman' : (user_role==='ac_user') ? ' Commissioner-General' : ''}
+              {(user_role==='cg_user') ? 'EC-Chairman' : (user_role==='ac_user') ? ' Commissioner-General' : ''}
             </Button>
             <Button className={classes.logoutBtn}  onClick={this.handleLogout} color="inherit">
             <PowerSetting style={{marginRight:5}}/>
