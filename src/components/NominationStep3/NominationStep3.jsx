@@ -60,7 +60,7 @@ class TextFields extends React.Component {
         const supportingDocItems = supportingDocs.map(docs => (
           <div>
           <Grid container spacing={12}>
-          <Grid item lg={2}>
+          <Grid item lg={1}>
 
           {
              supportdoc.map(sdoc => (
@@ -69,14 +69,17 @@ class TextFields extends React.Component {
           }           
           
             </Grid>
-            <Grid item lg={4}>
+            <Grid item lg={2}>
               <span>
-              {docs.doc}
+              <Typography variant="subtitle1" >{docs.doc}</Typography>
             </span>
             </Grid>
             <Grid item lg={1}>
-              <span><FileUpload value={docs.id} doneElement={doneElement} onSelectFiles={onSelectFiles} /></span>
-              {
+              <span ><FileUpload  value={docs.id} doneElement={doneElement} onSelectFiles={onSelectFiles} /></span>
+              
+            </Grid>
+            <Grid item lg={1}>
+            {
              supportdoc.map(sdoc => (
               sdoc.id === docs.id ? 
               <Typography variant="caption" gutterBottom>
@@ -86,10 +89,10 @@ class TextFields extends React.Component {
             ))
           } 
             </Grid>
-            {docs.id === 'b20dd58c-e5bb-469d-98c9-8711d6da1879' ?
+            {/* {docs.id === 'b20dd58c-e5bb-469d-98c9-8711d6da1879' ?
             <Grid item lg={5}>
               <span><FileUpload   style={{textAlign: 'right'}} value={docs.id} doneElement={doneElement} onSelectFiles={onSelectFiles} /></span>
-            </Grid> : ' ' }
+            </Grid> : ' ' } */}
           </Grid>
           <Divider className={classes.divider} variant="middle"/>
           </div>

@@ -31,7 +31,7 @@ export function getNominations(selectedElection,selectedParty) {
      
     const response = axios
     .get(
-      `${API_BASE_URL}/nominations/${selectedElection}/pending-nominations/${'NEW'}/team/${selectedParty}`,
+      `${API_BASE_URL}/nominations/${selectedElection}/pending-nominations/${'SUBMIT'}/team/${selectedParty}`,
     )
     .then(response => {
       console.log(response.data);
@@ -308,7 +308,6 @@ export function onChangeApproval(id,status,reviewNote) {
     )
     .then(response => {
       console.log("response",response.data);
-      debugger;
        dispatch(onChangeApprovalData(response.data));
     }).catch(err => {
           console.log(err)
@@ -345,11 +344,12 @@ export const setData = (val) => {
 }
 
 export function postNominationPayments(candidatePayments,candidateCount) {
+  debugger;
     return function (dispatch) {
 
         let nominationPayments = {
             depositor: candidatePayments.depositor,
-            amount: candidateCount*500,
+            amount: 2000*candidateCount,
             depositDate: Date.parse(candidatePayments.depositeDate),
             filePath: candidatePayments.filePath,
             status: "PENDING",
@@ -385,7 +385,6 @@ export function postNominationPayments(candidatePayments,candidateCount) {
       nominationId:nominationSuppertDocs.nominationId,
       candidateSupportDocs:nominationSuppertDocs.supportdoc
     }
-    debugger;
     return function (dispatch) {
        
       const response = axios
@@ -408,12 +407,12 @@ export function postNominationPayments(candidatePayments,candidateCount) {
     }
 }
 
-  export function updateNominationPayments(customProps,candidatePayments) {
+  export function updateNominationPayments(customProps,candidatePayments,candidateCount) {
     return function (dispatch) {
-      
+      debugger;
       let nominationPayments = {
         depositor: candidatePayments.depositor,
-        amount: candidatePayments.depositAmount,
+        amount: candidateCount*2000,
         depositDate:Date.parse(candidatePayments.depositeDate),
         filePath: candidatePayments.filePath,
         status: candidatePayments.status,

@@ -7,6 +7,8 @@ import NotifierRedux from './components/NotifierRedux';
 import NominationForm from "./modules/nomination/NominationForm";
 
 import Home from "./pages/USER/Home/Home";
+import CreateNomination from "./modules/nomination/CreateNomination";
+
 import Objection from "./pages/USER/Objection/Objection";
 import Profile from "./pages/USER/Profile/Profile";
 
@@ -49,6 +51,10 @@ export default class Protected extends Component {
         this.state.isLoggedIn = true;
       } else if (sessionStorage.getItem("party_user").includes("party_user")) {
         this.state.isLoggedIn = true;
+      } else if (sessionStorage.getItem("role").includes("cg_user")) {
+        this.state.isLoggedIn = true;
+      } else if (sessionStorage.getItem("role").includes("ac_user")) {
+        this.state.isLoggedIn = true;
       }
     }
   }
@@ -79,6 +85,10 @@ export default class Protected extends Component {
           <Route
             path="/profile"
             component={this.state.isLoggedIn ? Profile : Login}
+          />
+          <Route
+            path="/create-nomination"
+            component={this.state.isLoggedIn ? CreateNomination : Login}
           />
 
           <Route

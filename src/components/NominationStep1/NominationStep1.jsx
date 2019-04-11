@@ -121,18 +121,18 @@ class CustomizedTable extends React.Component {
                     display: true
                 }
             },
-            {
-                name: "Electoral Division",
-                options: {
-                    display: true
-                }
-            },
-            {
-                name: "Electoral Division Code",
-                options: {
-                    display: true
-                }
-            },
+            // {
+            //     name: "Electoral Division",
+            //     options: {
+            //         display: true
+            //     }
+            // },
+            // {
+            //     name: "Electoral Division Code",
+            //     options: {
+            //         display: true
+            //     }
+            // },
             {
                 name: "Action",
                 options: {
@@ -184,7 +184,7 @@ class CustomizedTable extends React.Component {
        
         return (
             <MUIDataTable
-                title={"Nomination Candidate list"}
+                title={"Candidates list"}
                 data={data}
                 columns={columns}
                 options={options}

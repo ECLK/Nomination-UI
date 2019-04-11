@@ -91,7 +91,7 @@ class NominationPayments extends React.Component {
         this.state = {
             open: true,
             depositor:'',
-            depositAmount:500*candidateCount,
+            depositAmount:2000*candidateCount,
             depositeDate:'',  
         }
       }
@@ -99,7 +99,7 @@ class NominationPayments extends React.Component {
     render() {
         const {classes, depositor,handleChange,NominationPayments,NumberFormatCustom,CandidateList,candidateCount} = this.props;
         const {  numberformat } = this.state;
-        const payPerCandidate = 500;
+        const payPerCandidate = 2000;
         return (
             <form className={classes.container} noValidate autoComplete="off">
                 <Grid container direction="row" justify="flex-start" alignItems="stretch" spacing={8}>                

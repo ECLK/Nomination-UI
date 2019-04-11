@@ -55,33 +55,53 @@ class AllowNomination extends React.Component {
         let columnHeaders = [
             {
                 id: '16ab500d-31b1-4176-bfa3-42e766e9d691',
-                name: 'Badulla'
+                name: 'Uva'
             },
             {
                 id: '1a29913e-3bc4-4a48-a35e-88f8a874e623',
-                name: 'Trincomalee'
+                name: 'Sabaragamuwa'
             }, {
                 id: '21b9752f-8641-40c3-8205-39a612bf5244',
-                name: 'Gampaha'
+                name: 'Northern'
             },
             {
                 id: '3ab3cf77-a468-41a8-821a-8aa6f38222ad',
-                name: 'Matale'
+                name: 'North Western'
+            },
+            {
+                id: '1',
+                name: 'Western'
+            },
+            {
+                id: '2',
+                name: 'Central'
+            },
+            {
+                id: '3',
+                name: 'North-Central'
+            },
+            {
+                id: '4',
+                name: 'Southern'
+            },
+            {
+                id: '5',
+                name: 'Eastern'
             }
         ];
 
         let rowHeaders = [{
             id: '1111',
-            name: 'United National Party ( UNP )'
+            name: 'United National Party (UNP)'
         }, {
             id: '2222',
-            name: 'United Peoples Freedom Alliance ( UPFA )'
+            name: 'United Peoples Freedom Alliance (UPFA)'
         }, {
             id: '3333',
-            name: 'Janatha Vimukthi Peramuna ( JVP )'
+            name: 'Janatha Vimukthi Peramuna (JVP)'
         }, {
             id: '4444',
-            name: 'Jana Setha Peramuna ( JSP )'
+            name: 'Jana Setha Peramuna (JSP)'
         }];
 
         let nomination_setup = [

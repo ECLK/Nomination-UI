@@ -81,6 +81,7 @@ class CustomizedTable extends React.Component {
 
   render() {
       const { classes,CandidateList,NominationPayments,division,candidateCount,user_role } = this.props;
+      debugger;
       const rows = this.state.nominations;
       const CandidateRow = (props) => {
         const { classes, candidate } = props;
@@ -106,11 +107,11 @@ class CustomizedTable extends React.Component {
         <div>
            <Grid container spacing={16}>
             <Grid item xs="6">
-            <Typography style={{marginBottom: 40}} component="h2" variant="display1" gutterBottom>
-            Nomination - {division} Division
+            <Typography  component="h2" variant="headline" gutterBottom>
+             {division} Province
            </Typography>
-           <Typography style={{marginBottom: 40}} component="h2" variant="title" gutterBottom>
-            No of candidate nominated :
+           <Typography  component="h2" variant="subheading" gutterBottom>
+            No of Candidate Nominated :
             <Chip style={{paddingLeft: 5,paddingRight:5,fontSize:20}}
                 label={CandidateList.length+ " / " +candidateCount} 
               />  
@@ -119,8 +120,8 @@ class CustomizedTable extends React.Component {
           </Grid>
           <Grid container spacing={16}>
             <Grid item xs="6">
-            <Typography style={{marginBottom: 40}} component="h2" variant="headline" gutterBottom>
-            Nomination Candidate Details
+            <Typography  component="h2" variant="subheading" gutterBottom>
+             Candidate Details
            </Typography>
             </Grid>
           </Grid>
@@ -128,7 +129,7 @@ class CustomizedTable extends React.Component {
             <Grid item xs="6">
               <Table className={classes.candidates_table}>
                 <TableHead>
-                  <TableCell align="left">Name of candidate</TableCell>
+                  <TableCell align="left">Name of Candidate</TableCell>
                   <TableCell align="left">Address</TableCell>
                   <TableCell align="left">Occupation</TableCell>
                 </TableHead>
@@ -145,8 +146,8 @@ class CustomizedTable extends React.Component {
            <div>                
           <Grid container spacing={16}>
             <Grid item xs="6">
-            <Typography style={{marginBottom: 10,marginTop: 30}} component="h2" variant="headline" gutterBottom>
-            Nomination Payment Details
+            <Typography style={{marginTop: 10}} component="h2" variant="subheading" gutterBottom>
+             Security Deposit Details
            </Typography>
             </Grid>
           </Grid>
@@ -163,7 +164,7 @@ class CustomizedTable extends React.Component {
                         <ListItemIcon>
                             <MoneyIcon/>
                         </ListItemIcon>
-                        <ListItemText primary={"Rs "+NominationPayments.depositAmount} secondary="Security Deposit Amount"/>
+                        <ListItemText primary={"Rs "+NominationPayments.amount} secondary="Security Deposit Amount"/>
                     </ListItem>
                     {/* <ListItem>
                         <ListItemIcon>

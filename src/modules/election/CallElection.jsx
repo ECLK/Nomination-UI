@@ -97,20 +97,9 @@ class CallElection extends React.Component {
                         Call Election
                     </Typography>
                         <TextField
-                            id="filled-name"
-                            label="Election Name "
-                            helperText="Please type your Election Name"
-                            className={classes.textField}
-                            value={this.state.electionName}
-                            onChange={this.handleChange('electionName')}
-                            margin="normal"
-                            variant="filled"
-                        />
-
-                        <TextField
                             id="filled-select-currency-native"
                             select
-                            label="Election Module"
+                            label="Election Template"
 
                             className={classes.textField}
                             value={this.state.currency}
@@ -122,7 +111,7 @@ class CallElection extends React.Component {
                                 },
                             }}
 
-                            helperText="Please select your Election Module"
+                            helperText="Please select your election template"
                             margin="normal"
                             variant="filled"
                         >
@@ -135,6 +124,18 @@ class CallElection extends React.Component {
                                 </option>
                             ))}
                         </TextField>
+                        <TextField
+                            id="filled-name"
+                            label="Election Name "
+                            helperText="Please type your Election Name"
+                            className={classes.textField}
+                            value={this.state.electionName}
+                            onChange={this.handleChange('electionName')}
+                            margin="normal"
+                            variant="filled"
+                        />
+
+                        
 
                     {/* <Typography className={classes.textCallElection} component="p">
                         Election ID :EL2018111112

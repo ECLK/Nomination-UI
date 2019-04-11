@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AdminMenu from '../../components/AdminMenu/AdminMenu';
 import {APPROVAL_STATE} from  './state/ElectionTypes';
-import { getAllElectionReviews, getElectionReviewData,  onChangeApproval} from "./state/ElectionAction.js";
+import { getAllElectionReviews, getElectionReviewData,  onChangeApproval,openSnackbar} from "./state/ElectionAction.js";
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography'
 import { Link } from 'react-router-dom'
@@ -25,6 +25,7 @@ import Done from '@material-ui/icons/Done';
 import classNames from 'classnames';
 import Block from '@material-ui/icons/Block';
 import moment from 'moment';
+import { Redirect } from 'react-router-dom'
 
 
 const drawerWidth = 240;
@@ -126,7 +127,8 @@ class Dashboard extends React.Component {
     state = {
         open: true,
         nominations: [],
-        activeElections:[]
+        activeElections:[],
+        goToConfig: false,
     };
 
 
@@ -145,8 +147,12 @@ class Dashboard extends React.Component {
     };
 
     changeElectionStatus = (electionId, status) => {
-        const {onChangeApproval} = this.props;
+        debugger;
+        const {onChangeApproval,openSnackbar,ElectionReviewData} = this.props;
+        (status==='REJECT') ? 
+        openSnackbar({ message: ElectionReviewData.name + ' has not been approved ' }) : openSnackbar({ message: ElectionReviewData.name + ' has been approved ' });
         onChangeApproval(electionId, status);
+        this.setState({goToConfig:true});
       };
       
 
@@ -233,7 +239,7 @@ class Dashboard extends React.Component {
                 <Grid item xs={12} sm={6}>
                     <Typography className={classes.text_b} component="p">Calculation Type : { CalculationType  }</Typography>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                {/* <Grid item xs={12} sm={6}>
                     <Grid container spacing={24}>
                         <Grid item xs={12} sm={6}>
                             <Typography className={classes.text_b} component="p">Weightage(%):Vote Based</Typography>
@@ -250,7 +256,7 @@ class Dashboard extends React.Component {
                             <Input id="common-name" value={ WeightagePref  } />
                         </Grid>
                     </Grid>
-                </Grid>
+                </Grid> */}
             </Grid>
             <Grid container spacing={24}>
                 <Grid item xs={12} sm={3}>
@@ -266,12 +272,12 @@ class Dashboard extends React.Component {
             </Grid>
             <Grid container spacing={24}>
                                     <Grid item xs={12} sm={3}>
-                                        <Typography className={classes.text_b} component="p">Security Deposite</Typography>
+                                        <Typography className={classes.text_b} component="p">Security Deposit </Typography>
                                     </Grid>
                                     <Grid item xs={12} sm={4}>
                                         <Grid container spacing={24}>
                                             <Grid item xs={12} sm={6}>
-                                                <Typography className={classes.text_b} component="p">Amount per nominee</Typography>
+                                                <Typography className={classes.text_b} component="p">Amount per Candidate </Typography>
                                             </Grid>
                                             <Grid item xs={12} sm={6}>
                                                 <Input id="common-name" value={'(Rs.) ' + CandidatePayment} />
@@ -281,7 +287,13 @@ class Dashboard extends React.Component {
                                 </Grid>
             </div>);
 
-       
+            var check = this.props.location.state.check;
+
+            if (this.state.goToConfig) return <Redirect
+            to={{
+            pathname: '/admin/call-election'
+            }}
+            />;
         
         return (
             <div className={classes.root}>
@@ -394,7 +406,7 @@ class Dashboard extends React.Component {
                                 <br />
                                 <hr />
                                 <br />
-                                <Typography className={classes.text_a} component="p"><b>Eligibility</b> </Typography>
+                                <Typography className={classes.text_a} component="p"><b>Eligibility Criteria</b> </Typography>
                                 <br />
                                 <br />
                                 <Grid container spacing={24}>
@@ -406,13 +418,18 @@ class Dashboard extends React.Component {
                                         </TableHead>
                                         <TableBody>
                                             <TableRow >
-                                                <TableCell align="left">Minimum age 35 years</TableCell>
+                                                <TableCell align="left">Above 35 years of age</TableCell>
                                                 <TableCell align="left"><Checkbox checked value={true} /></TableCell>
                                             </TableRow>
                                             <TableRow >
                                                 <TableCell align="left">Does not serve as a Judicial Officer</TableCell>
                                                 <TableCell align="left"><Checkbox value={true} /></TableCell>
                                             </TableRow>
+                                            <TableRow >
+                                                <TableCell align="left">Does not serve as the Commissioner General of the Election Commission</TableCell>
+                                                <TableCell align="left"><Checkbox value={true} /></TableCell>
+                                            </TableRow>
+                                            
                                             <TableRow >
                                                 <TableCell align="left">Does not serve as as the Commissioner-General</TableCell>
                                                 <TableCell align="left"><Checkbox checked value={true} /></TableCell>
@@ -434,12 +451,21 @@ class Dashboard extends React.Component {
 
                                 </Grid>
                                 <br />
-                                <Grid container spacing={24}>
+                                    
+                                    {(check==='test') ? 
                                     <Grid item xs={4} sm={1}>
-                                        <Link to="/election-process-review" >
-                                            <Button size="medium">Back</Button>
-                                        </Link>
-                                    </Grid>
+                                    <Link to="/admin/call-election" >
+                                        <Button size="medium">Back</Button>
+                                    </Link>
+                                </Grid>
+                                    : (
+                                        <div>
+                                <Grid container spacing={24}>
+                                             <Grid item xs={4} sm={1}>
+                                    <Link to="/election-process-review" >
+                                        <Button size="medium">Back</Button>
+                                    </Link>
+                                </Grid>
                                     <Grid style={{marginRight:15}} item xs={4} sm={1}>
                                     <Button 
                                         variant={ ElectionReviewData.approval_status==="APPROVE" ? "contained" : "outlined" }
@@ -462,8 +488,8 @@ class Dashboard extends React.Component {
                                     </Grid>
                                     <Grid item xs="3">
                                 </Grid>
-
                                 </Grid>
+                                   </div> )}
                             </CardContent>
                         </Card>
 
@@ -492,7 +518,7 @@ const mapActionsToProps = {
     getAllElectionReviews,
     getElectionReviewData,
     onChangeApproval,
-
+    openSnackbar
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Dashboard));

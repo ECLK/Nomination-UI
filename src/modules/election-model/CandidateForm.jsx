@@ -7,9 +7,10 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
-import {CandidateFormConfig, SupportingDocuments} from './Fixtures';
+import {SupportingDocuments} from './Fixtures';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import _ from 'lodash';
 
 const styles = theme => ({
     root: {
@@ -26,22 +27,47 @@ class CandidateForm extends React.Component {
 
     constructor(){
         super();
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChangeSupportingDocuments = this.handleChangeSupportingDocuments.bind(this);
+        this.handleChangeCandidateFormConfig = this.handleChangeCandidateFormConfig.bind(this);
     }
 
-    handleChange(event){
-        this.props.electionChanged({ ...this.props.electionModule, [event.target.value]: event.target.checked });
+    handleChangeSupportingDocuments(event){
+        let supportingDocuments = this.props.electionModule.supportingDocuments;
+        // remove item in any case.
+        supportingDocuments = supportingDocuments.filter(item=>{
+            return item.supportDocConfigId !== event.target.value
+        });
+        if(event.target.checked){
+            supportingDocuments.push({ supportDocConfigId: event.target.value })
+        }
+        this.props.electionChanged({ ...this.props.electionModule, supportingDocuments });
     }
+
+    handleChangeCandidateFormConfig(event){
+        let candidateFormConfiguration = this.props.electionModule.candidateFormConfiguration;
+        // remove item in any case.
+        candidateFormConfiguration = candidateFormConfiguration.filter(item=>{
+            return item.candidateConfigId !== event.target.value
+        });
+        if(event.target.checked){
+            candidateFormConfiguration.push({ candidateConfigId: event.target.value })
+        }
+        this.props.electionChanged({ ...this.props.electionModule, candidateFormConfiguration });
+    }
+
+    supportDocConfigId
 
     render() {
         const classes = styles();
         const electionModule = this.props.electionModule;
 
+        const CandidateFormConfig = this.props.candidateConfigs;
         let middle = (CandidateFormConfig.length)/2;
         middle += ((CandidateFormConfig.length)%2)?1:0;
         const columnOne = CandidateFormConfig.slice(0, middle);
         const columnTwo = CandidateFormConfig.slice(middle);
 
+        const SupportingDocuments = this.props.candidateSupportingDocs;
         let smiddle = (SupportingDocuments.length)/2;
         smiddle += ((SupportingDocuments.length)%2)?1:0;
         const scolumnOne = SupportingDocuments.slice(0, middle);
@@ -53,8 +79,16 @@ class CandidateForm extends React.Component {
                 <FormGroup>
                     { columnOne.map((element)=>{
                         return (<FormControlLabel
-                        control={<Checkbox checked={electionModule[element.value]} onChange={this.handleChange} value={element.value} />}
-                        label={element.label}
+                        control={
+                            <Checkbox 
+                                checked={electionModule.candidateFormConfiguration.filter(item => {
+                                    return item.candidateConfigId === element.key;
+                                }).length > 0} 
+                                onChange={this.handleChangeCandidateFormConfig} 
+                                value={element.key} 
+                            />
+                        }
+                        label={element.value}
                         />);
                     }) }
                 </FormGroup>
@@ -63,8 +97,16 @@ class CandidateForm extends React.Component {
                 <FormGroup>
                     { columnTwo.map((element)=>{
                         return (<FormControlLabel
-                        control={<Checkbox checked={electionModule[element.value]} onChange={this.handleChange} value={element.value} />}
-                        label={element.label}
+                        control={
+                            <Checkbox 
+                                checked={electionModule.candidateFormConfiguration.filter(item => {
+                                    return item.candidateConfigId === element.key;
+                                }).length > 0} 
+                                onChange={this.handleChangeCandidateFormConfig} 
+                                value={element.key} 
+                            />
+                        }
+                        label={element.value}
                         />);
                     }) }
                 </FormGroup>
@@ -78,8 +120,15 @@ class CandidateForm extends React.Component {
                 <FormGroup>
                     { scolumnOne.map((element)=>{
                         return (<FormControlLabel
-                        control={<Checkbox checked={electionModule[element.value]} onChange={this.handleChange} value={element.value} />}
-                        label={element.label}
+                        control={
+                            <Checkbox 
+                                checked={electionModule.supportingDocuments.filter(item => {
+                                    return item.supportDocConfigId === element.key;
+                                }).length > 0} 
+                                onChange={this.handleChangeSupportingDocuments} 
+                                value={element.key} />
+                        }
+                        label={element.value}
                         />);
                     }) }
                 </FormGroup>
@@ -88,8 +137,16 @@ class CandidateForm extends React.Component {
                 <FormGroup>
                     { scolumnTwo.map((element)=>{
                         return (<FormControlLabel
-                        control={<Checkbox checked={electionModule[element.value]} onChange={this.handleChange} value={element.value} />}
-                        label={element.label}
+                        control={
+                            <Checkbox 
+                                checked={electionModule.supportingDocuments.filter(item => {
+                                    return item.supportDocConfigId === element.key;
+                                }).length > 0} 
+                                onChange={this.handleChangeSupportingDocuments} 
+                                value={element.key} 
+                            />
+                        }
+                        label={element.value}
                         />);
                     }) }
                 </FormGroup>

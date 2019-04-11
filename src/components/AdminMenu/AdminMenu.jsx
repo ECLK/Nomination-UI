@@ -19,11 +19,13 @@ import {Link} from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
 import MoneyIcon from '@material-ui/icons/AttachMoney';
 import ProfileIcon from '@material-ui/icons/AccountBox';
+import PersonIcon from '@material-ui/icons/PermIdentity';
+import PowerSetting from '@material-ui/icons/PowerSettingsNew';
+
 import NominationIcon from '@material-ui/icons/Description';
 import ObjectionIcon from '@material-ui/icons/PanTool';
 import Button from '@material-ui/core/Button';
-import { Redirect } from 'react-router-dom'
-
+import { withRouter, Redirect } from 'react-router-dom'
 
 
 const drawerWidth = 240;
@@ -39,7 +41,7 @@ const styles = theme => ({
     },
   },
   appBar: {
-    zIndex: 222222222,
+    zIndex: 2000,
     display: 'flex'
   },
   menuButton: {
@@ -81,47 +83,76 @@ class ResponsiveDrawer extends React.Component {
     const { classes, theme } = this.props;
     if (this.state.goToLogin) return <Redirect to="/login" />;
 
+    var user_role = sessionStorage.getItem('role');
+
 
     const drawer = (
       <div>
         <div className={classes.toolbar} />
         <Divider />
         <List>
-            <ListItem button key="Home" component={Link} to='/admin/home' selected={this.props.page === "Home"} >
+          {(user_role==='cg_user') ?
+          <div>
+            <ListItem button key="Home" component={Link} to='/admin/home' selected={this.props.location.pathname === "/admin/home"} >
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="Home" />
             </ListItem>
-            <ListItem button key="Create_election" component={Link} to='/admin/create-election-home' >
-            <ListItemIcon><NominationIcon/></ListItemIcon>
-              <ListItemText primary="Create Election" />
-            </ListItem>
-            <ListItem button key="Call_election" component={Link} to='/admin/call-election' >
-            <ListItemIcon><NominationIcon/></ListItemIcon>
-              <ListItemText primary="Call Election" />
-            </ListItem>
-            <ListItem button key="Nomination" component={Link} to='/admin/nomination-review'>
-              <ListItemIcon><NominationIcon /></ListItemIcon>
-              <ListItemText primary="Nomination review" />
-            </ListItem>
-            <ListItem button key="Objection_review" component={Link} to='/admin/objection-review' >
-              <ListItemIcon><ObjectionIcon /></ListItemIcon>
-              <ListItemText primary="Objection review" />
-            </ListItem>
-            <ListItem button key="Payment_review" component={Link} to='/admin/payment-review'
-                      selected={this.props.page === "Home"}>
-                <ListItemIcon><MoneyIcon/></ListItemIcon>
-                <ListItemText primary="Payment Review"/>
-            </ListItem>
             <ListItem button key="Election_review" component={Link} to='/election-process-review'
-                      selected={this.props.page === "Home"}>
+                      selected={this.props.location.pathname === "/election-process-review"}>
                 <ListItemIcon><NominationIcon/></ListItemIcon>
                 <ListItemText primary="Election Review"/>
             </ListItem>
+            <ListItem button key="Nomination" component={Link} to='/admin/nomination-review' selected={this.props.location.pathname === "/admin/nomination-review"}>
+              <ListItemIcon><NominationIcon /></ListItemIcon>
+              <ListItemText primary="Nomination Review" />
+            </ListItem>
+            <ListItem button key="Objection_review" component={Link} to='/admin/objection-review' selected={this.props.location.pathname === "/admin/objection-review"} >
+              <ListItemIcon><ObjectionIcon /></ListItemIcon>
+              <ListItemText primary="Objection Review" />
+            </ListItem>
+            <ListItem button key="Payment_review" component={Link} to='/admin/payment-review'
+                      selected={this.props.location.pathname === "/admin/payment-review"}>
+                <ListItemIcon><MoneyIcon/></ListItemIcon>
+                <ListItemText primary="Payment Review"/>
+            </ListItem>
+            
+             </div > : (user_role==='ac_user') ?
+              <div>
+              <ListItem button key="Home" component={Link} to='/admin/home' selected={this.props.location.pathname === "/admin/home"} >
+                <ListItemIcon><HomeIcon /></ListItemIcon>
+                <ListItemText primary="Home" />
+              </ListItem>
+              <ListItem button key="Call_election" component={Link} to='/admin/call-election' selected={this.props.location.pathname === "/admin/call-election"} >
+              <ListItemIcon><NominationIcon/></ListItemIcon>
+                <ListItemText primary="Call Election" />
+              </ListItem>
+              <ListItem button key="Nomination" component={Link} to='/admin/nomination-review' selected={this.props.location.pathname === "/admin/nomination-review"}>
+                <ListItemIcon><NominationIcon /></ListItemIcon>
+                <ListItemText primary="Nomination Review" />
+              </ListItem>
+              <ListItem button key="Objection_review" component={Link} to='/admin/objection-review' selected={this.props.location.pathname === "/admin/objection-review"} >
+                <ListItemIcon><ObjectionIcon /></ListItemIcon>
+                <ListItemText primary="Objection Review" />
+              </ListItem>
+              <ListItem button key="Payment_review" component={Link} to='/admin/payment-review'
+                        selected={this.props.location.pathname === "/admin/payment-review"}>
+                  <ListItemIcon><MoneyIcon/></ListItemIcon>
+                  <ListItemText primary="Payment Review"/>
+              </ListItem>
+              </div > : ' '
+            }
 
         </List>
+       
         <Divider />
+        
         <List>
-            <ListItem button key="Profile" component={Link} to='/profile'>
+        {(user_role==='ac_user') ?
+          <ListItem button key="Create_election" component={Link} to='/admin/create-election-home' selected={this.props.location.pathname === "/admin/create-election-home"}>
+            <ListItemIcon><NominationIcon/></ListItemIcon>
+              <ListItemText primary="Create Election" />
+            </ListItem> : ''}
+            <ListItem button key="Profile" component={Link} to='/profile' selected={this.props.location.pathname === "/profile"}>
               <ListItemIcon><ProfileIcon /></ListItemIcon>
               <ListItemText primary="Profile" />
             </ListItem>
@@ -147,7 +178,15 @@ class ResponsiveDrawer extends React.Component {
               {this.props.title}
             </Typography>
             <div style={{flex:1}}></div>
-            <Button className={classes.logoutBtn}  onClick={this.handleLogout} color="inherit">Logout</Button>
+            
+            <Button color="inherit">
+              <PersonIcon style={{marginRight:5}}/>
+              {(user_role==='cg_user') ? 'EC-Chairman' : (user_role==='ac_user') ? ' Commissioner-General' : ''}
+            </Button>
+            <Button className={classes.logoutBtn}  onClick={this.handleLogout} color="inherit">
+            <PowerSetting style={{marginRight:5}}/>
+            Logout
+            </Button>
 
           </Toolbar>
         </AppBar>
@@ -192,4 +231,4 @@ ResponsiveDrawer.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(ResponsiveDrawer);
+export default withStyles(styles, { withTheme: true })(withRouter(ResponsiveDrawer));

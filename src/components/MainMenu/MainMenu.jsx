@@ -20,7 +20,9 @@ import ProfileIcon from '@material-ui/icons/AccountBox';
 import NominationIcon from '@material-ui/icons/Description';
 import ObjectionIcon from '@material-ui/icons/PanTool';
 import Button from '@material-ui/core/Button';
-import { Redirect } from 'react-router-dom'
+import {withRouter, Redirect } from 'react-router-dom'
+import PersonIcon from '@material-ui/icons/PermIdentity';
+import PowerSetting from '@material-ui/icons/PowerSettingsNew';
 
 const drawerWidth = 240;
 
@@ -35,7 +37,7 @@ const styles = theme => ({
     },
   },
   appBar: {
-    zIndex: 222222222,
+    zIndex: 2000,
     display: 'flex'
   },
   menuButton: {
@@ -53,7 +55,6 @@ const styles = theme => ({
     padding: theme.spacing.unit * 3,
   },
   logoutBtn: {
-    marginLeft: theme.spacing.unit * 140,
   },
 });
 
@@ -76,29 +77,35 @@ class ResponsiveDrawer extends React.Component {
     const { classes, theme } = this.props;
     if (this.state.goToLogin) return <Redirect to="/login" />;
 
+    var user_role = sessionStorage.getItem('role');
+
 
     const drawer = (
       <div>
         <div className={classes.toolbar} />
         <Divider />
         <List>
-          <ListItem button key="Home" component={Link} to='/home' selected={this.props.page === "Home"} >
+          <ListItem button key="Home" component={Link} to='/home' selected={this.props.location.pathname === "/home"} >
             <ListItemIcon><HomeIcon /></ListItemIcon>
             <ListItemText primary="Home" />
+          </ListItem>
+          <ListItem button key="Nomination" component={Link} to='/create-nomination' selected={this.props.location.pathname === "/create-nomination"} >
+            <ListItemIcon><HomeIcon /></ListItemIcon>
+            <ListItemText primary="Create Nomination" />
           </ListItem>
           {/* <ListItem button key="Nomination" component={Link} to='/nomination' selected={this.props.page === "Nomination"} >
               <ListItemIcon><NominationIcon /></ListItemIcon>
               <ListItemText primary="Nomination" />
             </ListItem> */}
-          <ListItem button key="Objection" component={Link} to='/objection'>
+          <ListItem button key="Objection" component={Link} to='/objection' selected={this.props.location.pathname === "/objection"}>
             <ListItemIcon><ObjectionIcon /></ListItemIcon>
-            <ListItemText primary="Objection" />
+            <ListItemText primary="Create Objection" />
           </ListItem>
 
         </List>
         <Divider />
         <List>
-          <ListItem button key="Profile" component={Link} to='/profile'>
+          <ListItem button key="Profile" component={Link} to='/profile' selected={this.props.location.pathname === "/profile"}>
             <ListItemIcon><ProfileIcon /></ListItemIcon>
             <ListItemText primary="Profile" />
           </ListItem>
@@ -120,10 +127,20 @@ class ResponsiveDrawer extends React.Component {
             >
               <MenuIcon />
             </IconButton>
-            <Typography style={{flex:1}} variant="h6" color="inherit" noWrap>
+            <Typography  variant="h6" color="inherit" noWrap>
               {this.props.title}
             </Typography>
-            <Button className={classes.logoutBtn} onClick={this.handleLogout} color="inherit">Logout</Button>
+
+            <div style={{flex:1}}></div>
+            
+            <Button color="inherit">
+              <PersonIcon style={{marginRight:5}}/>
+              {(user_role==='party_user') ? 'Party User' : (user_role==='ig_user') ? 'IG user' : ''}
+            </Button>
+            <Button onClick={this.handleLogout} color="inherit">
+              <PowerSetting style={{marginRight:5}}/>
+              Logout
+            </Button>
 
           </Toolbar>
         </AppBar>
@@ -168,4 +185,4 @@ ResponsiveDrawer.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(ResponsiveDrawer);
+export default withStyles(styles, { withTheme: true })(withRouter(ResponsiveDrawer));
