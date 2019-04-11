@@ -99,7 +99,7 @@ class NominationPayments extends React.Component {
     render() {
         const {classes, depositor,handleChange,NominationPayments,NumberFormatCustom,CandidateList,candidateCount} = this.props;
         const {  numberformat } = this.state;
-        const payPerCandidate = 500;
+        const payPerCandidate = 2000;
 
         return (
             <form className={classes.container} noValidate autoComplete="off">

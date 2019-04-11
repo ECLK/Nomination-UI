@@ -79,6 +79,7 @@ class NominationForm extends React.Component {
       language:'',
       depositor:'',
       depositAmount:'',
+      amount:'',
       depositeDate:'',  
         filePath:'upload',
         status:'PENDING',
@@ -219,11 +220,11 @@ class NominationForm extends React.Component {
   };
 
   componentDidUpdate (oldState){
-    const {NominationPayments} = this.props;
+    const {NominationPayments,candidateCount} = this.props;
     if(oldState.NominationPayments !== NominationPayments){
 
       this.setState({depositor:NominationPayments.depositor});   
-      this.setState({depositAmount:NominationPayments.depositAmount});   
+      this.setState({amount:candidateCount*2000});   
       var ddate = parseInt(NominationPayments.depositeDate);
       this.setState({depositeDate:moment(new Date(NominationPayments.depositeDate)).format('YYYY-MM-DD')});
 
@@ -384,7 +385,7 @@ class NominationForm extends React.Component {
 
       postNominationPayments(this.state,candidateCount);   
   }else if(activeStep === 2 && NominationPayments!==''){
-    updateNominationPayments(NominationPayments.id,this.state);   
+    updateNominationPayments(NominationPayments.id,this.state,candidateCount);   
   }
   };
 
@@ -431,7 +432,6 @@ class NominationForm extends React.Component {
   }
 
   render() {
-    debugger;
     const { classes,division } = this.props;
     const steps = getSteps();
     const { activeStep } = this.state;
