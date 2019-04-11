@@ -18,7 +18,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import DateRangeIcon from '@material-ui/icons/DateRange';
-import { getElectionModules, getPendingElections, getApproveElections, getRejectedElections, getElectionReviewData } from '../../../modules/election/state/ElectionAction';
+import { getElectionModules,getAllElections , getElectionReviewData } from '../../../modules/election/state/ElectionAction';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'
 import moment from 'moment';
@@ -101,12 +101,9 @@ class Home extends React.Component {
 
     };
     componentDidMount() {
-        const { getElectionModules, getPendingElections, getApproveElections, getRejectedElections } = this.props;
-
+        const { getElectionModules, getAllElections  } = this.props;
         getElectionModules();
-        getPendingElections();
-        getApproveElections();
-        getRejectedElections();
+        getAllElections();
     }
 
     // componentDidUpdate (oldState){
@@ -122,9 +119,11 @@ class Home extends React.Component {
 
 
     render() {
-        const { classes, electionModules, ApprovedElections, PendingElections, RejectedElections } = this.props;
+        const { classes, electionModules, AllElections, PendingElections, RejectedElections } = this.props;
+        debugger;
         const { expanded, expandedPanelIndexApp, expandedPanelIndexPen, expandedPanelIndexRej } = this.state;
-        const callElectionApproveElements = ApprovedElections.map((election, i) => (
+        const callElectionApproveElements = AllElections.map((election, i) => (
+            (election.status==='APPROVE') ? 
             <ExpansionPanel expanded={expandedPanelIndexApp === i} onChange={this.togglePanelApp(i)}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Grid container classname={classes.panel_wrapper} spacing={16}>
@@ -169,9 +168,10 @@ class Home extends React.Component {
                     </Grid>
                     <br />
                 </ExpansionPanelDetails>
-            </ExpansionPanel>
+            </ExpansionPanel> : '' 
         ));
-        const callElectionPendingElements = PendingElections.map((election, i) => (
+        const callElectionPendingElements = AllElections.map((election, i) => (
+            (election.status==='PENDING') ? 
             <ExpansionPanel expanded={expandedPanelIndexPen === i} onChange={this.togglePanelPen(i)}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Grid container classname={classes.panel_wrapper} spacing={16}>
@@ -216,9 +216,10 @@ class Home extends React.Component {
                     </Grid>
                     <br />
                 </ExpansionPanelDetails>
-            </ExpansionPanel>
+            </ExpansionPanel> : ''
         ));
-        const callElectionRejectedElements = RejectedElections.map((election, i) => (
+        const callElectionRejectedElements = AllElections.map((election, i) => (
+            (election.status==='REJECT') ? 
             <ExpansionPanel expanded={expandedPanelIndexRej === i} onChange={this.togglePanelRej(i)}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Grid container classname={classes.panel_wrapper} spacing={16}>
@@ -263,7 +264,7 @@ class Home extends React.Component {
                     </Grid>
                     <br />
                 </ExpansionPanelDetails>
-            </ExpansionPanel>
+            </ExpansionPanel> : ''
         ));
 
         return (
@@ -315,19 +316,15 @@ Home.propTypes = {
 const mapStateToProps = ({ Election }) => {
     const { getElectionModules, getElectionReviewData } = Election;
     const electionModules = Election.allElectionModules;
-    const ApprovedElections = Election.ApprovedElections;
-    const PendingElections = Election.PendingElections;
-    const RejectedElections = Election.RejectedElections;
+    const AllElections = Election.AllElections;
 
-    return { getElectionModules, electionModules, getPendingElections, getApproveElections, getRejectedElections, ApprovedElections, PendingElections, RejectedElections, getElectionReviewData };
+    return { getElectionModules, electionModules, getAllElections, AllElections, getElectionReviewData };
 };
 
 const mapActionsToProps = {
     getElectionModules,
-    getPendingElections,
-    getApproveElections,
-    getRejectedElections,
-    getElectionReviewData
+    getElectionReviewData,
+    getAllElections
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Home));
