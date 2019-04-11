@@ -344,11 +344,12 @@ export const setData = (val) => {
 }
 
 export function postNominationPayments(candidatePayments,candidateCount) {
+  debugger;
     return function (dispatch) {
 
         let nominationPayments = {
             depositor: candidatePayments.depositor,
-            amount: candidateCount*500,
+            amount: 2000*candidateCount,
             depositDate: Date.parse(candidatePayments.depositeDate),
             filePath: candidatePayments.filePath,
             status: "PENDING",
@@ -406,12 +407,12 @@ export function postNominationPayments(candidatePayments,candidateCount) {
     }
 }
 
-  export function updateNominationPayments(customProps,candidatePayments) {
+  export function updateNominationPayments(customProps,candidatePayments,candidateCount) {
     return function (dispatch) {
-      
+      debugger;
       let nominationPayments = {
         depositor: candidatePayments.depositor,
-        amount: candidatePayments.depositAmount,
+        amount: candidateCount*2000,
         depositDate:Date.parse(candidatePayments.depositeDate),
         filePath: candidatePayments.filePath,
         status: candidatePayments.status,

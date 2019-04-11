@@ -81,6 +81,7 @@ class CustomizedTable extends React.Component {
 
   render() {
       const { classes,CandidateList,NominationPayments,division,candidateCount,user_role } = this.props;
+      debugger;
       const rows = this.state.nominations;
       const CandidateRow = (props) => {
         const { classes, candidate } = props;
@@ -163,7 +164,7 @@ class CustomizedTable extends React.Component {
                         <ListItemIcon>
                             <MoneyIcon/>
                         </ListItemIcon>
-                        <ListItemText primary={"Rs "+NominationPayments.depositAmount} secondary="Security Deposit Amount"/>
+                        <ListItemText primary={"Rs "+NominationPayments.amount} secondary="Security Deposit Amount"/>
                     </ListItem>
                     {/* <ListItem>
                         <ListItemIcon>
