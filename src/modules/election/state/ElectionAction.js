@@ -10,9 +10,9 @@ import {
     ELECTION_REVIEW_DATA,
     ON_ELECTION_APPROVAL_CHANGE,
     SNACK_BAR_MESSAGE_LOADED,
-    GET_APPROVE_ELECTIONS,
-    GET_PENDING_ELECTIONS,
-    GET_REJECTED_ELECTIONS
+    GET_ALL_ELECTIONS,
+    RECEIVE_PENDING_ELECTION,
+    RECEIVE_APPROVED_ELECTION
 } from "./ElectionTypes";
 import { API_BASE_URL } from "../../../config.js";
 import axios from "axios";
@@ -148,87 +148,31 @@ export function getElectionModules() {
 }
 
 //Get approve elections
-const approveElectionLoaded = (getApproveElections) => {
+// change this name after completeing this function
+const allElectionLoaded = (getAllElections) => {
     return {
-        type: GET_APPROVE_ELECTIONS,
-        payload: getApproveElections,
+        type: GET_ALL_ELECTIONS,
+        payload: getAllElections,
     };
 };
 
-export function getApproveElections() {
+export function getAllElections() {
     return function (dispatch) {
 
         const response = axios
             .get(
-                `${API_BASE_URL}/elections/status/APPROVE`,
+                `${API_BASE_URL}/elections`,
             )
             .then(response => {
-                const getApproveElections = response.data;
+                const getAllElections = response.data;
+                debugger
                 dispatch(
-                    approveElectionLoaded(getApproveElections)
+                    allElectionLoaded(getAllElections)
                 );
             }).catch(err => {
-                const getApproveElections = [];
+                const getAllElections = [];
                 dispatch(
-                    approveElectionLoaded(getApproveElections)
-                );
-                console.log(err)
-            });
-    };
-}
-//Get pending elections
-const pendingElectionLoaded = (getPendingElections) => {
-    return {
-        type: GET_PENDING_ELECTIONS,
-        payload: getPendingElections,
-    };
-};
-
-export function getPendingElections() {
-    return function (dispatch) {
-
-        const response = axios
-            .get(
-                `${API_BASE_URL}/elections/status/PENDING`,
-            )
-            .then(response => {
-                const getPendingElections = response.data;
-                dispatch(
-                    pendingElectionLoaded(getPendingElections)
-                );
-            }).catch(err => {
-                const getPendingElections = [];
-                dispatch(
-                    pendingElectionLoaded(getPendingElections)
-                );
-                console.log(err)
-            });
-    };
-}
-//Get rejected elections
-const rejectedElectionLoaded = (getRejectedElections) => {
-    return {
-        type: GET_REJECTED_ELECTIONS,
-        payload: getRejectedElections,
-    };
-};
-
-export function getRejectedElections() {
-    return function (dispatch) {
-
-        const response = axios
-            .get(
-                `${API_BASE_URL}/elections/status/REJECT`,
-            )
-            .then(response => {
-                const getRejectedElections = response.data;
-                dispatch(
-                    rejectedElectionLoaded(getRejectedElections)
-                );
-            }).catch(err => {
-                const getRejectedElections = [];
-                dispatch(
-                    rejectedElectionLoaded(getRejectedElections)
+                    allElectionLoaded(getAllElections)
                 );
                 console.log(err)
             });
@@ -317,6 +261,13 @@ export const setPostCallElectionData = (val) => {
     }
 }
 
+export function receivePendingElection (pendingElection) {
+    return {
+        type: RECEIVE_PENDING_ELECTION,
+        payload: pendingElection
+    }
+}
+
 
 export function postCallElectionData(CallElectionData, electionData) {
 
@@ -326,7 +277,7 @@ export function postCallElectionData(CallElectionData, electionData) {
     let allElectionData = {
         "name":CallElectionData.electionName,
         "module_id":CallElectionData.electionModule,
-
+        "status":'PENDING',
         "created_by":"admin",
         "created_at":Date.parse(newDate),
         "updated_at":Date.parse(newDate),
@@ -360,7 +311,7 @@ export function postCallElectionData(CallElectionData, electionData) {
         "nominationAllowData": CallElectionData.rowData
 
     }
-debugger;
+
     return function (dispatch) {
         const response = axios
             .post(
@@ -369,7 +320,10 @@ debugger;
             )
             .then(response => {
                 console.log("response.data", response.data);
+                debugger;
                 dispatch(setPostCallElectionData(response));
+
+                dispatch(receivePendingElection(allElectionData));
             }).catch(err => {
                 console.log(err)
             });
@@ -472,9 +426,15 @@ export const onChangeApprovalData = (electionApprovals) => {
       payload: electionApprovals,
     }
   };
+
+  export function receiveApprovedElection (electionApprovals) {
+    return {
+        type: RECEIVE_APPROVED_ELECTION,
+        payload: electionApprovals
+    }
+}
   
   export function onChangeApproval(electionId,status) {
-    debugger;
     return function (dispatch) {
       let electionApprovals = {
         updatedAt: Date.parse(new Date()),
@@ -490,6 +450,8 @@ export const onChangeApprovalData = (electionApprovals) => {
       )
       .then(response => {
          dispatch(onChangeApprovalData(response.data));
+         dispatch(receiveApprovedElection(electionApprovals));
+
       }).catch(err => {
             console.log(err)
       });

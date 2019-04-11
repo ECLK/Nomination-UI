@@ -10,9 +10,9 @@ import {
     ELECTION_REVIEW_DATA,
     ON_ELECTION_APPROVAL_CHANGE,
     SNACK_BAR_MESSAGE_LOADED,
-    GET_APPROVE_ELECTIONS,
-    GET_PENDING_ELECTIONS,
-    GET_REJECTED_ELECTIONS
+    GET_ALL_ELECTIONS,
+    RECEIVE_PENDING_ELECTION,
+    RECEIVE_APPROVED_ELECTION
 } from "./ElectionTypes";
 import { REQUEST_STATE } from "../../../lib/request_redux_state";
 import update from 'immutability-helper';
@@ -36,12 +36,16 @@ const initialState = {
     PostedCallElectionData: [],
     ElectionReviewData:[],
     snackBarMsg:[],
-    ApprovedElections:[],
-    PendingElections:[],
-    RejectedElections:[]
+    AllElections:[]
 };
 
-
+const findIndex = (AllElections, id) => {
+    return AllElections.findIndex(x => x.id === id);
+  };
+  
+  function findApprovalIndex(AllElections, id) {
+    return AllElections.findIndex(x => x.id === id);
+  }
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
@@ -97,21 +101,26 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 snackBarMsg: action.payload
             };
-        case GET_APPROVE_ELECTIONS:
+        case GET_ALL_ELECTIONS:
             return {
                 ...state,
-                ApprovedElections: action.payload
-            }; 
-        case GET_PENDING_ELECTIONS:
+                AllElections: action.payload
+            };
+        case RECEIVE_PENDING_ELECTION:
             return {
                 ...state,
-                PendingElections: action.payload
-            }; 
-        case GET_REJECTED_ELECTIONS:
+                AllElections: [
+                    ...state.AllElections,
+                    action.payload
+                ]
+            };    
+        case RECEIVE_APPROVED_ELECTION:
+            const AllElections = state.AllElections;
+            const index = findApprovalIndex(AllElections, action.payload.electionId);
             return {
                 ...state,
-                RejectedElections: action.payload
-            };   
+                AllElections: update(AllElections, {[index]: {status: {$set: action.payload.status}}})
+            } 
     }
     return state;
 }
