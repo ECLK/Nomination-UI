@@ -11,7 +11,9 @@ import {
   UPDATE_NOMINATION_PAYMENTS,
   POST_NOMINATION_SUPPORT_DOC,
   APPROVED_ELECTIONS,
-  PARTY_LIST_LOADED
+  PARTY_LIST_LOADED,
+  GET_NOMINATION_LIST,
+  RECEIVE_NOMINATION_STATUS
 
 } from "./NominationTypes";
 import {API_BASE_URL} from "../../../config.js";
@@ -344,7 +346,6 @@ export const setData = (val) => {
 }
 
 export function postNominationPayments(candidatePayments,candidateCount) {
-  debugger;
     return function (dispatch) {
 
         let nominationPayments = {
@@ -378,12 +379,20 @@ export function postNominationPayments(candidatePayments,candidateCount) {
         payload: val
     }
 }
+export const setNominationStatus = (nominationSuppertDocs) => {
+  return {
+      type: RECEIVE_NOMINATION_STATUS,
+      payload: nominationSuppertDocs
+  }
+}
 
-  export function postNominationSupportDocs(nominationSuppertDocs) {
-   
+
+  export function postNominationSupportDocs(nominationSuppertDocs,divisionId) {
+   debugger;
     var nominationSuppertDocs = {
       nominationId:nominationSuppertDocs.nominationId,
-      candidateSupportDocs:nominationSuppertDocs.supportdoc
+      candidateSupportDocs:nominationSuppertDocs.supportdoc,
+      divisionId:divisionId
     }
     return function (dispatch) {
        
@@ -394,6 +403,8 @@ export function postNominationPayments(candidatePayments,candidateCount) {
       )
       .then(response => {
          dispatch(setSupportDocData(response.data));
+         dispatch(setNominationStatus(nominationSuppertDocs));
+        debugger;
       }).catch(err => {
             console.log(err)
       });
@@ -464,8 +475,37 @@ export function deleteNominationCandidate(customProps) {
   }
 //--------------- End of Delete Nomination Candidate -------------
 
+//--------------- Start of get nomination list -------------------
+const nominationListLoaded = (getNominationList) => {
+  return {
+    type: GET_NOMINATION_LIST,
+    payload: getNominationList,
+  };
+};
 
+export function getNominationList() {
+  return function (dispatch) {
+     
+    const response = axios
+    .get(
+      `${API_BASE_URL}/elections/${sessionStorage.getItem('election_id')}/teams/1111/divisions`,
+    )
+    .then(response => {
+      const getNominationList = response.data;
+       dispatch(
+         nominationListLoaded(getNominationList)
+         );
+    }).catch(err => {
+      const getNominationList = [];
+      dispatch(
+        nominationListLoaded(getNominationList)
+        );
+          console.log(err)
+    });
+  };
+}
 
+//--------------- End of get nomination list---------------------------
 
 
 

@@ -113,6 +113,7 @@ class Dashboard extends React.Component {
           customProps={this.props.location.state.id}
           nominationStatus={this.props.location.state.status}
           division={this.props.location.state.division}
+          divisionId={this.props.location.state.divisionId}
           candidateCount={this.props.location.state.candidateCount}
           title="Election Commission of Sri Lanka"
         />

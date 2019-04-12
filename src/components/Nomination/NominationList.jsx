@@ -13,6 +13,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux';
+import { getNominationList } from '../../modules/nomination/state/NominationAction';
+
 
 
 const styles = theme => ({
@@ -94,11 +97,8 @@ const styles = theme => ({
 		};
 
 		componentWillMount() {
-			axios.get(`elections/${sessionStorage.getItem('election_id')}/teams/1111/divisions`)
-				.then(res => {
-					const division = res.data;
-					this.setState({ division });
-			});
+			const {getNominationList} = this.props;
+			getNominationList();
 	}
 
 	redirectToTarget = (id) => {
@@ -106,15 +106,15 @@ const styles = theme => ({
 	}
 
 	render() {
-		const { classes } = this.props;
+		const { classes,division } = this.props;
 		const {props} = this;
 		const { expanded } = this.state;
-
+debugger;
 
 		return (
 			<div className={classes.root}>
 				{
-					this.state.division.map((division, index) =>
+					division.map((division, index) =>
 						<ExpansionPanel key={index} expanded={expanded === 'panel' + division.code} onChange={this.handleChange('panel' + division.code)}>
 							{division.nomination.map((nomination) => (
 							<ExpansionPanelSummary style={nomination.status === 'SUBMIT' ? {backgroundColor: '#b368c9'} : nomination.status === 'NEW' ? {backgroundColor: '#e9dced'} : {backgroundColor: '#e1b3ef'}} expandIcon={<ExpandMoreIcon />}>
@@ -151,7 +151,7 @@ const styles = theme => ({
 									}
 									{
 										division.nomination.length > 0 &&
-										<Link style={{ textDecoration: 'none' }} to={{ pathname: "nomination", state: { id: nomination.id,status: nomination.status,division: division.name,candidateCount:division.noOfCandidates }}}  >
+										<Link style={{ textDecoration: 'none' }} to={{ pathname: "nomination", state: { id: nomination.id,status: nomination.status,divisionId: division.id,division: division.name,candidateCount:division.noOfCandidates }}}  >
 										<Button variant="contained" color="primary"  className={classes.button} >{nomination.status === 'SUBMIT' ? 'VIEW' : nomination.status === 'NEW' ? 'CREATE' : 'EDIT'}</Button>
 										</Link>
 									}
@@ -175,4 +175,15 @@ ControlledExpansionPanels.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ControlledExpansionPanels);
+const mapStateToProps = ({Nomination}) => {
+	const {getNominationList} = Nomination;
+	const division = Nomination.nominationList;
+	
+	return {division,getNominationList};
+  };
+  
+  const mapActionsToProps = {
+	getNominationList,
+  };
+
+  export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(ControlledExpansionPanels));

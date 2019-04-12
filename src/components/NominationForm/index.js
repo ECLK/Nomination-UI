@@ -23,7 +23,6 @@ import moment from 'moment';
 import { Redirect } from 'react-router-dom';
 import {API_BASE_URL} from "../../config.js";
 import Axios from 'axios';
-// import Notifier, { openSnackbar } from '../Notifier';
 import axios from "axios";
 
 
@@ -81,20 +80,20 @@ class NominationForm extends React.Component {
       depositAmount:'',
       amount:'',
       depositeDate:'',  
-        filePath:'upload',
-        status:'PENDING',
-        nominationId:this.props.customProps,
-        payments:[],
-        allowedTypes,
-        allowedSize,
-        multiple,
-        status: "ready",
-        filename:'',
-        supportDocId:'3',
-        supportdoc:[],
-        currentSdocId:'',
-        goToHome: false,
-        election:{}
+      filePath:'upload',
+      status:'PENDING',
+      nominationId:this.props.customProps,
+      payments:[],
+      allowedTypes,
+      allowedSize,
+      multiple,
+      status: "ready",
+      filename:'',
+      supportDocId:'3',
+      supportdoc:[],
+      currentSdocId:'',
+      goToHome: false,
+      election:{}
     }    
   }
 
@@ -249,13 +248,6 @@ class NominationForm extends React.Component {
     });   
   };
 
-  // handleReset = event => {
-  //   debugger;
-  //   this.setState({
-  //           // [name]:event.target.value,
-  //   });   
-  // };
-
   handleRese(event){
     console.log("fds",event.target.ref);
     debugger;
@@ -352,9 +344,8 @@ class NominationForm extends React.Component {
   
 
   handleNext = () => {
-    const {postNominationPayments,updateNominationPayments,NominationPayments, nominationStatus,openSnackbar, customProps,postNominationSupportDocs,candidateCount,NominationCandidates}=this.props;
+    const {postNominationPayments,divisionId,division,updateNominationPayments,NominationPayments, nominationStatus,openSnackbar, customProps,postNominationSupportDocs,candidateCount,NominationCandidates}=this.props;
     let activeStep;
-   
     if (this.isLastStep() && !this.allStepsCompleted()) {
       // It's the last step, but not all steps have been completed,
       // find the first step that has been completed
@@ -373,7 +364,7 @@ class NominationForm extends React.Component {
          'Please complete the nomination form for all candidates before submission' });
         }else{
           openSnackbar({ message: 'The nomination form has been submitted successfully' });
-         postNominationSupportDocs(this.state);   
+         postNominationSupportDocs(this.state,divisionId);   
          this.setState({
            goToHome: true
        });
