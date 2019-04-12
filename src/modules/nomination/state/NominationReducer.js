@@ -11,7 +11,9 @@ import {
   DELETE_NOMINATION_CANDIDATE,
   POST_NOMINATION_SUPPORT_DOC,
   APPROVED_ELECTIONS,
-  PARTY_LIST_LOADED
+  PARTY_LIST_LOADED,
+  GET_NOMINATION_LIST,
+  RECEIVE_NOMINATION_STATUS
 } from "./NominationTypes";
 
 const initialState = {
@@ -25,16 +27,24 @@ const initialState = {
   getNominationCandidateDeleted:[],
   approveElections:[],
   nominationStatus:[],
-  partyList:[]
+  partyList:[],
+  nominationList:[]
 };
 
 const findIndex = (nominations, id) => {
   return nominations.findIndex(x => x.nomination_id === id);
 };
-
 function findApprovalIndex(nominations, id) {
   return nominations.findIndex(x => x.id === id);
 }
+function findNominationIndex(nomination, id) {
+  return nomination.findIndex(x => x.id === id);
+}
+function findDivisionIndex(nominationList, id) {
+  return nominationList.findIndex(x => x.id === id);
+}
+
+
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -101,7 +111,29 @@ export default function reducer(state = initialState, action) {
         ...state,
         partyList: action.payload
       }; 
-      
+    case RECEIVE_NOMINATION_STATUS:
+      const nominationList = state.nominationList;
+      const index2 = findDivisionIndex(nominationList, action.payload.divisionId);
+      const nomination = nominationList[index2].nomination;
+      const index3 = findNominationIndex(nomination, action.payload.nominationId);
+      return {
+        ...state,
+        nominationList: nominationList.map((nomination, nominationIndex) => {
+          if (nominationIndex === index2) {
+            return {
+              ...nominationList[index2],
+              nomination: update(nominationList[index2].nomination, {[index3]: {status: {$set: 'SUBMIT'}}})
+            }
+          } else {
+            return nomination
+          }
+        })
+      } 
+    case GET_NOMINATION_LIST:
+      return {
+        ...state,
+        nominationList: action.payload
+      };  
 
   }
   return state;
