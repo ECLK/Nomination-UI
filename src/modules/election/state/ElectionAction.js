@@ -55,22 +55,33 @@ export function loadElections() {
 
         // un comment this and remove below Promise when backend is implemented
         // return axios.get(
-        //     `${API_BASE_URL}/elections`
+        //     `${API_BASE_URL}/elections/status/${'APPROVE'}`,
         // ).then(response => {
-        //     dispatch(paymentsLoadSuccess(response))
+        //     dispatch(electionsLoadSuccess(response))
         // });
 
-        const elections = [{
-            "election_id": "32d250c8-b6b0-4aa6-9b14-4817dbb268d9",
-            "election_name": "2019 Parliamentary",
-        }, {
-            "election_id": "a93b50c8-b6b0-4aa6-9b14-4817dbb268d9",
-            "election_name": "2020 Provincial",
-        }];
+        const response = axios
+        .get(
+          `${API_BASE_URL}/elections/status/${'APPROVE'}`,
+        )
+        .then(response => {
+          const approveElections = response.data;
+           dispatch(electionsLoadSuccess(approveElections));
+        }).catch(err => {
+              console.log(err)
+        });
 
-        return new Promise(resolve =>
-            setTimeout(resolve, 1000)
-        ).then(_ => dispatch(electionsLoadSuccess(elections)));
+        // const elections = [{
+        //     "election_id": "32d250c8-b6b0-4aa6-9b14-4817dbb268d9",
+        //     "election_name": "2019 Parliamentary",
+        // }, {
+        //     "election_id": "a93b50c8-b6b0-4aa6-9b14-4817dbb268d9",
+        //     "election_name": "2020 Provincial",
+        // }];
+
+        // return new Promise(resolve =>
+        //     setTimeout(resolve, 1000)
+        // ).then(_ => dispatch(electionsLoadSuccess(elections)));
 
     }
 }

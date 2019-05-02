@@ -1,5 +1,8 @@
 import {loadElections} from "../../election/state/ElectionAction";
-import {PAYMENT_LOAD_SUCCESS, PAYMENTS_LOADING, TOGGLE_PAYMENT} from './PaymentTypes'
+import {PAYMENT_LOAD_SUCCESS, PAYMENTS_LOADING, TOGGLE_PAYMENT,UPDATE_PAYMENT_NOTE,ON_PAYMENT_NOTES_CHANGE} from './PaymentTypes'
+import {API_BASE_URL} from "../../../config.js";
+import axios from "axios";
+import { openSnackbar } from '../../election/state/ElectionAction';
 
 function paymentsLoadSuccess(payments) {
     return {
@@ -9,7 +12,6 @@ function paymentsLoadSuccess(payments) {
 }
 
 export function loadPayments(electionId) {
-
     return function (dispatch) {
 
         dispatch({
@@ -17,61 +19,99 @@ export function loadPayments(electionId) {
             id: electionId
         });
 
-        // return axios.get(
-        //     `${API_BASE_URL}/payments/${electionId}`
-        // ).then(response => {
-        //     dispatch(paymentsLoadSuccess({[electionId]: response}));
-        // });
+        const response = axios
+        .get(
+          `${API_BASE_URL}/elections/${electionId}/payments`,
+        )
+        .then(response => {
+           dispatch(paymentsLoadSuccess(response.data));
+        }).catch(err => {
+              console.log(err)
+        });
 
-        const payments = {
-            [electionId]: [{
-                nomination_id: "8ed2e77d-db11-4e69-83a2-3c005ebb3d40",
-                payment_id: "2ac00a0a-a442-4288-9cc1-39afcc164b39",
-                depositor: "Kamal Silva",
-                deposit_id: "LL002",
-                deposit_amount: "15000.00",
-                deposit_date: "2018-12-25",
-                attachment: "attachment",
-                payment_status: "pending",
-                approved_by:"",
-                note: "comment",
-            }, {
-                nomination_id: "49adf940-3f21-43f0-86e5-a3d8b881a0e6",
-                payment_id: "ef27c322-9766-4345-94c0-eb75c12472cd",
-                depositor: "Manu Perera",
-                deposit_id: "LL003",
-                deposit_amount: "13000.00",
-                deposit_date: "2018-11-23",
-                attachment: "attachment",
-                payment_status: "paid",
-                approved_by:"Approved By : Kamal Perera (Payment Review Officer)",
-                note: "comment",
-            }, {
-                nomination_id: "49adf940-3f21-43f0-86e5-a3d8b881a066",
-                payment_id: "ef27c322-9766-4345-94c0-eb75c124727d",
-                depositor: "Nimal Frenando",
-                deposit_id: "SB003",
-                deposit_amount: "13000.00",
-                deposit_date: "2018-11-21",
-                attachment: "attachment",
-                payment_status: "paid",
-                approved_by:"Approved By : Kamal Perera (Payment Review Officer)",
-                note: "comment",
-            }]
-        };
-
-        return new Promise(resolve =>
-            setTimeout(resolve, 1000)
-        ).then(_ => dispatch(paymentsLoadSuccess(payments)));
     };
 }
 
-export function togglePayment(electionId, paymentId) {
-
+export const onChangeApprovalData = (paymentApprovals) => {
     return {
-        type: TOGGLE_PAYMENT,
-        payload: {electionId, paymentId}
+      type: TOGGLE_PAYMENT,
+      payload: paymentApprovals,
+    }
+  };
+  
+  export function togglePayment(payment_status,team_name,division_name,status,paymentId) {
+    return function (dispatch) {
+      let paymentApprovals = {
+        status: status
+      };
+      
+      const response = axios
+      .put(
+        `${API_BASE_URL}/elections/${paymentId}/payments`,
+            {...paymentApprovals}
+      )
+      .then(response => {
+         dispatch(onChangeApprovalData(response.data));
+         const payment_status_new = (payment_status==='PENDING') ? 'Payment Received for ' : 'Payment Pending for '
+         dispatch(openSnackbar({ message:  payment_status_new + team_name +' - '+ division_name + ' Division' }));
+      }).catch(err => {
+            console.log(err)
+      });
     };
-}
+  }
 
+  export const savePaymentNote = (data) => {
+    return {
+      type: UPDATE_PAYMENT_NOTE,
+      payload: data,
+    }
+  };
+  
+  export function SavePaymentNote(team_name,division_name,Id,note) {
+    return function (dispatch) {
+      let paymentNote = {
+        note: note
+      };
+      
+      const response = axios
+      .put(
+        `${API_BASE_URL}/elections/${Id}/paymentNote`,
+            {...paymentNote}
+      )
+      .then(response => {
+         dispatch(savePaymentNote(response.data));
+         dispatch(openSnackbar({ message:  'Comment has been saved for ' + team_name +' - '+ division_name + ' Division' }));
+         
+      }).catch(err => {
+            console.log(err);
+            // dispatch(openSnackbar( {message:' Something went wrong'} ));
+            
+      });
+    };
+  }
+
+  // export const ChangePaymentNote = (data) => {
+  //   return {
+  //     type: UPDATE_PAYMENT_NOTE,
+  //     payload: data,
+  //   }
+  // };
+  
+  // export function handleNoteChange(Id,note) {
+  //   return function (dispatch) {
+  //     let paymentNote = {
+  //       note: note
+  //     };
+      
+  //        dispatch(ChangePaymentNote(paymentNote));
+  
+  //   };
+  // }
+  export const onChangePaymentNotes = (id, note) => {
+    return {
+      type: ON_PAYMENT_NOTES_CHANGE,
+      payload: {id, note},
+    }
+  };
+  
 

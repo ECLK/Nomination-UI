@@ -27,6 +27,9 @@ import { EligibilityCheckList } from './Fixtures';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import NumberFormat from 'react-number-format';
+
 import _ from 'lodash';
 
 
@@ -59,6 +62,8 @@ class ElectionConfig extends React.Component {
         divisions: [],
         eligibilityCheckList: [],
         selectedAuthority: '',
+        electionConfig:[],
+        showAmount:false
     };
 
     constructor(){
@@ -68,62 +73,189 @@ class ElectionConfig extends React.Component {
         this.handleEligibility = this.handleEligibility.bind(this);
     }
 
-    handleChange(event) {
-        debugger;
+    showAmount(event){
+        const newElectionModule = {...this.props.electionModule};
+
         if(event && event.target ){
             const target = event.target;
             const value = target.type === 'checkbox' ? target.checked : target.value;
             const name = target.name;
-        
-            this.props.electionChanged({ ...this.props.electionModule, [name]: value });
+            if(value==='No'){
+                newElectionModule.electionConfig.map((item,index) => (
+                    (item.electionModuleConfigId==='123213') ?
+                    newElectionModule.electionConfig.splice(index, 1) : ''
+                ));
+            }
+            (name==='fe2c2d7e-66de-406a-b887-1143023f8e72' && value==='Yes') ? this.setState({ showAmount: true }) : this.setState({ showAmount: false })
         }
     }
 
-    handleNominationSubmission(value, event) {
+    handleChangeAmount = name => event => {
         const newElectionModule = {...this.props.electionModule};
+        // this.setState({ [name]: event.target.value });
+        const electionConf = {
+            electionModuleConfigId: name,
+            value: event.target.value
+        }
+        newElectionModule.electionConfig.map((item,index) => (
+            (item.electionModuleConfigId===electionConf.electionModuleConfigId) ?
+            newElectionModule.electionConfig.splice(index, 1) : ''
+        ));
+        newElectionModule.electionConfig.push(electionConf);
+        this.props.electionChanged(newElectionModule); 
+
+      };
+
+    handleChange(event) {
+        if(event && event.target ){
+            console.log(this.refs);
+            const newElectionModule = {...this.props.electionModule};
+            const target = event.target;
+            const value = target.type === 'checkbox' ? target.checked : target.value;
+            const name = target.name;
+            const electionConf = {
+                electionModuleConfigId: name,
+                value: value,
+            }
+            const electionConfig = this.state.electionConfig;
+
+
+            newElectionModule.electionConfig.map((item,index) => (
+                (item.electionModuleConfigId===electionConf.electionModuleConfigId) ?
+                newElectionModule.electionConfig.splice(index, 1) : ''
+            ));
+
+            newElectionModule.electionConfig.map((item,index) => (
+                (item.electionModuleConfigId===electionConf.electionModuleConfigId) ?
+                electionConfig.splice(index, 1) : ''
+            ));
+
+
+            newElectionModule.electionConfig.push(electionConf);
+            electionConfig.push(electionConf);
+            this.props.electionChanged(newElectionModule); 
+            this.setState({electionConfig , electionModuleConfigId:"", value:""});
+            // this.props.electionChanged({ ...this.props.electionModule, [name]: value });
+        }
+    }
+
+    handleNominationSubmission(value,name, event) {
+        const newElectionModule = {...this.props.electionModule};
+        const electionConf = {
+            electionModuleConfigId: name,
+            value: value,
+        }
         if(event.target.checked){
-            newElectionModule.nominationSubmission.push(value);
+            newElectionModule.electionConfig.push(electionConf);
         }else{
-            newElectionModule.nominationSubmission = _.remove(newElectionModule.nominationSubmission, (element)=>{
-                return element !== value;
-            });
+          
+            this.props.electionModule.electionConfig.map((item,index) => (
+                (item.value===electionConf.value) ?
+                newElectionModule.electionConfig.splice(index, 1) : ''
+            ));
+
+            
         }
         this.props.electionChanged(newElectionModule); 
     }
 
+    // handleEligibility(row, event) {
+    //     const newElectionModule = {...this.props.electionModule};
+    //     if(event.target.checked){
+    //         newElectionModule.eligibilityCheckList[row.value] = true;
+    //     }else{
+    //         delete newElectionModule.eligibilityCheckList[row.value];
+    //     }
+    //     this.props.electionChanged(newElectionModule);
+    // }
     handleEligibility(row, event) {
         const newElectionModule = {...this.props.electionModule};
-        if(event.target.checked){
-            newElectionModule.eligibilityCheckList[row.value] = true;
-        }else{
-            delete newElectionModule.eligibilityCheckList[row.value];
+        const eligibilityConf = {
+            eligibilityId: row.value,
         }
-        this.props.electionChanged(newElectionModule);
+        if(event.target.checked){
+            newElectionModule.eligibilityCheckList.push(eligibilityConf);
+        }else{
+            this.props.electionModule.eligibilityCheckList.map((item,index) => (
+                (item.eligibilityId===eligibilityConf.eligibilityId) ?
+                newElectionModule.eligibilityCheckList.splice(index, 1) : ''
+            ));    
+        }
+        this.props.electionChanged(newElectionModule); 
     }
+
+    NumberFormatCustom(props) {
+        const { inputRef, onChange, ...other } = props;
+      
+        return (
+          <NumberFormat
+            {...other}
+            getInputRef={inputRef}
+            onValueChange={values => {
+              onChange({
+                target: {
+                  value: values.value,
+                },
+              });
+            }}
+            thousandSeparator
+            prefix="Rs "
+          />
+        );
+      }
 
     render() {
         const classes = styles();
 
         const electionModule = this.props.electionModule;
-        electionModule.eligibilityCheckList = {...electionModule.eligibilityCheckList};
-        let authority = this.state.authority;
+        // electionModule.eligibilityCheckList = {...electionModule.eligibilityCheckList};
+        // let authority = this.props.electionModule['authority'];
+        
+        let authority='';
+        let calType='';
+        let SecurityDeposit='';
+        let depositAmount='';
+        let Objections='';
+        let CreateAlliance='';
 
+        this.props.electionModule.electionConfig.map(item => {
+            if(item.electionModuleConfigId==='2353453'){
+                authority=item.value
+            }
+            if(item.electionModuleConfigId==='15990459-2ea4-413f-b1f7-29a138fd7a97'){
+                calType=item.value
+            }
+            if(item.electionModuleConfigId==='fe2c2d7e-66de-406a-b887-1143023f8e72'){
+                SecurityDeposit=item.value
+            }
+            if(item.electionModuleConfigId==='123213'){
+                depositAmount=item.value
+            }
+            if(item.electionModuleConfigId==='253454355'){
+                Objections=item.value
+            }
+            if(item.electionModuleConfigId==='142343242343'){
+                CreateAlliance=item.value
+            }
+            
+        });
+        if (!authority) {
+            authority = authorities.length > 0 && authorities[0].authority_id;
+        }
 
     const menuItems = authorities.map(authority => (
         <MenuItem value={authority.authority_id}>{authority.name}</MenuItem>));
         return (
             <div className={classes.root}>
-
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
                         <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="authority">Authority</InputLabel>
                             <Select
-                                style={{width:'200px'}}
-                                value={this.state.authority}
+                                value={authority}
                                 onChange={this.handleChange}
                                 inputProps={{
-                                name: 'authority',
+                                name: '2353453',
                                 id: 'authority',
                                 }}
                             >
@@ -131,17 +263,17 @@ class ElectionConfig extends React.Component {
 
                             </Select>
                             {/* <Input id="authority" name="authority" value={this.state.authority} onChange={this.handleChange} /> */}
-                        </FormControl>
+                        </FormControl> 
                     </Grid>
                     <Grid item xs={12}>
                         <FormControl component="fieldset">
                             <FormLabel component="legend">Calculation Type</FormLabel>
                             <RadioGroup
                                 aria-label="Gender"
-                                name="CalculationType"
+                                name="15990459-2ea4-413f-b1f7-29a138fd7a97"
                                 className={classes.group}
                                 onChange={this.handleChange}
-                                value={this.props.electionModule['CalculationType']}
+                                value={calType}
                                 row
                             >
                                 <FormControlLabel control={<Radio />} value="pure_vote_based" label="Pure vote-based" />
@@ -161,8 +293,9 @@ class ElectionConfig extends React.Component {
                                 <FormControlLabel 
                                     control={
                                         <Checkbox 
-                                            checked={this.props.electionModule.nominationSubmission.includes('Party Secretory')}
-                                            onChange={(e)=>{this.handleNominationSubmission('Party Secretory', e);}} 
+                                            // checked={this.props.electionModule.electionConfig.includes('Party Secretory')}
+                                            checked={this.props.electionModule.electionConfig.some( nominationSubmit => nominationSubmit['value'] === 'Party Secretory' )}
+                                            onChange={(e)=>{this.handleNominationSubmission('Party Secretory','1243123', e);}} 
                                         />
                                     }
                                     label="Party Secretory"
@@ -170,8 +303,9 @@ class ElectionConfig extends React.Component {
                                 <FormControlLabel
                                     control={
                                         <Checkbox  
-                                            checked={this.props.electionModule.nominationSubmission.includes('Independent Group Leader')} 
-                                            onChange={(e)=>{this.handleNominationSubmission('Independent Group Leader', e);}}
+                                            // checked={this.props.electionModule.nominationSubmission.includes('Independent Group Leader')} 
+                                            checked={this.props.electionModule.electionConfig.some( nominationSubmit => nominationSubmit['value'] === 'Independent Group Leader' )}
+                                            onChange={(e)=>{this.handleNominationSubmission('Independent Group Leader','1243123', e);}}
                                         />
                                     }
                                     label="Independent Group Leader"
@@ -184,10 +318,11 @@ class ElectionConfig extends React.Component {
                             <FormLabel component="legend">Security Deposit</FormLabel>
                             <RadioGroup
                                 aria-label="Gender"
-                                name="SecurityDeposit"
+                                name="fe2c2d7e-66de-406a-b887-1143023f8e72"
                                 className={classes.group}
-                                value={this.props.electionModule['SecurityDeposit']}
+                                value={SecurityDeposit}
                                 onChange={this.handleChange}
+                                onClick={this.showAmount.bind(this)}
                                 row
                             >
                                 <FormControlLabel
@@ -206,15 +341,33 @@ class ElectionConfig extends React.Component {
                                 />
                             </RadioGroup>
                         </FormControl>
+                        <Grid item lg={3}>
+                    {
+                        this.state.showAmount ?
+                    <TextField
+                            id="formatted-numberformat-input"
+                            label="Security Deposit Amount"
+                            className={classes.textField}
+                            prefix={'Rs '}
+                            value={depositAmount}
+                            onChange={this.handleChangeAmount('123213')}
+                            margin="normal"
+                            InputProps={{
+                                inputComponent: this.NumberFormatCustom,
+                              }}
+                        /> : ''
+                    }
+                    </Grid> 
                     </Grid>
+                   
                     <Grid item xs={12}>
                         <FormControl component="fieldset">
                             <FormLabel component="legend">Objections</FormLabel>
                             <RadioGroup
                                 aria-label="Objections"
-                                name="Objections"
+                                name="253454355"
                                 className={classes.group}
-                                value={this.props.electionModule['Objections']}
+                                value={Objections}
                                 onChange={this.handleChange}
                                 row
                             >
@@ -240,9 +393,9 @@ class ElectionConfig extends React.Component {
                             <FormLabel component="legend">Create Alliance</FormLabel>
                             <RadioGroup
                                 aria-label="Create Alliance"
-                                name="CreateAlliance"
+                                name="142343242343"
                                 className={classes.group}
-                                value={this.props.electionModule['CreateAlliance']}
+                                value={CreateAlliance}
                                 onChange={this.handleChange}
                                 row
                             >

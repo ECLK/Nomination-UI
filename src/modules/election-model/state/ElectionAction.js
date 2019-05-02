@@ -132,7 +132,6 @@ export const saveElection = function saveElection(election) {
 }
 
 export const submitElection = function saveElection(election) {
-
     let allElectionModuleData = {
         "name": election.name,
         "id": "1268362183761283718236",
@@ -177,6 +176,7 @@ export const submitElection = function saveElection(election) {
         }
     ],
     }
+    debugger;
 
     return function (dispatch) {
         const response = axios
