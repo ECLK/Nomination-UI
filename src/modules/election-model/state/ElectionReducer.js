@@ -14,10 +14,13 @@ const initialState = {
     ApprovedElectionModules:[],
     new_election_module: { 
         name: "" ,
-        nominationSubmission: [],
-        eligibilityCheckList: {},
+        // nominationSubmission: [],
+        eligibilityCheckList: [],
         candidateFormConfiguration: [],
         supportingDocuments: [],
+        divisionConfig:[],   
+        electionConfig:[]
+
     }
 };
 

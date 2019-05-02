@@ -50,6 +50,7 @@ class CreateElection extends React.Component {
         goToHome: false,
         candidateConfigs: [],
         candidateSupportingDocs: [],
+        divisions: []
     };
 
     constructor() {

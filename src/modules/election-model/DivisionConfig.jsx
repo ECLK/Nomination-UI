@@ -50,28 +50,35 @@ class DivisionConfig extends React.Component {
         this.props.electionChanged({ ...this.props.electionModule, [event.target.value]: event.target.checked });
     }
 
+    addDivision = () => {
+        const newElectionModule = {...this.props.electionModule};
+        const division = {
+            divisionCode: this.state.divisionCode,
+            divisionName: this.state.divisionName,
+            noOfCandidates: this.state.noOfCandidates
+        }
+        const divisions = this.state.divisions;
+        newElectionModule.divisionConfig.push(division);
+        divisions.push(division);
+        this.props.electionChanged(newElectionModule); 
+        this.setState({...this.state, divisions , divisionName:"", divisionCode:"", noOfCandidates:""});
+    }
+    removeDivision = (index) => () => {
+        const newElectionModule = {...this.props.electionModule};
+
+        const divisions = this.state.divisions;
+        newElectionModule.divisionConfig.splice(index, 1);
+        divisions.splice(index, 1);
+        this.props.electionChanged(newElectionModule); 
+        this.setState({...this.state, divisions});
+    }
+
     render() {
         const classes = styles();
         const handleChange = name => event => {
             this.setState({ ...this.state, [name]: event.target.value });
+            this.props.electionChanged({ ...this.props.electionModule, [name]: event.target.value });
         };
-
-        const addDivision = () => {
-            const division = {
-                code: this.state.code,
-                name: this.state.name,
-                noOfCandidates: this.state.noOfCandidates
-            }
-            const divisions = this.state.divisions;
-            divisions.push(division);
-            this.setState({...this.state, divisions , name:"", code:"", noOfCandidates:""});
-        }
-
-        const removeDivision = (index) => () => {
-            const divisions = this.state.divisions;
-            divisions.splice(index, 1);
-            this.setState({...this.state, divisions});
-        }
 
         return (
             <div className={classes.root}>
@@ -80,7 +87,7 @@ class DivisionConfig extends React.Component {
                     <Grid item xs={12}>
                         <FormControl className={classes.formControl}>
                             <InputLabel className={classes.textField} htmlFor="common-name">Division Common Name</InputLabel>
-                           <Input className={classes.textField} id="common-name" value={this.state.division} onChange={handleChange('division')} />
+                           <Input className={classes.textField} id="common-name" value={this.props.electionModule['divisionCommonName']} onChange={handleChange('divisionCommonName')} />
                            <FormHelperText>(e.g. Province)</FormHelperText>
                         </FormControl>
                     </Grid>
@@ -90,13 +97,13 @@ class DivisionConfig extends React.Component {
                     <Grid item xs={2}>
                         <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="common-name">Division Name </InputLabel>
-                            <Input id="common-name" value={this.state.name} onChange={handleChange('name')} />
+                            <Input id="common-name" value={this.state.divisionName} onChange={handleChange('divisionName')} />
                         </FormControl>
                     </Grid>
                     <Grid item xs={2}>
                         <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="common-name">Division Code</InputLabel>
-                            <Input id="common-name" value={this.state.code} onChange={handleChange('code')} />
+                            <Input id="common-name" value={this.state.divisionCode} onChange={handleChange('divisionCode')} />
                         </FormControl>
                     </Grid>
                     <Grid item xs={2}>
@@ -106,24 +113,24 @@ class DivisionConfig extends React.Component {
                         </FormControl>
                     </Grid>
                     <Grid item xs={6}>
-                        <IconButton variant="outlined" className={classes.button} aria-label="Delete" onClick={addDivision}>
+                        <IconButton variant="outlined" className={classes.button} aria-label="Delete" onClick={this.addDivision}>
                             <AddIcon />
                         </IconButton>
                     </Grid>
                     {
-                        this.state.divisions.map((element, index) => {
+                        this.props.electionModule.divisionConfig.map((element, index) => {
                             return (<React.Fragment>
                                 <Grid item xs={2}>
-                                    <Typography variant="body1" >{element.name}</Typography>
+                                    <Typography variant="body1" >{element.divisionName}</Typography>
                                 </Grid>
                                 <Grid item xs={2}>
-                                    <Typography variant="body1" >{element.code}</Typography>
+                                    <Typography variant="body1" >{element.divisionCode}</Typography>
                                 </Grid>
                                 <Grid item xs={2}>
                                     <Typography variant="body1" >{element.noOfCandidates}</Typography>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <IconButton variant="outlined" className={classes.button} aria-label="Delete" onClick={removeDivision(index)}>
+                                    <IconButton variant="outlined" className={classes.button} aria-label="Delete" onClick={this.removeDivision(index)}>
                                         <DeleteIcon />
                                     </IconButton>
                                 </Grid>
