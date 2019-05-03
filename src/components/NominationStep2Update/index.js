@@ -100,7 +100,7 @@ class NominationPayments extends React.Component {
         const {classes, depositor,handleChange,NominationPayments,NumberFormatCustom,CandidateList,candidateCount} = this.props;
         const {  numberformat } = this.state;
         const payPerCandidate = 2000;
-
+debugger;
         return (
             <form className={classes.container} noValidate autoComplete="off">
                 <Grid container direction="row" justify="flex-start" alignItems="stretch" spacing={8}>                
