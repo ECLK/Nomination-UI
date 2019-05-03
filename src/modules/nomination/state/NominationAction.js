@@ -277,7 +277,6 @@ export const setNominationStatus = (nominationSuppertDocs) => {
 
   export function updateNominationPayments(customProps,candidatePayments,candidateCount) {
     return function (dispatch) {
-      debugger;
       let nominationPayments = {
         depositor: candidatePayments.depositor,
         amount: candidateCount*2000,
@@ -287,6 +286,7 @@ export const setNominationStatus = (nominationSuppertDocs) => {
         updatedAt:Date.parse(new Date()),
         nominationId: candidatePayments.nominationId
     };
+    debugger;
       const response = axios
       .put(
         `${API_BASE_URL}/nominations/${customProps}/payments`,

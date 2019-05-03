@@ -288,8 +288,6 @@ class NominationForm extends React.Component {
 
   getStepContent(step,props) {
     var user_role = sessionStorage.getItem('role');
-    
-    console.log("this.state.currentSdocId",this.state.currentSdocId);
     const { classes } = this.props;
 
     const doneElement = (<div className={classes.done} style={this.showFlagToStyle(this.state.status === "uploaded")}>
@@ -345,6 +343,7 @@ class NominationForm extends React.Component {
 
   handleNext = () => {
     const {postNominationPayments,divisionId,division,updateNominationPayments,NominationPayments, nominationStatus,openSnackbar, customProps,postNominationSupportDocs,candidateCount,NominationCandidates}=this.props;
+    debugger;
     let activeStep;
     if (this.isLastStep() && !this.allStepsCompleted()) {
       // It's the last step, but not all steps have been completed,
@@ -372,10 +371,9 @@ class NominationForm extends React.Component {
   }
     
     if (activeStep === 2 && NominationPayments==''){
-      console.log("activeStep",activeStep);
-
       postNominationPayments(this.state,candidateCount);   
   }else if(activeStep === 2 && NominationPayments!==''){
+    
     updateNominationPayments(NominationPayments.id,this.state,candidateCount);   
   }
   };
