@@ -286,7 +286,6 @@ export const setNominationStatus = (nominationSuppertDocs) => {
         updatedAt:Date.parse(new Date()),
         nominationId: candidatePayments.nominationId
     };
-    debugger;
       const response = axios
       .put(
         `${API_BASE_URL}/nominations/${customProps}/payments`,

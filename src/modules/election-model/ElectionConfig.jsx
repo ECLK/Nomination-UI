@@ -159,25 +159,16 @@ class ElectionConfig extends React.Component {
         this.props.electionChanged(newElectionModule); 
     }
 
-    // handleEligibility(row, event) {
-    //     const newElectionModule = {...this.props.electionModule};
-    //     if(event.target.checked){
-    //         newElectionModule.eligibilityCheckList[row.value] = true;
-    //     }else{
-    //         delete newElectionModule.eligibilityCheckList[row.value];
-    //     }
-    //     this.props.electionChanged(newElectionModule);
-    // }
     handleEligibility(row, event) {
         const newElectionModule = {...this.props.electionModule};
         const eligibilityConf = {
-            eligibilityId: row.value,
+            eligibilityConfigId: row.value,
         }
         if(event.target.checked){
             newElectionModule.eligibilityCheckList.push(eligibilityConf);
         }else{
             this.props.electionModule.eligibilityCheckList.map((item,index) => (
-                (item.eligibilityId===eligibilityConf.eligibilityId) ?
+                (item.eligibilityConfigId===eligibilityConf.eligibilityConfigId) ?
                 newElectionModule.eligibilityCheckList.splice(index, 1) : ''
             ));    
         }
@@ -436,10 +427,17 @@ class ElectionConfig extends React.Component {
                                 {EligibilityCheckList.map(row => (
                                     <TableRow key={row.id}>
                                         <TableCell padding="checkbox" width="20">
+                                     
                                             <Checkbox
-                                                checked={electionModule.eligibilityCheckList[row.value]}
+                                                // checked={electionModule.eligibilityCheckList[row.value]}
+                                                checked={(electionModule.eligibilityCheckList) ? electionModule.eligibilityCheckList.filter(item => {
+                                                    return item.eligibilityConfigId === row.value;
+                                                }).length > 0 : ''} 
                                                 onChange={(event)=>{this.handleEligibility(row, event);}}
+                                                value={row.value} 
                                             />
+                                            
+                                            
                                         </TableCell>
                                         <TableCell component="th" scope="row">
                                             {row.label}

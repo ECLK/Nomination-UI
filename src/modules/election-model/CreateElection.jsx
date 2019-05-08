@@ -14,7 +14,7 @@ import { Redirect } from 'react-router-dom';
 import CandidateForm from './CandidateForm';
 import DivisionConfig from './DivisionConfig';
 import ElectionConfig from './ElectionConfig';
-import { createElection, updateElection, submitElection, getFieldOptions } from './state/ElectionAction';
+import { createElection, updateElection, submitElection,editElection, getFieldOptions,getElectionTemplateData } from './state/ElectionAction';
 import { openSnackbar } from '../election/state/ElectionAction';
 import { connect } from 'react-redux';
 
@@ -88,8 +88,12 @@ class CreateElection extends React.Component {
     }
 
     componentDidMount() {
-        const { createElection } = this.props;
+        const { createElection,getElectionTemplateData } = this.props;
         createElection(this.props.location.state.name);
+        getElectionTemplateData(this.props.location.state.id);
+        this.setState({
+            moduleId:this.props.location.state.id
+        });
         // fetch required data
         getFieldOptions().then((data)=>{
             this.setState(data);
@@ -102,10 +106,11 @@ class CreateElection extends React.Component {
         const { activeStep } = this.state;
         let { skipped } = this.state;
         if(activeStep === 2){
-            this.props.submitElection(this.props.new_election_module);
+            (this.state.moduleId) ? this.props.editElection(this.state.moduleId,this.props.new_election_module) : this.props.submitElection(this.props.new_election_module);
+            // this.props.submitElection(this.props.new_election_module);
             const {openSnackbar } = this.props;
 
-            openSnackbar({ message: this.props.new_election_module.name + ' has been submitted for approval ' });
+            // openSnackbar({ message: this.props.new_election_module.name + ' has been submitted for approval ' });
 
             this.setState({
                 goToHome: true
@@ -219,7 +224,9 @@ const mapActionsToProps = {
     createElection,
     updateElection,
     submitElection,
-    openSnackbar
+    editElection,
+    openSnackbar,
+    getElectionTemplateData
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(CreateElection));
