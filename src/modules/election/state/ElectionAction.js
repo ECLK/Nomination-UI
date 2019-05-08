@@ -299,30 +299,10 @@ export function postCallElectionData(CallElectionData, electionData) {
                 objectionStart: Date.parse(CallElectionData.objectionStart),
                 objectionEnd: Date.parse(CallElectionData.objectionEnd),
                 electionId: electionData.election_id,
-            }
-        ,
-        // "confData": [
-        //     {
-        //         electionConfigId: '1',
-        //         value: CallElectionData.depositAmount,
-        //         electionId: electionData.election_id,
-        //     },
-        //     {
-        //         electionConfigId: '2',
-        //         value: CallElectionData.WeightageVote,
-        //         electionId: electionData.election_id,
-        //     },
-        //     {
-        //         electionConfigId: '3',
-        //         value: CallElectionData.WeightagePrefarence,
-        //         electionId: electionData.election_id,
-        //     }
-
-        // ],
+            },
         "nominationAllowData": CallElectionData.rowData
 
     }
-
     return function (dispatch) {
         const response = axios
             .post(
@@ -493,4 +473,16 @@ export const onChangeApprovalData = (electionApprovals) => {
    
  };
 
+ export const getFieldOptions = function getFieldOptions(moduleId) {
+    let promises = [];
+
+    promises.push(axios.get(`${API_BASE_URL}/field-options/electorates-divisions/${moduleId}`));
+    
+    return axios.all(promises)
+        .then(args =>{
+            return {
+                columnHeaders: args[0].data,
+            }
+        });
+}
 

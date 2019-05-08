@@ -14,7 +14,7 @@ import ElectionWeightage from '../../components/ElectionWeightage/ElectionWeight
 import AllowNomination from './AllowNomination';
 import { Redirect } from 'react-router-dom';
 import NotifierRedux from '../../components/Notifier';
-import { setCallElectionData, postCallElectionData,openSnackbar } from './state/ElectionAction';
+import { setCallElectionData, postCallElectionData,openSnackbar,getFieldOptions } from './state/ElectionAction';
 import { connect } from 'react-redux';
 
 
@@ -61,10 +61,17 @@ class VerticalLinearStepper extends React.Component {
       values: '',
       rowData:'',
       goToHome: false,
+      columnHeaders:''
     };
     
 }
 
+componentDidMount() {
+  const { CallElectionData } = this.props;
+  getFieldOptions(CallElectionData.electionModule).then((data)=>{
+      this.setState(data);
+  })
+}
 
   handleNext = () => {
     let activeStep;
@@ -144,8 +151,8 @@ class VerticalLinearStepper extends React.Component {
     const { classes } = this.props;
     const steps = getSteps();
     const { activeStep } = this.state;
-    const { nominationStart, nominationEnd, objectionStart, objectionEnd, depositAmount, WeightageVote, WeightagePrefarence } = this.state;
-    const values = { nominationStart, nominationEnd, objectionStart, objectionEnd, depositAmount, WeightageVote, WeightagePrefarence }
+    const { nominationStart, nominationEnd, objectionStart, objectionEnd, depositAmount, WeightageVote, WeightagePrefarence,columnHeaders } = this.state;
+    const values = { nominationStart, nominationEnd, objectionStart, objectionEnd, depositAmount, WeightageVote, WeightagePrefarence,columnHeaders }
 
 
 
