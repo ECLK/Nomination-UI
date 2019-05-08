@@ -15,10 +15,6 @@ import { Redirect } from 'react-router-dom'
 
 
 const styles = theme => ({
-    // container: {
-    //     display: 'flex',
-    //     flexWrap: 'wrap',
-    // },
     textField: {
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
@@ -34,46 +30,23 @@ const styles = theme => ({
     }
 });
 
-const ElectionModule = [
-    {
-        value: '455cd89e-269b-4b69-96ce-8d7c7bf44ac2',
-        label: 'Parliamentary',
-    },
-    {
-        value: '7404a229-6274-43d0-b3c5-740c3c2e1256',
-        label: 'Presidential',
-    },
-    {
-        value: '27757873-ed40-49f7-947b-48b432a1b062',
-        label: 'Provincial',
-    },
-
-];
 
 class CallElection extends React.Component {
     state = {
         electionName: '',
         ElectionModule: '',
         goToConfig: false,
-
     };
 
     constructor(props){
         super(props);
     }
          
-      
-
     handleSubmit = (e) => {
         this.setState({goToConfig:true});
         const { setCallElectionData } = this.props;
-
-
-        // const {postElection} = this.props;
-      
         e.preventDefault();
         setCallElectionData(this.state);
-       
     };
 
     handleChange = name => event => {
@@ -82,13 +55,9 @@ class CallElection extends React.Component {
         });
     };
 
- 
-
     render() {
         const {classes,electionModules} = this.props;
         if (this.state.goToConfig) return <Redirect to="/admin/active-election" />;
-
-
         return (
                     <form className={classes.container} onSubmit={this.handleSubmit} noValidate autoComplete="off">
             <Card className={classes.card}>
@@ -116,7 +85,7 @@ class CallElection extends React.Component {
                             variant="filled"
                         >
                         <option >
-                                   -- Select Module --
+                                   -- Select Template --
                                 </option>
                             {electionModules.map(option => (
                                 <option key={option.id} value={option.id}>
@@ -134,13 +103,6 @@ class CallElection extends React.Component {
                             margin="normal"
                             variant="filled"
                         />
-
-                        
-
-                    {/* <Typography className={classes.textCallElection} component="p">
-                        Election ID :EL2018111112
-
-                    </Typography> */}
                 </CardContent>
                 <CardActions>
                     <Button type='submit' size="small">Next</Button>
@@ -154,7 +116,6 @@ class CallElection extends React.Component {
 CallElection.propTypes = {
     classes: PropTypes.object.isRequired,
 };
-
 
 const mapStateToProps = ({Election}) => {
     const {setCallElectionData} = Election;  
