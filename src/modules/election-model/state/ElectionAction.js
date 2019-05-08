@@ -4,10 +4,13 @@ import {
     SAVE_ELECTION_MODULE,
     GET_APPROVED_ELECTION_MODULE,
     GET_PENDING_ELECTION_MODULE,
-    GET_REJECTED_ELECTION_MODULE
+    GET_REJECTED_ELECTION_MODULE,
+    GET_ELECTION_TEMPLATE_DATA
 } from "./ElectionTypes";
 import { API_BASE_URL } from "../../../config.js";
 import axios from "axios";
+import { openSnackbar } from '../../election/state/ElectionAction';
+
 //----------- Start of save Call Election Data ----------------
 
 export const setPostModuleData = (val) => {
@@ -176,7 +179,6 @@ export const submitElection = function saveElection(election) {
         }
     ],
     }
-    debugger;
 
     return function (dispatch) {
         const response = axios
@@ -185,13 +187,13 @@ export const submitElection = function saveElection(election) {
                 { ...allElectionModuleData , ...election}
             )
             .then(response => {
-                console.log("response.data", response.data);
                 if(response.data){
                     election.submited = true;
                     dispatch({
                         type: UPDATE_ELECTION_MODULE,
                         payload: election
                     });
+                    dispatch(openSnackbar({ message: election.name + ' has been submitted for approval' }));
                 }
             }).catch(err => {
                 console.log(err)
@@ -199,6 +201,29 @@ export const submitElection = function saveElection(election) {
     }
 }
 
+export const setUpdatedTemplateData = (val) => {
+    return {
+        type: UPDATE_ELECTION_MODULE,
+        payload: val
+    }
+}
+
+  export function editElection(moduleId,election) {
+    return function (dispatch) {
+     
+      const response = axios
+      .put(
+        `${API_BASE_URL}/election-modules/${moduleId}`,
+        {...election}
+      )
+      .then(response => {
+         dispatch(setUpdatedTemplateData(response.data));
+         dispatch(openSnackbar({ message: election.name + ' has been updated ' }));
+      }).catch(err => {
+            console.log(err)
+      });
+    };
+  }
 //get pending election modules
 const pendingElectionModuleLoaded = (getPendingElectionModules) => {
     return {
@@ -306,3 +331,94 @@ export const getFieldOptions = function getFieldOptions() {
 }
 
 //----------- End of save Create Election Data ----------------
+export const setGetTemplateData = (val) => {
+    return {
+        type: GET_ELECTION_TEMPLATE_DATA,
+        payload: val
+    }
+}
+
+export function getElectionTemplateData(moduleId) {
+    //TODO: config ids should get from the front end and the array should be dynamic
+    let allElectionModuleData = {
+        "moduleId": moduleId,
+        "divisionCommonName":'Provintial',
+        "createdBy":'admin',
+        "createdAt":'',
+        "updatedAt":'',
+        "candidateFormConfiguration": [
+            {
+                candidateConfigId: '1',
+            },
+            {
+                candidateConfigId: '2',
+            },
+            {
+                candidateConfigId: '3',
+            },
+            {
+                candidateConfigId: '4',
+            },
+        ],
+        "supportingDocuments": [
+            {
+                supportDocConfigId: '15990459-2ea4-413f-b1f7-29a138fd7a97',
+            },
+            {
+                supportDocConfigId: 'fe2c2d7e-66de-406a-b887-1143023f8e72',
+            },
+            {
+                supportDocConfigId: 'ff4c6768-bdbe-4a16-b680-5fecb6b1f747',
+            }
+        ],
+        "divisionConfig":[
+            {
+                divisionName: 'division name',
+                divisionCode: 'code',
+                noOfCandidates: 'noOfCandidates',
+            },
+            {
+                divisionName: 'division name',
+                divisionCode: 'code',
+                noOfCandidates: 'noOfCandidates',
+            },
+            {
+                divisionName: 'division name',
+                divisionCode: 'code',
+                noOfCandidates: 'noOfCandidates',
+            }
+        ],
+    "electionConfig": [
+        {
+            electionModuleConfigId: '15990459-2ea4-413f-b1f7-29a138fd7a97',
+            value:'allowed',
+        },
+        {
+            supportDocConfigId: 'fe2c2d7e-66de-406a-b887-1143023f8e72',
+            value:'allowed',
+        },
+        {
+            supportDocConfigId: 'ff4c6768-bdbe-4a16-b680-5fecb6b1f747',
+            value:'allowed',
+        }
+
+    ],
+    }
+    // return {
+    //     type: GET_ELECTION_TEMPLATE_DATA,
+    //     payload: allElectionModuleData
+    // }
+    return function (dispatch) {
+        const response = axios
+            .get(
+                `${API_BASE_URL}/modules/${moduleId}`,
+                { ...allElectionModuleData }
+            )
+            .then(response => {
+                console.log("response.data", response.data);
+                dispatch(setGetTemplateData(response.data));
+            }).catch(err => {
+                console.log(err)
+            });
+    }
+}

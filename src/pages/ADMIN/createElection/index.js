@@ -150,9 +150,9 @@ class Home extends React.Component {
                                     </ListItem>
                                 </Grid>
                                 <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
-                                    {/* <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: election.id } }} > */}
+                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "create-election", state: { id: election.id } }} >
                                         <Button  style={{ marginTop: 30 }} variant="contained" color="primary" size="small">Edit</Button>
-                                    {/* </Link> */}
+                                    </Link>
                                 </Grid>
                             </Grid>
                         </Grid>

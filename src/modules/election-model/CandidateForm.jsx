@@ -81,9 +81,9 @@ class CandidateForm extends React.Component {
                         return (<FormControlLabel
                         control={
                             <Checkbox 
-                                checked={electionModule.candidateFormConfiguration.filter(item => {
+                                checked={(electionModule.candidateFormConfiguration) ? electionModule.candidateFormConfiguration.filter(item => {
                                     return item.candidateConfigId === element.key;
-                                }).length > 0} 
+                                }).length > 0 : ''} 
                                 onChange={this.handleChangeCandidateFormConfig} 
                                 value={element.key} 
                             />
@@ -99,9 +99,9 @@ class CandidateForm extends React.Component {
                         return (<FormControlLabel
                         control={
                             <Checkbox 
-                                checked={electionModule.candidateFormConfiguration.filter(item => {
+                                checked={(electionModule.candidateFormConfiguration) ? electionModule.candidateFormConfiguration.filter(item => {
                                     return item.candidateConfigId === element.key;
-                                }).length > 0} 
+                                }).length > 0 : ''} 
                                 onChange={this.handleChangeCandidateFormConfig} 
                                 value={element.key} 
                             />
@@ -122,9 +122,9 @@ class CandidateForm extends React.Component {
                         return (<FormControlLabel
                         control={
                             <Checkbox 
-                                checked={electionModule.supportingDocuments.filter(item => {
+                                checked={(electionModule.supportingDocuments) ? electionModule.supportingDocuments.filter(item => {
                                     return item.supportDocConfigId === element.key;
-                                }).length > 0} 
+                                }).length > 0 : ''} 
                                 onChange={this.handleChangeSupportingDocuments} 
                                 value={element.key} />
                         }
@@ -139,9 +139,9 @@ class CandidateForm extends React.Component {
                         return (<FormControlLabel
                         control={
                             <Checkbox 
-                                checked={electionModule.supportingDocuments.filter(item => {
+                                checked={(electionModule.supportingDocuments) ? electionModule.supportingDocuments.filter(item => {
                                     return item.supportDocConfigId === element.key;
-                                }).length > 0} 
+                                }).length > 0 : ''} 
                                 onChange={this.handleChangeSupportingDocuments} 
                                 value={element.key} 
                             />

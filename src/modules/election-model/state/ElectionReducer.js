@@ -4,7 +4,8 @@ import {
     CLEAR_ELECTION_MODULE,
     GET_APPROVED_ELECTION_MODULE,
     GET_PENDING_ELECTION_MODULE,
-    GET_REJECTED_ELECTION_MODULE
+    GET_REJECTED_ELECTION_MODULE,
+    GET_ELECTION_TEMPLATE_DATA
 } from "./ElectionTypes";
 
 const initialState = {
@@ -53,6 +54,12 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 RejectedElectionModules: action.payload
             };  
+        case GET_ELECTION_TEMPLATE_DATA:
+            return {
+                ...state,
+                new_election_module: action.payload
+            };  
+            
     }
     return state;
 }
