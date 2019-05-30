@@ -10,6 +10,8 @@ import CardContent from '@material-ui/core/CardContent';//--
 import Button from '@material-ui/core/Button';//--
 import Typography from '@material-ui/core/Typography';//--
 import { Redirect } from 'react-router-dom'
+import {asyncValidateTemplate} from '../../modules/election-model/state/ElectionAction';
+
 
 const styles = theme => ({
     container: {
@@ -47,6 +49,8 @@ class FilledTextFields extends React.Component {
     state = {
         ModuleName: '',
         goToConfig: false,
+        errorTextTemplate: '',
+        exist:false
     };
 
     constructor(props){
@@ -55,14 +59,37 @@ class FilledTextFields extends React.Component {
     }
 
     handleChange = name => event => {
+        if(name==='ModuleName'){
+            this.setState({errorTextTemplate:''});
+        }
         this.setState({
             [name]: event.target.value,
         });
     };
 
     handleNext() {
-        this.setState({goToConfig:true});
+        if(this.state.exist===true){
+            this.setState({errorTextTemplate:'emptyField2'});
+            }else if(this.state.ModuleName===''){
+            this.setState({errorTextTemplate:'emptyField'});
+            }else{
+                this.setState({goToConfig:true});
+            }
     }
+
+    asyncValidation = name => event =>{
+        if(event.target.value){
+        asyncValidateTemplate(event.target.value).then((data)=>{
+          if(data.exist===true){
+           this.setState({exist:data.exist});
+          }else{
+           this.setState({exist:data.exist});
+          }
+       })
+        }else{
+            this.setState({exist:false});
+        }
+       }
 
     render() {
         const {classes} = this.props;
@@ -84,11 +111,14 @@ class FilledTextFields extends React.Component {
                     <form className={classes.container} noValidate autoComplete="off">
                         <TextField
                             id="filled-name"
-                            label="Module Name"
-                            helperText="Please type your Module Name"
+                            label="Template Name"
+                            // helperText="Please type your Module Name"
                             className={classes.textField}
                             value={this.state.ModuleName}
+                            error={this.state.errorTextTemplate}
+                            helperText={this.state.errorTextTemplate === "emptyField2" ? 'This template name already used!' : 'Please type your template Name '}
                             onChange={this.handleChange('ModuleName')}
+                            onBlur={this.asyncValidation('ModuleName')}
                             margin="normal"
                             variant="filled"
                             style={{marginBottom:'28px'}}

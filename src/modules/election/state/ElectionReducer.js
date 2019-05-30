@@ -12,12 +12,16 @@ import {
     SNACK_BAR_MESSAGE_LOADED,
     GET_ALL_ELECTIONS,
     RECEIVE_PENDING_ELECTION,
-    RECEIVE_APPROVED_ELECTION
+    RECEIVE_APPROVED_ELECTION,
+    GET_CALL_ELECTION_DATA,
+    HANDLE_CHANGE_CALL_ELECTION,
+    EDIT_CALL_ELECTION_DATA,
+    DELETE_CALL_ELECTION_DATA
 } from "./ElectionTypes";
 import { REQUEST_STATE } from "../../../lib/request_redux_state";
 import update from 'immutability-helper';
 
-const initialState = {
+const initialState = { 
     //define the common states only
     nominationStart: '2017-05-24T10:30',
     nominationEnd: '2017-05-24T10:30',
@@ -31,7 +35,23 @@ const initialState = {
     elections: [],
     electionData: [],
     allElectionModules: [],
-    CallElectionData: [],
+    CallElectionData: {
+        "name":'',
+        "module_id":'',
+        "status":'',
+        "created_by":"",
+        "created_at":'',
+        "updated_at":'',
+        "timeLineData": 
+            {
+                nominationStart: '',
+                nominationEnd: '',
+                objectionStart: '',
+                objectionEnd: '',
+                electionId: '',
+            },
+        "rowData":[]
+    },
     PostedCallElection: [],
     PostedCallElectionData: [],
     ElectionReviewData:[],
@@ -85,6 +105,13 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 PostedCallElectionData: action.payload
             };
+        case EDIT_CALL_ELECTION_DATA://save timeline, electionConfig, allow nominaton
+        const AllElectionsPrev = state.AllElections;
+        const i = findApprovalIndex(AllElectionsPrev, action.payload.electionId);
+        return {
+            ...state,
+            AllElections: update(state.AllElections, {[i]: {status: {$set: action.payload.status}}})
+        }; 
         case ELECTION_REVIEW_DATA://save timeline, electionConfig, allow nominaton
             return {
                 ...state,
@@ -120,7 +147,26 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 AllElections: update(AllElections, {[index]: {status: {$set: action.payload.status}}})
-            } 
+            }; 
+        case GET_CALL_ELECTION_DATA://set election data to the state
+            return {
+                ...state,
+                CallElectionData: action.payload
+            };
+        case HANDLE_CHANGE_CALL_ELECTION://set election data to the state
+            return {
+                ...state,
+                CallElectionData: action.payload
+            };
+        case DELETE_CALL_ELECTION_DATA:
+        console.log(action.payload);
+            const toDelete = state.AllElections.findIndex(x => x.id === action.payload);
+            debugger;
+                return {
+                    ...state,
+                    AllElections: update(state.AllElections, { $splice: [[toDelete, 1]] } )
+                };
+            
     }
     return state;
 }

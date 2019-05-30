@@ -159,7 +159,7 @@ class Home extends React.Component {
                                     </ListItem>
                                 </Grid>
                                 <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
-                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: election.id,check:'test' } }} >
+                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "active-election", state: { id: election.id,check:'approve',moduleId:election.moduleId } }} >
                                         <Button onClick={this.getElectionReviewData.bind(this, election.id)} style={{ marginTop: 30 }} variant="contained" color="primary" size="small">View</Button>
                                     </Link>
                                 </Grid>
@@ -207,8 +207,8 @@ class Home extends React.Component {
                                     </ListItem>
                                 </Grid>
                                 <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
-                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: election.id,check:'test' } }} >
-                                        <Button onClick={this.getElectionReviewData.bind(this, election.id)} style={{ marginTop: 30 }} variant="contained" color="primary" size="small">View</Button>
+                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "active-election", state: { id: election.id,check:'test',moduleId:election.moduleId } }} >
+                                        <Button onClick={this.getElectionReviewData.bind(this, election.id)} style={{ marginTop: 30 }} variant="contained" color="primary" size="small">Edit</Button>
                                     </Link>
                                 </Grid>
                             </Grid>
@@ -255,8 +255,8 @@ class Home extends React.Component {
                                     </ListItem>
                                 </Grid>
                                 <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
-                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: election.id,check:'test' } }} >
-                                        <Button onClick={this.getElectionReviewData.bind(this, election.id)} style={{ marginTop: 30 }} variant="contained" color="primary" size="small">View</Button>
+                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "active-election", state: { id: election.id,check:'reject',moduleId:election.moduleId } }} >
+                                        <Button onClick={this.getElectionReviewData.bind(this, election.id)} style={{ marginTop: 30 }} variant="contained" color="primary" size="small">Edit</Button>
                                     </Link>
                                 </Grid>
                             </Grid>

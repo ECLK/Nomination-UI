@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core/styles';
 import purple from '@material-ui/core/colors/purple';
 import green from '@material-ui/core/colors/green';
+import deepPurple from '@material-ui/core/colors/deepPurple';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 // A theme with custom primary and secondary color.
@@ -16,7 +17,11 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 const theme = createMuiTheme({
   palette: {
     primary: purple,
-    secondary: green,
+    secondary: deepPurple,
+    red: deepPurple,
+    // red: {
+    //   main: '#f44336',
+    // },
   },
   typography: {
     useNextVariants: true,

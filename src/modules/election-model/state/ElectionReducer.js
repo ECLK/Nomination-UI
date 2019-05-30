@@ -1,3 +1,5 @@
+import update from 'immutability-helper';
+
 import {
     CREATE_ELECTION_MODULE,
     UPDATE_ELECTION_MODULE,
@@ -5,7 +7,8 @@ import {
     GET_APPROVED_ELECTION_MODULE,
     GET_PENDING_ELECTION_MODULE,
     GET_REJECTED_ELECTION_MODULE,
-    GET_ELECTION_TEMPLATE_DATA
+    GET_ELECTION_TEMPLATE_DATA,
+    GET_DELETED_ELECTION_MODULE
 } from "./ElectionTypes";
 
 const initialState = {
@@ -59,7 +62,14 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 new_election_module: action.payload
             };  
-            
+        case GET_DELETED_ELECTION_MODULE:
+        //Change this to PendingElectionModules election after creaate pending list
+        const toDelete = state.ApprovedElectionModules.findIndex(x => x.id === action.payload);
+            return {
+                ...state,
+                PendingElectionModules: update(state.ApprovedElectionModules, { $splice: [[toDelete, 1]] } )
+            };
+           
     }
     return state;
 }
