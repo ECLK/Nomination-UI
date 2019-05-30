@@ -111,6 +111,8 @@ class CandidateForm extends React.Component {
                     }) }
                 </FormGroup>
                 </FormControl>
+                {(this.props.errorTextCandidateConfig) ? <Typography style={{color:'red'}} variant="subtitle1" gutterBottom>Select at least one field!</Typography> : ''}
+
                 <br /><br />
                 <Typography variant="h6">
                     Supporting Documents

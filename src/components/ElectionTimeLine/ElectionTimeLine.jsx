@@ -9,11 +9,9 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
-
-
-
-
-
+import moment from 'moment';
+// import { handleChange } from '../../modules/election/state/ElectionAction';
+import { connect } from 'react-redux';
 
 const styles = theme => ({
   root: {
@@ -68,10 +66,10 @@ class CheckboxesGroup extends React.Component {
   
 
   render() {
-    const { classes,values, handleChange  } = this.props;
+    const { classes,values, handleChange,CallElectionData,errorTextItems  } = this.props;
     const { gilad, jason, antoine } = this.state;
     const error = [gilad, jason, antoine].filter(v => v).length !== 2;
-
+    
     return (
       <div className={classes.root}>
         <FormControl component="fieldset" className={classes.formControl}>
@@ -110,8 +108,10 @@ class CheckboxesGroup extends React.Component {
                         defaultValue={values.nominationStart}
                         className={classes.textField}
                         name="nominationStart"
-                        value={this.state.nominationStart}
+                        value={moment(new Date((CallElectionData.timeLineData) ? CallElectionData.timeLineData.nominationStart : '')).format("YYYY-MM-DDTHH:mm")}
                         onChange={handleChange('nominationStart')}
+                        helperText={errorTextItems.errorTextNominationStart === "emptyField" ? 'This field is required!' : ''}
+                        error={errorTextItems.errorTextNominationStart === "emptyField"}
                         InputLabelProps={{
                         shrink: true,
                         }}
@@ -127,8 +127,10 @@ class CheckboxesGroup extends React.Component {
                         defaultValue={values.nominationEnd}
                         className={classes.textField}
                         name="nominationEnd"
-                        value={this.state.nominationEnd}
+                        value={moment(new Date((CallElectionData.timeLineData) ? CallElectionData.timeLineData.nominationEnd : '')).format("YYYY-MM-DDTHH:mm")}
                         onChange={handleChange('nominationEnd')}
+                        helperText={errorTextItems.errorTextNominationEnd === "emptyField" ? 'This field is required!' : errorTextItems.errorTextNominationEnd === "emptyField2" ? 'This is not a valid date!' : ''}
+                        error={errorTextItems.errorTextNominationEnd}
                         InputLabelProps={{
                         shrink: true,
                         }}
@@ -144,8 +146,10 @@ class CheckboxesGroup extends React.Component {
                         defaultValue={values.objectionStart}
                         className={classes.textField}
                         name="objectionStart"
-                        value={this.state.objectionStart}
+                        value={moment(new Date((CallElectionData.timeLineData) ? CallElectionData.timeLineData.objectionStart: '')).format("YYYY-MM-DDTHH:mm")}
                         onChange={handleChange('objectionStart')}
+                        helperText={errorTextItems.errorTextObjectionStart === "emptyField" ? 'This field is required!' : errorTextItems.errorTextObjectionStart === "emptyField2" ? 'This is not a valid date!' : ''}
+                        error={errorTextItems.errorTextObjectionStart}
                         InputLabelProps={{
                         shrink: true,
                         }}
@@ -161,8 +165,10 @@ class CheckboxesGroup extends React.Component {
                         defaultValue={values.objectionEnd}
                         className={classes.textField}
                         name="objectionEnd"
-                        value={this.state.objectionEnd}
+                        value={moment(new Date((CallElectionData.timeLineData) ? CallElectionData.timeLineData.objectionEnd : '')).format("YYYY-MM-DDTHH:mm")}
                         onChange={handleChange('objectionEnd')}
+                        helperText={errorTextItems.errorTextObjectionEnd === "emptyField" ? 'This field is required!' : errorTextItems.errorTextObjectionEnd === "emptyField2" ? 'This is not a valid date!' : ''}
+                        error={errorTextItems.errorTextObjectionEnd}
                         InputLabelProps={{
                         shrink: true,
                         }}
@@ -183,4 +189,11 @@ CheckboxesGroup.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(CheckboxesGroup);
+const mapStateToProps = ({ Election }) => {
+
+};
+
+const mapActionsToProps = {
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(CheckboxesGroup));

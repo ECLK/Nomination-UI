@@ -5,7 +5,8 @@ import {
     GET_APPROVED_ELECTION_MODULE,
     GET_PENDING_ELECTION_MODULE,
     GET_REJECTED_ELECTION_MODULE,
-    GET_ELECTION_TEMPLATE_DATA
+    GET_ELECTION_TEMPLATE_DATA,
+    GET_DELETED_ELECTION_MODULE
 } from "./ElectionTypes";
 import { API_BASE_URL } from "../../../config.js";
 import axios from "axios";
@@ -314,6 +315,38 @@ export function getRejectedElectionModules() {
     };
 }
 
+//delete election modules
+const deletedElectionModuleLoaded = (moduleId) => {
+    return {
+        type: GET_DELETED_ELECTION_MODULE,
+        payload: moduleId,
+    };
+};
+
+export function deleteElectionModule(moduleId) {
+    debugger;
+    return function (dispatch) {
+
+        const response = axios
+            .delete(
+                `${API_BASE_URL}/modules/${moduleId}`,
+            )
+            .then(response => {
+                const getDeletedElectionModuleLoaded = response.data;
+                dispatch(
+                    deletedElectionModuleLoaded(moduleId)
+                );
+                dispatch(openSnackbar({ message: ' Election template has been deleted' }));
+
+            }).catch(err => {
+                // const moduleId = [];
+                dispatch(
+                    deletedElectionModuleLoaded(moduleId)
+                );
+                console.log(err)
+            });
+    };
+}
 
 export const getFieldOptions = function getFieldOptions() {
     let promises = [];
@@ -419,6 +452,19 @@ export function getElectionTemplateData(moduleId) {
                 dispatch(setGetTemplateData(response.data));
             }).catch(err => {
                 console.log(err)
+            });
+    }
+}
+
+export const asyncValidateTemplate = function asyncValidateTemplate(templateName) {
+    let promises = [];
+    if(templateName){
+        promises.push(axios.get(`${API_BASE_URL}/modules/validations/${templateName}`));
+        return axios.all(promises)
+            .then(args =>{
+                return {
+                    exist: args[0].data,
+                }
             });
     }
 }

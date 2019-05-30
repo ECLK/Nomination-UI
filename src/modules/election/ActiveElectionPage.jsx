@@ -88,7 +88,7 @@ class Dashboard extends React.Component {
     state = {
         open: true,
         nominations: [],
-
+        electionId:''
 
     };
     
@@ -116,7 +116,7 @@ class Dashboard extends React.Component {
             <div className={classes.root}>
                 <CssBaseline />
                 <AdminMenu title="Election Commission of Sri Lanka"></AdminMenu>
-                <ActiveElectionForm className={classes.electionForm}  title="Election Commission of Sri Lanka"></ActiveElectionForm>
+                <ActiveElectionForm moduleId={(this.props.location.state) ? this.props.location.state.moduleId : ''} electionId={(this.props.location.state) ? this.props.location.state.id : ''} check={(this.props.location.state) ? this.props.location.state.check : ''} className={classes.electionForm}  title="Election Commission of Sri Lanka"></ActiveElectionForm>
 
             </div>
         );

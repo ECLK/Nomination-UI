@@ -18,6 +18,7 @@ import {
 } from "./NominationTypes";
 import {API_BASE_URL} from "../../../config.js";
 import axios from "axios";
+import { openSnackbar } from '../../election/state/ElectionAction';
 import moment from "react-moment";
 
 const nominationLoaded = (getNominations) => {
@@ -148,7 +149,7 @@ export const onChangeApprovalData = (nominationApprovals) => {
   }
 };
 
-export function onChangeApproval(id,status,reviewNote) {
+export function onChangeApproval(nominations,id,status,reviewNote) {
   return function (dispatch) {
     let nominationApprovals = {
       createdBy: 'admin',//TODO: yujith, change this to session user after creating the session
@@ -158,16 +159,18 @@ export function onChangeApproval(id,status,reviewNote) {
       reviewNote:reviewNote,
       nominationId: id
     };
-    
-     
+    const index = nominations.findIndex(x => x.id === id);
+    const division = nominations[index].division_name;
+    const party = nominations[index].party;
+
     const response = axios
     .post(
       `${API_BASE_URL}/nominations/${id}/approve-nomination`,
           {...nominationApprovals}
     )
     .then(response => {
-      console.log("response",response.data);
        dispatch(onChangeApprovalData(response.data));
+       dispatch(openSnackbar({ message:(status === '1ST-APPROVE') ? 'Approved nomination for '+party+' '+ division+' division' : 'Rejected nomination for '+party+' '+ division+' division'}));
     }).catch(err => {
           console.log(err)
     });

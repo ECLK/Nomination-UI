@@ -22,7 +22,17 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
 import Done from '@material-ui/icons/Done';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import CloseIcon from '@material-ui/icons/Close';
+import Remark from '@material-ui/icons/Create';
+import IconButton from "@material-ui/core/IconButton";
+import Slide from '@material-ui/core/Slide';
 import classNames from 'classnames';
+import CommentIcon from '@material-ui/icons/InsertComment';
 import Block from '@material-ui/icons/Block';
 import moment from 'moment';
 import { Redirect } from 'react-router-dom'
@@ -123,12 +133,58 @@ const styles = theme => ({
       },
 });
 
+function Transition(props) {
+    return <Slide direction="up" {...props} />;
+  }
+  const DialogTitle = withStyles(theme => ({
+    root: {
+      borderBottom: `1px solid ${theme.palette.divider}`,
+      margin: 0,
+      padding: theme.spacing.unit * 2,
+    },
+    closeButton: {
+      position: 'absolute',
+      right: theme.spacing.unit,
+      top: theme.spacing.unit,
+      color: theme.palette.grey[500],
+    },
+  }))(props => {
+    const { children, classes, onClose } = props;
+    return (
+      <MuiDialogTitle disableTypography className={classes.root}>
+        <Typography variant="h6">{children}</Typography>
+        {onClose ? (
+          <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
+            <CloseIcon />
+          </IconButton>
+        ) : null}
+      </MuiDialogTitle>
+    );
+  });
+  const DialogContent = withStyles(theme => ({
+    root: {
+      margin: 0,
+      padding: theme.spacing.unit * 2,
+    },
+  }))(MuiDialogContent);
+  
+  const DialogActions = withStyles(theme => ({
+    root: {
+      borderTop: `1px solid ${theme.palette.divider}`,
+      margin: 0,
+      padding: theme.spacing.unit,
+    },
+  }))(MuiDialogActions);
 class Dashboard extends React.Component {
     state = {
-        open: true,
+        open: false,
+        open2: false,
         nominations: [],
         activeElections:[],
         goToConfig: false,
+        electionId:'',
+        status:'',
+        reviewNote:''
     };
 
 
@@ -146,16 +202,49 @@ class Dashboard extends React.Component {
         this.setState({ open: false });
     };
 
-    changeElectionStatus = (electionId, status) => {
+    changeElectionStatus = () => {
+        console.log(this.state);
         debugger;
         const {onChangeApproval,openSnackbar,ElectionReviewData} = this.props;
-        (status==='REJECT') ? 
+        (this.state.status==='REJECT') ? 
         openSnackbar({ message: ElectionReviewData.name + ' has not been approved ' }) : openSnackbar({ message: ElectionReviewData.name + ' has been approved ' });
-        onChangeApproval(electionId, status);
+        onChangeApproval(this.state.electionId, this.state.status, this.state.reviewNote);
         this.setState({goToConfig:true});
       };
-      
 
+    onOpenModal = (electionId, status) => {
+        
+        this.setState({
+          open: true,
+          electionId: electionId,
+          status: status,
+          reviewNote:''
+        });
+      };
+
+      onCloseModal = () => {
+        this.setState({ open: false });
+      };
+
+      handleChange = name => event => {
+        this.setState({
+          [name]: event.target.value,
+        });
+      };
+
+      onOpenModal2 = (electionId, status) => {
+        const {ElectionReviewData} = this.props;
+        
+        this.setState({
+          open2: true,
+          nominationId: electionId,
+          status: status,
+          reviewNote: ElectionReviewData.reviewNote
+        });
+      };
+      onCloseModal2 = () => {
+        this.setState({ open2: false });
+      };
     render() {
         const { classes, allElectionModules,ElectionReviewData } = this.props;
         debugger;
@@ -470,7 +559,8 @@ class Dashboard extends React.Component {
                                     <Button 
                                         variant={ ElectionReviewData.approval_status==="APPROVE" ? "contained" : "outlined" }
                                         disabled={ ElectionReviewData.approval_status==="APPROVE" }
-                                        onClick={ () => { this.changeElectionStatus(ElectionReviewData.id, APPROVAL_STATE.APPROVE ) }}
+                                        // onClick={ () => { this.changeElectionStatus(ElectionReviewData.id, APPROVAL_STATE.APPROVE ) }}
+                                        onClick={() => { this.onOpenModal(ElectionReviewData.id, APPROVAL_STATE.APPROVE) }}
                                         className={classNames(classes.button, classes.green_button)}>
                                         {ElectionReviewData.approval_status==="APPROVE" ? "Approved" : "Approve"}
                                         <Done className={classes.left_icon} />
@@ -480,13 +570,15 @@ class Dashboard extends React.Component {
                                     <Button
                                         variant={ ElectionReviewData.approval_status==="REJECT" ? "contained" : "outlined" }
                                         disabled={ ElectionReviewData.approval_status==="REJECT" }
-                                        onClick={ () => { this.changeElectionStatus(ElectionReviewData.id, APPROVAL_STATE.REJECT ) }}
+                                        // onClick={ () => { this.changeElectionStatus(ElectionReviewData.id, APPROVAL_STATE.REJECT ) }}
+                                        onClick={() => { this.onOpenModal(ElectionReviewData.id, APPROVAL_STATE.REJECT) }}
                                         className={classNames(classes.button, classes.red_button)}>
                                         {ElectionReviewData.approval_status==="REJECT" ? "Rejected" : "Reject"}
                                         <Block className={classes.left_icon} />
                                     </Button>
                                     </Grid>
                                     <Grid item xs="3">
+                                    <CommentIcon style={{marginRight:10,marginTop:8,marginLeft:30}} onClick={() => { this.onOpenModal2(ElectionReviewData.id, APPROVAL_STATE.APPROVED) }} className={classes.left_icon} />
                                 </Grid>
                                 </Grid>
                                    </div> )}
@@ -495,6 +587,82 @@ class Dashboard extends React.Component {
 
                     </div>
                 </div>
+                <div>
+            <Dialog
+              open={this.state.open}
+              TransitionComponent={Transition}
+              keepMounted
+              onClose={this.handleClose}
+              aria-labelledby="alert-dialog-slide-title"
+              aria-describedby="alert-dialog-slide-description"
+            >
+             
+              <DialogTitle id="alert-dialog-slide-title">
+              <Remark style={{marginBottom:-4,marginRight:5}} /> {"Remarks"}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-slide-description">
+                  <TextField
+                    style={{ width: 400 }}
+                    id="outlined-multiline-flexible"
+                    label="Please enter your remarks here"
+                    multiline
+                    rowsMax="4"
+                    value={this.state.reviewNote}
+                    onChange={this.handleChange('reviewNote')}
+                    className={classes.textField}
+                    margin="normal"
+                    variant="outlined"
+                  />
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button value="OK" onClick={this.changeElectionStatus} color="primary">
+                  Save
+            </Button>
+                <Button onClick={this.onCloseModal} color="primary">
+                  Cancel
+            </Button>
+              </DialogActions>
+            </Dialog>
+            <Dialog
+              open={this.state.open2}
+              TransitionComponent={Transition}
+              keepMounted
+              onClose={this.handleClose}
+              aria-labelledby="alert-dialog-slide-title"
+              aria-describedby="alert-dialog-slide-description"
+            >
+             
+              <DialogTitle id="alert-dialog-slide-title">
+              <Remark style={{marginBottom:-4,marginRight:5}} /> {"Remarks"}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-slide-description">
+                  <TextField
+                    style={{ width: 400 }}
+                    id="outlined-multiline-flexible"
+                    label=""
+                    multiline
+                    rowsMax="4"
+                    value={this.state.reviewNote}
+                    // onChange={this.handleChange('reviewNote')}
+                    className={classes.textField}
+                    margin="normal"
+                    variant="outlined"
+                  />
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                {/* <Button value="OK" onClick={this.changeNominationStatus} color="primary">
+                  Save
+            </Button> */}
+                <Button onClick={this.onCloseModal2} color="primary">
+                  Cancel
+            </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
             </div>
         );
     }

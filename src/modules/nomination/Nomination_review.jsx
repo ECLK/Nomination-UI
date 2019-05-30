@@ -171,7 +171,7 @@ class NominationReview extends React.Component {
 
   changeNominationStatus = () => {
     const { onChangeApproval } = this.props;
-    onChangeApproval(this.state.nominationId, this.state.status, this.state.reviewNote);
+    onChangeApproval(this.props.nominations,this.state.nominationId, this.state.status, this.state.reviewNote);
     this.onCloseModal();
   };
 
