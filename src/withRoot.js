@@ -4,11 +4,9 @@ import JssProvider from 'react-jss/lib/JssProvider';
 import {
   MuiThemeProvider,
   createMuiTheme,
-} from '@material-ui/core/styles';
-import {
   createGenerateClassName,
   jssPreset,
-} from '@material-ui/styles';
+} from '@material-ui/core/styles';
 import purple from '@material-ui/core/colors/purple';
 import green from '@material-ui/core/colors/green';
 import deepPurple from '@material-ui/core/colors/deepPurple';

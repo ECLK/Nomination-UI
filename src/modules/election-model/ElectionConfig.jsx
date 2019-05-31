@@ -107,6 +107,8 @@ class ElectionConfig extends React.Component {
       };
 
     handleChange(event) {
+        debugger;
+
         if(event && event.target ){
             console.log(this.refs);
             const newElectionModule = {...this.props.electionModule};
@@ -119,7 +121,7 @@ class ElectionConfig extends React.Component {
             }
             const electionConfig = this.state.electionConfig;
 
-
+            debugger;
             newElectionModule.electionConfig.map((item,index) => (
                 (item.electionModuleConfigId===electionConf.electionModuleConfigId) ?
                 newElectionModule.electionConfig.splice(index, 1) : ''
