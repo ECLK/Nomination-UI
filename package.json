@@ -6,7 +6,7 @@
     "@devexpress/dx-react-core": "^1.10.4",
     "@devexpress/dx-react-grid": "^1.10.4",
     "@devexpress/dx-react-grid-material-ui": "^1.10.4",
-    "@material-ui/core": "latest",
+    "@material-ui/core": "3.9.2",
     "@material-ui/icons": "latest",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
