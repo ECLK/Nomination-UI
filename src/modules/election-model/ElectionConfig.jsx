@@ -49,13 +49,7 @@ const styles = theme => ({
         flexDirection: 'row',
     }
 });
-const authorities = [{
-    "authority_id": "32d250c8-b6b0-4aa6-9b14-4817dbb268d9",
-    "name": "Officer Incharge of Create Election",
-  }, {
-    "authority_id": "a93b50c8-b6b0-4aa6-9b14-4817dbb268d9",
-    "name": "Officer Incharge of Calling Election",
-  }];
+
 
 class ElectionConfig extends React.Component {
     state = {
@@ -107,10 +101,8 @@ class ElectionConfig extends React.Component {
       };
 
     handleChange(event) {
-        debugger;
 
         if(event && event.target ){
-            console.log(this.refs);
             const newElectionModule = {...this.props.electionModule};
             const target = event.target;
             const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -121,7 +113,6 @@ class ElectionConfig extends React.Component {
             }
             const electionConfig = this.state.electionConfig;
 
-            debugger;
             newElectionModule.electionConfig.map((item,index) => (
                 (item.electionModuleConfigId===electionConf.electionModuleConfigId) ?
                 newElectionModule.electionConfig.splice(index, 1) : ''
@@ -199,11 +190,12 @@ class ElectionConfig extends React.Component {
 
     render() {
         const classes = styles();
+        const {errorTextItems} = this.props;
 
         const electionModule = this.props.electionModule;
         // electionModule.eligibilityCheckList = {...electionModule.eligibilityCheckList};
         // let authority = this.props.electionModule['authority'];
-        
+        console.log("this.state.errorTextAuthority",this.props.errorTextAuthority);
         let authority='';
         let calType='';
         let SecurityDeposit='';
@@ -233,16 +225,16 @@ class ElectionConfig extends React.Component {
             
         });
         if (!authority) {
-            authority = authorities.length > 0 && authorities[0].authority_id;
+            authority = this.props.authorities.length > 0 && this.props.authorities[0].authority_id;
         }
 
-    const menuItems = authorities.map(authority => (
+    const menuItems = this.props.authorities.map(authority => (
         <MenuItem value={authority.authority_id}>{authority.name}</MenuItem>));
         return (
             <div className={classes.root}>
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
-                        <FormControl className={classes.formControl}>
+                        <FormControl error={(errorTextItems.errorTextAuthority==='emptyField') ? true : false} className={classes.formControl}>
                             <InputLabel htmlFor="authority">Authority</InputLabel>
                             <Select
                                 value={authority}
@@ -255,11 +247,12 @@ class ElectionConfig extends React.Component {
                                 {menuItems}
 
                             </Select>
+                            <FormHelperText>{(errorTextItems.errorTextAuthority==='emptyField') ? 'This field is required!' : ''}</FormHelperText>
                             {/* <Input id="authority" name="authority" value={this.state.authority} onChange={this.handleChange} /> */}
                         </FormControl> 
                     </Grid>
                     <Grid item xs={12}>
-                        <FormControl component="fieldset">
+                        <FormControl error={(errorTextItems.errorTextCalType==='emptyField') ? true : false} component="fieldset">
                             <FormLabel component="legend">Calculation Type</FormLabel>
                             <RadioGroup
                                 aria-label="Gender"
@@ -273,11 +266,12 @@ class ElectionConfig extends React.Component {
                                 <FormControlLabel control={<Radio />} value="pure_prefrence_based" label="Pure preference-based" />
                                 <FormControlLabel control={<Radio />} value="vote_and_prefrence" label="Vote &amp; Prefrential Based" />
                             </RadioGroup>
+                            <FormHelperText>{(errorTextItems.errorTextCalType==='emptyField') ? 'This field is required!' : ''}</FormHelperText>
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>
                         <FormControl component="fieldset">
-                            <FormLabel component="legend">Nomination Submission By</FormLabel>
+                            <FormLabel error={(errorTextItems.errorTextSubmisionBy==='emptyField') ? true : false} component="legend">Nomination Submission By</FormLabel>
                             <RadioGroup
                                 aria-label="Nomination Submission"
                                 className={classes.group}
@@ -304,10 +298,11 @@ class ElectionConfig extends React.Component {
                                     label="Independent Group Leader"
                                 />
                             </RadioGroup>
+                            <FormHelperText style={{color:'red'}}>{(errorTextItems.errorTextSubmisionBy==='emptyField') ? 'This field is required!' : ''}</FormHelperText>
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>
-                        <FormControl component="fieldset">
+                        <FormControl error={(errorTextItems.errorTextSecurityDeposite==='emptyField') ? true : false} component="fieldset">
                             <FormLabel component="legend">Security Deposit</FormLabel>
                             <RadioGroup
                                 aria-label="Gender"
@@ -333,6 +328,7 @@ class ElectionConfig extends React.Component {
                                     value="No"
                                 />
                             </RadioGroup>
+                            <FormHelperText>{(errorTextItems.errorTextSecurityDeposite==='emptyField') ? 'This field is required!' : ''}</FormHelperText>
                         </FormControl>
                         <Grid item lg={3}>
                     {
@@ -354,7 +350,7 @@ class ElectionConfig extends React.Component {
                     </Grid>
                    
                     <Grid item xs={12}>
-                        <FormControl component="fieldset">
+                        <FormControl error={(errorTextItems.errorTextObjection==='emptyField') ? true : false} component="fieldset">
                             <FormLabel component="legend">Objections</FormLabel>
                             <RadioGroup
                                 aria-label="Objections"
@@ -379,10 +375,11 @@ class ElectionConfig extends React.Component {
                                     value="NotAllowed"
                                 />
                             </RadioGroup>
+                            <FormHelperText>{(errorTextItems.errorTextObjection==='emptyField') ? 'This field is required!' : ''}</FormHelperText>
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>
-                        <FormControl component="fieldset">
+                        <FormControl error={(errorTextItems.errorTextAlliance==='emptyField') ? true : false} component="fieldset">
                             <FormLabel component="legend">Create Alliance</FormLabel>
                             <RadioGroup
                                 aria-label="Create Alliance"
@@ -407,6 +404,7 @@ class ElectionConfig extends React.Component {
                                     value="NotAllowed"
                                 />
                             </RadioGroup>
+                            <FormHelperText>{(errorTextItems.errorTextAlliance==='emptyField') ? 'This field is required!' : ''}</FormHelperText>
                         </FormControl>
                     </Grid>
                     <Grid item xs={6}>
