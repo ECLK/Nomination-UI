@@ -14,6 +14,21 @@ import withRoot from "./withRoot";
 import Progress from "./components/Progress/Progress";
 import Login from "./pages/Login/Login";
 import store from "./state/store";
+import axios from "axios";
+
+
+function getCookie(name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
+// Add a request interceptor to set the authorization header
+axios.interceptors.request.use(function (config) {
+  config.headers.Authorization =  "Bearer " +getCookie('somekey');
+  return config;
+});
+
 
 const styles = theme => ({
   root: {

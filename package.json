@@ -11,6 +11,7 @@
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
     "formik": "^1.5.1",
+    "http-proxy-middleware": "^0.19.1",
     "immutability-helper": "^2.9.0",
     "jss": "latest",
     "material-ui-dropzone": "^2.0.0",
