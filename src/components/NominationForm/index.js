@@ -93,7 +93,9 @@ class NominationForm extends React.Component {
       supportdoc:[],
       currentSdocId:'',
       goToHome: false,
-      election:{}
+      election:{},
+      errorTextDepositor:'',
+      errorTextDepositedDate:'',
     }    
   }
 
@@ -243,6 +245,12 @@ class NominationForm extends React.Component {
   }
 
   handleChange = (name) => event => {
+   if(name==='depositor'){
+    this.setState({errorTextDepositor:''});
+   }
+   if(name==='depositeDate'){
+    this.setState({errorTextDepositedDate:''});
+   }
     this.setState({
             [name]:event.target.value,
     });   
@@ -289,6 +297,9 @@ class NominationForm extends React.Component {
   getStepContent(step,props) {
     var user_role = sessionStorage.getItem('role');
     const { classes } = this.props;
+    const {errorTextDepositor,errorTextDepositedDate} = this.state;
+    const errorTextItems = { errorTextDepositor,errorTextDepositedDate }
+
 
     const doneElement = (<div className={classes.done} style={this.showFlagToStyle(this.state.status === "uploaded")}>
     <DoneOutline  color="secondary"/>
@@ -306,11 +317,11 @@ class NominationForm extends React.Component {
           return <NominationStep1 customProps={customProps}/>;
         case 1:
         if(nominationStatus==="DRAFT"){
-          return <NominationStep2Update candidateCount={candidateCount} NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
+          return <NominationStep2Update errorTextItems={errorTextItems} candidateCount={candidateCount} NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
         }else if(nominationStatus==="SUBMIT"){
-          return <NominationStep2 candidateCount={candidateCount} NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
+          return <NominationStep2 errorTextItems={errorTextItems} candidateCount={candidateCount} NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
         }else{
-          return <NominationStep2 candidateCount={candidateCount} NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
+          return <NominationStep2 errorTextItems={errorTextItems} candidateCount={candidateCount} NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
           // return <NominationStep2 candidateCount={candidateCount} nominationPayments={nominationPayments} handleChange={this.handleChange} />;
         }
         case 2:
@@ -345,6 +356,7 @@ class NominationForm extends React.Component {
     const {postNominationPayments,divisionId,division,updateNominationPayments,NominationPayments, nominationStatus,openSnackbar, customProps,postNominationSupportDocs,candidateCount,NominationCandidates}=this.props;
     debugger;
     let activeStep;
+
     if (this.isLastStep() && !this.allStepsCompleted()) {
       // It's the last step, but not all steps have been completed,
       // find the first step that has been completed
@@ -362,11 +374,27 @@ class NominationForm extends React.Component {
          openSnackbar({ message: 
          'Please complete the nomination form for all candidates before submission' });
         }else{
-          openSnackbar({ message: 'The nomination form has been submitted successfully' });
-         postNominationSupportDocs(this.state,divisionId);   
-         this.setState({
-           goToHome: true
-       });
+          var goNext = true;
+          if(this.state.depositor==='' || this.state.depositor===undefined){
+            activeStep=1;
+            this.setState({errorTextDepositor:'emptyField',activeStep,});
+            goNext = false;
+          }
+          if(this.state.depositeDate==='' || this.state.depositor===undefined){
+            activeStep=1;
+            this.setState({errorTextDepositedDate:'emptyField',activeStep,});
+            goNext = false;
+          }
+          
+          
+          if(goNext){
+            openSnackbar({ message: 'The nomination form has been submitted successfully' });
+           postNominationSupportDocs(this.state,divisionId);   
+            this.setState({
+              goToHome: true
+          });
+          } 
+       
        }
   }
     

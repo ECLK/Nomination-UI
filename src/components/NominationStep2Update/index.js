@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import "react-datepicker/dist/react-datepicker.css";
 import { handleChangePayment } from '../../modules/nomination/state/NominationAction';
 import { connect } from 'react-redux';
-
+import moment from 'moment';
 
 
 const styles = theme => ({
@@ -99,31 +99,40 @@ class NominationPayments extends React.Component {
     render() {
         const {classes, depositor,handleChange,NominationPayments,NumberFormatCustom,CandidateList,candidateCount} = this.props;
         const {  numberformat } = this.state;
+        const {errorTextItems} = this.props;
+
         const payPerCandidate = 2000;
-debugger;
+        let today = new Date();
+        var TodayFormated = moment(today).format("YYYY-MM-DD");
+
         return (
             <form className={classes.container} noValidate autoComplete="off">
                 <Grid container direction="row" justify="flex-start" alignItems="stretch" spacing={8}>                
                     <Grid item lg={3}>
                          <TextField
+                            error={errorTextItems.errorTextDepositor}
                             label="Depositor Name"
                             className={classes.textField}
                             value={NominationPayments.depositor}
                             onChange={handleChange("depositor")}
                             margin="normal"
+                            helperText={errorTextItems.errorTextDepositor === "emptyField" ? 'This field is required!' : ''}
                         /> 
                     </Grid>
                     <Grid item lg={3}>
                          <TextField
+                            error={errorTextItems.errorTextDepositedDate}
                             id="date"
                             label="Diposited Date"
                             type="date"
                             value={NominationPayments.depositeDate}
                             onChange={handleChange('depositeDate')}
                             className={classes.textField}
+                            helperText={errorTextItems.errorTextDepositedDate === "emptyField" ? 'This field is required!' : ''}
                             InputLabelProps={{
                                 shrink: true,
                             }}
+                            InputProps={{ inputProps: { max: TodayFormated } }}
                             margin="normal"
                         />
                     </Grid>                  

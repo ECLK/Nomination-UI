@@ -135,7 +135,8 @@ class CreateElection extends React.Component {
         errorTextSecurityDeposite:'',
         errorTextObjection:'',
         errorTextAlliance:'',
-        errorTextSubmisionBy:''
+        errorTextSubmisionBy:'',
+        errorTextEligibility:''
     };
 
     constructor() {
@@ -144,8 +145,8 @@ class CreateElection extends React.Component {
     }
 
     getStepContent(step) {
-        const {errorTextAuthority,errorTextCalType, errorTextSecurityDeposite, errorTextObjection,errorTextAlliance,errorTextSubmisionBy} = this.state;
-        const errorTextItems = { errorTextAuthority, errorTextCalType, errorTextSecurityDeposite, errorTextObjection,errorTextAlliance,errorTextSubmisionBy }
+        const {errorTextAuthority,errorTextCalType, errorTextSecurityDeposite,errorTextSecurityDepositeAmount, errorTextObjection,errorTextAlliance,errorTextNominationSubmision,errorTextEligibility} = this.state;
+        const errorTextItems = { errorTextAuthority, errorTextCalType, errorTextSecurityDeposite,errorTextSecurityDepositeAmount, errorTextObjection,errorTextAlliance,errorTextNominationSubmision,errorTextEligibility }
 
 
         switch (step) {
@@ -179,20 +180,44 @@ class CreateElection extends React.Component {
     handleElectionChange(electionModule) {
         debugger;
         for (let i = 0; i < electionModule.electionConfig.length; i++) {
-            for (let j = 0; j < authorities.length; j++) {
-
-                console.log(electionModule.electionConfig[i].value+"aaaa"+authorities[j].authority_id);
-                if (electionModule.electionConfig[i].value ===  authorities[j].authority_id && electionModule.electionConfig[i].value !==  "1") {
+                if (electionModule.electionConfig[i].id ===  'authority' && electionModule.electionConfig[i].value !==  "1") {
                     this.setState({errorTextAuthority:''});
                     debugger
                 }
-            }
         }
         for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
             if (this.props.new_election_module.electionConfig[i].value==='pure_vote_based' || this.props.new_election_module.electionConfig[i].value==='pure_prefrence_based' || this.props.new_election_module.electionConfig[i].value==='vote_and_prefrence') {
                 this.setState({errorTextCalType:''});
             }
         }
+        for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+        if (this.props.new_election_module.electionConfig[i].id==='securityDeposite') {
+            this.setState({errorTextSecurityDeposite:''});
+            }
+        }
+        for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+            if (this.props.new_election_module.electionConfig[i].id==='securityDepositeAmount') {
+                this.setState({errorTextSecurityDepositeAmount:''});
+                }
+            }
+        for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+            if (this.props.new_election_module.electionConfig[i].id==='nominationSubmision') {
+                this.setState({errorTextNominationSubmision:''});
+                }
+            }
+        for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+            if (this.props.new_election_module.electionConfig[i].id==='Objections') {
+                this.setState({errorTextObjection:''});
+                }
+            }
+        for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+            if (this.props.new_election_module.electionConfig[i].id==='Alliance') {
+                this.setState({errorTextAlliance:''});
+                }
+            } 
+        if (this.props.new_election_module.eligibilityCheckList.length>0) {
+            this.setState({errorTextEligibility:''});
+        }   
         // this.setState({errorTextAuthority:''});
         // this.setState({errorTextCalType:''});
         // this.setState({errorTextSecurityDeposite:''});
@@ -242,8 +267,6 @@ class CreateElection extends React.Component {
         let { skipped } = this.state;
 
         var goNext = true;
-        console.log(this.props.new_election_module);
-        debugger;
         if (this.props.new_election_module.candidateFormConfiguration.length === 0) {
             this.setState({ errorTextCandidateConfig: 'emptyField' });
             goNext = false;
@@ -262,8 +285,7 @@ class CreateElection extends React.Component {
 
             if (this.props.new_election_module.electionConfig.length > 0 && this.props.new_election_module.electionConfig.length !== undefined) {
                 for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
-                    for (let j = 0; j < authorities.length; j++) {
-                        if (this.props.new_election_module.electionConfig[i].value ===  authorities[j].authority_id && this.props.new_election_module.electionConfig[i].value !==  "1") {
+                        if (this.props.new_election_module.electionConfig[i].id ===  "authority" && this.props.new_election_module.electionConfig[i].value !==  "1") {
                             this.setState({errorTextAuthority:''});
                             goNext = true;
                             break;
@@ -271,7 +293,6 @@ class CreateElection extends React.Component {
                             this.setState({errorTextAuthority:'emptyField'});
                             goNext = false;
                         }
-                    }
                 }
                 for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
                         if (this.props.new_election_module.electionConfig[i].value==='pure_vote_based' || this.props.new_election_module.electionConfig[i].value==='pure_prefrence_based' || this.props.new_election_module.electionConfig[i].value==='vote_and_prefrence') {
@@ -283,25 +304,87 @@ class CreateElection extends React.Component {
                             goNext = false;
                         }
                 }
+                for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+                    debugger;
+                    if (this.props.new_election_module.electionConfig[i].id==='securityDeposite') {
+                        this.setState({errorTextSecurityDeposite:''});
+                        goNext = true;
+                        break;
+                        debugger;
+                    }else{
+                        debugger;
+                        this.setState({errorTextSecurityDeposite:'emptyField'});
+                        goNext = false;
+                    }
+                }
+                for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+                    if (this.props.new_election_module.electionConfig[i].id==='securityDepositeAmount') {
+                        this.setState({errorTextSecurityDepositeAmount:''});
+                        goNext = true;
+                        break;
+                    }else{
+                        this.setState({errorTextSecurityDepositeAmount:'emptyField'});
+                        goNext = false;
+                    }
+                }
+                for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+                    if (this.props.new_election_module.electionConfig[i].id==='nominationSubmision') {
+                        this.setState({errorTextNominationSubmision:''});
+                        goNext = true;
+                        break;
+                    }else{
+                        this.setState({errorTextNominationSubmision:'emptyField'});
+                        goNext = false;
+                    }
+                }
+                for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+                    if (this.props.new_election_module.electionConfig[i].id==='Objections') {
+                        this.setState({errorTextObjection:''});
+                        goNext = true;
+                        break;
+                    }else{
+                        this.setState({errorTextObjection:'emptyField'});
+                        goNext = false;
+                    }
+                }
+                for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+                    if (this.props.new_election_module.electionConfig[i].id==='Alliance') {
+                        this.setState({errorTextAlliance:''});
+                        goNext = true;
+                        break;
+                    }else{
+                        this.setState({errorTextAlliance:'emptyField'});
+                        goNext = false;
+                    }
+                }
+                if (this.props.new_election_module.eligibilityCheckList.length>0) {
+                    this.setState({errorTextEligibility:''});
+                    goNext = true;
+                }else{
+                    this.setState({errorTextEligibility:'emptyField'});
+                    goNext = false;
+                }
+
+                if (goNext) {
+                    (this.state.moduleId) ? this.props.editElection(this.state.moduleId,this.props.new_election_module) : this.props.submitElection(this.props.new_election_module);                const { openSnackbar } = this.props;
+        
+                    this.setState({
+                        goToHome: true
+                    });
+                    return;
+                }
+                
             }else{
                 this.setState({errorTextAuthority:'emptyField'});
                 this.setState({errorTextCalType:'emptyField'});
                 this.setState({errorTextSecurityDeposite:'emptyField'});
                 this.setState({errorTextObjection:'emptyField'});
                 this.setState({errorTextAlliance:'emptyField'});
-                this.setState({errorTextSubmisionBy:'emptyField'});
+                this.setState({errorTextNominationSubmision:'emptyField'});
+                this.setState({errorTextEligibility:'emptyField'});
                 goNext = false;
             }
-
-            debugger;
-            // (this.state.moduleId) ? this.props.editElection(this.state.moduleId,this.props.new_election_module) : this.props.submitElection(this.props.new_election_module);
-            // this.props.submitElection(this.props.new_election_module);
-            const { openSnackbar } = this.props;
-
-            this.setState({
-                // goToHome: true
-            });
-            return;
+            
         }
         if (goNext) {
             this.setState({
