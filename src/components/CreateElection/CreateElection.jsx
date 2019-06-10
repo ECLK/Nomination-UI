@@ -106,7 +106,7 @@ class FilledTextFields extends React.Component {
             <Card className={classes.card}>
                 <CardContent>
                     <Typography variant="h5" component="h2">
-                        Create Election
+                        Create Election Template
                     </Typography>
                     <form className={classes.container} noValidate autoComplete="off">
                         <TextField

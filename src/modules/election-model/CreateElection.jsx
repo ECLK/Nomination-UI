@@ -25,7 +25,7 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import CloseIcon from '@material-ui/icons/Close';
 import WarningIcon from '@material-ui/icons/Warning';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import { createElection, updateElection, submitElection,editElection, getFieldOptions,getElectionTemplateData,deleteElectionModule } from './state/ElectionAction';
+import { createElection, updateElection, submitElection, editElection, getFieldOptions, getElectionTemplateData, deleteElectionModule } from './state/ElectionAction';
 import { openSnackbar } from '../election/state/ElectionAction';
 import { connect } from 'react-redux';
 
@@ -50,13 +50,13 @@ const styles = theme => ({
     },
     rightIcon: {
         marginLeft: theme.spacing.unit,
-        
-      },
-    warningIcon:{
+
+    },
+    warningIcon: {
         width: '10vw',
         height: '5vh',
     }
-      
+
 });
 
 function getSteps() {
@@ -65,51 +65,60 @@ function getSteps() {
 
 function Transition(props) {
     return <Slide direction="up" {...props} />;
-  }
+}
 
 
-  const DialogTitle = withStyles(theme => ({
+const DialogTitle = withStyles(theme => ({
     root: {
-      borderBottom: `1px solid ${theme.palette.divider}`,
-      margin: 0,
-      padding: theme.spacing.unit * 2,
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        margin: 0,
+        padding: theme.spacing.unit * 2,
     },
     closeButton: {
-      position: 'absolute',
-      right: theme.spacing.unit,
-      top: theme.spacing.unit,
-      color: theme.palette.grey[500],
+        position: 'absolute',
+        right: theme.spacing.unit,
+        top: theme.spacing.unit,
+        color: theme.palette.grey[500],
     },
-  }))(props => {
+}))(props => {
     const { children, classes, onClose } = props;
     return (
-      <MuiDialogTitle disableTypography className={classes.root}>
-        <Typography variant="h6">{children}</Typography>
-        {onClose ? (
-          <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
-            <CloseIcon />
-          </IconButton>
-        ) : null}
-      </MuiDialogTitle>
+        <MuiDialogTitle disableTypography className={classes.root}>
+            <Typography variant="h6">{children}</Typography>
+            {onClose ? (
+                <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
+                    <CloseIcon />
+                </IconButton>
+            ) : null}
+        </MuiDialogTitle>
     );
-  });
-  
-  const DialogContent = withStyles(theme => ({
+});
+
+const DialogContent = withStyles(theme => ({
     root: {
-      margin: 0,
-      padding: theme.spacing.unit * 2,
+        margin: 0,
+        padding: theme.spacing.unit * 2,
     },
-  }))(MuiDialogContent);
-  
-  const DialogActions = withStyles(theme => ({
+}))(MuiDialogContent);
+
+const DialogActions = withStyles(theme => ({
     root: {
-      borderTop: `1px solid ${theme.palette.divider}`,
-      margin: 0,
-      padding: theme.spacing.unit,
+        borderTop: `1px solid ${theme.palette.divider}`,
+        margin: 0,
+        padding: theme.spacing.unit,
     },
-  }))(MuiDialogActions);
-  
-  
+}))(MuiDialogActions);
+
+const authorities = [{
+    "authority_id": "1",
+    "name": "-- Select Authority--",
+}, {
+    "authority_id": "32d250c8-b6b0-4aa6-9b14-4817dbb268d9",
+    "name": "Officer Incharge of Create Election",
+}, {
+    "authority_id": "a93b50c8-b6b0-4aa6-9b14-4817dbb268d9",
+    "name": "Officer Incharge of Calling Election",
+}];
 class CreateElection extends React.Component {
     state = {
         activeStep: 0,
@@ -118,9 +127,16 @@ class CreateElection extends React.Component {
         candidateConfigs: [],
         candidateSupportingDocs: [],
         divisions: [],
-        errorTextCandidateConfig:'',
-        errorTextDivisionCommonName:'',
-        errorTextDivisionConfig:''
+        errorTextCandidateConfig: '',
+        errorTextDivisionCommonName: '',
+        errorTextDivisionConfig: '',
+        errorTextAuthority:'',
+        errorTextCalType:'',
+        errorTextSecurityDeposite:'',
+        errorTextObjection:'',
+        errorTextAlliance:'',
+        errorTextSubmisionBy:'',
+        errorTextEligibility:''
     };
 
     constructor() {
@@ -129,6 +145,10 @@ class CreateElection extends React.Component {
     }
 
     getStepContent(step) {
+        const {errorTextAuthority,errorTextCalType, errorTextSecurityDeposite,errorTextSecurityDepositeAmount, errorTextObjection,errorTextAlliance,errorTextNominationSubmision,errorTextEligibility} = this.state;
+        const errorTextItems = { errorTextAuthority, errorTextCalType, errorTextSecurityDeposite,errorTextSecurityDepositeAmount, errorTextObjection,errorTextAlliance,errorTextNominationSubmision,errorTextEligibility }
+
+
         switch (step) {
             case 0:
                 return <CandidateForm
@@ -149,6 +169,8 @@ class CreateElection extends React.Component {
                 return <ElectionConfig
                     electionModule={this.props.new_election_module}
                     electionChanged={this.handleElectionChange}
+                    authorities={authorities}
+                    errorTextItems={errorTextItems}
                 />;
             default:
                 return 'Unknown step';
@@ -156,10 +178,56 @@ class CreateElection extends React.Component {
     }
 
     handleElectionChange(electionModule) {
+        debugger;
+        for (let i = 0; i < electionModule.electionConfig.length; i++) {
+                if (electionModule.electionConfig[i].id ===  'authority' && electionModule.electionConfig[i].value !==  "1") {
+                    this.setState({errorTextAuthority:''});
+                    debugger
+                }
+        }
+        for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+            if (this.props.new_election_module.electionConfig[i].value==='pure_vote_based' || this.props.new_election_module.electionConfig[i].value==='pure_prefrence_based' || this.props.new_election_module.electionConfig[i].value==='vote_and_prefrence') {
+                this.setState({errorTextCalType:''});
+            }
+        }
+        for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+        if (this.props.new_election_module.electionConfig[i].id==='securityDeposite') {
+            this.setState({errorTextSecurityDeposite:''});
+            }
+        }
+        for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+            if (this.props.new_election_module.electionConfig[i].id==='securityDepositeAmount') {
+                this.setState({errorTextSecurityDepositeAmount:''});
+                }
+            }
+        for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+            if (this.props.new_election_module.electionConfig[i].id==='nominationSubmision') {
+                this.setState({errorTextNominationSubmision:''});
+                }
+            }
+        for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+            if (this.props.new_election_module.electionConfig[i].id==='Objections') {
+                this.setState({errorTextObjection:''});
+                }
+            }
+        for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+            if (this.props.new_election_module.electionConfig[i].id==='Alliance') {
+                this.setState({errorTextAlliance:''});
+                }
+            } 
+        if (this.props.new_election_module.eligibilityCheckList.length>0) {
+            this.setState({errorTextEligibility:''});
+        }   
+        // this.setState({errorTextAuthority:''});
+        // this.setState({errorTextCalType:''});
+        // this.setState({errorTextSecurityDeposite:''});
+        // this.setState({errorTextObjection:''});
+        // this.setState({errorTextAlliance:''});
+        // this.setState({errorTextSubmisionBy:''});
         const { updateElection } = this.props;
-        this.setState({errorTextCandidateConfig:''});
-        this.setState({errorTextDivisionCommonName:''});
-        this.setState({errorTextDivisionConfig:''});
+        this.setState({ errorTextCandidateConfig: '' });
+        this.setState({ errorTextDivisionCommonName: '' });
+        this.setState({ errorTextDivisionConfig: '' });
         updateElection(electionModule);
     }
 
@@ -170,24 +238,24 @@ class CreateElection extends React.Component {
     //         goToHome: true
     //     });
     // }
-    handleDelete = (electionModule,event) => {
+    handleDelete = (electionModule, event) => {
         const { deleteElectionModule } = this.props;
         deleteElectionModule(electionModule.currentTarget.id);
-        this.onCloseModal();           
+        this.onCloseModal();
         this.setState({
             goToHome: true
         });
     }
 
     componentDidMount() {
-        const { createElection,getElectionTemplateData } = this.props;
+        const { createElection, getElectionTemplateData } = this.props;
         createElection(this.props.location.state.name);
         getElectionTemplateData(this.props.location.state.id);
         this.setState({
-            moduleId:this.props.location.state.id
+            moduleId: this.props.location.state.id
         });
         // fetch required data
-        getFieldOptions().then((data)=>{
+        getFieldOptions().then((data) => {
             this.setState(data);
         })
     }
@@ -199,47 +267,140 @@ class CreateElection extends React.Component {
         let { skipped } = this.state;
 
         var goNext = true;
-        console.log(this.props.new_election_module);
-        debugger;
-        if(this.props.new_election_module.candidateFormConfiguration.length === 0){
-            this.setState({errorTextCandidateConfig:'emptyField'});
+        if (this.props.new_election_module.candidateFormConfiguration.length === 0) {
+            this.setState({ errorTextCandidateConfig: 'emptyField' });
             goNext = false;
         }
-        if(activeStep === 1){
-        if(this.props.new_election_module.divisionCommonName===undefined || this.props.new_election_module.divisionCommonName===''){
-            this.setState({errorTextDivisionCommonName:'emptyField'});
-            goNext = false;
+        if (activeStep === 1) {
+            if (this.props.new_election_module.divisionCommonName === undefined || this.props.new_election_module.divisionCommonName === '') {
+                this.setState({ errorTextDivisionCommonName: 'emptyField' });
+                goNext = false;
+            }
+            if (this.props.new_election_module.divisionConfig.length === 0 && this.props.new_election_module.divisionCommonName !== undefined) {
+                this.setState({ errorTextDivisionConfig: 'emptyField' });
+                goNext = false;
+            }
         }
-        if(this.props.new_election_module.divisionConfig.length===0 && this.props.new_election_module.divisionCommonName!==undefined){
-            this.setState({errorTextDivisionConfig:'emptyField'});
-            goNext = false;
-        }
-    }
-        if(activeStep === 2){
-            (this.state.moduleId) ? this.props.editElection(this.state.moduleId,this.props.new_election_module) : this.props.submitElection(this.props.new_election_module);
-            // this.props.submitElection(this.props.new_election_module);
-            const {openSnackbar } = this.props;
+        if (activeStep === 2) {
 
-            this.setState({
-                goToHome: true
-            });
-            return;
+            if (this.props.new_election_module.electionConfig.length > 0 && this.props.new_election_module.electionConfig.length !== undefined) {
+                for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+                        if (this.props.new_election_module.electionConfig[i].id ===  "authority" && this.props.new_election_module.electionConfig[i].value !==  "1") {
+                            this.setState({errorTextAuthority:''});
+                            goNext = true;
+                            break;
+                        }else{
+                            this.setState({errorTextAuthority:'emptyField'});
+                            goNext = false;
+                        }
+                }
+                for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+                        if (this.props.new_election_module.electionConfig[i].value==='pure_vote_based' || this.props.new_election_module.electionConfig[i].value==='pure_prefrence_based' || this.props.new_election_module.electionConfig[i].value==='vote_and_prefrence') {
+                            this.setState({errorTextCalType:''});
+                            goNext = true;
+                            break;
+                        }else{
+                            this.setState({errorTextCalType:'emptyField'});
+                            goNext = false;
+                        }
+                }
+                for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+                    debugger;
+                    if (this.props.new_election_module.electionConfig[i].id==='securityDeposite') {
+                        this.setState({errorTextSecurityDeposite:''});
+                        goNext = true;
+                        break;
+                        debugger;
+                    }else{
+                        debugger;
+                        this.setState({errorTextSecurityDeposite:'emptyField'});
+                        goNext = false;
+                    }
+                }
+                for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+                    if (this.props.new_election_module.electionConfig[i].id==='securityDepositeAmount') {
+                        this.setState({errorTextSecurityDepositeAmount:''});
+                        goNext = true;
+                        break;
+                    }else{
+                        this.setState({errorTextSecurityDepositeAmount:'emptyField'});
+                        goNext = false;
+                    }
+                }
+                for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+                    if (this.props.new_election_module.electionConfig[i].id==='nominationSubmision') {
+                        this.setState({errorTextNominationSubmision:''});
+                        goNext = true;
+                        break;
+                    }else{
+                        this.setState({errorTextNominationSubmision:'emptyField'});
+                        goNext = false;
+                    }
+                }
+                for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+                    if (this.props.new_election_module.electionConfig[i].id==='Objections') {
+                        this.setState({errorTextObjection:''});
+                        goNext = true;
+                        break;
+                    }else{
+                        this.setState({errorTextObjection:'emptyField'});
+                        goNext = false;
+                    }
+                }
+                for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+                    if (this.props.new_election_module.electionConfig[i].id==='Alliance') {
+                        this.setState({errorTextAlliance:''});
+                        goNext = true;
+                        break;
+                    }else{
+                        this.setState({errorTextAlliance:'emptyField'});
+                        goNext = false;
+                    }
+                }
+                if (this.props.new_election_module.eligibilityCheckList.length>0) {
+                    this.setState({errorTextEligibility:''});
+                    goNext = true;
+                }else{
+                    this.setState({errorTextEligibility:'emptyField'});
+                    goNext = false;
+                }
+
+                if (goNext) {
+                    (this.state.moduleId) ? this.props.editElection(this.state.moduleId,this.props.new_election_module) : this.props.submitElection(this.props.new_election_module);                const { openSnackbar } = this.props;
+        
+                    this.setState({
+                        goToHome: true
+                    });
+                    return;
+                }
+                
+            }else{
+                this.setState({errorTextAuthority:'emptyField'});
+                this.setState({errorTextCalType:'emptyField'});
+                this.setState({errorTextSecurityDeposite:'emptyField'});
+                this.setState({errorTextObjection:'emptyField'});
+                this.setState({errorTextAlliance:'emptyField'});
+                this.setState({errorTextNominationSubmision:'emptyField'});
+                this.setState({errorTextEligibility:'emptyField'});
+                goNext = false;
+            }
+            
         }
-        if(goNext){
-        this.setState({
-            activeStep: activeStep + 1,
-            skipped,
-        });
-    }
+        if (goNext) {
+            this.setState({
+                activeStep: activeStep + 1,
+                skipped,
+            });
+        }
     };
     onOpenModal = () => {
         this.setState({ open: true });
-      
-      };
-    
-      onCloseModal = () => {
+
+    };
+
+    onCloseModal = () => {
         this.setState({ open: false });
-      };
+    };
     handleBack = () => {
         this.setState(state => ({
             activeStep: state.activeStep - 1,
@@ -297,64 +458,64 @@ class CreateElection extends React.Component {
                                             >
                                                 Cancel
                                             </Button>
-                                            {(this.state.moduleId && activeStep === 2) ? 
-                                            <Button
-                                                variant="contained"
-                                                color="default"
-                                                // onClick={this.handleDelete}
-                                                onClick={this.onOpenModal}
-                                                className={classes.button}
-                                            >
-                                                Delete
+                                            {(this.state.moduleId && activeStep === 2) ?
+                                                <Button
+                                                    variant="contained"
+                                                    color="default"
+                                                    // onClick={this.handleDelete}
+                                                    onClick={this.onOpenModal}
+                                                    className={classes.button}
+                                                >
+                                                    Delete
                                                 <DeleteIcon className={classes.rightIcon} />
-                                            </Button> : ''
-                                        
+                                                </Button> : ''
+
                                             }
-                                            {(this.state.moduleId) ? 
-                                            <Button
-                                                variant="contained"
-                                                color="primary"
-                                                onClick={this.handleNext}
-                                                className={classes.button}
-                                            >
-                                                {activeStep === steps.length - 1 ? 'Update' : 'Next'}
-                                            </Button>
-                                            :
-                                            <Button
-                                            variant="contained"
-                                            color="primary"
-                                            onClick={this.handleNext}
-                                            className={classes.button}
-                                            >
-                                            {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
-                                            </Button>
+                                            {(this.state.moduleId) ?
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={this.handleNext}
+                                                    className={classes.button}
+                                                >
+                                                    {activeStep === steps.length - 1 ? 'Update' : 'Next'}
+                                                </Button>
+                                                :
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={this.handleNext}
+                                                    className={classes.button}
+                                                >
+                                                    {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
+                                                </Button>
                                             }
                                         </div>
                                         <Dialog
-                                        open={this.state.open}
-                                        TransitionComponent={Transition}
-                                        keepMounted
-                                        onClose={this.handleClose}
-                                        aria-labelledby="alert-dialog-slide-title"
-                                        aria-describedby="alert-dialog-slide-description"
+                                            open={this.state.open}
+                                            TransitionComponent={Transition}
+                                            keepMounted
+                                            onClose={this.handleClose}
+                                            aria-labelledby="alert-dialog-slide-title"
+                                            aria-describedby="alert-dialog-slide-description"
                                         >
-                                        <DialogTitle id="alert-dialog-slide-title">
-                                        </DialogTitle>
-                                        <DialogContent>
+                                            <DialogTitle id="alert-dialog-slide-title">
+                                            </DialogTitle>
+                                            <DialogContent>
 
-                                            <DialogContentText id="alert-dialog-slide-description">
-                                        {/* <WarningIcon className={classes.warningIcon} /> */}
-                                            Are You Sure You Want to Delete This Election Template?
+                                                <DialogContentText id="alert-dialog-slide-description">
+                                                    {/* <WarningIcon className={classes.warningIcon} /> */}
+                                                    Are You Sure You Want to Delete This Election Template?
                                             </DialogContentText>
-                                        </DialogContent>
-                                        <DialogActions>
-                                            <Button id={this.state.moduleId} value="OK" onClick={this.handleDelete} color="primary">
-                                            OK
+                                            </DialogContent>
+                                            <DialogActions>
+                                                <Button id={this.state.moduleId} value="OK" onClick={this.handleDelete} color="primary">
+                                                    OK
                                             </Button>
-                                            <Button onClick={this.onCloseModal} color="primary">
-                                            Cancel
+                                                <Button onClick={this.onCloseModal} color="primary">
+                                                    Cancel
                                             </Button>
-                                        </DialogActions>
+                                            </DialogActions>
                                         </Dialog>
                                     </Paper>
                                 )}
@@ -371,11 +532,11 @@ CreateElection.propTypes = {
 };
 
 
-const mapStateToProps = ({ ElectionModel,Election }) => {
+const mapStateToProps = ({ ElectionModel, Election }) => {
     const { openSnackbar } = Election;
 
-    const { new_election_module,deleteElectionModule } = ElectionModel;
-    return { new_election_module,openSnackbar,deleteElectionModule };
+    const { new_election_module, deleteElectionModule } = ElectionModel;
+    return { new_election_module, openSnackbar, deleteElectionModule };
 };
 
 const mapActionsToProps = {

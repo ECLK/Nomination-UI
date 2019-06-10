@@ -492,7 +492,6 @@ export const asyncValidateElection = function asyncValidateElection(electionName
     let promises = [];
     if(electionName){
         promises.push(axios.get(`${API_BASE_URL}/elections/validations/${electionName}`));
-        debugger;
         return axios.all(promises)
             .then(args =>{
                 debugger;
