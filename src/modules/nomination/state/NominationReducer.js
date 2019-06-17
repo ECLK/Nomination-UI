@@ -13,7 +13,9 @@ import {
   APPROVED_ELECTIONS,
   PARTY_LIST_LOADED,
   GET_NOMINATION_LIST,
-  RECEIVE_NOMINATION_STATUS
+  RECEIVE_NOMINATION_STATUS,
+  POST_CANDIDATE_SUPPORT_DOC,
+  CANDIDATE_SUPPORT_DOC_LOADED
 } from "./NominationTypes";
 
 const initialState = {
@@ -28,7 +30,9 @@ const initialState = {
   approveElections:[],
   nominationStatus:[],
   partyList:[],
-  nominationList:[]
+  nominationList:[],
+  postCandidateSupportDocs:[],
+  candidateSupportdocLoaded:[]
 };
 
 const findIndex = (nominations, id) => {
@@ -134,7 +138,16 @@ export default function reducer(state = initialState, action) {
         ...state,
         nominationList: action.payload
       };  
-
+    case POST_CANDIDATE_SUPPORT_DOC:
+      return {
+        ...state,
+        postCandidateSupportDocs: action.payload
+      }; 
+    case CANDIDATE_SUPPORT_DOC_LOADED:
+      return {
+        ...state,
+        candidateSupportdocLoaded: action.payload
+      }; 
   }
   return state;
 }
