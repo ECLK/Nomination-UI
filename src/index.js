@@ -17,6 +17,10 @@ axios.defaults.headers.post["Content-Type"] =
        sessionStorage.setItem("election_id", electionId);
       });  
 
+  axios.get(`permission`)
+  .then(res => {
+      console.log("jjjjjjjjjjjjjjjjjjj",res.data);
+      });
 
 ReactDOM.render(<App />, document.getElementById("root"));
 

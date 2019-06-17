@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
 import Notifier, { openSnackbar } from '../Notifier';
-import { getNominationCandidates } from '../../modules/nomination/state/NominationAction';
+import { getNominationCandidates,getCandidateSupportingDocs } from '../../modules/nomination/state/NominationAction';
 import { connect } from 'react-redux';
 
 const styles = theme => ({
@@ -151,6 +151,7 @@ class TextFields extends React.Component {
           this.setState({ counsilName });
 
         })
+        this.props.getCandidateSupportingDocs(index);
     }
     
     handleChange = name => event => {
@@ -193,7 +194,7 @@ class TextFields extends React.Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            url: `/candidates/${index}`,
+            url: `candidates/${index}`,
             data: postData
         })
         .then(function (response) {
@@ -429,7 +430,8 @@ const mapStateToProps = ({Nomination}) => {
   };
 
   const mapActionsToProps = {
-    getNominationCandidates
+    getNominationCandidates,
+    getCandidateSupportingDocs
   };
   
   export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(TextFields));

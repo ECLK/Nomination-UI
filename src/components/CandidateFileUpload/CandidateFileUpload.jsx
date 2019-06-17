@@ -6,7 +6,7 @@ import FileUpload from "../common/FileUpload";
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import {postNominationSupportDocs } from '../../modules/nomination/state/NominationAction';
+import {postCandidateSupportDocs} from '../../modules/nomination/state/NominationAction';
 import { connect } from 'react-redux';
 import DoneOutline from '@material-ui/icons/DoneOutline';
 import CloseIcon from '@material-ui/icons/Cancel';
@@ -50,28 +50,21 @@ class CandidateFileUpload extends React.Component {
 
   handleSubmit = (e) => {
     var candidateSuppertDocs = {
-      candidateSupportDocs:this.state.supportdoc
+      candidateSupportDocs:this.state.supportdoc,
+      nominationId:this.props.customProps,
+      candidateId:this.props.index
     }
-    debugger;
         e.preventDefault();
-       
-        axios({
-            method: 'post',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            url: 'nominations/candidate/support-docs',
-            data: candidateSuppertDocs
-        })
-        .then(function (response) {
-           console.log(response);
-          })
-          .catch(function (error) {
-              alert("error",error);
-          });
-  
+        this.props.postCandidateSupportDocs(candidateSuppertDocs);
 };
+
+componentDidMount() {
+  console.log(this.props.supportingDocsData);
+  debugger;
+  this.setState({
+    supportdoc: this.props.supportingDocsData
+  });
+}
 
 
   onSelectFiles = evt => {
@@ -102,12 +95,13 @@ class CandidateFileUpload extends React.Component {
       }
     }
     
-
+debugger;
     this.setState({
       status: evt.type,
       supportdoc:array,
       supportDocId: evt.target.id
     });
+    console.log("oooooooooooooooo",this.state)
 
     // Fetch files
     const { files } = evt.target;
@@ -287,12 +281,13 @@ CandidateFileUpload.propTypes = {
 };
 
 const mapStateToProps = ({Nomination}) => {
-    const {postNominationSupportDocs} = Nomination;
-    return {postNominationSupportDocs};
+    const {postCandidateSupportDocs} = Nomination;
+    const supportingDocsData = Nomination.candidateSupportdocLoaded;
+    return {postCandidateSupportDocs,supportingDocsData};
   };
   
   const mapActionsToProps = {
-    postNominationSupportDocs
+    postCandidateSupportDocs,
   };
   
   export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(CandidateFileUpload));

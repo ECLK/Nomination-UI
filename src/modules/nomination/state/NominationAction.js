@@ -13,7 +13,9 @@ import {
   APPROVED_ELECTIONS,
   PARTY_LIST_LOADED,
   GET_NOMINATION_LIST,
-  RECEIVE_NOMINATION_STATUS
+  RECEIVE_NOMINATION_STATUS,
+  POST_CANDIDATE_SUPPORT_DOC,
+  CANDIDATE_SUPPORT_DOC_LOADED
 
 } from "./NominationTypes";
 import {API_BASE_URL} from "../../../config.js";
@@ -271,6 +273,30 @@ export const setNominationStatus = (nominationSuppertDocs) => {
     };
   }
 
+  export const setCandidateSupportDocData = (val) => {
+    return {
+        type: POST_CANDIDATE_SUPPORT_DOC,
+        payload: val
+    }
+}
+  export function postCandidateSupportDocs(candidateSuppertDocs) {
+    debugger;
+     
+     return function (dispatch) {
+        
+       const response = axios
+       .post(
+         `${API_BASE_URL}/nominations/candidate/support-docs`,
+             {...candidateSuppertDocs}
+       )
+       .then(response => {
+          dispatch(setCandidateSupportDocData(response.data));
+       }).catch(err => {
+             console.log(err)
+       });
+     };
+   }
+
   export const setUpdatedPaymentData = (val) => {
     return {
         type: PUT_NOMINATION_PAYMENTS,
@@ -366,6 +392,37 @@ export function getNominationList() {
 
 //--------------- End of get nomination list---------------------------
 
+//--------------- Start of get nomination candidate support doc list -------------------
+const candidateSupportdocLoaded = (getcandidateSupportdocList) => {
+  return {
+    type: CANDIDATE_SUPPORT_DOC_LOADED,
+    payload: getcandidateSupportdocList,
+  };
+};
+
+export function getCandidateSupportingDocs(candidateId) {
+  return function (dispatch) {
+     
+    const response = axios
+    .get(
+      `${API_BASE_URL}/nominations/${candidateId}/candidate/support-docs`,
+    )
+    .then(response => {
+      const getcandidateSupportdocList = response.data;
+       dispatch(
+        candidateSupportdocLoaded(getcandidateSupportdocList)
+         );
+    }).catch(err => {
+      const getcandidateSupportdocList = [];
+      dispatch(
+        candidateSupportdocLoaded(getcandidateSupportdocList)
+        );
+          console.log(err)
+    });
+  };
+}
+
+//--------------- End of get nomination candidate support doc list---------------------------
 
 
 
