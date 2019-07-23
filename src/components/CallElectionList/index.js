@@ -25,6 +25,9 @@ const styles = theme => ({
         width: '100%',
         backgroundColor: theme.palette.background.paper,
     },
+    tabs: {
+        backgroundColor: '#dcdfe5',
+    }
 });
 
 class ScrollableTabsButtonAuto extends React.Component {
@@ -42,8 +45,9 @@ class ScrollableTabsButtonAuto extends React.Component {
 
             return (
                 <div className={classes.root}>
-                    <AppBar position="static" >
+                    <AppBar style={{color:'black'}} position="static" >
                         <Tabs
+                            classes={{flexContainer: classes.tabs}}
                             value={value}
                             onChange={this.handleChange}
                             // indicatorColor="primary"

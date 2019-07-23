@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import MainMenu from '../../components/MainMenu/MainMenu';
+import AdminMenu from '../../components/AdminMenu/AdminMenu';
 import Axios from 'axios';
 import CheckboxTable from '../../components/CheckboxTable/CheckboxTable';
 import { Button, FormGroup, Paper, Card, CardContent, CardActionArea, CardActions } from '@material-ui/core';
@@ -50,7 +50,6 @@ class AllowNomination extends React.Component {
 
     render() {
         const { classes,electionData,values,errorTextElectorates } = this.props;
-        debugger;
         let rowHeaders = [{
             id: '1111',
             name: 'United National Party (UNP)'
@@ -93,7 +92,7 @@ class AllowNomination extends React.Component {
 
             <div className={classes.root}>
                 <CssBaseline />
-                <MainMenu title="Election Commission of Sri Lanka" ></MainMenu>
+                <AdminMenu title="Election Commission of Sri Lanka" ></AdminMenu>
                 {(errorTextElectorates) ? <Typography style={{color:'red'}} variant="subtitle1" gutterBottom>Select electorates before finish</Typography> : ''}
                 <div className={classes.content}>
                     {/* <Card> */}

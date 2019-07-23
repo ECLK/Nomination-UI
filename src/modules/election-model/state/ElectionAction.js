@@ -6,7 +6,12 @@ import {
     GET_PENDING_ELECTION_MODULE,
     GET_REJECTED_ELECTION_MODULE,
     GET_ELECTION_TEMPLATE_DATA,
-    GET_DELETED_ELECTION_MODULE
+    GET_DELETED_ELECTION_MODULE,
+    GET_ALL_ELECTION_TEMPLATES,
+    ELECTION_TEMPLATE_REVIEW_DATA,
+    ON_ELECTION_TEMPLATE_APPROVAL_CHANGE,
+    RECEIVE_APPROVED_ELECTION_TEMPLATES,
+    RECIVE_PENDING_ELECTION_MODULE
 } from "./ElectionTypes";
 import { API_BASE_URL } from "../../../config.js";
 import axios from "axios";
@@ -105,7 +110,6 @@ export function postCallElectionData(electionData) {
 }
 
 export const createElection = function createElection(electionName) {
-    
     return function (dispatch) {
         dispatch({
             type: CREATE_ELECTION_MODULE,
@@ -190,10 +194,22 @@ export const submitElection = function saveElection(election) {
             .then(response => {
                 if(response.data){
                     election.submited = true;
+                    var electionNew= {createdAt: response.data.createdAt,
+                        createdBy: response.data.createdBy,
+                        id: response.data.id,
+                        lastModified: response.data.updatedAt,
+                        moduleId: "",
+                        name: response.data.name,
+                        status: "PENDING"}
                     dispatch({
                         type: UPDATE_ELECTION_MODULE,
                         payload: election
                     });
+                    dispatch({
+                        type: RECIVE_PENDING_ELECTION_MODULE,
+                        payload: electionNew
+                    });
+                    
                     dispatch(openSnackbar({ message: election.name + ' has been submitted for approval' }));
                 }
             }).catch(err => {
@@ -324,7 +340,6 @@ const deletedElectionModuleLoaded = (moduleId) => {
 };
 
 export function deleteElectionModule(moduleId) {
-    debugger;
     return function (dispatch) {
 
         const response = axios
@@ -353,12 +368,19 @@ export const getFieldOptions = function getFieldOptions() {
 
     promises.push(axios.get(`${API_BASE_URL}/field-options/candidate-configs`));
     promises.push(axios.get(`${API_BASE_URL}/field-options/candidate-supporting-docs`));
-    
+    promises.push(axios.get(`${API_BASE_URL}/field-options/nomination-supporting-docs`));
+    promises.push(axios.get(`${API_BASE_URL}/field-options/objection-supporting-docs`));
+    promises.push(axios.get(`${API_BASE_URL}/field-options/payment-supporting-docs`));
+
+
     return axios.all(promises)
         .then(args =>{
             return {
                 candidateConfigs: args[0].data,
                 candidateSupportingDocs: args[1].data,
+                nominationSupportingDocs: args[2].data,
+                objectionSupportingDocs: args[3].data,
+                paymentSupportingDocs: args[4].data,
             }
         });
 }
@@ -372,7 +394,27 @@ export const setGetTemplateData = (val) => {
 }
 
 export function getElectionTemplateData(moduleId) {
-    //TODO: config ids should get from the front end and the array should be dynamic
+    if(moduleId===undefined){
+        return function (dispatch) {
+            const new_election_module= { 
+                name: '' ,
+                // nominationSubmission: [],
+                divisionCommonName:'',
+                approval_status:'',
+                eligibilityCheckList: [],
+                candidateFormConfiguration: [],
+                supportingDocuments: [],
+                divisionConfig:[],   
+                electionConfig:[],
+                ElectionTemplateReviewData:[],
+            }
+            dispatch({
+                type: GET_ELECTION_TEMPLATE_DATA,
+                payload: new_election_module
+            })
+        };
+    }else{
+        //TODO: config ids should get from the front end and the array should be dynamic
     let allElectionModuleData = {
         "moduleId": moduleId,
         "divisionCommonName":'Provintial',
@@ -448,12 +490,12 @@ export function getElectionTemplateData(moduleId) {
                 { ...allElectionModuleData }
             )
             .then(response => {
-                console.log("response.data", response.data);
                 dispatch(setGetTemplateData(response.data));
             }).catch(err => {
                 console.log(err)
             });
     }
+}
 }
 
 export const asyncValidateTemplate = function asyncValidateTemplate(templateName) {
@@ -468,3 +510,107 @@ export const asyncValidateTemplate = function asyncValidateTemplate(templateName
             });
     }
 }
+
+//Get all election templates
+const allElectionTemplateLoaded = (getAllTemplates) => {
+    return {
+        type: GET_ALL_ELECTION_TEMPLATES,
+        payload: getAllTemplates,
+    };
+};
+
+export function getAllElectionTemplates() {
+    debugger;
+    return function (dispatch) {
+
+        const response = axios
+            .get(
+                `${API_BASE_URL}/election-modules`,
+            )
+            .then(response => {
+                const getAllTemplates = response.data;
+                debugger;
+                dispatch(
+                    allElectionTemplateLoaded(getAllTemplates)
+                );
+            }).catch(err => {
+                const getAllTemplates = [];
+                debugger;
+                dispatch(
+                    allElectionTemplateLoaded(getAllTemplates)
+                );
+                console.log(err)
+            });
+    };
+}
+
+//Get data for election template approve detail page
+export const electionTemplateReviewDataLoaded = (val) => {
+    return {
+        type: ELECTION_TEMPLATE_REVIEW_DATA,
+        payload: val
+    }
+}
+export function getElectionTemplateReviewData(id) {
+    return function (dispatch) {
+
+        const response = axios
+            .get(
+                `${API_BASE_URL}/elections/${id}`,
+            )
+            .then(response => {
+                const getElectionTemplateReviewData = response.data;
+                dispatch(
+                    electionTemplateReviewDataLoaded(getElectionTemplateReviewData)
+                );
+            }).catch(err => {
+                const getElectionTemplateReviewData = [];
+                dispatch(
+                    electionTemplateReviewDataLoaded(getElectionTemplateReviewData)
+                );
+                console.log(err)
+            });
+    };
+}
+
+// change election template review status
+export const onChangeApprovalData = (templateApprovals) => {
+    return {
+      type: ON_ELECTION_TEMPLATE_APPROVAL_CHANGE,
+      payload: templateApprovals,
+    }
+  };
+
+  export function receiveApprovedElectionTemplates (templateApprovals) {
+    return {
+        type: RECEIVE_APPROVED_ELECTION_TEMPLATES,
+        payload: templateApprovals
+    }
+}
+  
+  export function onChangeApproval(moduleId,status,reviewNote,name) {
+    return function (dispatch) {
+      let templateApprovals = {
+        updatedAt: Date.parse(new Date()),
+        status: status,
+        moduleId: moduleId,
+        reviewNote:reviewNote
+      };
+      
+       debugger;
+      const response = axios
+      .put(
+        `${API_BASE_URL}/election-modules/${moduleId}/approve-election-templates`,
+            {...templateApprovals}
+      )
+      .then(response => {
+          debugger;
+         dispatch(onChangeApprovalData(response.data));
+         dispatch(receiveApprovedElectionTemplates(templateApprovals));
+         dispatch(openSnackbar({ message:(status==='APPROVE') ?  name + ' has been approved' :  name + ' has been rejected'}));
+      }).catch(err => {
+          debugger;
+            console.log("errerrerrerrerrerrerr",err)
+      });
+    };
+  }

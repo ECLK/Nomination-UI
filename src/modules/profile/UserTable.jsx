@@ -1,14 +1,15 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import MUIDataTable from "mui-datatables";
-import CustomToolbar from "./CustomToolbar";
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+// import CustomToolbar from "./CustomToolbar";
 import CustomToolbarEdit from "./CustomToolbarEdit";
-import CustomToolbarDelete from "./CustomToolbarDelete";
+// import CustomToolbarDelete from "./CustomToolbarDelete";
 import PropTypes from "prop-types";
-import { getNominationCandidates } from '../../modules/nomination/state/NominationAction';
+import {getTeams } from '../nomination/state/NominationAction';
+import {getUserList } from './state/ProfileAction';
 import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
-import { de } from 'date-fns/locale';
 
 
 
@@ -56,8 +57,9 @@ class CustomizedTable extends React.Component {
     }
 
     componentDidMount() {
-        const { customProps, getNominationCandidates } = this.props;
-        getNominationCandidates(customProps);
+        const { getTeams,getUserList } = this.props;
+        getTeams();
+        getUserList();
     }
 
     handleDrawerOpen = () => {
@@ -67,6 +69,17 @@ class CustomizedTable extends React.Component {
     handleDrawerClose = () => {
         this.setState({ open: false });
     };
+
+    getMuiTheme = () => createMuiTheme({
+        overrides: {
+          MUIDataTableBodyCell: {
+            root: {
+              backgroundColor: "#f7f8fa",
+              width:300
+            }
+          }
+        }
+      })
 
     render() {
         const { classes, CandidateList } = this.props;
@@ -81,59 +94,23 @@ class CustomizedTable extends React.Component {
                 }
             },
             {
-                name: "NIC",
+                name: "User Name",
                 options: {
                     display: true
                 }
             },
             {
-                name: "Full Name",
+                name: "Email",
                 options: {
                     display: true
                 }
             },
             {
-                name: "Preferred Name",
+                name: "Party",
                 options: {
                     display: true
                 }
             },
-            {
-                name: "Date of Birth",
-                options: {
-                    display: true
-                }
-            },
-            {
-                name: "Gender",
-                options: {
-                    display: true
-                }
-            },
-            {
-                name: "Occupation",
-                options: {
-                    display: true
-                }
-            },
-            {
-                name: "Address",
-                options: {
-                    display: true
-                }
-            },
-            // {
-            //     name: "Electoral Division",
-            //     options: {
-            //         display: true
-            //     }
-            // },
-            // {
-            //     name: "Electoral Division Code",
-            //     options: {
-            //         display: true
-            //     }
-            // },
             {
                 name: "Action",
                 options: {
@@ -147,19 +124,18 @@ class CustomizedTable extends React.Component {
                                         value={value}
                                         index={tableMeta.rowData[0]}
                                         change={event => updateValue(event)}
-                                        customProps={customProps}
                                         modalType="Update"
                                     />
                                 </Grid>
                                 <Grid item lg={6}>
-                                    <CustomToolbarDelete
+                                    {/* <CustomToolbarDelete
                                         className={classes.grid}
                                         value={value}
                                         index={tableMeta.rowData[0]}
                                         change={event => updateValue(event)}
                                         customProps={customProps}
                                         modalType="Delete"
-                                    />
+                                    /> */}
                                 </Grid>
                             </Grid>
                         );
@@ -169,39 +145,71 @@ class CustomizedTable extends React.Component {
         ]
 
 
-        const outputData = rows.map(Object.values);
-        const { customProps } = this.props;
-        const data = outputData;
+        // const outputData = rows.map(Object.values);
+        const { userList,partyList } = this.props;
+       
+        // console.log(partyMap);
+        // debugger;
+        function getParty(id){
+            const partyMap = {};
+            for (var j = 0; j < partyList.length; j++) {
+                partyMap[partyList[j].team_id] = partyList[j]
+            }
+            
+            return partyMap[id] ? partyMap[id].team_name : ""
+        }
+
+        let data = userList.map(obj=>{
+            return [
+                obj.id, 
+                obj.name, 
+                obj.email,
+                getParty(obj.party),
+                obj.action
+            ]
+        });
+        // let data = userList.map(x => Object.values(x));
+
+        // const data = outputData;
+        // const data = [
+        //     ["1", "Yujith", "ujith@gmail.com", "UPFA", "Business Analyst"],
+        //     ["234", "Clemant", "clem@gmail.com", "UNP", "Business Analyst"],
+        //     ["3", "Umayanga", "umayanga@gmail.com", "JVP", "Business Analyst"]]
         const options = {
             filterType: "dropdown",
             responsive: "scroll",
-            customToolbar: () => {
-                return (
-                    <CustomToolbar customProps={customProps} modalType="Add"  />
-                );
-            }
+            selectableRows: false
+            // customToolbar: () => {
+            //     return (
+            //         <CustomToolbar customProps={customProps} modalType="Add"  />
+            //     );
+            // }
         };
 
        
         return (
+            <MuiThemeProvider theme={this.getMuiTheme()}>
             <MUIDataTable
-                title={"Candidates list"}
+                title={"User list"}
                 data={data}
                 columns={columns}
                 options={options}
             />
+            </MuiThemeProvider>
         );
     }
 }
 
-const mapStateToProps = ({ Nomination }) => {
-    const { getNominationCandidates } = Nomination;
-    const CandidateList = Nomination.getNominationCandidates;
-    return { getNominationCandidates, CandidateList };
+const mapStateToProps = ({ Profile,Nomination }) => {
+    // const { getNominationCandidates } = Nomination;
+    const userList = Profile.userList;
+    const partyList = Nomination.partyList;
+    return { userList,partyList };
 };
 
 const mapActionsToProps = {
-    getNominationCandidates
+    getTeams,
+    getUserList
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(CustomizedTable));

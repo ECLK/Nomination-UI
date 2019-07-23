@@ -134,7 +134,6 @@ export function getAllElections() {
             )
             .then(response => {
                 const getAllElections = response.data;
-                debugger
                 dispatch(
                     allElectionLoaded(getAllElections)
                 );
@@ -488,13 +487,11 @@ export const onChangeApprovalData = (electionApprovals) => {
         });
 }
 export const asyncValidateElection = function asyncValidateElection(electionName) {
-    debugger;
     let promises = [];
     if(electionName){
         promises.push(axios.get(`${API_BASE_URL}/elections/validations/${electionName}`));
         return axios.all(promises)
             .then(args =>{
-                debugger;
                 return {
                     exist: args[0].data,
                 }
@@ -510,7 +507,6 @@ export const setGetCallElectionData = (val) => {
 }
 
 export function getCallElectionData(electionId) {
-    debugger;
     //TODO: config ids should get from the front end and the array should be dynamic
     let newDate = new Date();
    

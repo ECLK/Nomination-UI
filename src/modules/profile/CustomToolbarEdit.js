@@ -5,13 +5,16 @@ import EditIcon from "@material-ui/icons/Edit";
 import { withStyles } from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
 import Modal from "react-responsive-modal";
-import CandidateTabContainer from '../CandidateTabContainer';
+import UserProfileUpdate from '../../components/UserProfileUpdate';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
+// import { getUserInfo } from './state/ProfileAction';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
+import { connect } from 'react-redux';
+import { de } from "date-fns/esm/locale";
 
 const defaultToolbarStyles = {
   iconButton: {
@@ -84,10 +87,17 @@ class CustomToolbar extends React.Component {
     this.setState({ open: false });
   };
 
+  componentWillMount(){
+    console.log("dddddddddddd");
+    // const {getUserInfo,index} = this.props;
+    // debugger;
+    // getUserInfo(index);
+  }
+
   render() {
+  
     const { classes, customProps ,index,modalType } = this.props;
     const { open } = this.state;
-    debugger;
     return (
       <React.Fragment>
         <Tooltip title={"Edit"}>
@@ -102,12 +112,10 @@ class CustomToolbar extends React.Component {
           open={this.state.open}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.onCloseModal}>
-            {modalType} Candidate
+            {modalType} User Profile
           </DialogTitle>
           <DialogContent>
-            <Typography gutterBottom>
-            <CandidateTabContainer onCloseModal={this.onCloseModal} customProps={customProps} index={index}/>
-            </Typography>
+            <UserProfileUpdate onCloseModal={this.onCloseModal} customProps={customProps} index={index}/>
           </DialogContent>
           {/* <DialogActions>
         
@@ -132,4 +140,16 @@ class CustomToolbar extends React.Component {
 
 }
 
-export default withStyles(defaultToolbarStyles, { name: "CustomToolbar" })(CustomToolbar);
+// export default withStyles(defaultToolbarStyles, { name: "CustomToolbar" })(CustomToolbar);
+
+const mapStateToProps = ({Profile}) => {
+  const userInfo = Profile.userInfo;
+  return {userInfo};
+};
+
+const mapActionsToProps = {
+  // getUserInfo
+  // getTeams
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(defaultToolbarStyles, { name: "CustomToolbar" })(CustomToolbar));

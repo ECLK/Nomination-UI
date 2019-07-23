@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import MainMenu from "../../components/MainMenu/MainMenu";
 import NominationForm from "../../components/NominationForm";
-import { getNominationPayments } from "./state/NominationAction";
+import { getNominationPayments,getNominationStatus } from "./state/NominationAction";
 import { connect } from "react-redux";
 
 const drawerWidth = 240;
@@ -90,8 +90,9 @@ class Dashboard extends React.Component {
   }
 
   async componentDidMount() {
-    const { getNominationPayments } = this.props;
+    const { getNominationPayments,getNominationStatus } = this.props;
     await getNominationPayments(this.props.location.state.id);
+    await getNominationStatus(sessionStorage.getItem('election_id'));
   }
 
   handleDrawerOpen = () => {
@@ -126,7 +127,7 @@ Dashboard.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-const mapStateToProps = ({ Nomination }) => {
+const mapStateToProps = ({ Nomination,Election }) => {
   // const {nominationPayments} = Nomination;
   const { getNominationPayments } = Nomination;
   const NominationPayments = Nomination.getNominationPayments;
@@ -138,7 +139,8 @@ const mapStateToProps = ({ Nomination }) => {
 
 const mapActionsToProps = {
   // postNominationPayments,
-  getNominationPayments
+  getNominationPayments,
+  getNominationStatus
   // updateNominationPayments
 };
 

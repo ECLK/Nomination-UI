@@ -13,8 +13,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import {withStyles} from '@material-ui/core/styles';
-import {Link} from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 
 import HomeIcon from '@material-ui/icons/Home';
 import MoneyIcon from '@material-ui/icons/AttachMoney';
@@ -61,7 +61,7 @@ const styles = theme => ({
   logoutBtn: {
     //flex: 1
   },
-  
+
 });
 
 class ResponsiveDrawer extends React.Component {
@@ -75,88 +75,82 @@ class ResponsiveDrawer extends React.Component {
   };
 
   handleLogout = () => {
-    this.setState({goToLogin:true});
+    this.setState({ goToLogin: true });
   };
- 
+
 
   render() {
     const { classes, theme } = this.props;
     if (this.state.goToLogin) return <Redirect to="/login" />;
+    var cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)scope\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    var scopes = decodeURIComponent(cookieValue).split(/ +/g)
+    var indexA = scopes.findIndex(x => x === 'election_template_edit');
 
+    if(scopes.length>1){
+      var temp = scopes[indexA];
+      scopes[indexA] = scopes[scopes.length - 1];
+      scopes[scopes.length - 1] = temp;
+    }
     var user_role = sessionStorage.getItem('role');
 
+    //  var scopes = ['home','election_edit','nomination_approval','election_approval','objection_approval','payment_approval','template_edit','profile'];
+    const list = scopes.map((scope) => {
+      switch (scope) {
+        case "call_election_edit":
+          return <ListItem button key="Call_election" component={Link} to='/admin/call-election' selected={this.props.location.pathname === "/admin/call-election"} >
+            <ListItemIcon><NominationIcon /></ListItemIcon>
+            <ListItemText primary="Call Election" />
+          </ListItem>
+        case "election_template_edit":
+          return <div><Divider /><ListItem button key="Create_election" component={Link} to='/admin/create-election-home' selected={this.props.location.pathname === "/admin/create-election-home"}>
+            <ListItemIcon><NominationIcon /></ListItemIcon>
+            <ListItemText primary="Create Election" />
+          </ListItem></div>
+        case "nomination_approval_edit":
+          return <ListItem button key="Nomination" component={Link} to='/admin/nomination-review' selected={this.props.location.pathname === "/admin/nomination-review"}>
+            <ListItemIcon><NominationIcon /></ListItemIcon>
+            <ListItemText primary="Nomination Approval" />
+          </ListItem>
+        case "call_election_approve_edit":
+          return <ListItem button key="Election_review" component={Link} to='/election-process-review'
+            selected={this.props.location.pathname === "/election-process-review"}>
+            <ListItemIcon><NominationIcon /></ListItemIcon>
+            <ListItemText primary="Election Approval" />
+          </ListItem>
+        case "objection_approve_edit":
+          return <ListItem button key="Objection_review" component={Link} to='/admin/objection-review' selected={this.props.location.pathname === "/admin/objection-review"} >
+            <ListItemIcon><ObjectionIcon /></ListItemIcon>
+            <ListItemText primary="Objection Approval" />
+          </ListItem>
+        case "payment_approve_edit":
+          return <ListItem button key="Payment_review" component={Link} to='/admin/payment-review'
+            selected={this.props.location.pathname === "/admin/payment-review"}>
+            <ListItemIcon><MoneyIcon /></ListItemIcon>
+            <ListItemText primary="Payment Approval" />
+          </ListItem>
+        case "election_template_approval":
+          return <ListItem button key="template_review" component={Link} to='/admin/template-review'
+              selected={this.props.location.pathname === "/admin/template-review"}>
+          <ListItemIcon><MoneyIcon/></ListItemIcon>
+          <ListItemText primary="Election Template Approval"/>
+          </ListItem>
+      }
+    });
 
     const drawer = (
       <div>
         <div className={classes.toolbar} />
         <Divider />
         <List>
-          {(user_role==='cg_user') ?
-          <div>
-            <ListItem button key="Home" component={Link} to='/admin/home' selected={this.props.location.pathname === "/admin/home"} >
-              <ListItemIcon><HomeIcon /></ListItemIcon>
-              <ListItemText primary="Home" />
-            </ListItem>
-            <ListItem button key="Election_review" component={Link} to='/election-process-review'
-                      selected={this.props.location.pathname === "/election-process-review"}>
-                <ListItemIcon><NominationIcon/></ListItemIcon>
-                <ListItemText primary="Election Review"/>
-            </ListItem>
-            <ListItem button key="Nomination" component={Link} to='/admin/nomination-review' selected={this.props.location.pathname === "/admin/nomination-review"}>
-              <ListItemIcon><NominationIcon /></ListItemIcon>
-              <ListItemText primary="Nomination Review" />
-            </ListItem>
-            <ListItem button key="Objection_review" component={Link} to='/admin/objection-review' selected={this.props.location.pathname === "/admin/objection-review"} >
-              <ListItemIcon><ObjectionIcon /></ListItemIcon>
-              <ListItemText primary="Objection Review" />
-            </ListItem>
-            <ListItem button key="Payment_review" component={Link} to='/admin/payment-review'
-                      selected={this.props.location.pathname === "/admin/payment-review"}>
-                <ListItemIcon><MoneyIcon/></ListItemIcon>
-                <ListItemText primary="Payment Review"/>
-            </ListItem>
-            
-             </div > : (user_role==='ac_user') ?
-              <div>
-              <ListItem button key="Home" component={Link} to='/admin/home' selected={this.props.location.pathname === "/admin/home"} >
-                <ListItemIcon><HomeIcon /></ListItemIcon>
-                <ListItemText primary="Home" />
-              </ListItem>
-              <ListItem button key="Call_election" component={Link} to='/admin/call-election' selected={this.props.location.pathname === "/admin/call-election"} >
-              <ListItemIcon><NominationIcon/></ListItemIcon>
-                <ListItemText primary="Call Election" />
-              </ListItem>
-              <ListItem button key="Nomination" component={Link} to='/admin/nomination-review' selected={this.props.location.pathname === "/admin/nomination-review"}>
-                <ListItemIcon><NominationIcon /></ListItemIcon>
-                <ListItemText primary="Nomination Review" />
-              </ListItem>
-              <ListItem button key="Objection_review" component={Link} to='/admin/objection-review' selected={this.props.location.pathname === "/admin/objection-review"} >
-                <ListItemIcon><ObjectionIcon /></ListItemIcon>
-                <ListItemText primary="Objection Review" />
-              </ListItem>
-              <ListItem button key="Payment_review" component={Link} to='/admin/payment-review'
-                        selected={this.props.location.pathname === "/admin/payment-review"}>
-                  <ListItemIcon><MoneyIcon/></ListItemIcon>
-                  <ListItemText primary="Payment Review"/>
-              </ListItem>
-              </div > : ' '
-            }
-
-        </List>
-       
-        <Divider />
-        
-        <List>
-        {(user_role==='ac_user') ?
-          <ListItem button key="Create_election" component={Link} to='/admin/create-election-home' selected={this.props.location.pathname === "/admin/create-election-home"}>
-            <ListItemIcon><NominationIcon/></ListItemIcon>
-              <ListItemText primary="Create Election" />
-            </ListItem> : ''}
-            <ListItem button key="Profile" component={Link} to='/profile' selected={this.props.location.pathname === "/profile"}>
-              <ListItemIcon><ProfileIcon /></ListItemIcon>
-              <ListItemText primary="Profile" />
-            </ListItem>
-          
+        <ListItem button key="Home" component={Link} to='/admin/home' selected={this.props.location.pathname === "/admin/home"} >
+            <ListItemIcon><HomeIcon /></ListItemIcon>
+            <ListItemText primary="Home" />
+          </ListItem>
+          {list}
+          <ListItem button key="Profile" component={Link} to='/profile' selected={this.props.location.pathname === "/profile"}>
+            <ListItemIcon><ProfileIcon /></ListItemIcon>
+            <ListItemText primary="Profile" />
+          </ListItem>
         </List>
       </div>
     );
@@ -177,15 +171,15 @@ class ResponsiveDrawer extends React.Component {
             <Typography variant="h6" color="inherit" noWrap>
               {this.props.title}
             </Typography>
-            <div style={{flex:1}}></div>
-            
+            <div style={{ flex: 1 }}></div>
+
             <Button color="inherit">
-              <PersonIcon style={{marginRight:5}}/>
-              {(user_role==='cg_user') ? 'EC-Chairman' : (user_role==='ac_user') ? ' Commissioner-General' : ''}
+              <PersonIcon style={{ marginRight: 5 }} />
+              {(user_role === 'cg_user') ? 'EC-Chairman' : (user_role === 'ac_user') ? ' Commissioner-General' : ''}
             </Button>
-            <Button className={classes.logoutBtn}  onClick={this.handleLogout} color="inherit">
-            <PowerSetting style={{marginRight:5}}/>
-            Logout
+            <Button className={classes.logoutBtn} onClick={this.handleLogout} color="inherit">
+              <PowerSetting style={{ marginRight: 5 }} />
+              Logout
             </Button>
 
           </Toolbar>
@@ -200,7 +194,7 @@ class ResponsiveDrawer extends React.Component {
               open={this.state.mobileOpen}
               onClose={this.handleDrawerToggle}
               classes={{
-               // paper: classes.drawerPaper,
+                // paper: classes.drawerPaper,
               }}
             >
               {drawer}

@@ -55,14 +55,7 @@ done: {
 },
 });
 
-function getSteps() {
-  var user_role = sessionStorage.getItem('role');
-  if(user_role!=='ig_user'){
-    return ['Candidate Details', 'Review', 'Nomination Supporting Documents'];
-  }else{
-    return ['Candidate Details', 'Security Deposit Details', 'Review', 'Nomination Supporting Documents'];
-  }
-}
+
 
 
 class NominationForm extends React.Component {
@@ -99,12 +92,24 @@ class NominationForm extends React.Component {
     }    
   }
 
+   getSteps() {
+
+    var paymentStatus = this.props.nominationPaymentStatus;
+
+    if(paymentStatus!=='Yes'){
+      return ['Candidate Details', 'Review', 'Nomination Supporting Documents'];
+    }else{
+      return ['Candidate Details', 'Security Deposit Details', 'Review', 'Nomination Supporting Documents'];
+    }
+  }
+
   componentDidMount(){
     Axios.get(`elections/${sessionStorage.getItem('election_id')}`)
     .then(res => {
         const election = res.data;
         this.setState({ election });
     });
+  
   }
 
   onSelectFiles = evt => {
@@ -296,6 +301,7 @@ class NominationForm extends React.Component {
 
   getStepContent(step,props) {
     var user_role = sessionStorage.getItem('role');
+    var paymentStatus = this.props.nominationPaymentStatus;
     const { classes } = this.props;
     const {errorTextDepositor,errorTextDepositedDate} = this.state;
     const errorTextItems = { errorTextDepositor,errorTextDepositedDate }
@@ -311,7 +317,7 @@ class NominationForm extends React.Component {
       </div>);
     
     const { nominationPayments,NominationPayments, customProps,nominationStatus,division,candidateCount } = this.props;
-    if(user_role==='ig_user'){
+    if(paymentStatus==='Yes'){
       switch (step) {
         case 0:
           return <NominationStep1 customProps={customProps}/>;
@@ -325,7 +331,7 @@ class NominationForm extends React.Component {
           // return <NominationStep2 candidateCount={candidateCount} nominationPayments={nominationPayments} handleChange={this.handleChange} />;
         }
         case 2:
-          return <NominationStep5 user_role={user_role} division={division} candidateCount={candidateCount} NominationPayments={this.state} />;
+          return <NominationStep5 paymentStatus={paymentStatus} division={division} candidateCount={candidateCount} NominationPayments={this.state} />;
         case 3:
         return <NominationStep3 customProps={customProps} supportdoc={this.state.supportdoc} closeElement={closeElement} doneElement={doneElement} onSelectFiles={this.onSelectFiles}  />;
         default:
@@ -336,7 +342,7 @@ class NominationForm extends React.Component {
         case 0:
           return <NominationStep1 customProps={customProps}/>;
         case 1:
-          return <NominationStep5 user_role={user_role} division={division} candidateCount={candidateCount} NominationPayments={this.state} />;
+          return <NominationStep5 paymentStatus={paymentStatus} division={division} candidateCount={candidateCount} NominationPayments={this.state} />;
         case 2:
         return <NominationStep3 customProps={customProps} supportdoc={this.state.supportdoc} closeElement={closeElement} doneElement={doneElement} onSelectFiles={this.onSelectFiles}  />;
         default:
@@ -348,7 +354,7 @@ class NominationForm extends React.Component {
 
   
   totalSteps = () => {
-    return getSteps().length;
+    return this.getSteps().length;
   };
   
 
@@ -360,7 +366,7 @@ class NominationForm extends React.Component {
     if (this.isLastStep() && !this.allStepsCompleted()) {
       // It's the last step, but not all steps have been completed,
       // find the first step that has been completed
-      const steps = getSteps();
+      const steps = this.getSteps();
       activeStep = steps.findIndex((step, i) => !(i in this.state.completed));
     } else {
       activeStep = this.state.activeStep + 1;
@@ -449,10 +455,11 @@ class NominationForm extends React.Component {
   }
 
   render() {
+    console.log(this.state.nominationPaymentStatus)
     const { classes,division } = this.props;
-    const steps = getSteps();
+    const steps = this.getSteps();
     const { activeStep } = this.state;
-    var user_role = sessionStorage.getItem('role');
+    var paymentStatus = this.props.nominationPaymentStatus;
     return (
       <div className={classes.root}>
       {this.state.goToHome ? (
@@ -505,7 +512,7 @@ class NominationForm extends React.Component {
                 >
                   Back
                 </Button>
-                {(activeStep !== 3 && user_role === 'ig_user') || (user_role !== 'ig_user' && activeStep !== 2) ?
+                {(activeStep !== 3 && paymentStatus === 'Yes') || (paymentStatus !== 'No' && activeStep !== 2) ?
                 <Button
                   variant="contained"
                   color="primary"
@@ -516,7 +523,7 @@ class NominationForm extends React.Component {
                 </Button> : ' '
                 }
               
-                    {activeStep === 3 || (user_role !== 'ig_user' && activeStep === 2) ? 
+                    {activeStep === 3 || (paymentStatus !== 'Yes' && activeStep === 2) ? 
                     <Button variant="contained" color="primary" onClick={this.handleComplete}>
                       Submit For Approval
                     </Button> : ' '
@@ -555,12 +562,12 @@ const mapStateToProps = ({Nomination,Election}) => {
   const NominationCandidates = Nomination.getNominationCandidates;
   const {updateNominationPayments} = Nomination;
   const {postNominationSupportDocs} = Nomination;
+  const nominationPaymentStatus = Nomination.nominationPaymentStatus;
   const {openSnackbar} = Election;
 
   
   
-  
-  return {nominationPayments,updateNominationPayments,NominationPayments,postNominationSupportDocs,NominationCandidates,openSnackbar};
+  return {nominationPayments,updateNominationPayments,NominationPayments,postNominationSupportDocs,NominationCandidates,openSnackbar,nominationPaymentStatus};
 };
 
 const mapActionsToProps = {

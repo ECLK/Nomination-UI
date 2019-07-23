@@ -15,7 +15,8 @@ import {
   GET_NOMINATION_LIST,
   RECEIVE_NOMINATION_STATUS,
   POST_CANDIDATE_SUPPORT_DOC,
-  CANDIDATE_SUPPORT_DOC_LOADED
+  CANDIDATE_SUPPORT_DOC_LOADED,
+  NOMINATION_PAYMENT_STATUS_LOADED
 
 } from "./NominationTypes";
 import {API_BASE_URL} from "../../../config.js";
@@ -424,7 +425,37 @@ export function getCandidateSupportingDocs(candidateId) {
 
 //--------------- End of get nomination candidate support doc list---------------------------
 
+//--------------- Start of get nomination security deposit status -------------------
+const nominationPaymentStatusLoaded = (paymentStatus) => {
+  return {
+    type: NOMINATION_PAYMENT_STATUS_LOADED,
+    payload: paymentStatus,
+  };
+};
 
+export function getNominationStatus(electionId) {
+  return function (dispatch) {
+     
+    const response = axios
+    .get(
+      `${API_BASE_URL}/nominations/${electionId}/payment-status`,
+    )
+    .then(response => {
+      const paymentStatus = response.data;
+       dispatch(
+        nominationPaymentStatusLoaded(paymentStatus)
+         );
+    }).catch(err => {
+      const paymentStatus = {};
+      dispatch(
+        nominationPaymentStatusLoaded(paymentStatus)
+        );
+          console.log(err)
+    });
+  };
+}
+
+//--------------- End of get nomination security deposit status ---------------------------
 
 
 

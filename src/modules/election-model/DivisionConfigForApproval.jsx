@@ -22,6 +22,9 @@ import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
+import DivisionTable from './DivisionTable';
+import TextField from '@material-ui/core/TextField';
+
 
 const styles = theme => ({
     root: {
@@ -41,7 +44,8 @@ class DivisionConfig extends React.Component {
         divisions: [],
         errorTextDivisionCode:'',
         errorTextDivisionName:'',
-        errorTextNoOfCandidates:''
+        errorTextNoOfCandidates:'',
+        divisionCommonName:''
     };
 
     constructor(){
@@ -113,44 +117,25 @@ class DivisionConfig extends React.Component {
         return (
             <div className={classes.root}>
 
-                <Grid container spacing={24}>
+                <Grid style={{marginLeft:20}} container spacing={24}>
                     <Grid item xs={12}>
                         <FormControl  error={(this.props.errorTextDivisionCommonName) ? true : false} className={classes.formControl}>
-                            <InputLabel className={classes.textField} htmlFor="common-name">Division Common Name</InputLabel>
-                           <Input className={classes.textField} aria-describedby="component-error-text" id="common-name" value={this.props.electionModule['divisionCommonName']} onChange={handleChange('divisionCommonName')} />
+                            {/* <InputLabel className={classes.textField} htmlFor="common-name">Division Common Name</InputLabel> */}
+                            <TextField
+                                id="common-name"
+                                label="Division Common Name"
+                                className={classes.textField}
+                                value={this.props.electionModule['divisionCommonName']} 
+                                // onChange={handleChange('divisionCommonName')}
+                                margin="normal"
+                                variant="outlined"
+                            />
+                           {/* <Input className={classes.textField} aria-describedby="component-error-text" id="common-name" value={this.props.electionModule['divisionCommonName']} onChange={handleChange('divisionCommonName')} /> */}
                            <FormHelperText>{(this.props.errorTextDivisionCommonName) ? 'This field is required!' : '(e.g. Province)'}</FormHelperText>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12}>
-
-                    </Grid>
-                    <Grid item xs={2}>
-                        <FormControl error={(this.state.errorTextDivisionName==='emptyField') ? true : false} className={classes.formControl}>
-                            <InputLabel htmlFor="common-name">Division Name </InputLabel>
-                            <Input id="common-name" value={this.state.divisionName} onChange={handleChange('divisionName')} />
-                            <FormHelperText>{(this.state.errorTextDivisionName==='emptyField') ? 'This field is required!' : ''}</FormHelperText>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <FormControl error={(this.state.errorTextDivisionCode==='emptyField') ? true : false} className={classes.formControl}>
-                            <InputLabel htmlFor="common-name">Division Code</InputLabel>
-                            <Input id="common-name" value={this.state.divisionCode} onChange={handleChange('divisionCode')} />
-                            <FormHelperText>{(this.state.errorTextDivisionCode==='emptyField') ? 'This field is required!' : ''}</FormHelperText>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <FormControl error={(this.state.errorTextNoOfCandidates==='emptyField') ? true : false} className={classes.formControl}>
-                            <InputLabel htmlFor="common-name">No of Candidates</InputLabel>
-                            <Input id="common-name" value={this.state.noOfCandidates} onChange={handleChange('noOfCandidates')} />
-                            <FormHelperText>{(this.state.errorTextNoOfCandidates==='emptyField') ? 'This field is required!' : ''}</FormHelperText>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <IconButton variant="outlined" className={classes.button} aria-label="Delete" onClick={this.addDivision}>
-                            <AddIcon />
-                        </IconButton>
-                    </Grid>
-                    {
+                    
+                    {/* {
                         this.props.electionModule.divisionConfig.map((element, index) => {
                             return (<React.Fragment>
                                 <Grid item xs={2}>
@@ -162,14 +147,10 @@ class DivisionConfig extends React.Component {
                                 <Grid item xs={2}>
                                     <Typography variant="body1" >{element.noOfCandidates}</Typography>
                                 </Grid>
-                                <Grid item xs={6}>
-                                    <IconButton variant="outlined" className={classes.button} aria-label="Delete" onClick={this.removeDivision(index)}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </Grid>
                             </React.Fragment>);
                         })
-                    }
+                    } */}
+                    <DivisionTable electionModule={this.props.electionModule}></DivisionTable>
                 </Grid>
                 {(this.props.errorTextDivisionConfig==='emptyField') ? <Typography style={{color:'red'}} variant="subtitle1" gutterBottom>Please add at least one division!</Typography> : ''}
 

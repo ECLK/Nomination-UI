@@ -10,7 +10,8 @@ import CardContent from '@material-ui/core/CardContent';//--
 import Button from '@material-ui/core/Button';//--
 import Typography from '@material-ui/core/Typography';//--
 import { Redirect } from 'react-router-dom'
-import {asyncValidateTemplate} from '../../modules/election-model/state/ElectionAction';
+import {asyncValidateTemplate,getElectionTemplateData} from '../../modules/election-model/state/ElectionAction';
+import { connect } from 'react-redux';
 
 
 const styles = theme => ({
@@ -68,6 +69,7 @@ class FilledTextFields extends React.Component {
     };
 
     handleNext() {
+        this.props.getElectionTemplateData();
         if(this.state.exist===true){
             this.setState({errorTextTemplate:'emptyField2'});
             }else if(this.state.ModuleName===''){
@@ -140,4 +142,11 @@ FilledTextFields.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(FilledTextFields);
+const mapStateToProps = ({ ElectionModel }) => {
+};
+
+const mapActionsToProps = {
+    getElectionTemplateData
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(FilledTextFields));

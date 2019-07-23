@@ -26,6 +26,9 @@ class InfoBanner extends React.Component {
 		var nominationStart = moment(this.props.election.nominationStart).format("DD MMM YYYY hh:mm a") //parse integer
 		var nominationEnd = moment(this.props.election.nominationEnd).format("DD MMM YYYY hh:mm a") //parse integer
 
+		var objectionStart = moment(this.props.election.objectionStart).format("DD MMM YYYY hh:mm a") //parse integer
+		var objectionEnd = moment(this.props.election.objectionEnd).format("DD MMM YYYY hh:mm a") //parse integer
+
 
 		return (
 			<div className={classes.root}>
@@ -37,6 +40,9 @@ class InfoBanner extends React.Component {
 						</Typography>
 						<Typography variant="subtitle1" gutterBottom>
 							<b>Nomination Start Date:</b> {nominationStart}  --- <b>Nomination End Date:</b> {nominationEnd}
+						</Typography>
+						<Typography variant="subtitle1" gutterBottom>
+							<b>Objection Start Date:</b> {objectionStart}  --- <b>Objection End Date:</b> {objectionEnd}
 						</Typography>
 					</Paper>
 				</Grid>

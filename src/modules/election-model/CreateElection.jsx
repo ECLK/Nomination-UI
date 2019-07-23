@@ -126,6 +126,9 @@ class CreateElection extends React.Component {
         goToHome: false,
         candidateConfigs: [],
         candidateSupportingDocs: [],
+        nominationSupportingDocs: [],
+        objectionSupportingDocs: [],
+        paymentSupportingDocs: [],
         divisions: [],
         errorTextCandidateConfig: '',
         errorTextDivisionCommonName: '',
@@ -156,6 +159,9 @@ class CreateElection extends React.Component {
                     electionChanged={this.handleElectionChange}
                     candidateConfigs={this.state.candidateConfigs}
                     candidateSupportingDocs={this.state.candidateSupportingDocs}
+                    nominationSupportingDocs={this.state.nominationSupportingDocs}
+                    objectionSupportingDocs={this.state.objectionSupportingDocs}
+                    paymentSupportingDocs={this.state.paymentSupportingDocs}
                     errorTextCandidateConfig={this.state.errorTextCandidateConfig}
                 />;
             case 1:
@@ -178,11 +184,9 @@ class CreateElection extends React.Component {
     }
 
     handleElectionChange(electionModule) {
-        debugger;
         for (let i = 0; i < electionModule.electionConfig.length; i++) {
                 if (electionModule.electionConfig[i].id ===  'authority' && electionModule.electionConfig[i].value !==  "1") {
                     this.setState({errorTextAuthority:''});
-                    debugger
                 }
         }
         for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
@@ -218,12 +222,6 @@ class CreateElection extends React.Component {
         if (this.props.new_election_module.eligibilityCheckList.length>0) {
             this.setState({errorTextEligibility:''});
         }   
-        // this.setState({errorTextAuthority:''});
-        // this.setState({errorTextCalType:''});
-        // this.setState({errorTextSecurityDeposite:''});
-        // this.setState({errorTextObjection:''});
-        // this.setState({errorTextAlliance:''});
-        // this.setState({errorTextSubmisionBy:''});
         const { updateElection } = this.props;
         this.setState({ errorTextCandidateConfig: '' });
         this.setState({ errorTextDivisionCommonName: '' });
@@ -231,13 +229,6 @@ class CreateElection extends React.Component {
         updateElection(electionModule);
     }
 
-    // handleDelete(electionModule) {
-    //     const { deleteElectionModule } = this.props;
-    //     deleteElectionModule(electionModule);
-    //     this.setState({
-    //         goToHome: true
-    //     });
-    // }
     handleDelete = (electionModule, event) => {
         const { deleteElectionModule } = this.props;
         deleteElectionModule(electionModule.currentTarget.id);
@@ -250,7 +241,9 @@ class CreateElection extends React.Component {
     componentDidMount() {
         const { createElection, getElectionTemplateData } = this.props;
         createElection(this.props.location.state.name);
-        getElectionTemplateData(this.props.location.state.id);
+        if(this.props.location.state.id){
+            getElectionTemplateData(this.props.location.state.id);
+        }
         this.setState({
             moduleId: this.props.location.state.id
         });
@@ -305,14 +298,11 @@ class CreateElection extends React.Component {
                         }
                 }
                 for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
-                    debugger;
                     if (this.props.new_election_module.electionConfig[i].id==='securityDeposite') {
                         this.setState({errorTextSecurityDeposite:''});
                         goNext = true;
                         break;
-                        debugger;
                     }else{
-                        debugger;
                         this.setState({errorTextSecurityDeposite:'emptyField'});
                         goNext = false;
                     }
@@ -366,7 +356,7 @@ class CreateElection extends React.Component {
                 }
 
                 if (goNext) {
-                    (this.state.moduleId) ? this.props.editElection(this.state.moduleId,this.props.new_election_module) : this.props.submitElection(this.props.new_election_module);                const { openSnackbar } = this.props;
+                    this.state.moduleId ? this.props.editElection(this.state.moduleId,this.props.new_election_module) : this.props.submitElection(this.props.new_election_module);                const { openSnackbar } = this.props;
         
                     this.setState({
                         goToHome: true
@@ -406,6 +396,11 @@ class CreateElection extends React.Component {
             activeStep: state.activeStep - 1,
         }));
     };
+    handleDone = () => {
+        this.setState({
+          goToHome: true
+        });
+      };
 
     render() {
         const { classes } = this.props;
@@ -425,7 +420,7 @@ class CreateElection extends React.Component {
                     <Grid item xs={12}>
                         <div>
                             {this.state.goToHome ? (
-                                <Redirect to="/admin/home" />
+                                <Redirect to="/admin/create-election-home" />
                             ) : (
                                     <Paper className={classes.pageContent} elevation={1}>
                                         <Stepper activeStep={activeStep}>
@@ -458,7 +453,9 @@ class CreateElection extends React.Component {
                                             >
                                                 Cancel
                                             </Button>
-                                            {(this.state.moduleId && activeStep === 2) ?
+                                            {/* {((this.props.electionId) && this.props.check !== 'approve' && this.props.check !== 'reject') ? */}
+
+                                            {(this.state.moduleId && activeStep === 2  && this.props.location.state.check !== 'approve' && this.props.location.state.check !== 'reject' ) ?
                                                 <Button
                                                     variant="contained"
                                                     color="default"
@@ -471,7 +468,7 @@ class CreateElection extends React.Component {
                                                 </Button> : ''
 
                                             }
-                                            {(this.state.moduleId) ?
+                                            {(this.state.moduleId && this.props.location.state.check !== 'approve' && this.props.location.state.check !== 'reject') ?
                                                 <Button
                                                     variant="contained"
                                                     color="primary"
@@ -480,7 +477,22 @@ class CreateElection extends React.Component {
                                                 >
                                                     {activeStep === steps.length - 1 ? 'Update' : 'Next'}
                                                 </Button>
-                                                :
+                                                : (this.props.location.state.check === 'approve' && activeStep === steps.length - 1) ?
+                                                <Grid item xs="1">
+                                                    <Button style={{ marginLeft: 150,marginTop:-56 }} color="primary" onClick={this.handleDone} className={classes.button}>
+                                                         Done
+                                                    </Button>
+                                                </Grid>
+                                                : (this.props.location.state.check === 'reject') ?
+                                                <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={this.handleNext}
+                                                className={classes.button}
+                                            >
+                                                {activeStep === steps.length - 1 ? 'Update' : 'Next'}
+                                            </Button>
+                                            :
                                                 <Button
                                                     variant="contained"
                                                     color="primary"

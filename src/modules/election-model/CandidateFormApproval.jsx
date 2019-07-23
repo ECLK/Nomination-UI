@@ -23,7 +23,6 @@ import ChartIcon from '@material-ui/icons/ShowChart';
 import SecurityIcon from '@material-ui/icons/Security';
 import MoneyIcon from '@material-ui/icons/AttachMoney';
 import OtherIcon from '@material-ui/icons/DragIndicator';
-import Grid from '@material-ui/core/Grid';
 
 
 
@@ -298,6 +297,10 @@ class CandidateForm extends React.Component {
                     Candidate Form Configuration
                 </Typography>
                 <FormControl component="fieldset" className={classes.formControl}>
+                    {/* <Button variant="contained" disabled color="secondary" className={classes.button}>
+                    <AddIcon className={classes.leftIcon} />
+                    Add New
+                </Button> */}
                     <FormGroup>
                         {columnOne.map((element) => {
                             return (<FormControlLabel
@@ -333,14 +336,6 @@ class CandidateForm extends React.Component {
                         })}
                     </FormGroup>
                 </FormControl>
-                <Grid container className={classes.root} spacing={2}>
-                    <Grid item xs={12}>
-                         <Button variant="outlined" style={{marginTop:15}} disabled color="secondary" className={classes.button}>
-                        <AddIcon className={classes.leftIcon} />
-                        Add New
-                    </Button>
-                    </Grid>
-                    </Grid>
                 {(this.props.errorTextCandidateConfig) ? <Typography style={{ color: 'red' }} variant="subtitle1" gutterBottom>Select at least one field!</Typography> : ''}
 
                 <br /><br />
@@ -579,14 +574,6 @@ class CandidateForm extends React.Component {
                         </ListItem>
                          :  ''}
                     </List>
-                    <Grid container className={classes.root} spacing={2}>
-                    <Grid item xs={12}>
-                         <Button variant="outlined" style={{marginTop:15}} disabled color="secondary" className={classes.button}>
-                        <AddIcon className={classes.leftIcon} />
-                        Add New
-                    </Button>
-                    </Grid>
-                    </Grid>
                 </FormControl>
                 <br /><br />
                 <Typography variant="h6">
@@ -824,14 +811,6 @@ class CandidateForm extends React.Component {
                         </ListItem>
                          :  ''}
                     </List>
-                    <Grid container className={classes.root} spacing={2}>
-                    <Grid item xs={12}>
-                         <Button variant="outlined" style={{marginTop:15}} disabled color="secondary" className={classes.button}>
-                        <AddIcon className={classes.leftIcon} />
-                        Add New
-                    </Button>
-                    </Grid>
-                    </Grid>
                 </FormControl>
                 <br /><br />
                 <Typography variant="h6">
@@ -1069,14 +1048,6 @@ class CandidateForm extends React.Component {
                         </ListItem>
                          :  ''}
                     </List>
-                    <Grid container className={classes.root} spacing={2}>
-                    <Grid item xs={12}>
-                         <Button variant="outlined" style={{marginTop:15}} disabled color="secondary" className={classes.button}>
-                        <AddIcon className={classes.leftIcon} />
-                        Add New
-                    </Button>
-                    </Grid>
-                    </Grid>
                 </FormControl>
                 <br /><br />
                 <Typography variant="h6">
@@ -1314,14 +1285,6 @@ class CandidateForm extends React.Component {
                         </ListItem>
                          :  ''}
                     </List>
-                    <Grid container className={classes.root} spacing={2}>
-                    <Grid item xs={12}>
-                         <Button variant="outlined" style={{marginTop:15}} disabled color="secondary" className={classes.button}>
-                        <AddIcon className={classes.leftIcon} />
-                        Add New
-                    </Button>
-                    </Grid>
-                    </Grid>
                 </FormControl>
             </div>
         );
