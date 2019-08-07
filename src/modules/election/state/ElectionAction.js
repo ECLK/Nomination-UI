@@ -16,7 +16,8 @@ import {
     GET_CALL_ELECTION_DATA,
     HANDLE_CHANGE_CALL_ELECTION,
     EDIT_CALL_ELECTION_DATA,
-    DELETE_CALL_ELECTION_DATA
+    DELETE_CALL_ELECTION_DATA,
+    GET_CALL_ELECTION_TIME_LINE_DATA
 } from "./ElectionTypes";
 import { API_BASE_URL } from "../../../config.js";
 import axios from "axios";
@@ -551,5 +552,28 @@ export const handleChangeElectionData = function handleChangeElectionData(electi
         })
     };
 }
+
+export const setGetElectionTimeLineData = (val) => {
+    return {
+        type: GET_CALL_ELECTION_TIME_LINE_DATA,
+        payload: val
+    }
+}
+
+export function getElectionTimeLine(electionId) {
+  
+    return function (dispatch) {
+        const response = axios
+            .get(
+                `${API_BASE_URL}/elections/${electionId}`
+            )
+            .then(response => {
+                dispatch(setGetElectionTimeLineData(response.data));
+            }).catch(err => {
+                console.log(err)
+            });
+    }
+}
+
 
   

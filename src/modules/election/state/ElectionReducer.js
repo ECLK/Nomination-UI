@@ -16,7 +16,8 @@ import {
     GET_CALL_ELECTION_DATA,
     HANDLE_CHANGE_CALL_ELECTION,
     EDIT_CALL_ELECTION_DATA,
-    DELETE_CALL_ELECTION_DATA
+    DELETE_CALL_ELECTION_DATA,
+    GET_CALL_ELECTION_TIME_LINE_DATA
 } from "./ElectionTypes";
 import { REQUEST_STATE } from "../../../lib/request_redux_state";
 import update from 'immutability-helper';
@@ -56,7 +57,8 @@ const initialState = {
     PostedCallElectionData: [],
     ElectionReviewData:[],
     snackBarMsg:[],
-    AllElections:[]
+    AllElections:[],
+    ElectionTimeLineData:[]
 };
 
 const findIndex = (AllElections, id) => {
@@ -166,7 +168,11 @@ export default function reducer(state = initialState, action) {
                     ...state,
                     AllElections: update(state.AllElections, { $splice: [[toDelete, 1]] } )
                 };
-            
+        case GET_CALL_ELECTION_TIME_LINE_DATA:
+        return {
+            ...state,
+            ElectionTimeLineData: action.payload
+        };
     }
     return state;
 }

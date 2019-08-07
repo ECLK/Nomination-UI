@@ -6,16 +6,10 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import CustomToolbarEdit from "./CustomToolbarEdit";
 // import CustomToolbarDelete from "./CustomToolbarDelete";
 import PropTypes from "prop-types";
-import {getTeams } from '../nomination/state/NominationAction';
-import {getUserList } from './state/ProfileAction';
+import {getTeams } from './state/NominationAction';
+import {getPaymentList } from './state/NominationAction';
 import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
-
-
-
-
-
-
 
 const styles = theme => ({
     root: {
@@ -56,10 +50,10 @@ class CustomizedTable extends React.Component {
 
     }
 
-    componentDidMount() {
-        const { getTeams,getUserList } = this.props;
+    componentWillMount() {
+        const { getTeams,getPaymentList } = this.props;
         getTeams();
-        getUserList();
+        getPaymentList();
     }
 
     handleDrawerOpen = () => {
@@ -82,7 +76,8 @@ class CustomizedTable extends React.Component {
       })
 
     render() {
-        const { classes, CandidateList } = this.props;
+        const { classes, CandidateList,paymentList,partyList } = this.props;
+        debugger;
         const rows = CandidateList;
         console.log("CandidateList", CandidateList);
 
@@ -94,13 +89,25 @@ class CustomizedTable extends React.Component {
                 }
             },
             {
-                name: "User Name",
+                name: "Depositor",
                 options: {
                     display: true
                 }
             },
             {
-                name: "Email",
+                name: "Serial No",
+                options: {
+                    display: true
+                }
+            },
+            {
+                name: "Deposited Date",
+                options: {
+                    display: true
+                }
+            },
+            {
+                name: "Deposit Amount",
                 options: {
                     display: true
                 }
@@ -112,11 +119,16 @@ class CustomizedTable extends React.Component {
                 }
             },
             {
+                name: "Division",
+                options: {
+                    display: true
+                }
+            },
+            {
                 name: "Action",
                 options: {
                     filter: true,
                     customBodyRender: (value, tableMeta, updateValue) => {
-                        debugger;
                         return (
                             <Grid container className={classes.grid} direction="row" justify="flex-start" alignItems="stretch" spacing={12}>
                                 <Grid item lg={6}>
@@ -145,12 +157,6 @@ class CustomizedTable extends React.Component {
             },
         ]
 
-
-        // const outputData = rows.map(Object.values);
-        const { userList,partyList } = this.props;
-       
-        // console.log(partyMap);
-        // debugger;
         function getParty(id){
             const partyMap = {};
             for (var j = 0; j < partyList.length; j++) {
@@ -160,15 +166,20 @@ class CustomizedTable extends React.Component {
             return partyMap[id] ? partyMap[id].team_name : ""
         }
 
-        let data = userList.map(obj=>{
+        let data = paymentList.map(obj=>{
             return [
-                obj.id, 
-                obj.name, 
-                obj.email,
-                getParty(obj.party),
+                // obj.payment_id, 
+                obj.nomination_id, 
+                obj.depositor, 
+                obj.serial,
+                obj.deposit_date,
+                obj.deposit_amount,
+                getParty(obj.team_id),
+                obj.division,
                 obj.action
             ]
         });
+        debugger;
         // let data = userList.map(x => Object.values(x));
 
         // const data = outputData;
@@ -191,7 +202,7 @@ class CustomizedTable extends React.Component {
         return (
             <MuiThemeProvider theme={this.getMuiTheme()}>
             <MUIDataTable
-                title={"User list"}
+                title={"Payment list"}
                 data={data}
                 columns={columns}
                 options={options}
@@ -201,16 +212,16 @@ class CustomizedTable extends React.Component {
     }
 }
 
-const mapStateToProps = ({ Profile,Nomination }) => {
+const mapStateToProps = ({  Nomination }) => {
     // const { getNominationCandidates } = Nomination;
-    const userList = Profile.userList;
+    const paymentList = Nomination.paymentList;
     const partyList = Nomination.partyList;
-    return { userList,partyList };
+    return { partyList,paymentList };
 };
 
 const mapActionsToProps = {
     getTeams,
-    getUserList
+    getPaymentList
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(CustomizedTable));

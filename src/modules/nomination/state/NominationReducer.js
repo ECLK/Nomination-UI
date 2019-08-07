@@ -16,7 +16,12 @@ import {
   RECEIVE_NOMINATION_STATUS,
   POST_CANDIDATE_SUPPORT_DOC,
   CANDIDATE_SUPPORT_DOC_LOADED,
-  NOMINATION_PAYMENT_STATUS_LOADED
+  NOMINATION_PAYMENT_STATUS_LOADED,
+  PAYMENT_LIST_LOADED,
+  PAYMENT_SERIAL_NO_LOADED,
+  GET_NOMINATION_LIST_FOR_PAYMENT,
+  GET_NOMINATION_DATA,
+  NOMINATION_PAYMENT_VALIDATION_LOADED
 } from "./NominationTypes";
 
 const initialState = {
@@ -32,9 +37,14 @@ const initialState = {
   nominationStatus:[],
   partyList:[],
   nominationList:[],
+  nominationListForPayment:[],
   postCandidateSupportDocs:[],
   candidateSupportdocLoaded:[],
-  nominationPaymentStatus:{}
+  nominationPaymentStatus:{},
+  paymentList:[],
+  nominationPaymentSerial:'',
+  nominationData:[],
+  nominationPaymentValidation:false,
 };
 
 const findIndex = (nominations, id) => {
@@ -62,13 +72,17 @@ export default function reducer(state = initialState, action) {
     case POST_NOMINATION_PAYMENTS:
       return {
         ...state,
-        candidatePayments: action.payload
+        paymentList: [
+          ...state.paymentList,
+          action.payload
+      ]
       };
     case PUT_NOMINATION_PAYMENTS:
+      const PaymentIndex = state.paymentList.findIndex(x => x.payment_id === action.payload.payment_id);
       return {
         ...state,
-        candidatePayments: action.payload
-      };
+        paymentList: update(state.paymentList, {[PaymentIndex]: {$set: action.payload}})
+      }
     case NOMINATIONS_LOADED:
       return {
         ...state,
@@ -140,6 +154,11 @@ export default function reducer(state = initialState, action) {
         ...state,
         nominationList: action.payload
       };  
+    case GET_NOMINATION_LIST_FOR_PAYMENT:
+      return {
+        ...state,
+        nominationListForPayment: action.payload
+      };  
     case POST_CANDIDATE_SUPPORT_DOC:
       return {
         ...state,
@@ -155,6 +174,27 @@ export default function reducer(state = initialState, action) {
         ...state,
         nominationPaymentStatus: action.payload
       };
+    case PAYMENT_LIST_LOADED:
+      return {
+        ...state,
+        paymentList: action.payload
+      }; 
+    case PAYMENT_SERIAL_NO_LOADED:
+      return {
+        ...state,
+        nominationPaymentSerial: action.payload
+      }; 
+    case GET_NOMINATION_DATA:
+      return {
+        ...state,
+        nominationData: action.payload
+      }; 
+    case NOMINATION_PAYMENT_VALIDATION_LOADED:
+      return {
+        ...state,
+        nominationPaymentValidation: action.payload
+      }; 
+      
   }
   return state;
 }

@@ -5,6 +5,9 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import MainMenu from "../../components/MainMenu/MainMenu";
 import NominationForm from "../../components/NominationForm";
 import { getNominationPayments,getNominationStatus } from "./state/NominationAction";
+import { getElectionTimeLine } from '../election/state/ElectionAction';
+import InfoBanner from '../../components/InfoBanner/InfoBanner';
+import Grid from '@material-ui/core/Grid';
 import { connect } from "react-redux";
 
 const drawerWidth = 240;
@@ -90,9 +93,10 @@ class Dashboard extends React.Component {
   }
 
   async componentDidMount() {
-    const { getNominationPayments,getNominationStatus } = this.props;
+    const { getNominationPayments,getNominationStatus,getElectionTimeLine } = this.props;
     await getNominationPayments(this.props.location.state.id);
     await getNominationStatus(sessionStorage.getItem('election_id'));
+    getElectionTimeLine(sessionStorage.getItem('election_id'));
   }
 
   handleDrawerOpen = () => {
@@ -104,20 +108,29 @@ class Dashboard extends React.Component {
   };
 
   render() {
-    const { classes, NominationPayments } = this.props;
+    const { classes, NominationPayments,ElectionData } = this.props;
     return (
       <div className={classes.root}>
         <CssBaseline />
         <MainMenu title="Election Commission of Sri Lanka" />
-        <NominationForm
-          NominationPayments={NominationPayments}
-          customProps={this.props.location.state.id}
-          nominationStatus={this.props.location.state.status}
-          division={this.props.location.state.division}
-          divisionId={this.props.location.state.divisionId}
-          candidateCount={this.props.location.state.candidateCount}
-          title="Election Commission of Sri Lanka"
-        />
+        <Grid container spacing={24}>
+            <Grid item xs={12}>
+              <InfoBanner division={this.props.location.state.division} election={ElectionData}></InfoBanner>
+            </Grid>
+            <Grid item xs={12}>
+                  <NominationForm
+                    NominationPayments={NominationPayments}
+                    customProps={this.props.location.state.id}
+                    nominationStatus={this.props.location.state.status}
+                    division={this.props.location.state.division}
+                    divisionId={this.props.location.state.divisionId}
+                    candidateCount={this.props.location.state.candidateCount}
+                    title="Election Commission of Sri Lanka"
+                  />            
+          </Grid>
+        </Grid>
+                
+       
       </div>
     );
   }
@@ -131,16 +144,17 @@ const mapStateToProps = ({ Nomination,Election }) => {
   // const {nominationPayments} = Nomination;
   const { getNominationPayments } = Nomination;
   const NominationPayments = Nomination.getNominationPayments;
-
+  const ElectionData = Election.ElectionTimeLineData;
   // const {updateNominationPayments} = Nomination;
 
-  return { getNominationPayments, NominationPayments };
+  return { getNominationPayments, NominationPayments,ElectionData };
 };
 
 const mapActionsToProps = {
   // postNominationPayments,
   getNominationPayments,
-  getNominationStatus
+  getNominationStatus,
+  getElectionTimeLine
   // updateNominationPayments
 };
 

@@ -8,6 +8,8 @@ import NominationForm from "./modules/nomination/NominationForm";
 
 import Home from "./pages/USER/Home/Home";
 import CreateNomination from "./modules/nomination/CreateNomination";
+import NominationPayment from "./modules/nomination/NominationPayment";
+
 
 import Objection from "./pages/USER/Objection/Objection";
 import Profile from "./modules/profile/Profile";
@@ -162,6 +164,9 @@ console.log("indexUserhome",indexNomination);
           />
           <Route
             path='/admin/election-process-review-detail' component={ElectionProcessReviewDetails}
+          />
+          <Route
+            path='/admin/nomination-payment-list' component={NominationPayment}
           />
 
           {/* <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login}/>

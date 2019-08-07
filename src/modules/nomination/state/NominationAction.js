@@ -16,8 +16,12 @@ import {
   RECEIVE_NOMINATION_STATUS,
   POST_CANDIDATE_SUPPORT_DOC,
   CANDIDATE_SUPPORT_DOC_LOADED,
-  NOMINATION_PAYMENT_STATUS_LOADED
-
+  NOMINATION_PAYMENT_STATUS_LOADED,
+  PAYMENT_LIST_LOADED,
+  PAYMENT_SERIAL_NO_LOADED,
+  GET_NOMINATION_LIST_FOR_PAYMENT,
+  GET_NOMINATION_DATA,
+  NOMINATION_PAYMENT_VALIDATION_LOADED
 } from "./NominationTypes";
 import {API_BASE_URL} from "../../../config.js";
 import axios from "axios";
@@ -62,6 +66,7 @@ export function getNominationPayments(customProps) {
     )
     .then(response => {
       const getNominationPayments = response.data;
+      debugger;
        dispatch(nominationPaymentLoaded(getNominationPayments));
     }).catch(err => {
           console.log(err)
@@ -208,28 +213,41 @@ export const setData = (val) => {
     }
 }
 
-export function postNominationPayments(candidatePayments,candidateCount) {
+export function postNominationPayments(candidatePayments,serialNo,division,party) {
+  debugger;
     return function (dispatch) {
 
         let nominationPayments = {
             depositor: candidatePayments.depositor,
-            amount: 2000*candidateCount,
+            amount: candidatePayments.depositAmount,
+            serialNo:serialNo,
             depositDate: Date.parse(candidatePayments.depositeDate),
-            filePath: candidatePayments.filePath,
-            status: "PENDING",
+            filePath: 'upload',
+            status: "APPROVE",
             createdBy:candidatePayments.depositor,//TODO: yujith,change this to session user after session user created
             createdAt:Date.parse(new Date()),
             updatedAt:Date.parse(new Date()),
-            nominationId: candidatePayments.nominationId
+            nominationId: candidatePayments.nomination
         };
-       
       const response = axios
       .post(
         `${API_BASE_URL}/nominations/payments`,
             {...nominationPayments}
       )
       .then(response => {
-         dispatch(setData(response.data));
+        const newPayment = {
+          action:true,
+          deposit_amount:response.data.amount,
+          deposit_date:candidatePayments.depositeDate,
+          depositor:response.data.depositor,
+          division:division,
+          nomination_id:response.data.nominationId,
+          payment_id:response.data.id,
+          serial:response.data.serialNo,
+          team_id:party
+        }
+         dispatch(setData(newPayment));
+         dispatch(openSnackbar({ message:`Payment has been submitted for ${candidatePayments.division} by ${candidatePayments.partyName}`}));
       }).catch(err => {
             console.log(err)
       });
@@ -305,25 +323,41 @@ export const setNominationStatus = (nominationSuppertDocs) => {
     }
 }
 
-  export function updateNominationPayments(customProps,candidatePayments,candidateCount) {
+  export function updateNominationPayments(paymentId,nominationPayments,partyName,nominationName) {
+    debugger;
     return function (dispatch) {
-      let nominationPayments = {
-        depositor: candidatePayments.depositor,
-        amount: candidateCount*2000,
-        depositDate:Date.parse(candidatePayments.depositeDate),
-        filePath: candidatePayments.filePath,
-        status: candidatePayments.status,
-        updatedAt:Date.parse(new Date()),
-        nominationId: candidatePayments.nominationId
-    };
+          
+      let nominationPayment = {
+          depositor: nominationPayments.depositor,
+          amount: nominationPayments.depositAmount,
+          serialNo:nominationPayments.serialNo,
+          depositDate: Date.parse(nominationPayments.depositeDate),
+          filePath: 'upload',
+          status: "APPROVE",
+          updatedAt:Date.parse(new Date()),
+          nominationId: nominationPayments.nomination,
+          note:nominationPayments.note
+      };
       const response = axios
       .put(
-        `${API_BASE_URL}/nominations/${customProps}/payments`,
-        {...nominationPayments}
+        `${API_BASE_URL}/nominations/${paymentId}/payments`,
+        {...nominationPayment}
       )
       .then(response => {
-        const updateNominationPayments = response.data;
+        const updateNominationPayments = {
+          action:true,
+          deposit_amount:response.data.amount,
+          deposit_date:nominationPayments.depositeDate,
+          depositor:response.data.depositor,
+          division:nominationName,
+          nomination_id:nominationPayments.nomination,
+          payment_id:response.data.paymentId,
+          serial:nominationPayments.serialNo,
+          team_id:nominationPayments.party
+        }
+        debugger;
          dispatch(setUpdatedPaymentData(updateNominationPayments));
+         dispatch(openSnackbar({ message:`Payment has been updated for ${nominationName} by ${partyName}`}));
       }).catch(err => {
             console.log(err)
       });
@@ -370,6 +404,7 @@ const nominationListLoaded = (getNominationList) => {
 };
 
 export function getNominationList() {
+
   return function (dispatch) {
      
     const response = axios
@@ -392,6 +427,71 @@ export function getNominationList() {
 }
 
 //--------------- End of get nomination list---------------------------
+
+//--------------- Start of get nomination data by nomination id -------------------
+const nominationDataLoaded = (getNominationData) => {
+  return {
+    type: GET_NOMINATION_DATA,
+    payload: getNominationData,
+  };
+};
+
+export function getNominationData(nominationId) {
+debugger;
+  return function (dispatch) {
+     
+    const response = axios
+    .get(
+      `${API_BASE_URL}/nominations/${nominationId}`,
+    )
+    .then(response => {
+      const getNominationData = response.data;
+       dispatch(
+        nominationDataLoaded(getNominationData)
+         );
+    }).catch(err => {
+      const getNominationData = [];
+      dispatch(
+        nominationDataLoaded(getNominationData)
+        );
+          console.log(err)
+    });
+  };
+}
+
+//--------------- End of get nomination data by nomination id ---------------------------
+
+//--------------- Start of get nomination list for nomination payment-------------------
+const nominationListforPaymentLoaded = (getNominationList) => {
+  return {
+    type: GET_NOMINATION_LIST_FOR_PAYMENT,
+    payload: getNominationList,
+  };
+};
+
+export function getNominationListForPayment(electionId,teamId) {
+  return function (dispatch) {
+     
+    const response = axios
+    .get(
+      `${API_BASE_URL}/elections/${electionId}/teams/${teamId}/nominations`,
+    )
+    .then(response => {
+      const getNominationList = response.data;
+       dispatch(
+        nominationListforPaymentLoaded(getNominationList)
+         );
+    }).catch(err => {
+      const getNominationList = [];
+      dispatch(
+        nominationListforPaymentLoaded(getNominationList)
+        );
+          console.log(err)
+    });
+  };
+}
+
+//--------------- End of get nomination list for nomination payment---------------------------
 
 //--------------- Start of get nomination candidate support doc list -------------------
 const candidateSupportdocLoaded = (getcandidateSupportdocList) => {
@@ -458,6 +558,90 @@ export function getNominationStatus(electionId) {
 //--------------- End of get nomination security deposit status ---------------------------
 
 
+//--------------- Start of get security deposit details ---------------------------
 
+const paymentListLoaded = (paymentList) => {
+  return {
+    type: PAYMENT_LIST_LOADED,
+    payload: paymentList,
+  };
+};
+
+export function getPaymentList() {
+  return function (dispatch) {
+     
+    const response = axios
+    .get(
+      `${API_BASE_URL}/nomination-payments`,
+    )
+    .then(response => {
+      const paymentList = response.data;
+      debugger;
+       dispatch(paymentListLoaded(paymentList));
+    }).catch(err => {
+      debugger;
+      const paymentList = [];
+      dispatch(paymentListLoaded(paymentList));
+          console.log(err)
+    });
+  };
+}
+
+const paymentSerialLoaded = (paymentSerial) => {
+  return {
+    type: PAYMENT_SERIAL_NO_LOADED,
+    payload: paymentSerial,
+  };
+};
+
+export function getNominationPaymentSerialNumber() {
+  return function (dispatch) {
+     
+    const response = axios
+    .get(
+      `${API_BASE_URL}/payment-serial`,
+    )
+    .then(response => {
+      const paymentSerial = response.data;
+      debugger;
+       dispatch(paymentSerialLoaded(paymentSerial));
+    }).catch(err => {
+      debugger;
+      const paymentSerial = '';
+      dispatch(paymentSerialLoaded(paymentSerial));
+          console.log(err)
+    });
+  };
+}
+
+const nominationPaymentValidationLoaded = (nominationValidation) => {
+  return {
+    type: NOMINATION_PAYMENT_VALIDATION_LOADED,
+    payload: nominationValidation,
+  };
+};
+
+export function validateNominationPayment(nominationId) {
+  debugger;
+  return function (dispatch) {
+     
+    const response = axios
+    .get(
+      `${API_BASE_URL}/payments/${nominationId}/validate`,
+    )
+    .then(response => {
+      const nominationValidation = response.data;
+      debugger;
+       dispatch(nominationPaymentValidationLoaded(nominationValidation));
+    }).catch(err => {
+      debugger;
+      const nominationValidation = false;
+      dispatch(nominationPaymentValidationLoaded(nominationValidation));
+          console.log(err)
+    });
+  };
+}
+
+//--------------- End of get security deposit details ---------------------------
 
 

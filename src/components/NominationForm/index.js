@@ -467,11 +467,11 @@ class NominationForm extends React.Component {
                             ) : (
        <div>
          <Typography component="h2" variant="headline" gutterBottom style={{marginLeft:5}}>
-             {this.state.election.name}
+             {/* {this.state.election.name} */}
         </Typography>
-        <Typography  variant="subheading" gutterBottom style={{marginBottom:25,marginLeft:5}}>
-          {division+" Province"}
-        </Typography>
+        {/* <Typography  variant="subheading" gutterBottom style={{marginBottom:25,marginLeft:5}}>
+          {division+" Unit"}
+        </Typography> */}
       <Paper className={classes.pageContent} elevation={1}>
         <Stepper nonLinear activeStep={activeStep}>
           {steps.map((label, index) => {
