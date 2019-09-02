@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes, { array } from 'prop-types';
-import NumberFormat from 'react-number-format';
 import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -8,18 +7,15 @@ import StepButton from '@material-ui/core/StepButton';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import NominationStep1 from '../NominationStep1/NominationStep1';
-import NominationStep2 from '../NominationStep2';
 import NominationStep3 from '../NominationStep3/NominationStep3';
 import NominationStep5 from '../NominationStep5/NominationStep2';
-import NominationStep2Update from '../NominationStep2Update';
-import { postNominationPayments, updateNominationPayments,postNominationSupportDocs } from '../../modules/nomination/state/NominationAction';
+import { postNominationSupportDocs } from '../../modules/nomination/state/NominationAction';
 import { openSnackbar } from '../../modules/election/state/ElectionAction';
 import { connect } from 'react-redux';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import DoneOutline from '@material-ui/icons/DoneOutline';
 import CloseIcon from '@material-ui/icons/Cancel';
-import moment from 'moment';
 import { Redirect } from 'react-router-dom';
 import {API_BASE_URL} from "../../config.js";
 import Axios from 'axios';
@@ -93,14 +89,7 @@ class NominationForm extends React.Component {
   }
 
    getSteps() {
-
-    var paymentStatus = this.props.nominationPaymentStatus;
-
-    if(paymentStatus!=='Yes'){
       return ['Candidate Details', 'Review', 'Nomination Supporting Documents'];
-    }else{
-      return ['Candidate Details', 'Security Deposit Details', 'Review', 'Nomination Supporting Documents'];
-    }
   }
 
   componentDidMount(){
@@ -225,15 +214,7 @@ class NominationForm extends React.Component {
     }
   };
 
-  componentDidUpdate (oldState){
-    const {NominationPayments,candidateCount} = this.props;
-    if(oldState.NominationPayments !== NominationPayments){
-
-      this.setState({depositor:NominationPayments.depositor});   
-      this.setState({amount:candidateCount*2000});   
-      var ddate = parseInt(NominationPayments.depositeDate);
-      this.setState({depositeDate:moment(new Date(NominationPayments.depositeDate)).format('YYYY-MM-DD')});
-
+  componentDidUpdate (){
       const { customProps } = this.props;
       axios.get(`${API_BASE_URL}/nominations/${customProps}/support-docs`)
         .then(res => {
@@ -246,110 +227,36 @@ class NominationForm extends React.Component {
            } });
           this.setState({ supportdoc:supportdoc });
         })
-    }
-  }
-
-  handleChange = (name) => event => {
-   if(name==='depositor'){
-    this.setState({errorTextDepositor:''});
-   }
-   if(name==='depositeDate'){
-    this.setState({errorTextDepositedDate:''});
-   }
-    this.setState({
-            [name]:event.target.value,
-    });   
-  };
-
-  handleRese(event){
-    console.log("fds",event.target.ref);
-    debugger;
-    // const obj = {'id':this.state.supportDocId, 'filename':response.data.filename, 'originalname':response.data.originalname};
-    // const newArray = this.state.supportdoc.slice(); // Create a copy
-    // newArray.push(obj); // Push the object
-    // this.setState(
-    //   { 
-    //     status: "uploaded",
-    //     supportdoc: newArray
-    //   }
-    // );
   }
  
-
-  NumberFormatCustom(props) {
-    const { inputRef, onChange, ...other } = props;
-  
-    return (
-      <NumberFormat
-        {...other}
-        getInputRef={inputRef}
-        onValueChange={values => {
-          onChange({
-            target: {
-              value: values.value,
-            },
-          });
-        }}
-        thousandSeparator
-        prefix="Rs "
-      />
-    );
-  }
    showFlagToStyle = (flag) => (
     {display: flag ? "" : "none"}
   );
 
   getStepContent(step,props) {
-    var user_role = sessionStorage.getItem('role');
-    var paymentStatus = this.props.nominationPaymentStatus;
     const { classes } = this.props;
-    const {errorTextDepositor,errorTextDepositedDate} = this.state;
-    const errorTextItems = { errorTextDepositor,errorTextDepositedDate }
-
 
     const doneElement = (<div className={classes.done} style={this.showFlagToStyle(this.state.status === "uploaded")}>
     <DoneOutline  color="secondary"/>
     {/* <a download={"filename"} href={"ok"}>filename</a> */}
     </div>);
       const closeElement = (<div  className={classes.done} style={this.showFlagToStyle(this.state.status === "uploaded")}>
-      <CloseIcon ref={this.state.currentSdocId} onClick={this.handleRese} color="red"/>
+      <CloseIcon ref={this.state.currentSdocId}  color="red"/>
       {/* <a download={"filename"} href={"ok"}>filename</a> */}
       </div>);
     
-    const { nominationPayments,NominationPayments, customProps,nominationStatus,division,candidateCount } = this.props;
-    if(paymentStatus==='Yes'){
+    const { customProps,division,candidateCount } = this.props;
+
       switch (step) {
         case 0:
           return <NominationStep1 customProps={customProps}/>;
         case 1:
-        if(nominationStatus==="DRAFT"){
-          return <NominationStep2Update errorTextItems={errorTextItems} candidateCount={candidateCount} NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
-        }else if(nominationStatus==="SUBMIT"){
-          return <NominationStep2 errorTextItems={errorTextItems} candidateCount={candidateCount} NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
-        }else{
-          return <NominationStep2 errorTextItems={errorTextItems} candidateCount={candidateCount} NominationPayments={this.state} customProps={customProps} NumberFormatCustom={this.NumberFormatCustom} handleChange={this.handleChange} />;
-          // return <NominationStep2 candidateCount={candidateCount} nominationPayments={nominationPayments} handleChange={this.handleChange} />;
-        }
-        case 2:
-          return <NominationStep5 paymentStatus={paymentStatus} division={division} candidateCount={candidateCount} NominationPayments={this.state} />;
-        case 3:
-        return <NominationStep3 customProps={customProps} supportdoc={this.state.supportdoc} closeElement={closeElement} doneElement={doneElement} onSelectFiles={this.onSelectFiles}  />;
-        default:
-          return 'Unknown step';
-      }
-    }else{
-      switch (step) {
-        case 0:
-          return <NominationStep1 customProps={customProps}/>;
-        case 1:
-          return <NominationStep5 paymentStatus={paymentStatus} division={division} candidateCount={candidateCount} NominationPayments={this.state} />;
+          return <NominationStep5 division={division} candidateCount={candidateCount} NominationPayments={this.state} />;
         case 2:
         return <NominationStep3 customProps={customProps} supportdoc={this.state.supportdoc} closeElement={closeElement} doneElement={doneElement} onSelectFiles={this.onSelectFiles}  />;
         default:
           return 'Unknown step';
-      }
-    }
-   
+      }   
   }
 
   
@@ -359,7 +266,7 @@ class NominationForm extends React.Component {
   
 
   handleNext = () => {
-    const {postNominationPayments,divisionId,division,updateNominationPayments,NominationPayments, nominationStatus,openSnackbar, customProps,postNominationSupportDocs,candidateCount,NominationCandidates}=this.props;
+    const {divisionId,openSnackbar,postNominationSupportDocs,candidateCount,NominationCandidates}=this.props;
     debugger;
     let activeStep;
 
@@ -379,36 +286,14 @@ class NominationForm extends React.Component {
        if(candidateCount!==NominationCandidates.length){
          openSnackbar({ message: 
          'Please complete the nomination form for all candidates before submission' });
-        }else{
-          var goNext = true;
-          if(this.state.depositor==='' || this.state.depositor===undefined){
-            activeStep=1;
-            this.setState({errorTextDepositor:'emptyField',activeStep,});
-            goNext = false;
-          }
-          if(this.state.depositeDate==='' || this.state.depositor===undefined){
-            activeStep=1;
-            this.setState({errorTextDepositedDate:'emptyField',activeStep,});
-            goNext = false;
-          }
-          
-          
-          if(goNext){
+        }
+        else{
             openSnackbar({ message: 'The nomination form has been submitted successfully' });
            postNominationSupportDocs(this.state,divisionId);   
             this.setState({
               goToHome: true
           });
-          } 
-       
        }
-  }
-    
-    if (activeStep === 2 && NominationPayments==''){
-      postNominationPayments(this.state,candidateCount);   
-  }else if(activeStep === 2 && NominationPayments!==''){
-    
-    updateNominationPayments(NominationPayments.id,this.state,candidateCount);   
   }
   };
 
@@ -455,11 +340,9 @@ class NominationForm extends React.Component {
   }
 
   render() {
-    console.log(this.state.nominationPaymentStatus)
     const { classes,division } = this.props;
     const steps = this.getSteps();
     const { activeStep } = this.state;
-    var paymentStatus = this.props.nominationPaymentStatus;
     return (
       <div className={classes.root}>
       {this.state.goToHome ? (
@@ -512,7 +395,7 @@ class NominationForm extends React.Component {
                 >
                   Back
                 </Button>
-                {(activeStep !== 3 && paymentStatus === 'Yes') || (paymentStatus !== 'No' && activeStep !== 2) ?
+                {(activeStep !== 2) ?
                 <Button
                   variant="contained"
                   color="primary"
@@ -523,7 +406,7 @@ class NominationForm extends React.Component {
                 </Button> : ' '
                 }
               
-                    {activeStep === 3 || (paymentStatus !== 'Yes' && activeStep === 2) ? 
+                    {activeStep === 2 ? 
                     <Button variant="contained" color="primary" onClick={this.handleComplete}>
                       Submit For Approval
                     </Button> : ' '
@@ -557,22 +440,16 @@ NominationForm.propTypes = {
 
 
 const mapStateToProps = ({Nomination,Election}) => {
-  const {nominationPayments} = Nomination;
-  const NominationPayments = Nomination.getNominationPayments;
   const NominationCandidates = Nomination.getNominationCandidates;
-  const {updateNominationPayments} = Nomination;
   const {postNominationSupportDocs} = Nomination;
-  const nominationPaymentStatus = Nomination.nominationPaymentStatus;
   const {openSnackbar} = Election;
 
   
   
-  return {nominationPayments,updateNominationPayments,NominationPayments,postNominationSupportDocs,NominationCandidates,openSnackbar,nominationPaymentStatus};
+  return {postNominationSupportDocs,NominationCandidates,openSnackbar};
 };
 
 const mapActionsToProps = {
-  postNominationPayments,
-  updateNominationPayments,
   postNominationSupportDocs,
   openSnackbar
 };

@@ -3,35 +3,22 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
 import { Grid } from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
 import { EligibilityCheckList } from './Fixtures';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import NumberFormat from 'react-number-format';
 import _ from 'lodash';
-
-
 
 const styles = theme => ({
     root: {
@@ -49,14 +36,14 @@ const styles = theme => ({
     }
 });
 
-
 class ElectionConfig extends React.Component {
     state = {
         divisions: [],
         eligibilityCheckList: [],
         selectedAuthority: '',
         electionConfig:[],
-        showAmount:false
+        showAmountRpp:false,
+        showAmountIg:false
     };
 
     constructor(){
@@ -66,9 +53,8 @@ class ElectionConfig extends React.Component {
         this.handleEligibility = this.handleEligibility.bind(this);
     }
 
-    showAmount(event){
+    showAmountRpp(event){
         const newElectionModule = {...this.props.electionModule};
-
         if(event && event.target ){
             const target = event.target;
             const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -79,17 +65,48 @@ class ElectionConfig extends React.Component {
                     newElectionModule.electionConfig.splice(index, 1) : ''
                 ));
             }
-            (name==='fe2c2d7e-66de-406a-b887-1143023f8e72' && value==='Yes') ? this.setState({ showAmount: true }) : this.setState({ showAmount: false })
+            (name==='fe2c2d7e-66de-406a-b887-1143023f8e72' && value==='Yes') ? this.setState({ showAmountRpp: true }) : this.setState({ showAmountRpp: false })
         }
     }
 
-    handleChangeAmount = name => event => {
+    showAmountIg(event){
         const newElectionModule = {...this.props.electionModule};
-        // this.setState({ [name]: event.target.value });
+        if(event && event.target ){
+            const target = event.target;
+            const value = target.type === 'checkbox' ? target.checked : target.value;
+            const name = target.name;
+            if(value==='No'){
+                newElectionModule.electionConfig.map((item,index) => (
+                    (item.electionModuleConfigId==='1232132') ?
+                    newElectionModule.electionConfig.splice(index, 1) : ''
+                ));
+            }
+            (name==='fe2c2d7e-66de-406a-b887-1143023f8e54' && value==='Yes') ? this.setState({ showAmountIg: true }) : this.setState({ showAmountIg: false })
+        }
+    }
+    handleChangeAmountRpp = name => event => {
+        const newElectionModule = {...this.props.electionModule};
         const electionConf = {
             electionModuleConfigId: name,
             value: event.target.value,
-            id:'securityDepositeAmount'
+            id:'securityDepositeAmountRpp'
+        }
+        newElectionModule.electionConfig.map((item,index) => (
+            (item.electionModuleConfigId===electionConf.electionModuleConfigId) ?
+            newElectionModule.electionConfig.splice(index, 1) : ''
+        ));
+        if(electionConf.value!==''){
+            newElectionModule.electionConfig.push(electionConf);
+        }
+        this.props.electionChanged(newElectionModule); 
+      };
+
+      handleChangeAmountIg = name => event => {
+        const newElectionModule = {...this.props.electionModule};
+        const electionConf = {
+            electionModuleConfigId: name,
+            value: event.target.value,
+            id:'securityDepositeAmountIg'
         }
         newElectionModule.electionConfig.map((item,index) => (
             (item.electionModuleConfigId===electionConf.electionModuleConfigId) ?
@@ -113,25 +130,20 @@ class ElectionConfig extends React.Component {
                 value: value,
                 id:id
             }
-            debugger;
             const electionConfig = this.state.electionConfig;
 
             newElectionModule.electionConfig.map((item,index) => (
                 (item.electionModuleConfigId===electionConf.electionModuleConfigId) ?
                 newElectionModule.electionConfig.splice(index, 1) : ''
             ));
-
             newElectionModule.electionConfig.map((item,index) => (
                 (item.electionModuleConfigId===electionConf.electionModuleConfigId) ?
                 electionConfig.splice(index, 1) : ''
             ));
-
-
             newElectionModule.electionConfig.push(electionConf);
             electionConfig.push(electionConf);
             this.props.electionChanged(newElectionModule); 
             this.setState({electionConfig , electionModuleConfigId:"", value:""});
-            // this.props.electionChanged({ ...this.props.electionModule, [name]: value });
         }
     }
 
@@ -200,11 +212,14 @@ class ElectionConfig extends React.Component {
         // let authority = this.props.electionModule['authority'];
         let authority='';
         let calType='';
-        let SecurityDeposit='';
-        let depositAmount='';
+        let SecurityDepositRpp='';
+        let SecurityDepositIg='';
+        let depositAmountRpp='';
+        let depositAmountIg='';
         let Objections='';
         let CreateAlliance='';
-        let show='';
+        let showRpp='';
+        let showIg='';
         let remarks='';
 
         this.props.electionModule.electionConfig.map(item => {
@@ -215,10 +230,16 @@ class ElectionConfig extends React.Component {
                 calType=item.value
             }
             if(item.electionModuleConfigId==='fe2c2d7e-66de-406a-b887-1143023f8e72'){
-                SecurityDeposit=item.value
+                SecurityDepositRpp=item.value
+            }
+            if(item.electionModuleConfigId==='fe2c2d7e-66de-406a-b887-1143023f8e54'){
+                SecurityDepositIg=item.value
             }
             if(item.electionModuleConfigId==='123213'){
-                depositAmount=item.value;
+                depositAmountRpp=item.value;
+            }
+            if(item.electionModuleConfigId==='1232132'){
+                depositAmountIg=item.value;
             }
             if(item.electionModuleConfigId==='253454355'){
                 Objections=item.value
@@ -234,17 +255,20 @@ class ElectionConfig extends React.Component {
         if (!authority) {
             authority = this.props.authorities.length > 0 && this.props.authorities[0].authority_id;
         }
-        if (depositAmount) {
-            show = true;
+        if (depositAmountRpp) {
+            showRpp = true;
+        }
+        if (depositAmountIg) {
+            showIg = true;
         }
 
-    const menuItems = this.props.authorities.map(authority => (
-        <MenuItem value={authority.authority_id}>{authority.name}</MenuItem>));
+    // const menuItems = this.props.authorities.map(authority => (
+    //     <MenuItem value={authority.authority_id}>{authority.name}</MenuItem>));
         return (
             <div className={classes.root}>
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
-                        <FormControl error={(errorTextItems.errorTextAuthority==='emptyField') ? true : false} className={classes.formControl}>
+                        <FormControl  className={classes.formControl}>
                         
                         <TextField
                             id="standard-name"
@@ -337,15 +361,15 @@ class ElectionConfig extends React.Component {
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>
-                        <FormControl error={(errorTextItems.errorTextSecurityDeposite==='emptyField') ? true : false} component="fieldset">
-                            <FormLabel component="legend">Security Deposit</FormLabel>
+                        <FormControl error={(errorTextItems.errorTextSecurityDepositeRpp==='emptyField') ? true : false} component="fieldset">
+                            <FormLabel component="legend">Security Deposit (Registered Political Parties)</FormLabel>
                             <RadioGroup
                                 aria-label="Gender"
                                 name="fe2c2d7e-66de-406a-b887-1143023f8e72"
                                 className={classes.group}
-                                value={SecurityDeposit}
-                                onChange={this.handleChange.bind(this,"securityDeposite")}
-                                onClick={this.showAmount.bind(this)}
+                                value={SecurityDepositRpp}
+                                onChange={this.handleChange.bind(this,"securityDepositeRpp")}
+                                onClick={this.showAmountRpp.bind(this)}
                                 row
                             >
                                 <FormControlLabel
@@ -363,20 +387,70 @@ class ElectionConfig extends React.Component {
                                     value="No"
                                 />
                             </RadioGroup>
-                            <FormHelperText>{(errorTextItems.errorTextSecurityDeposite==='emptyField') ? 'This field is required!' : ''}</FormHelperText>
+                            <FormHelperText>{(errorTextItems.errorTextSecurityDepositeRpp==='emptyField') ? 'This field is required!' : ''}</FormHelperText>
                         </FormControl>
                         <Grid item lg={3}>
                     {
-                        this.state.showAmount || show ?
+                        this.state.showAmountRpp || showRpp ?
                     <TextField
-                            error={errorTextItems.errorTextSecurityDepositeAmount}
+                            error={errorTextItems.errorTextSecurityDepositeAmountRpp}
                             id="formatted-numberformat-input"
                             label="Security Deposit Amount"
                             className={classes.textField}
                             prefix={'Rs '}
-                            value={depositAmount}
-                            onChange={this.handleChangeAmount('123213')}
-                            helperText={errorTextItems.errorTextSecurityDepositeAmount === "emptyField" ? 'This field is required!' : 'Please type your Amount '}
+                            value={depositAmountRpp}
+                            onChange={this.handleChangeAmountRpp('123213')}
+                            helperText={errorTextItems.errorTextSecurityDepositeAmountRpp === "emptyField" ? 'This field is required!' : 'Please type your Amount '}
+                            margin="normal"
+                            InputProps={{
+                                inputComponent: this.NumberFormatCustom,
+                              }}
+                        /> : ''
+                    }
+                    </Grid> 
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <FormControl error={(errorTextItems.errorTextSecurityDepositeIg==='emptyField') ? true : false} component="fieldset">
+                            <FormLabel component="legend">Security Deposit (Independent Groups)</FormLabel>
+                            <RadioGroup
+                                aria-label="Gender"
+                                name="fe2c2d7e-66de-406a-b887-1143023f8e54"
+                                className={classes.group}
+                                value={SecurityDepositIg}
+                                onChange={this.handleChange.bind(this,"securityDepositeIg")}
+                                onClick={this.showAmountIg.bind(this)}
+                                row
+                            >
+                                <FormControlLabel
+                                    control={
+                                        <Radio />
+                                    }
+                                    value="Yes"
+                                    label="Security Deposit"
+                                />
+                                <FormControlLabel
+                                    control={
+                                        <Radio />
+                                    }
+                                    label="No Security Deposit"
+                                    value="No"
+                                />
+                            </RadioGroup>
+                            <FormHelperText>{(errorTextItems.errorTextSecurityDepositeIg==='emptyField') ? 'This field is required!' : ''}</FormHelperText>
+                        </FormControl>
+                        <Grid item lg={3}>
+                    {
+                        this.state.showAmountIg || showIg ?
+                    <TextField
+                            error={errorTextItems.errorTextSecurityDepositeAmountIg}
+                            id="formatted-numberformat-input"
+                            label="Security Deposit Amount"
+                            className={classes.textField}
+                            prefix={'Rs '}
+                            value={depositAmountIg}
+                            onChange={this.handleChangeAmountIg('1232132')}
+                            helperText={errorTextItems.errorTextSecurityDepositeAmountIg === "emptyField" ? 'This field is required!' : 'Please type your Amount '}
                             margin="normal"
                             InputProps={{
                                 inputComponent: this.NumberFormatCustom,

@@ -1,7 +1,6 @@
 import {
     CREATE_ELECTION_MODULE,
     UPDATE_ELECTION_MODULE,
-    SAVE_ELECTION_MODULE,
     GET_APPROVED_ELECTION_MODULE,
     GET_PENDING_ELECTION_MODULE,
     GET_REJECTED_ELECTION_MODULE,
@@ -227,14 +226,24 @@ export const setUpdatedTemplateData = (val) => {
 
   export function editElection(moduleId,election) {
     return function (dispatch) {
-     
       const response = axios
       .put(
         `${API_BASE_URL}/election-modules/${moduleId}`,
         {...election}
       )
       .then(response => {
+        var electionNew= {createdAt: response.data.createdAt,
+            createdBy: 'admin',
+            id: response.data.id,
+            lastModified: response.data.updatedAt,
+            moduleId: "",
+            name: response.data.name,
+            status: "PENDING"}
          dispatch(setUpdatedTemplateData(response.data));
+         dispatch({
+            type: RECIVE_PENDING_ELECTION_MODULE,
+            payload: electionNew
+        });
          dispatch(openSnackbar({ message: election.name + ' has been updated ' }));
       }).catch(err => {
             console.log(err)
@@ -520,7 +529,6 @@ const allElectionTemplateLoaded = (getAllTemplates) => {
 };
 
 export function getAllElectionTemplates() {
-    debugger;
     return function (dispatch) {
 
         const response = axios
@@ -529,13 +537,11 @@ export function getAllElectionTemplates() {
             )
             .then(response => {
                 const getAllTemplates = response.data;
-                debugger;
                 dispatch(
                     allElectionTemplateLoaded(getAllTemplates)
                 );
             }).catch(err => {
                 const getAllTemplates = [];
-                debugger;
                 dispatch(
                     allElectionTemplateLoaded(getAllTemplates)
                 );
@@ -597,20 +603,17 @@ export const onChangeApprovalData = (templateApprovals) => {
         reviewNote:reviewNote
       };
       
-       debugger;
       const response = axios
       .put(
         `${API_BASE_URL}/election-modules/${moduleId}/approve-election-templates`,
             {...templateApprovals}
       )
       .then(response => {
-          debugger;
          dispatch(onChangeApprovalData(response.data));
          dispatch(receiveApprovedElectionTemplates(templateApprovals));
          dispatch(openSnackbar({ message:(status==='APPROVE') ?  name + ' has been approved' :  name + ' has been rejected'}));
       }).catch(err => {
-          debugger;
-            console.log("errerrerrerrerrerrerr",err)
+            console.log(err)
       });
     };
   }

@@ -409,7 +409,7 @@ export function getNominationList() {
      
     const response = axios
     .get(
-      `${API_BASE_URL}/elections/${sessionStorage.getItem('election_id')}/teams/1111/divisions`,
+      `${API_BASE_URL}/elections/${sessionStorage.getItem('election_id')}/teams/${sessionStorage.getItem('party_id')}/divisions`,
     )
     .then(response => {
       const getNominationList = response.data;
@@ -439,10 +439,12 @@ const nominationDataLoaded = (getNominationData) => {
 export function getNominationData(nominationId) {
 debugger;
   return function (dispatch) {
-     
+    //change this keyName to candidate payment ig to get the ig candidate payment
+     let keyName = 'candidate payment rpp'
     const response = axios
     .get(
-      `${API_BASE_URL}/nominations/${nominationId}`,
+      `${API_BASE_URL}/nominations/${nominationId}/key-name/${keyName}`,
+
     )
     .then(response => {
       const getNominationData = response.data;

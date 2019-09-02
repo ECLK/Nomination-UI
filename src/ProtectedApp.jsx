@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Login from "./pages/Login/Login";
+import SelectElection from "./pages/SelectElection/SelectElection";
 import NotifierRedux from './components/NotifierRedux';
 
 // import NominationForm from 'pages/USER/NominationForm/NominationForm';
@@ -73,11 +74,13 @@ console.log("indexUserhome",indexNomination);
       <div>
         <NotifierRedux />
         <Switch>
-          <Redirect exact from="/" to="/home" />
+          <Redirect exact from="/" to="/login" />
           <Route
             path="/home"
             component={Home}
           />
+          
+          <Route path="/select-election" component={SelectElection} />
           <Route path="/login" component={Login} />
           {/* <Route path='/nomination' component={Nomination} /> */}
           <Route
@@ -98,7 +101,7 @@ console.log("indexUserhome",indexNomination);
             component={NominationForm}
           />
           {
-            indexNomination!==-1 ? <Redirect exact from="/admin" to="/home" /> : <Redirect exact from="/admin" to="/admin/home" />
+            indexNomination!==-1 ? <Redirect exact from="/admin" to="/select-election" /> : <Redirect exact from="/admin" to="/admin/home" />
           }
           
           <Route

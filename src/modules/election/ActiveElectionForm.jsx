@@ -9,12 +9,9 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import ElectionTimeLine from '../../components/ElectionTimeLine/ElectionTimeLine';
-import ElectionPayment from '../../components/ElectionPayment/ElectionPayment';
-import ElectionWeightage from '../../components/ElectionWeightage/ElectionWeightage';
 import AllowNomination from './AllowNomination';
 import { Redirect } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
-import NotifierRedux from '../../components/Notifier';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -23,12 +20,10 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import CloseIcon from '@material-ui/icons/Close';
-import WarningIcon from '@material-ui/icons/Warning';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import { setCallElectionData, postCallElectionData, openSnackbar, getFieldOptions, getCallElectionData, handleChangeElectionData, editCallElectionData, deleteCallElectionData } from './state/ElectionAction';
 import { connect } from 'react-redux';
 import moment from 'moment';
-
 
 const styles = theme => ({
   root: {
@@ -50,7 +45,7 @@ const styles = theme => ({
   },
   rightIcon: {
     marginLeft: theme.spacing.unit,
-    
+
   },
 });
 
@@ -58,11 +53,9 @@ function getSteps() {
   return ['TIMELINE', 'SELECT ELECTORATES'];
 }
 
-
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
-
 
 const DialogTitle = withStyles(theme => ({
   root: {
@@ -117,98 +110,100 @@ class ActiveElectionForm extends React.Component {
       nominationEnd: Date.parse(newDate),
       objectionStart: Date.parse(newDate),
       objectionEnd: Date.parse(newDate),
-      // depositAmount: 'Amount',
-      // WeightagePrefarence: '%',
-      // WeightageVote: '%',
       electionName: CallElectionData.electionName,
       electionModule: CallElectionData.electionModule,
       values: '',
       rowData: '',
       goToHome: false,
-      columnHeaders: '',
-      errorTextNominationStart:'',
-      errorTextNominationEnd:'',
-      errorTextObjectionStart:'',
-      errorTextObjectionEnd:'',
-      goNext:false,
-      errorTextElectorates:''
+      columnHeaders: { name: '', id: '' },
+      errorTextNominationStart: '',
+      errorTextNominationEnd: '',
+      errorTextObjectionStart: '',
+      errorTextObjectionEnd: '',
+      goNext: false,
+      errorTextElectorates: ''
     };
-
-  }
-
-  componentDidMount() {
-    const { CallElectionData, getCallElectionData, } = this.props;
-    getCallElectionData(this.props.electionId);
-
-    getFieldOptions((CallElectionData.module_id) ? CallElectionData.module_id : this.props.moduleId).then((data) => {
-      this.setState(data);
-    })
   }
 
   handleNext = () => {
     let activeStep;
-    const { setElectionTimeLine,CallElectionData } = this.props;
+    const { setElectionTimeLine, CallElectionData } = this.props;
 
-      var goNext = true;
+    var goNext = true;
 
-      if(CallElectionData.timeLineData.nominationStart==='' || isNaN(CallElectionData.timeLineData.nominationStart)){
-        this.setState({errorTextNominationStart:'emptyField'});
-        goNext = false;
-      }
-      if(CallElectionData.timeLineData.nominationEnd==='' || isNaN(CallElectionData.timeLineData.nominationEnd)){
-        this.setState({errorTextNominationEnd:'emptyField'});
-        goNext = false;
-      }
-      if(CallElectionData.timeLineData.objectionStart==='' || isNaN(CallElectionData.timeLineData.objectionStart)){
-        this.setState({errorTextObjectionStart:'emptyField'});
-        goNext = false;
-      }
-      if(CallElectionData.timeLineData.objectionEnd==='' || isNaN(CallElectionData.timeLineData.objectionEnd)){
-        this.setState({errorTextObjectionEnd:'emptyField'});
-        goNext = false;
-      }
-      var nominationStart = moment(CallElectionData.timeLineData.nominationStart).format("YYYY-MM-DD");
-      var nominationEnd = moment(CallElectionData.timeLineData.nominationEnd).format("YYYY-MM-DD");
-      var objectionStart = moment(CallElectionData.timeLineData.objectionStart).format("YYYY-MM-DD");
-      var objectionEnd = moment(CallElectionData.timeLineData.objectionEnd).format("YYYY-MM-DD");
+    if (CallElectionData.timeLineData.nominationStart === '' || isNaN(CallElectionData.timeLineData.nominationStart)) {
+      this.setState({ errorTextNominationStart: 'emptyField' });
+      goNext = false;
+    }
+    if (CallElectionData.timeLineData.nominationEnd === '' || isNaN(CallElectionData.timeLineData.nominationEnd)) {
+      this.setState({ errorTextNominationEnd: 'emptyField' });
+      goNext = false;
+    }
+    if (CallElectionData.timeLineData.objectionStart === '' || isNaN(CallElectionData.timeLineData.objectionStart)) {
+      this.setState({ errorTextObjectionStart: 'emptyField' });
+      goNext = false;
+    }
+    if (CallElectionData.timeLineData.objectionEnd === '' || isNaN(CallElectionData.timeLineData.objectionEnd)) {
+      this.setState({ errorTextObjectionEnd: 'emptyField' });
+      goNext = false;
+    }
+    var nominationStart = moment(CallElectionData.timeLineData.nominationStart).format("YYYY-MM-DD");
+    var nominationEnd = moment(CallElectionData.timeLineData.nominationEnd).format("YYYY-MM-DD");
+    var objectionStart = moment(CallElectionData.timeLineData.objectionStart).format("YYYY-MM-DD");
+    var objectionEnd = moment(CallElectionData.timeLineData.objectionEnd).format("YYYY-MM-DD");
 
-      if(moment(nominationEnd).isBefore(nominationStart)){
-        this.setState({errorTextNominationEnd:'emptyField2'});
-        goNext = false;
-      }
-      if(moment(objectionStart).isBefore(nominationEnd)){
-        this.setState({errorTextObjectionStart:'emptyField2'});
-        goNext = false;
-      }
-      if(moment(objectionEnd).isBefore(objectionStart)){
-        this.setState({errorTextObjectionEnd:'emptyField2'});
-        goNext = false;
-      }
-      if(this.state.activeStep===1){
-        if(CallElectionData.rowData.length === 0){
-          this.setState({errorTextElectorates:'emptyField'});
-          goNext = false;
-        }
-      }
+    if (moment(nominationEnd).isBefore(nominationStart)) {
+      this.setState({ errorTextNominationEnd: 'emptyField2' });
+      goNext = false;
+    }
+    if (moment(objectionStart).isBefore(nominationEnd)) {
+      this.setState({ errorTextObjectionStart: 'emptyField2' });
+      goNext = false;
+    }
+    if (moment(objectionEnd).isBefore(objectionStart)) {
+      this.setState({ errorTextObjectionEnd: 'emptyField2' });
+      goNext = false;
+    }
 
-      if(goNext){
-        this.setState(state => ({
-          activeStep: state.activeStep + 1,
-        }));
+    let today = new Date();
+    var TodayFormated = moment(today).format("YYYY-MM-DD");
+
+    if (moment(nominationStart).isBefore(TodayFormated) && CallElectionData.status !== 'APPROVE') {
+      this.setState({ errorTextNominationStart: 'emptyField2' });
+      goNext = false;
+    }
+    if (moment(nominationEnd).isBefore(TodayFormated) && CallElectionData.status !== 'APPROVE') {
+      this.setState({ errorTextNominationEnd: 'emptyField2' });
+      goNext = false;
+    }
+    if (moment(objectionStart).isBefore(TodayFormated) && CallElectionData.status !== 'APPROVE') {
+      this.setState({ errorTextObjectionStart: 'emptyField2' });
+      goNext = false;
+    }
+    if (moment(objectionEnd).isBefore(TodayFormated) && CallElectionData.status !== 'APPROVE') {
+      this.setState({ errorTextObjectionEnd: 'emptyField2' });
+      goNext = false;
+    }
+
+    if (this.state.activeStep === 1) {
+      if (CallElectionData.rowData.length === 0) {
+        this.setState({ errorTextElectorates: 'emptyField' });
+        goNext = false;
       }
-    
+    }
+
+    if (goNext) {
+      this.setState(state => ({
+        activeStep: state.activeStep + 1,
+      }));
+    }
+
     if (activeStep === 1) {
       setElectionTimeLine(this.state);
     }
-    // const { setCallElectionData } = this.props;
-    // const newElectionModule = {...this.props.CallElectionData};
-
-  
-
     if (this.state.activeStep === 0) {
-      // setCallElectionData(newElectionModule);
-    }
 
+    }
   };
 
   handleBack = () => {
@@ -225,9 +220,6 @@ class ActiveElectionForm extends React.Component {
 
   handleSubmit = () => {
     const { postCallElectionData, CallElectionData, electionData, openSnackbar } = this.props;
-
-    openSnackbar({ message: CallElectionData.name + ' has been submitted for approval ' });
-
     postCallElectionData(CallElectionData, electionData);
     this.setState({
       goToHome: true
@@ -240,9 +232,6 @@ class ActiveElectionForm extends React.Component {
   };
   handleUpdate = () => {
     const { editCallElectionData, CallElectionData, electionData, openSnackbar, electionId } = this.props;
-
-    openSnackbar({ message: CallElectionData.name + ' has been updated ' });
-
     editCallElectionData(CallElectionData, electionId);
     this.setState({
       goToHome: true
@@ -250,60 +239,48 @@ class ActiveElectionForm extends React.Component {
   };
   handleDelete = () => {
     const { deleteCallElectionData, CallElectionData, openSnackbar, electionId } = this.props;
-
-    openSnackbar({ message: CallElectionData.name + ' has been deleted ' });
-
-    deleteCallElectionData(electionId);
+    deleteCallElectionData(electionId, CallElectionData.name);
     this.setState({
       goToHome: true
     });
   };
-
 
   handleChange = (input) => e => {
     const { handleChangeElectionData } = this.props;
     const newElectionModule = { ...this.props.CallElectionData };
     const name = input;
     const value = e.target.value;
-
-    if ("nominationStart" == name) { 
-      newElectionModule.timeLineData["nominationStart"] = Date.parse(value) 
-      this.setState({errorTextNominationStart:''});
+    if ("nominationStart" == name) {
+      newElectionModule.timeLineData["nominationStart"] = Date.parse(value)
+      this.setState({ errorTextNominationStart: '' });
     }
-    if ("nominationEnd" == name) { 
-      newElectionModule.timeLineData["nominationEnd"] = Date.parse(value) 
-      this.setState({errorTextNominationEnd:''});
+    if ("nominationEnd" == name) {
+      newElectionModule.timeLineData["nominationEnd"] = Date.parse(value)
+      this.setState({ errorTextNominationEnd: '' });
     }
-    if ("objectionStart" == name) { 
-      newElectionModule.timeLineData["objectionStart"] = Date.parse(value) 
-      this.setState({errorTextObjectionStart:''});
+    if ("objectionStart" == name) {
+      newElectionModule.timeLineData["objectionStart"] = Date.parse(value)
+      this.setState({ errorTextObjectionStart: '' });
     }
-    if ("objectionEnd" == name) { 
+    if ("objectionEnd" == name) {
       newElectionModule.timeLineData["objectionEnd"] = Date.parse(value)
-      this.setState({errorTextObjectionEnd:''});
-     }
-     this.setState({errorTextElectorates:''});
-
-     handleChangeElectionData(newElectionModule)
-      
-
+      this.setState({ errorTextObjectionEnd: '' });
+    }
+    this.setState({ errorTextElectorates: '' });
+    handleChangeElectionData(newElectionModule)
   };
   onOpenModal = () => {
     this.setState({ open: true });
-  
+
   };
 
   onCloseModal = () => {
     this.setState({ open: false });
   };
 
-  // handleChange = input => e => {
-  //   this.setState({ [input]: e.target.value });
-  // }
-
   getStepContent(step, values) {
     const { CallElectionData } = this.props;
-    const {errorTextNominationStart,errorTextNominationEnd,errorTextObjectionStart,errorTextObjectionEnd} = this.state;
+    const { errorTextNominationStart, errorTextNominationEnd, errorTextObjectionStart, errorTextObjectionEnd } = this.state;
     const errorTextItems = { errorTextNominationStart, errorTextNominationEnd, errorTextObjectionStart, errorTextObjectionEnd }
 
     switch (step) {
@@ -314,16 +291,6 @@ class ActiveElectionForm extends React.Component {
           CallElectionData={CallElectionData}
           errorTextItems={errorTextItems}
         />;
-      // case 1:
-      //   return <ElectionPayment
-      //     handleChange={this.handleChange}
-      //     values={values}
-      //   />;
-      // case 2:
-      //   return <ElectionWeightage
-      //     handleChange={this.handleChange}
-      //     values={values}
-      //   />;
       case 1:
         return <AllowNomination
           handleChange={this.handleChange}
@@ -343,8 +310,6 @@ class ActiveElectionForm extends React.Component {
     const { nominationStart, nominationEnd, objectionStart, objectionEnd, depositAmount, WeightageVote, WeightagePrefarence, columnHeaders } = this.state;
     const values = { nominationStart, nominationEnd, objectionStart, objectionEnd, depositAmount, WeightageVote, WeightagePrefarence, columnHeaders }
 
-
-
     return (
       <div className={classes.root}>
         {this.state.goToHome ? (
@@ -353,7 +318,6 @@ class ActiveElectionForm extends React.Component {
             <Stepper activeStep={activeStep} orientation="vertical">
               {steps.map((label, index) => {
                 return (
-
                   <Step key={label}>
                     <StepLabel>{label}</StepLabel>
                     <StepContent>
@@ -372,8 +336,6 @@ class ActiveElectionForm extends React.Component {
                             color="primary"
                             onClick={this.handleNext}
                             className={classes.button}
-                          // onClick={activeStep === 3 ? this.handleSubmit : this.handleNext}
-
                           >
                             {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                           </Button>
@@ -399,10 +361,10 @@ class ActiveElectionForm extends React.Component {
                   <Button color="primary" onClick={this.handleUpdate} className={classes.button}>
                     Update
             </Button>
-                  <Button color="secondary"  onClick={this.onOpenModal} className={classes.button}>
+                  <Button color="secondary" onClick={this.onOpenModal} className={classes.button}>
                     Delete
                     <DeleteIcon className={classes.rightIcon} />
-            </Button>
+                  </Button>
                 </Grid>
                 : (this.props.check === 'approve') ?
                   <Grid item xs="1">
@@ -437,19 +399,17 @@ class ActiveElectionForm extends React.Component {
           <DialogTitle id="alert-dialog-slide-title">
           </DialogTitle>
           <DialogContent>
-
             <DialogContentText id="alert-dialog-slide-description">
-              {/* <WarningIcon className={classes.warningIcon} /> */}
               Are You Sure You Want to Delete This Election ?
-                                            </DialogContentText>
+            </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button id={this.state.moduleId} value="OK" onClick={this.handleDelete}  color="primary">
+            <Button id={this.state.moduleId} value="OK" onClick={this.handleDelete} color="primary">
               OK
-                                            </Button>
+            </Button>
             <Button onClick={this.onCloseModal} color="primary">
               Cancel
-                                            </Button>
+            </Button>
           </DialogActions>
         </Dialog>
       </div>
@@ -479,7 +439,8 @@ const mapActionsToProps = {
   getCallElectionData,
   handleChangeElectionData,
   editCallElectionData,
-  deleteCallElectionData
+  deleteCallElectionData,
+  getFieldOptions
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(ActiveElectionForm));

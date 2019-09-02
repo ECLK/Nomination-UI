@@ -1,11 +1,9 @@
 import {
     ELECTION_LOAD_SUCCESS,
     ELECTIONS_LOADING,
-    POST_ACTIVE_ELECTION_DATA,
     POST_ELECTION,
     GET_ELECTION_MODULE,
     POST_CALL_ELECTION,
-    POST_CALL_ELECTION_DATA,
     SET_CALL_ELECTION_DATA,
     ELECTION_REVIEW_DATA,
     ON_ELECTION_APPROVAL_CHANGE,
@@ -17,7 +15,9 @@ import {
     HANDLE_CHANGE_CALL_ELECTION,
     EDIT_CALL_ELECTION_DATA,
     DELETE_CALL_ELECTION_DATA,
-    GET_CALL_ELECTION_TIME_LINE_DATA
+    GET_CALL_ELECTION_TIME_LINE_DATA,
+    GET_ACTIVE_ELECTIONS,
+    SET_ELECTORATES_DIVISIONS
 } from "./ElectionTypes";
 import { API_BASE_URL } from "../../../config.js";
 import axios from "axios";
@@ -111,6 +111,36 @@ export function getElectionModules() {
                 const getElectionModules = [];
                 dispatch(
                     electionModuleLoaded(getElectionModules)
+                );
+                console.log(err)
+            });
+    };
+}
+
+//get future elections for party logins
+const activeElectionLoaded = (getActiveElections) => {
+    return {
+        type: GET_ACTIVE_ELECTIONS,
+        payload: getActiveElections,
+    };
+};
+
+export function getActiveElections() {
+    return function (dispatch) {
+
+        const response = axios
+            .get(
+                `${API_BASE_URL}/elections/forDemo/new`,
+            )
+            .then(response => {
+                const getActiveElections = response.data;
+                dispatch(
+                    activeElectionLoaded(getActiveElections)
+                );
+            }).catch(err => {
+                const getActiveElections = [];
+                dispatch(
+                    activeElectionLoaded(getActiveElections)
                 );
                 console.log(err)
             });
@@ -279,7 +309,9 @@ export function postCallElectionData(CallElectionData, electionData) {
                 }
                 dispatch(setPostCallElectionData(response));
                 dispatch(receivePendingElection(allElectionDataNew));
+                dispatch(openSnackbar({ message: CallElectionData.name + ' has been submitted for approval' }));
             }).catch(err => {
+                dispatch(openSnackbar({ message: ' Something went wrong' }));
                 console.log(err)
             });
     };
@@ -324,7 +356,9 @@ export function editCallElectionData(CallElectionData, electionId) {
                 .then(response => {
                    const data={electionId:electionId,status:'PENDING'}
                     dispatch(setEditCallElectionData(data));
+                    dispatch(openSnackbar({ message: CallElectionData.name + ' has been updated ' }));
                 }).catch(err => {
+                    dispatch(openSnackbar({ message: ' Something went wrong' }));
                     console.log(err)
                 });
         };
@@ -341,7 +375,7 @@ export const setDeleteCallElectionData = (val) => {
     }
 }
 
-export function deleteCallElectionData(electionId) {
+export function deleteCallElectionData(electionId,electionName) {
        
         return function (dispatch) {
             const response = axios
@@ -350,7 +384,9 @@ export function deleteCallElectionData(electionId) {
                 )
                 .then(response => {
                     dispatch(setDeleteCallElectionData(electionId));
+                    dispatch(openSnackbar({ message: electionName + ' has been deleted ' }));
                 }).catch(err => {
+                    dispatch(openSnackbar({ message: ' Something went wrong' }));
                     console.log(err)
                 });
         };
@@ -476,17 +512,25 @@ export const onChangeApprovalData = (electionApprovals) => {
  };
 
  export const getFieldOptions = function getFieldOptions(moduleId) {
-    let promises = [];
-
-    promises.push(axios.get(`${API_BASE_URL}/field-options/electorates-divisions/${moduleId}`));
-    
-    return axios.all(promises)
-        .then(args =>{
-            return {
-                columnHeaders: args[0].data,
-            }
-        });
+    return function (dispatch) {
+        const response = axios
+            .get(
+                `${API_BASE_URL}/field-options/electorates-divisions/${moduleId}`
+            )
+            .then(response => {
+                dispatch(setElectoratesDivisions(response.data));
+            }).catch(err => {
+                console.log(err)
+            });
+    }
 }
+export const setElectoratesDivisions = (val) => {
+    return {
+        type: SET_ELECTORATES_DIVISIONS,
+        payload: val
+    }
+}
+
 export const asyncValidateElection = function asyncValidateElection(electionName) {
     let promises = [];
     if(electionName){
@@ -507,7 +551,7 @@ export const setGetCallElectionData = (val) => {
     }
 }
 
-export function getCallElectionData(electionId) {
+export function getCallElectionData(electionId,electionName,moduleId) {
     //TODO: config ids should get from the front end and the array should be dynamic
     let newDate = new Date();
    
@@ -538,6 +582,24 @@ export function getCallElectionData(electionId) {
             .then(response => {
                 dispatch(setGetCallElectionData(response.data));
             }).catch(err => {
+                let  CallElectionData= {
+                    "name":electionName,
+                    "module_id":moduleId,
+                    "status":'',
+                    "created_by":"",
+                    "created_at":'',
+                    "updated_at":'',
+                    "timeLineData": 
+                        {
+                            nominationStart: '',
+                            nominationEnd: '',
+                            objectionStart: '',
+                            objectionEnd: '',
+                            electionId: '',
+                        },
+                    "rowData":[]
+                }
+                dispatch(setGetCallElectionData(CallElectionData));
                 console.log(err)
             });
     }
