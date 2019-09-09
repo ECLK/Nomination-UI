@@ -1,215 +1,304 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import AdminMenu from '../../components/AdminMenu/AdminMenu';
-import { getAllElectionReviews, getElectionReviewData } from "./state/ElectionAction.js";
-import { connect } from 'react-redux';
-import Typography from '@material-ui/core/Typography'
-import Card from '@material-ui/core/Card';//--
-import ElectionReviewProcess from '../../components/ElectionReviewProcess/ElectionReviewProcess.jsx';
-import { Link } from 'react-router-dom'
-import CardContent from '@material-ui/core/CardContent';
+import CallElectionList from '../../components/CallElectionList';
+import CallElection from './CallElection';
+import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';//---
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';///-
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import PersonIcon from '@material-ui/icons/Person';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import DateRangeIcon from '@material-ui/icons/DateRange';
+import { getAllElections ,getElectionReviewData,getFieldOptions } from '../election/state/ElectionAction';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom'
+import moment from 'moment';
 
 
 
-const drawerWidth = 240;
 
 const styles = theme => ({
+    container: {
+        marginLeft: theme.spacing.unit * 35,
+        paddingTop: 10,
+    }, heading: {
+        fontSize: theme.typography.pxToRem(15),
+        flexBasis: '33.33%',
+        flexShrink: 0,
+
+        fontSize: theme.typography.pxToRem(15),
+        fontWeight: theme.typography.fontWeightRegular,
+    },
+    secondaryHeading: {
+        fontSize: theme.typography.pxToRem(15),
+        color: theme.palette.text.secondary,
+    },
+    xxxxx: {
+        wide: 'full'
+    },
+    panel_wrapper: {
+        "min-width": 800,
+    },
+    heading: {
+        padding: 14,
+    },
     root: {
         display: 'flex',
     },
-    toolbar: {
-        paddingRight: 24, // keep right padding when drawer closed
-    },
-    toolbarIcon: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        padding: '0 8px',
-        ...theme.mixins.toolbar,
-    },
-    appBar: {
-        zIndex: theme.zIndex.drawer + 1,
-        transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-    },
-    appBarShift: {
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-    menuButton: {
-        marginLeft: 12,
-        marginRight: 36,
-    },
-    menuButtonHidden: {
-        display: 'none',
-    },
-    title: {
-        flexGrow: 1,
-    },
-    drawerPaper: {
-        position: 'relative',
-        whiteSpace: 'nowrap',
-        width: drawerWidth,
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-    drawerPaperClose: {
-        overflowX: 'hidden',
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        width: theme.spacing.unit * 7,
-        [theme.breakpoints.up('sm')]: {
-            width: theme.spacing.unit * 9,
-        },
-    },
-    appBarSpacer: theme.mixins.toolbar,
-    content: {
-        flexGrow: 1,
-        padding: theme.spacing.unit * 3,
-        height: '100vh',
-        overflow: 'auto',
-    },
-    h5: {
-        marginBottom: theme.spacing.unit * 2,
-    },
-    card: {
-        width: 300,
-        margin: 5,
-        cursor: 'pointer',
 
-    },
+
 });
+const h1Style = {
+    marginLeft: '-850px'
+};
 
-class Dashboard extends React.Component {
+class Home extends React.Component {
     state = {
         open: true,
-        nominations: []
+        expanded: null,
+        expandedPanelIndexApp: -1,
+        expandedPanelIndexPen: -1,
+        expandedPanelIndexRej: -1,
     };
 
+    handleChange = panel => (event, expanded) => {
+        this.setState({
+            expanded: expanded ? panel : false,
+        });
+    };
 
-    componentDidMount() {
-        const { allElectionModules, getAllElectionReviews } = this.props;
-        getAllElectionReviews();
+    togglePanelApp = panelIndex => (event, didExpand) => {
+        this.setState({
+            expandedPanelIndexApp: didExpand ? panelIndex : -1
 
-        console.log(allElectionModules)
+        });
+    };
+    togglePanelPen = panelIndex => (event, didExpand) => {
+        this.setState({
+            expandedPanelIndexPen: didExpand ? panelIndex : -1
+
+        });
+    };
+    togglePanelRej = panelIndex => (event, didExpand) => {
+        this.setState({
+            expandedPanelIndexRej: didExpand ? panelIndex : -1
+
+        });
+    };
+    getElectionTemplateData = (id,moduleId) => {
+        const { getElectionReviewData,getFieldOptions } = this.props;
+        getElectionReviewData(id);
+        getFieldOptions(moduleId);
+    };
+    
+    componentWillMount() {
+        const { getAllElections  } = this.props;
+        getAllElections();
     }
 
-    handleDrawerOpen = () => {
-        this.setState({ open: true });
-    };
-    getElectionReviewData = (id) => {
-        const { getElectionReviewData } = this.props;
-
-        getElectionReviewData(id);
-
-    };
-    // getElectionReviewData(id){
-    //     debugger;
-    // }
-
-    handleDrawerClose = () => {
-        this.setState({ open: false });
-    };
 
     render() {
-        const { classes, allElectionModules } = this.props;
-        const allElection = [
-            { index: "0", noOfDevision: "09", election: "Provincial Council Election 2019", noOfTeams: "15" },
-            { index: "1", noOfDevision: "25", election: "Local Authority Election 2019", noOfTeams: "08" },
-            { index: "2", noOfDevision: "01", election: "Presidential Election 2019", noOfTeams: "10" },
-            { index: "3", noOfDevision: "23", election: "Parliamentary Election 2019", noOfTeams: "07" },
-        ];
-        return (
-            <div className={classes.root}>
-                <CssBaseline />
-                <AdminMenu title="Election Commission of Sri Lanka"></AdminMenu>
-                <div style={{ width: '100%' }}>
-                    <Typography style={{ marginBottom: '50px', marginLeft: '20px' }} variant="h5" component="h2">
-                        Election Review
-                </Typography>
+        const { classes, AllElectionTemplates } = this.props;
+        const { expanded, expandedPanelIndexApp, expandedPanelIndexPen, expandedPanelIndexRej } = this.state;
+        const callElectionApproveElements = AllElectionTemplates.map((election, i) => (
+            (election.status==='APPROVE') ? 
+            <ExpansionPanel expanded={expandedPanelIndexApp === i} onChange={this.togglePanelApp(i)}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Grid container classname={classes.panel_wrapper} spacing={16}>
+                        <Grid item xs="6">
+                            <Typography className={classes.heading}>{election.name}</Typography>
+                        </Grid>
+                        <Grid item xs="3">
+                            {/* <Typography className={classes.heading}>({election.name})</Typography> */}
+                        </Grid>
+                        <Grid item xs="3">
 
-                    <div className={classes.container}>
-
-
-                        <div style={{ width: '100%', display: 'flex' }}>
-                            {/* {allElectionModules.map(row => <ElectionReviewProcess />)} */}
-                            <Grid container className={classes.root} spacing={64}>
-                                {
-                                    allElectionModules.map(row =>
-                                        <Grid item xs={3}>
-                                            <Button onClick={this.getElectionReviewData(row.id)}>
-                                                <Card style={{ width: 350, marginLeft: ((row.index == 0) ? '30px' : '0'), margin: ((row.index !== 0) ? '20px' : '0') }} md={3} xs={6} sm={3}>
-                                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "admin/election-process-review-detail", state: { id: row.id } }} >
-                                                        <CardContent >
-                                                            <Grid className={classes.container} container spacing={24}>
-                                                                <Grid style={{ textAlign: 'left' }} item >
-                                                                    <Typography className={classes.text_a} component="p">
-                                                                        <b>{row.name}</b>
-                                                                    </Typography>
-                                                                    <br />
-                                                                    <Typography className={classes.text_a} component="p">
-                                                                        No of Divisions : {7}
-                                                                    </Typography>
-
-                                                                    <Typography className={classes.text_a} component="p">
-                                                                        No of Parties/IG : {4}
-
-                                                                    </Typography>
-                                                                </Grid>
-
-                                                            </Grid>
-                                                        </CardContent>
-                                                    </Link>
-                                                </Card >
-                                            </Button>
-                                        </Grid>
-                                    )}
+                        </Grid>
+                    </Grid>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <Grid container classname={classes.panel_wrapper} spacing={24}>
+                        <Grid item xs={12}>
+                            <Grid container spacing={24}>
+                                <Grid item xs={6} sm={3}>
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            <PersonIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={election.createdBy} secondary="Created By" />
+                                    </ListItem>
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            <DateRangeIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={moment(election.lastModified).format("DD MMM YYYY hh:mm a")} secondary="Last Modified" />
+                                    </ListItem>
+                                </Grid>
+                                <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
+                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "admin/election-process-review-detail", state: { id: election.id,check:'approve',moduleId:election.moduleId } }} >
+                                        <Button onClick={this.getElectionTemplateData.bind(this, election.id, election.moduleId)} style={{ marginTop: 30 }} variant="contained" color="primary" size="small">View</Button>
+                                    </Link>
+                                </Grid>
                             </Grid>
-                        </div>
+                        </Grid>
+                    </Grid>
+                    <br />
+                </ExpansionPanelDetails>
+            </ExpansionPanel> : '' 
+        ));
+        const callElectionPendingElements = AllElectionTemplates.map((election, i) => (
+            (election.status==='PENDING') ? 
+            <ExpansionPanel expanded={expandedPanelIndexPen === i} onChange={this.togglePanelPen(i)}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Grid container classname={classes.panel_wrapper} spacing={16}>
+                        <Grid item xs="6">
+                            <Typography className={classes.heading}>{election.name}</Typography>
+                        </Grid>
+                        <Grid item xs="3">
+                            {/* <Typography className={classes.heading}>({election.name})</Typography> */}
+                        </Grid>
+                        <Grid item xs="3">
 
+                        </Grid>
+                    </Grid>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <Grid container classname={classes.panel_wrapper} spacing={24}>
+                        <Grid item xs={12}>
+                            <Grid container spacing={24}>
+                                <Grid item xs={6} sm={3}>
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            <PersonIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={election.createdBy} secondary="Created By" />
+                                    </ListItem>
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            <DateRangeIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={moment(election.lastModified).format("DD MMM YYYY hh:mm a")} secondary="Last Modified" />
+                                    </ListItem>
+                                </Grid>
+                                <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
+                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "admin/election-process-review-detail", state: { id: election.id,check:'pending',moduleId:election.moduleId } }} >
+                                        <Button onClick={this.getElectionTemplateData.bind(this, election.id, election.moduleId)} style={{ marginTop: 30 }} variant="contained" color="primary" size="small">Edit</Button>
+                                    </Link>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <br />
+                </ExpansionPanelDetails>
+            </ExpansionPanel> : ''
+        ));
+        const callElectionRejectedElements = AllElectionTemplates.map((election, i) => (
+            (election.status==='REJECT') ? 
+            <ExpansionPanel expanded={expandedPanelIndexRej === i} onChange={this.togglePanelRej(i)}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Grid container classname={classes.panel_wrapper} spacing={16}>
+                        <Grid item xs="6">
+                            <Typography className={classes.heading}>{election.name}</Typography>
+                        </Grid>
+                        <Grid item xs="3">
+                            {/* <Typography className={classes.heading}>({election.name})</Typography> */}
+                        </Grid>
+                        <Grid item xs="3">
 
-                        <br />
+                        </Grid>
+                    </Grid>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <Grid container classname={classes.panel_wrapper} spacing={24}>
+                        <Grid item xs={12}>
+                            <Grid container spacing={24}>
+                                <Grid item xs={6} sm={3}>
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            <PersonIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={election.createdBy} secondary="Created By" />
+                                    </ListItem>
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            <DateRangeIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={moment(election.lastModified).format("DD MMM YYYY hh:mm a")} secondary="Last Modified" />
+                                    </ListItem>
+                                </Grid>
+                                <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
+                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "admin/election-process-review-detail", state: { id: election.id,check:'reject',moduleId:election.moduleId } }} >
+                                        <Button onClick={this.getElectionTemplateData.bind(this, election.id, election.moduleId)} style={{ marginTop: 30 }} variant="contained" color="primary" size="small">Edit</Button>
+                                    </Link>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <br />
+                </ExpansionPanelDetails>
+            </ExpansionPanel> : ''
+        ));
 
-                    </div>
+        return (
+            <div>
+                <AdminMenu title="Election Commission of Sri Lanka"></AdminMenu>
+
+                <div className={classes.container}>
+                    {/* <Typography variant="h5" component="h2">
+                        Election Home
+                    </Typography> */}
+                    <br />
+                    <Grid container className={classes.root} spacing={32}>
+
+                        <Grid item xs={8} >
+                            <div style={{ width: '100%' }}>
+                                <CallElectionList callElectionApproveElements={callElectionApproveElements} callElectionPendingElements={callElectionPendingElements} callElectionRejectedElements={callElectionRejectedElements}></CallElectionList>
+                            </div>
+                        </Grid>
+                        <Grid item xs={5} >
+                            <div style={{ width: '100%' }}>
+                                {/* {callElectionElements} */}
+                            </div>
+                        </Grid>
+                    </Grid>
+                    <br />
                 </div>
             </div>
+
         );
     }
 }
 
-Dashboard.propTypes = {
+Home.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
+
 const mapStateToProps = ({ Election }) => {
-    const { allElectionModules } = Election;
     const { getElectionReviewData } = Election;
+    const AllElectionTemplates = Election.AllElections;
 
-
-    return { allElectionModules, getElectionReviewData }
+    return { AllElectionTemplates, getElectionReviewData };
 };
 
 const mapActionsToProps = {
-    getAllElectionReviews,
-    getElectionReviewData
+    getElectionReviewData,
+    getAllElections,
+    getFieldOptions
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Dashboard));
-
-
-
-
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Home));

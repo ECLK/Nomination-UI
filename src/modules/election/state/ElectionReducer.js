@@ -62,7 +62,9 @@ const initialState = {
     AllElections:[],
     ElectionTimeLineData:[],
     allActiveElections:[],
-    columnHeaders:{id:'',name:''}
+    columnHeaders:[
+        {id:'',name:''}
+    ]
 };
 
 const findIndex = (AllElections, id) => {
