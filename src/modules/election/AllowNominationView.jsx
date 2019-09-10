@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AdminMenu from '../../components/AdminMenu/AdminMenu';
-import CheckboxTable from '../../components/CheckboxTable/CheckboxTable';
+import CheckboxTable from '../../components/CheckboxTableElectionReview/CheckboxTable';
 import { CardContent } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { getFieldOptions } from './state/ElectionAction';
@@ -87,10 +87,10 @@ class AllowNomination extends React.Component {
                 <CssBaseline />
                 <AdminMenu title="Election Commission of Sri Lanka" ></AdminMenu>
                 {(errorTextElectorates) ? <Typography style={{color:'red'}} variant="subtitle1" gutterBottom>Select electorates before finish</Typography> : ''}
-                <div className={classes.content}>
+                <div style={{marginTop:-78}} className={classes.content}>
                         {/* <CardContent> */}
                             <form ref="form" onSubmit={this.handleSubmit}>
-                                <CheckboxTable title="Select Electorates" data={nomination_setup}  rows={rowHeaders}></CheckboxTable>
+                                <CheckboxTable  data={nomination_setup}  rows={rowHeaders}></CheckboxTable>
                             </form>
                         {/* </CardContent> */}
                 </div>

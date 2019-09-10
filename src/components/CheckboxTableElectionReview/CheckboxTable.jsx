@@ -61,7 +61,7 @@ class CheckboxTableGrid extends React.Component {
       })
 
     componentWillMount() {
-        const { rows, cols, CallElectionData } = this.props;
+        const { rows, cols, CallElectionData,rowData } = this.props;
 
         let rowHeaders = [''];
         this.props.rows.map((value) => {
@@ -87,12 +87,12 @@ class CheckboxTableGrid extends React.Component {
             var colCount = 0;
             rawCount++;
             for (let j = 0; j < cols.length; j++) {
-                for (let h = 0; h < CallElectionData.rowData.length; h++) {
-                    if (cols[j].id === CallElectionData.rowData[h].division_id && rows[i].id === CallElectionData.rowData[h].team_id) {
+                for (let h = 0; h < rowData.length; h++) {
+                    if (cols[j].id === rowData[h].division_id && rows[i].id === rowData[h].team_id) {
 
                         let allow_party = {
-                            'division_id': CallElectionData.rowData[h].division_id,
-                            'team_id': CallElectionData.rowData[h].team_id,
+                            'division_id': rowData[h].division_id,
+                            'team_id': rowData[h].team_id,
                             'id': (i + 1) + '-' + (j + 1)
                         }
                         this.state.rowData.push(allow_party);
@@ -111,7 +111,7 @@ class CheckboxTableGrid extends React.Component {
         for (let i = 0; i < rows.length; i++) {
             let row = [];
             for (let j = 0; j < cols.length; j++) {
-                CallElectionData.rowData.map((value) => {
+                rowData.map((value) => {
                     if (cols[j].id === value.division_id && rows[i].id === value.team_id) {
                         if (prevCol === cols[j].id) {
                             colCount++;
@@ -278,7 +278,7 @@ class CheckboxTableGrid extends React.Component {
         }
         // set row data headers
         const outputData = rowData.map(Object.values);
-        // const outputData = CallElectionData.rowData.map(Object.values);
+        // const outputData = rowData.map(Object.values);
         // set column data
         const columns = this.state.columnHeaders;
         // set option list
@@ -305,8 +305,9 @@ const mapStateToProps = ({ Election }) => {
     const { setCallElectionData } = Election;
     const CallElectionData = Election.CallElectionData;
     const cols = Election.columnHeaders;
+    const rowData = Election.electionElectorates;
     const electionData = Election.electionData;
-    return { setCallElectionData, CallElectionData, electionData, cols }
+    return { setCallElectionData, CallElectionData, electionData, cols ,rowData}
 };
 
 const mapActionsToProps = {

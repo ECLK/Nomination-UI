@@ -17,7 +17,8 @@ import {
     DELETE_CALL_ELECTION_DATA,
     GET_CALL_ELECTION_TIME_LINE_DATA,
     GET_ACTIVE_ELECTIONS,
-    SET_ELECTORATES_DIVISIONS
+    SET_ELECTORATES_DIVISIONS,
+    ELECTION_ELECTORATES_REVIEW_DATA
 } from "./ElectionTypes";
 import { API_BASE_URL } from "../../../config.js";
 import axios from "axios";
@@ -441,6 +442,38 @@ export function getElectionReviewData(id) {
                 const getElectionReviewData = [];
                 dispatch(
                     electionReviewDataLoaded(getElectionReviewData)
+                );
+                console.log(err)
+            });
+    };
+}
+
+//Get electorates data for election approve detail page 
+
+export const electionElectoratesReviewDataLoaded = (val) => {
+    return {
+        type: ELECTION_ELECTORATES_REVIEW_DATA,
+        payload: val
+    }
+}
+export function getElectoratesData(id) {
+    return function (dispatch) {
+
+        const response = axios
+            .get(
+                `${API_BASE_URL}/activeElectionsData/${id}/electorates`,
+            )
+            .then(response => {
+                const getElectoratesData = response.data;
+                debugger;
+                dispatch(
+                    electionElectoratesReviewDataLoaded(getElectoratesData)
+                );
+            }).catch(err => {
+                const getElectoratesData = [];
+                debugger;
+                dispatch(
+                    electionElectoratesReviewDataLoaded(getElectoratesData)
                 );
                 console.log(err)
             });
