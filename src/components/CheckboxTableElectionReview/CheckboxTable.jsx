@@ -60,14 +60,14 @@ class CheckboxTableGrid extends React.Component {
           }
       })
 
-    componentWillMount() {
-        const { rows, cols, CallElectionData,rowData } = this.props;
-
+    componentWillReceiveProps(props) {
+        const { rows, cols, CallElectionData,rowData } = props;
+        
         let rowHeaders = [''];
         this.props.rows.map((value) => {
             rowHeaders.push(value.name);
         });
-        let columnHeaders = ['', 'Select All'];
+        let columnHeaders = [''];
         this.props.cols.map((value) => {
             columnHeaders.push(value.name);
         });
@@ -75,7 +75,7 @@ class CheckboxTableGrid extends React.Component {
         let checkboxGrid = [];
         rowHeaders.map(() => {
             let row = [];
-            columnHeaders.map(() => {
+            columnHeaders.map((index) => {
                 row.push(false);
             });
             checkboxGrid.push(row);
@@ -267,11 +267,15 @@ class CheckboxTableGrid extends React.Component {
         let rowData = [];
         for (let i = 0; i < this.state.rowHeaders.length; i++) {
             let colData = [];
-            for (let j = 0; j < this.state.columnHeaders.length; j++) {
+            for (let j = 0; j < this.state.columnHeaders.length+1; j++) {
                 if (j == 0) {
+                    if(i!==0 && j!==1){
                     colData.push(this.state.rowHeaders[i]);
+                    }
                 } else {
-                    colData.push(<Checkbox color="primary" checked={this.state.checkboxGrid[i][j - 1]} onChange={this.handleChange(i, j - 1, data)}></Checkbox>);
+                    if(i!==0 && j!==1){
+                        colData.push(<Checkbox color="primary" checked={this.state.checkboxGrid[i][j - 1]} onChange={this.handleChange(i, j - 1, data)}></Checkbox>);
+                    }
                 }
             }
             rowData.push(colData);
@@ -305,9 +309,9 @@ const mapStateToProps = ({ Election }) => {
     const { setCallElectionData } = Election;
     const CallElectionData = Election.CallElectionData;
     const cols = Election.columnHeaders;
-    const rowData = Election.electionElectorates;
+    // const rowData = Election.electionElectorates;
     const electionData = Election.electionData;
-    return { setCallElectionData, CallElectionData, electionData, cols ,rowData}
+    return { setCallElectionData, CallElectionData, electionData, cols }
 };
 
 const mapActionsToProps = {

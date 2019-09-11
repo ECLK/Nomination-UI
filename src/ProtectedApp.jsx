@@ -166,7 +166,7 @@ console.log("indexUserhome",indexNomination);
             exact component={ElectionProcessReview}
           />
           <Route
-            path='/admin/election-process-review-detail' component={ElectionProcessReviewDetails}
+            path='/admin/election-process-review-detail/:electionId/:moduleId/:check' component={ElectionProcessReviewDetails}
           />
           <Route
             path='/admin/nomination-payment-list' component={NominationPayment}

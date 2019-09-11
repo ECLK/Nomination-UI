@@ -6,7 +6,8 @@ import AdminMenu from '../../components/AdminMenu/AdminMenu';
 import CheckboxTable from '../../components/CheckboxTableElectionReview/CheckboxTable';
 import { CardContent } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
-import { getFieldOptions } from './state/ElectionAction';
+import { getFieldOptions,getElectoratesData } from './state/ElectionAction';
+import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 
 const styles = theme => ({
@@ -42,8 +43,13 @@ class AllowNomination extends React.Component {
         e.preventDefault()
     }
 
+    componentDidMount() {
+        const { getElectoratesData} = this.props;
+        getElectoratesData(this.props.match.params.electionId);
+    }
+
     render() {
-        const { classes,electionData,errorTextElectorates } = this.props;
+        const { classes,electionData,errorTextElectorates ,rowData} = this.props;
         let rowHeaders = [{
             id: '1111',
             name: 'United National Party (UNP)'
@@ -90,7 +96,7 @@ class AllowNomination extends React.Component {
                 <div style={{marginTop:-78}} className={classes.content}>
                         {/* <CardContent> */}
                             <form ref="form" onSubmit={this.handleSubmit}>
-                                <CheckboxTable  data={nomination_setup}  rows={rowHeaders}></CheckboxTable>
+                                <CheckboxTable  data={nomination_setup}  rows={rowHeaders} rowData={rowData}></CheckboxTable>
                             </form>
                         {/* </CardContent> */}
                 </div>
@@ -106,13 +112,15 @@ AllowNomination.propTypes = {
 const mapStateToProps = ({ Election }) => {
     const electionData = Election.electionData;
     const CallElectionData = Election.CallElectionData;
+    const rowData = Election.electionElectorates;
 
-    return {  electionData,CallElectionData }
+    return {  electionData,CallElectionData ,rowData}
   };
 
 const mapActionsToProps = {
-    getFieldOptions
+    getFieldOptions,
+    getElectoratesData
   };
   
   
-export default connect(mapStateToProps,mapActionsToProps)(withStyles(styles)(AllowNomination));
+export default connect(mapStateToProps,mapActionsToProps)(withStyles(styles)(withRouter(AllowNomination)));

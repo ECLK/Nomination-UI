@@ -36,6 +36,7 @@ import CommentIcon from '@material-ui/icons/InsertComment';
 import Block from '@material-ui/icons/Block';
 import AllowNomination from './AllowNominationView';
 import moment from 'moment';
+import { withRouter } from "react-router-dom";
 import { Redirect } from 'react-router-dom'
 
 
@@ -191,9 +192,9 @@ class Dashboard extends React.Component {
     componentDidMount() {
         const { allElectionModules, getAllElectionReviews, getElectionReviewData ,getFieldOptions,getElectoratesData} = this.props;
         getAllElectionReviews();
-        getElectionReviewData(this.props.location.state.id);
-        getElectoratesData(this.props.location.state.id);
-        getFieldOptions(this.props.location.state.moduleId);
+        getElectionReviewData(this.props.match.params.electionId);
+        getElectoratesData(this.props.match.params.electionId);
+        getFieldOptions(this.props.match.params.moduleId);
     }
 
     handleDrawerOpen = () => {
@@ -370,7 +371,7 @@ class Dashboard extends React.Component {
             </Grid>
         </div>);
 
-        var check = this.props.location.state.check;
+        var check = this.props.match.params.check;
 
         if (this.state.goToConfig) return <Redirect
             to={{
@@ -514,13 +515,13 @@ class Dashboard extends React.Component {
                                     </Grid>
                                     : (
                                         <div>
-                                            <Grid container spacing={24}>
+                                            <Grid container spacing={2}>
                                                 <Grid item xs={4} sm={1}>
                                                     <Link to="/election-process-review" >
                                                         <Button size="medium">Back</Button>
                                                     </Link>
                                                 </Grid>
-                                                <Grid style={{ marginRight: 15 }} item xs={4} sm={1}>
+                                                <Grid item xs={2} sm={2}>
                                                     <Button
                                                         variant={ElectionReviewData.approval_status === "APPROVE" ? "contained" : "outlined"}
                                                         disabled={ElectionReviewData.approval_status === "APPROVE"}
@@ -531,7 +532,7 @@ class Dashboard extends React.Component {
                                                         <Done className={classes.left_icon} />
                                                     </Button>
                                                 </Grid>
-                                                <Grid item xs={4} sm={1}>
+                                                <Grid style={{marginLeft:-43}} item xs={2} sm={2}>
                                                     <Button
                                                         variant={ElectionReviewData.approval_status === "REJECT" ? "contained" : "outlined"}
                                                         disabled={ElectionReviewData.approval_status === "REJECT"}
@@ -542,7 +543,7 @@ class Dashboard extends React.Component {
                                                         <Block className={classes.left_icon} />
                                                     </Button>
                                                 </Grid>
-                                                <Grid item xs="3">
+                                                <Grid style={{marginLeft:-76}} item xs="3" sm={1}>
                                                     <CommentIcon style={{ marginRight: 10, marginTop: 8, marginLeft: 30 }} onClick={() => { this.onOpenModal2(ElectionReviewData.id, APPROVAL_STATE.APPROVED) }} className={classes.left_icon} />
                                                 </Grid>
                                             </Grid>
@@ -652,7 +653,7 @@ const mapActionsToProps = {
     getElectoratesData
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Dashboard));
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(withRouter(Dashboard)));
 
 
 

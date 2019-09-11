@@ -145,9 +145,12 @@ class Home extends React.Component {
                                     </ListItem>
                                 </Grid>
                                 <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
-                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "admin/election-process-review-detail", state: { id: election.id,check:'approve',moduleId:election.moduleId } }} >
-                                        <Button onClick={this.getElectionTemplateData.bind(this, election.id, election.moduleId)} style={{ marginTop: 30 }} variant="contained" color="primary" size="small">View</Button>
-                                    </Link>
+                                        <Button 
+                                            onClick={() => {
+                                                this.getElectionTemplateData.bind(this, election.id, election.moduleId)
+                                                this.props.history.push(`admin/election-process-review-detail/${election.id}/${election.moduleId}/approve`);
+                                            }}
+                                            style={{ marginTop: 30 }} variant="contained" color="primary" size="small">View</Button>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -193,9 +196,12 @@ class Home extends React.Component {
                                     </ListItem>
                                 </Grid>
                                 <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
-                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "admin/election-process-review-detail", state: { id: election.id,check:'pending',moduleId:election.moduleId } }} >
-                                        <Button onClick={this.getElectionTemplateData.bind(this, election.id, election.moduleId)} style={{ marginTop: 30 }} variant="contained" color="primary" size="small">Edit</Button>
-                                    </Link>
+                                        <Button 
+                                        onClick={() => {
+                                            this.getElectionTemplateData.bind(this, election.id, election.moduleId)
+                                            this.props.history.push(`admin/election-process-review-detail/${election.id}/${election.moduleId}/pending`);
+                                        }}
+                                            style={{ marginTop: 30 }} variant="contained" color="primary" size="small">Edit</Button>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -241,9 +247,12 @@ class Home extends React.Component {
                                     </ListItem>
                                 </Grid>
                                 <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
-                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "admin/election-process-review-detail", state: { id: election.id,check:'reject',moduleId:election.moduleId } }} >
-                                        <Button onClick={this.getElectionTemplateData.bind(this, election.id, election.moduleId)} style={{ marginTop: 30 }} variant="contained" color="primary" size="small">Edit</Button>
-                                    </Link>
+                                        <Button 
+                                        onClick={() => {
+                                            this.getElectionTemplateData.bind(this, election.id, election.moduleId)
+                                            this.props.history.push(`admin/election-process-review-detail/${election.id}/${election.moduleId}/reject`);
+                                        }}                                        
+                                        style={{ marginTop: 30 }} variant="contained" color="primary" size="small">Edit</Button>
                                 </Grid>
                             </Grid>
                         </Grid>
