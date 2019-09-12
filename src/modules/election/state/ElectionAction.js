@@ -18,7 +18,8 @@ import {
     GET_CALL_ELECTION_TIME_LINE_DATA,
     GET_ACTIVE_ELECTIONS,
     SET_ELECTORATES_DIVISIONS,
-    ELECTION_ELECTORATES_REVIEW_DATA
+    ELECTION_ELECTORATES_REVIEW_DATA,
+    ELECTION_ELIGIBILITY_REVIEW_DATA
 } from "./ElectionTypes";
 import { API_BASE_URL } from "../../../config.js";
 import axios from "axios";
@@ -474,6 +475,38 @@ export function getElectoratesData(id) {
                 debugger;
                 dispatch(
                     electionElectoratesReviewDataLoaded(getElectoratesData)
+                );
+                console.log(err)
+            });
+    };
+}
+
+//Get eligibility config data for election approve detail page by election id
+
+export const electionEligibilityDataLoaded = (val) => {
+    return {
+        type: ELECTION_ELIGIBILITY_REVIEW_DATA,
+        payload: val
+    }
+}
+export function getEligibilityData(id) {
+    return function (dispatch) {
+
+        const response = axios
+            .get(
+                `${API_BASE_URL}/activeElectionsData/${id}/eligibility`,
+            )
+            .then(response => {
+                const getEligibilityData = response.data;
+                debugger;
+                dispatch(
+                    electionEligibilityDataLoaded(getEligibilityData)
+                );
+            }).catch(err => {
+                const getEligibilityData = [];
+                debugger;
+                dispatch(
+                    electionEligibilityDataLoaded(getEligibilityData)
                 );
                 console.log(err)
             });

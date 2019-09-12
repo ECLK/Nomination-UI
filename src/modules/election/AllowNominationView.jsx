@@ -6,7 +6,7 @@ import AdminMenu from '../../components/AdminMenu/AdminMenu';
 import CheckboxTable from '../../components/CheckboxTableElectionReview/CheckboxTable';
 import { CardContent } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
-import { getFieldOptions,getElectoratesData } from './state/ElectionAction';
+import { getFieldOptions,getElectoratesData,getEligibilityData } from './state/ElectionAction';
 import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 
@@ -44,8 +44,10 @@ class AllowNomination extends React.Component {
     }
 
     componentDidMount() {
-        const { getElectoratesData} = this.props;
+        const { getElectoratesData,getEligibilityData} = this.props;
         getElectoratesData(this.props.match.params.electionId);
+        getEligibilityData(this.props.match.params.electionId);
+
     }
 
     render() {
@@ -119,7 +121,8 @@ const mapStateToProps = ({ Election }) => {
 
 const mapActionsToProps = {
     getFieldOptions,
-    getElectoratesData
+    getElectoratesData,
+    getEligibilityData
   };
   
   

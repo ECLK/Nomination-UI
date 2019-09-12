@@ -19,8 +19,9 @@ import {
     DELETE_CALL_ELECTION_DATA,
     GET_CALL_ELECTION_TIME_LINE_DATA,
     GET_ACTIVE_ELECTIONS,
-    SET_ELECTORATES_DIVISIONS,
-    ELECTION_ELECTORATES_REVIEW_DATA
+SET_ELECTORATES_DIVISIONS,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+    ELECTION_ELECTORATES_REVIEW_DATA,
+    ELECTION_ELIGIBILITY_REVIEW_DATA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
 } from "./ElectionTypes";
 import { REQUEST_STATE } from "../../../lib/request_redux_state";
 import update from 'immutability-helper';
@@ -67,6 +68,7 @@ const initialState = {
         {id:'',name:''}
     ],
     electionElectorates: [],
+    electionEligibilities: [],
 };
 
 const findIndex = (AllElections, id) => {
@@ -195,6 +197,11 @@ export default function reducer(state = initialState, action) {
         return {
             ...state,
             electionElectorates: action.payload
+        };
+        case ELECTION_ELIGIBILITY_REVIEW_DATA:
+        return {
+            ...state,
+            electionEligibilities: action.payload
         };
     }
     return state;
