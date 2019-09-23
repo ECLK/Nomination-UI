@@ -4,6 +4,7 @@ console.log("process.env",process.env);
 // export const API_BASE_URL = 'http://localhost:9001/ec-election';
 // export const API_BASE_URL = 'https://api.nominations.ecdev.opensource.lk/ec-election';
 export const API_BASE_URL = 'http://localhost:8280/nominations/0.9';
+export const PDF_GENARATION_SERVICE_URL = 'http://localhost:5000/';
 
 // var API_BASE_URL = "https://nominations.ecdev.opensource.lk/ec-election";
 

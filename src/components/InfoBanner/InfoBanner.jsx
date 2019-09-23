@@ -5,6 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Chip from '@material-ui/core/Chip';
+import Eclogo from '../../assets/Emblem_of_Sri_Lanka.png';
 import moment from 'moment';
 
 
@@ -21,6 +22,12 @@ const styles = theme => ({
 		margin: theme.spacing.unit,
 		padding: theme.spacing.unit  * 2,
 	  },
+	logocontainer: {
+		height: '100%'
+	},
+	logocontainerimg :{
+		width: '100%',
+	}
 });
 
 class InfoBanner extends React.Component {
@@ -40,6 +47,14 @@ class InfoBanner extends React.Component {
 				<Grid style={{marginBottom:-35}} container spacing={12}>
 				<Grid item xs={12}>
 					<Paper className={classes.paper}>
+					<Grid container classname={classes.panel_wrapper} spacing={16}>
+					<Grid item xs={1}>
+					<div className={classes.logocontainer} >
+					<img src={Eclogo} style={{maxWidth: 60,margin:25}} className="img-fluid" alt="logo" />
+					</div>
+					
+					</Grid>
+					<Grid item xs={11}>
 						<Chip
 							// icon={<FaceIcon />}
 							label={election.name}
@@ -61,9 +76,11 @@ class InfoBanner extends React.Component {
 						</Typography>
 						{(division)   ?
 						<Typography  variant="subheading" gutterBottom style={{marginBottom:25,marginLeft:5}}>
-							{division+" Division"}
+							{division+" Unit"}
 						</Typography>  : ''
 						}
+						</Grid>
+						</Grid>
 					</Paper>
 				</Grid>
 				</Grid>

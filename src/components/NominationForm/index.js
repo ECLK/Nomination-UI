@@ -24,7 +24,7 @@ import axios from "axios";
 
 const styles = theme => ({
   root: {
-    width: '90%',
+    width: '100%',
     marginTop:10,
     padding: 24,
     paddingLeft: 26,

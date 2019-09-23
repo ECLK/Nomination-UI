@@ -14,7 +14,8 @@ import { getNominationListForPayment,
         getTeams,
         getApproveElections,
         updateNominationPayments,
-        validateNominationPayment } from '../../modules/nomination/state/NominationAction';
+        validateNominationPayment,
+        createAndDownloadPdf } from '../../modules/nomination/state/NominationAction';
 import { connect } from 'react-redux';
 import CustomAutocompleteParty from '../AutocompleteParty';
 import CustomAutocompleteElection from '../AutocompleteElection';
@@ -24,7 +25,11 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Input from '@material-ui/core/Input';
+import DownloadIcon from '@material-ui/icons/CloudDownload';
+import clsx from 'clsx';
+import axios from 'axios';
 import moment from 'moment';
+import {saveAs} from 'file-saver';
 
 
 const styles = theme => ({
@@ -61,6 +66,12 @@ const styles = theme => ({
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
         width: '90%',
+      },
+    iconSmall: {
+        fontSize: 20,
+      },
+    leftIcon: {
+        marginRight: theme.spacing.unit,
       },
 });
 
@@ -132,7 +143,8 @@ class NominationPayments extends React.Component {
             errorTextNote:'',
             division:'',
             partyName:'',
-            errorTextNominationPaymentValidation:''
+            errorTextNominationPaymentValidation:'',
+            partyType:''
         }
       }
 
@@ -174,17 +186,62 @@ class NominationPayments extends React.Component {
        }else if(this.state.party && name==='election'){
         this.props.getNominationListForPayment(event.value,this.state.party)
        }
-
-       if(name==='nomination' && this.state.election && this.state.party){
-        this.props.getNominationData(event.value);
-       }
+       if (name === 'partyType') {
+        this.setState({ partyType: event.target.value,errorTextPartyType: '' });
+    }
+      //  if(name==='nomination' && this.state.election && this.state.party){
+      //   this.props.getNominationData(event.value);
+      //  }
+       if (this.state.nomination && this.state.election && this.state.party && name==='partyType' || name==='party') {
+        this.props.getNominationData(this.state.nomination,(event.target===undefined) ? this.state.partyType : event.target.value);
+    }
+    if (this.state.nomination && this.state.election && this.state.party && name==='nomination') {
+      this.props.getNominationData(this.state.nomination,this.state.partyType);
+  }
      };
 
-       handleChangeButton = (e) => {
-        // const { onCloseModal } = this.props;
-        // if(e.currentTarget.value==="Submit&Clouse"){
-        //     onCloseModal();           
-        // }
+     handlePdfGenarationButton = (e) => {
+      const { onCloseModal,nominationListForPayment,partyList } = this.props;
+      var goNext = true;
+      debugger;
+      e.preventDefault();
+
+      if (this.state.depositor === null || this.state.depositor === "") {
+          this.setState({ errorTextDepositor: 'emptyField' });
+          goNext = false;
+      }
+
+      if (this.state.depositeDate === null || this.state.depositeDate === "") {
+          this.setState({ errorTextDepositedDate: 'emptyField' });
+          goNext = false;
+      }
+
+      if (this.state.note === null || this.state.note === "") {
+          this.setState({ errorTextNote: 'emptyField' });
+          goNext = false;
+      }
+      
+      //extract party name for success message by party id
+      var partyName='';
+      for (var j = 0; j < partyList.length; j++) {
+          if(this.state.party===partyList[j].team_id){
+              partyName=partyList[j].team_name;
+              break;
+          }
+      }
+
+      //extract nomination name for success message by nomination id
+      var nominationName='';
+      for (var j = 0; j < nominationListForPayment.length; j++) {
+          if(this.state.nomination===nominationListForPayment[j].nomination[0].id){
+              nominationName=nominationListForPayment[j].name;
+              break;
+          }
+      }
+      if (goNext) {
+              createAndDownloadPdf(this.state);
+              onCloseModal();
+      }
         }
         
        NumberFormatCustom(props) {
@@ -208,11 +265,25 @@ class NominationPayments extends React.Component {
       }
 
       componentDidUpdate (oldState){
-        const {NominationPayments} = this.props;
+        const {NominationPayments,partyList,getNominationData,index} = this.props;
         if(oldState.NominationPayments !== NominationPayments){
             if(NominationPayments.election && NominationPayments.team_id){
                 this.props.getNominationListForPayment(NominationPayments.election,NominationPayments.team_id);
                }
+               //select party type from party data
+               for(var i=0;i<partyList.length;i++){
+                if(NominationPayments.team_id===partyList[i].team_id){
+                  var party_type = partyList[i].team_party_type;
+                }
+               }
+               if(party_type === 'RPP'){
+                 party_type='candidate payment rpp';
+                this.setState({partyType:'candidate payment rpp'});
+               }else if (party_type === 'IG') {
+                party_type='candidate payment ig';
+                this.setState({partyType:'candidate payment ig'});
+               }
+               getNominationData(index,party_type);
           this.setState({depositor:NominationPayments.depositor});   
           this.setState({depositAmount:NominationPayments.amount});   
           this.setState({serialNo:NominationPayments.serialNo});   
@@ -276,13 +347,35 @@ class NominationPayments extends React.Component {
         }
         if (goNext) {
                 updateNominationPayments(this.state.paymentId,this.state,partyName,nominationName);
+                // createAndDownloadPdf(this.state);
+                // createAndDownloadPdf = () => {
+                  // axios.post('/create-pdf',this.state)
+                  // .then(()=> axios.get('fetch-pdf', { responseType: 'blob'}))
+                  // .then((res) => {
+                  //   const pdfBlob = new Blob([res.data], { type:'application/pdf' });
+                  //   saveAs(pdfBlob,'newPdf.pdf');
+                  // })
+                // }
                 onCloseModal();
         }
     };
+    
+    // createAndDownloadPdf = () => {
+    //   debugger;
+    //   axios.post('/create-pdf', this.state)
+    //     .then(() => axios.get('fetch-pdf', { responseType: 'blob' }))
+    //     .then((res) => {
+    //       const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+  
+    //       saveAs(pdfBlob, 'newPdf.pdf');
+    //     })
+    // }
+    
 
     render() {
         const {classes, depositor,NominationPayments,onCloseModal,partyList,serialNo,approveElections,nominationListForPayment,nominationData} = this.props;
         const {  numberformat } = this.state;
+        debugger;
         // const {errorTextItems} = this.props;
         const payPerCandidate = (nominationData.length) ? nominationData[0].payPerCandidate :  '';
         const candidateCount = (nominationData.length) ? nominationData[0].noOfCandidates :  '';
@@ -314,7 +407,23 @@ class NominationPayments extends React.Component {
                     </Grid>  
                     <Grid container   item lg={3}>
                     <CustomAutocompleteNomination errorTextNominationPaymentValidation={this.state.errorTextNominationPaymentValidation} className={classes.textField} nominationListForPayment={nominationListForPayment} value={this.state.nomination} suggestions={suggestionsNominations} handleChange={this.handleChangeAutocomplete} />         
-                    </Grid>                         
+                    </Grid> 
+                    <Grid container item lg={3}>
+                        <Select
+                            value={this.state.partyType}
+                            onChange={this.handleChangeAutocomplete("partyType")}
+                            name="partyType"
+                            style={{marginTop:20,marginLeft:20,width:'88%'}}
+                            displayEmpty
+                            className={classes.textField}
+                            >
+                            <MenuItem value="" disabled>
+                                Slect party type
+                            </MenuItem>
+                            <MenuItem value={'candidate payment rpp'}>Registered Political Party ( RPP )</MenuItem>
+                            <MenuItem value={'candidate payment ig'}>Indipendent Group ( IG )</MenuItem>
+                        </Select>
+                    </Grid>                        
                 </Grid>
                 <Divider variant="middle" className={classes.topBottomSpace} />
                 <Grid style={{marginLeft:12}} container direction="row" justify="flex-start" alignItems="stretch" spacing={2}>                
@@ -423,8 +532,12 @@ class NominationPayments extends React.Component {
                         <Button style={{marginRight:'15px'}} variant="contained"  onClick={onCloseModal} value="Submit&New" color="primary" className={classes.submit}>
                             Cancel
                         </Button>
-                        <Button  variant="contained" onClick = { this.handleChangeButton }  type="submit" value="Submit&Clouse" color="default" className={classes.submit}>
+                        <Button style={{marginRight:'15px'}} variant="contained"  type="submit" value="Submit&Clouse" color="default" className={classes.submit}>
                             Update
+                        </Button>
+                        <Button variant="contained" onClick = { this.handlePdfGenarationButton } style={{padding:7}} size="small"    type="submit" value="Submit&DownloadPdf" color="secondary" className={classes.button}>
+                          <DownloadIcon className={clsx(classes.leftIcon, classes.iconSmall)} />
+                          Download PDF
                         </Button>
                     </Grid>
                 </Grid>                         
