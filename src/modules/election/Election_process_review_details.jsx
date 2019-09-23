@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AdminMenu from '../../components/AdminMenu/AdminMenu';
 import { APPROVAL_STATE } from './state/ElectionTypes';
-import { getAllElectionReviews, getElectionReviewData, onChangeApproval, openSnackbar ,getFieldOptions,getElectoratesData} from "./state/ElectionAction.js";
+import { getAllElectionReviews, getElectionReviewData, onChangeApproval, openSnackbar ,getFieldOptions,getElectoratesData,getEligibilityData} from "./state/ElectionAction.js";
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography'
 import { Link } from 'react-router-dom'
@@ -190,10 +190,11 @@ class Dashboard extends React.Component {
     };
 
     componentDidMount() {
-        const { allElectionModules, getAllElectionReviews, getElectionReviewData ,getFieldOptions,getElectoratesData} = this.props;
+        const { allElectionModules, getAllElectionReviews, getElectionReviewData ,getFieldOptions,getElectoratesData,getEligibilityData} = this.props;
         getAllElectionReviews();
         getElectionReviewData(this.props.match.params.electionId);
         getElectoratesData(this.props.match.params.electionId);
+        getEligibilityData(this.props.match.params.electionId);
         getFieldOptions(this.props.match.params.moduleId);
     }
 
@@ -246,7 +247,8 @@ class Dashboard extends React.Component {
         this.setState({ open2: false });
     };
     render() {
-        const { classes, allElectionModules, ElectionReviewData,cols } = this.props;
+        const { classes, allElectionModules, ElectionReviewData,cols,electionEligibilities } = this.props;
+        debugger;
         var Authjority = ' ';
         var CalculationType = ' ';
         var WeightageVote = ' ';
@@ -375,7 +377,7 @@ class Dashboard extends React.Component {
 
         if (this.state.goToConfig) return <Redirect
             to={{
-                pathname: '/admin/call-election'
+                pathname: '/election-process-review'
             }}
         />;
 
@@ -469,14 +471,16 @@ class Dashboard extends React.Component {
                                         <TableHead>
                                             <TableCell align="left">Eligibility Criteria Check List</TableCell>
 
-                                            <TableCell align="left">Select</TableCell>
+                                            <TableCell align="left"></TableCell>
                                         </TableHead>
                                         <TableBody>
+                                       { electionEligibilities.map((election) => (
                                             <TableRow >
-                                                <TableCell align="left">Above 35 years of age</TableCell>
-                                                <TableCell align="left"><Checkbox checked value={true} /></TableCell>
+                                                <TableCell align="left">{election.description}</TableCell>
+                                                <TableCell align="left"></TableCell>
                                             </TableRow>
-                                            <TableRow >
+                                       ))}
+                                            {/* <TableRow >
                                                 <TableCell align="left">Does not serve as a Judicial Officer</TableCell>
                                                 <TableCell align="left"><Checkbox value={true} /></TableCell>
                                             </TableRow>
@@ -500,7 +504,7 @@ class Dashboard extends React.Component {
                                             <TableRow >
                                                 <TableCell align="left">Is not standing nominated as a candidate for election by more than one recognized political party or independent group in respect of any electoral district</TableCell>
                                                 <TableCell align="left"><Checkbox value={true} /></TableCell>
-                                            </TableRow>
+                                            </TableRow> */}
                                         </TableBody>
                                     </Table>
 
@@ -639,9 +643,9 @@ const mapStateToProps = ({ Election }) => {
     const { getElectionReviewData } = Election;
     const ElectionReviewData = Election.ElectionReviewData;
     const cols = Election.columnHeaders;
+    const electionEligibilities = Election.electionEligibilities;
 
-
-    return { allElectionModules, getElectionReviewData, ElectionReviewData,cols }
+    return { allElectionModules, getElectionReviewData, ElectionReviewData,cols,electionEligibilities }
 };
 
 const mapActionsToProps = {
@@ -650,7 +654,8 @@ const mapActionsToProps = {
     onChangeApproval,
     openSnackbar,
     getFieldOptions,
-    getElectoratesData
+    getElectoratesData,
+    getEligibilityData
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(withRouter(Dashboard)));

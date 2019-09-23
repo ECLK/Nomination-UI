@@ -44,7 +44,7 @@ const initialState = {
   paymentList:[],
   nominationPaymentSerial:'',
   nominationData:[],
-  nominationPaymentValidation:false,
+  nominationPaymentValidation:true,
 };
 
 const findIndex = (nominations, id) => {

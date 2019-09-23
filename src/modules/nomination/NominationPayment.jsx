@@ -19,7 +19,7 @@ import MuiDialogContent from '@material-ui/core/DialogContent';
 import CloseIcon from '@material-ui/icons/Close';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from "@material-ui/core/IconButton";
-import {getNominationPaymentSerialNumber,getApproveElections } from './state/NominationAction';
+import {getNominationPaymentSerialNumber,getApproveElections,getNominationData } from './state/NominationAction';
 import { connect } from 'react-redux';
 
 
@@ -118,6 +118,7 @@ class Home extends React.Component {
 
     onOpenModal = () => {
         this.props.getNominationPaymentSerialNumber();
+        this.props.getNominationData('','');
         this.setState({ open: true });
       
       };
@@ -137,7 +138,7 @@ class Home extends React.Component {
                     {/* all the content should go here.. */}
 
                     {/* <InfoBanner election={this.state.election}></InfoBanner> */}
-                    <div className={classes.root}>
+                    {/* <div className={classes.root}> */}
                         <Grid  container spacing={24}>
                             <Typography component="h2" variant="headline" gutterBottom style={{marginLeft:5}}>
                                  Nomination Payment
@@ -150,12 +151,12 @@ class Home extends React.Component {
                                 Add New Payment
                             </Button>                               
                         </Grid>
-                        <Grid container spacing={24}>
-                            <Grid container item xs={12} direction="column">  
+                        <Grid container spacing={2}>
+                            <Grid container item xs={12}  direction="column">  
                                 <NominationPaymentList></NominationPaymentList>
                             </Grid>
                         </Grid>
-                    </div>
+                    {/* </div> */}
                     <Grid  container spacing={24}>
                     
                     <Dialog
@@ -210,7 +211,8 @@ const mapStateToProps = ({  Nomination }) => {
 
 const mapActionsToProps = {
     getNominationPaymentSerialNumber,
-    getApproveElections
+    getApproveElections,
+    getNominationData
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Home));

@@ -23,10 +23,11 @@ import {
   GET_NOMINATION_DATA,
   NOMINATION_PAYMENT_VALIDATION_LOADED
 } from "./NominationTypes";
-import {API_BASE_URL} from "../../../config.js";
+import {API_BASE_URL,PDF_GENARATION_SERVICE_URL} from "../../../config.js";
 import axios from "axios";
 import { openSnackbar } from '../../election/state/ElectionAction';
 import moment from "react-moment";
+import {saveAs} from 'file-saver';
 
 const nominationLoaded = (getNominations) => {
   return {
@@ -436,11 +437,12 @@ const nominationDataLoaded = (getNominationData) => {
   };
 };
 
-export function getNominationData(nominationId) {
+export function getNominationData(nominationId,keyName) {
 debugger;
   return function (dispatch) {
     //change this keyName to candidate payment ig to get the ig candidate payment
-     let keyName = 'candidate payment rpp'
+   
+
     const response = axios
     .get(
       `${API_BASE_URL}/nominations/${nominationId}/key-name/${keyName}`,
@@ -646,4 +648,16 @@ export function validateNominationPayment(nominationId) {
 
 //--------------- End of get security deposit details ---------------------------
 
-
+//--------------- Start of genarate pdf ---------------------------
+const firstAPI = axios.create({
+  baseURL: PDF_GENARATION_SERVICE_URL
+})
+export const createAndDownloadPdf = function createAndDownloadPdf(paymentData) {
+  firstAPI.post(`/create-pdf`,paymentData)
+    .then(()=> firstAPI.get('fetch-pdf', { responseType: 'blob'}))
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type:'application/pdf' });
+      saveAs(pdfBlob,'newPdf.pdf');
+    })
+}
+//--------------- End of genarate pdf ---------------------------

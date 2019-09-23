@@ -69,7 +69,7 @@ class CustomizedTable extends React.Component {
           MUIDataTableBodyCell: {
             root: {
               backgroundColor: "#f7f8fa",
-              width:300
+            //   width:500
             }
           }
         }

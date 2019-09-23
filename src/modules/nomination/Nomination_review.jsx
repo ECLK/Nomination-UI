@@ -276,10 +276,10 @@ class NominationReview extends React.Component {
               <Typography className={classes.heading}>{nomination.party} | {nomination.division_name}</Typography>
 
             </Grid>
-            <Grid item xs="5">
+            <Grid item xs="4">
               <Typography className={classes.heading}>Total no of candidate : {nomination.candidates.length}</Typography>
             </Grid>
-            <Grid item xs="3">
+            <Grid item xs="4">
             
              
                 <CommentIcon style={{marginRight:10,marginBottom:-2}} onClick={() => { this.onOpenModal2(nomination.id, APPROVAL_STATE.APPROVED) }} className={classes.left_icon} />

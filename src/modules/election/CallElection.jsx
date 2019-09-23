@@ -6,6 +6,7 @@ import Card from '@material-ui/core/Card';//--
 import CardActions from '@material-ui/core/CardActions';//--
 import CardContent from '@material-ui/core/CardContent';//--
 import Button from '@material-ui/core/Button';//--
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';//--
 import { setCallElectionData, handleChangeElectionData, asyncValidateElection } from './state/ElectionAction';
 import { connect } from 'react-redux';
@@ -103,6 +104,8 @@ class CallElection extends React.Component {
                         <Typography variant="h5" component="h2">
                             Call Election
                     </Typography>
+                    <Grid container classname={classes.panel_wrapper} spacing={16}>
+                    <Grid item xs="6">
                         <TextField
                             id="filled-select-currency-native"
                             select
@@ -132,6 +135,8 @@ class CallElection extends React.Component {
                                 </option>
                             ))}
                         </TextField>
+                        </Grid>
+                        <Grid item xs="6">
                         <TextField
                             id="filled-name"
                             label="Election Name "
@@ -144,6 +149,8 @@ class CallElection extends React.Component {
                             margin="normal"
                             variant="filled"
                         />
+                        </Grid>
+                    </Grid>
                     </CardContent>
                     <CardActions>
                         <Button type='submit' size="small">Next</Button>

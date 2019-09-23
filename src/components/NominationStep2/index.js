@@ -7,7 +7,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import Button from '@material-ui/core/Button';
 import NumberFormat from 'react-number-format';
 import Divider from '@material-ui/core/Divider';
-import { handleChangePayment, getNominationPayments, getTeams, getNominationListForPayment, getNominationData, postNominationPayments, validateNominationPayment } from '../../modules/nomination/state/NominationAction';
+import { handleChangePayment, 
+        getNominationPayments, 
+        getTeams, 
+        getNominationListForPayment, 
+        getNominationData, 
+        postNominationPayments, 
+        validateNominationPayment,
+        createAndDownloadPdf } from '../../modules/nomination/state/NominationAction';
 import { connect } from 'react-redux';
 import CustomAutocompleteParty from '../AutocompleteParty';
 import CustomAutocompleteElection from '../AutocompleteElection';
@@ -15,8 +22,11 @@ import CustomAutocompleteNomination from '../AutocompleteNomination';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
+import clsx from 'clsx';
+import DownloadIcon from '@material-ui/icons/CloudDownload';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Input from '@material-ui/core/Input';
+import FormControl from '@material-ui/core/FormControl';
 import moment from 'moment';
 
 
@@ -121,8 +131,10 @@ class NominationPayments extends React.Component {
             errorTextElection:'',
             errorTextParty:'',
             errorTextNomination:'',
+            errorTextPartyType:'',
             division:'',
-            partyName:''
+            partyName:'',
+            partyType:''
         }
     }
 
@@ -161,15 +173,18 @@ class NominationPayments extends React.Component {
         if (name === 'election') {
             this.setState({ errorTextElection: '' });
         }
+        if (name === 'partyType') {
+            this.setState({ partyType: event.target.value,errorTextPartyType: '' });
+        }
 
         if (this.state.election && name === 'party') {
             this.props.getNominationListForPayment(this.state.election, event.value);
         } else if (this.state.party && name === 'election') {
             this.props.getNominationListForPayment(event.value, this.state.party)
         }
-
-        if (name === 'nomination' && this.state.election && this.state.party) {
-            this.props.getNominationData(event.value);
+debugger;
+        if (this.state.nomination && this.state.election && this.state.party && name==='partyType') {
+            this.props.getNominationData(this.state.nomination,event.target.value);
         }
     };
 
@@ -230,12 +245,17 @@ class NominationPayments extends React.Component {
             this.setState({ errorTextParty: 'emptyField' });
             goNext = false;
         }
-
+        
+        if (this.state.partyType === '' || this.state.partyType === null) {
+            this.setState({ errorTextPartyType: 'emptyField' });
+            goNext = false;
+        }
+        
         if (this.state.nomination === '' || this.state.nomination === null) {
             this.setState({ errorTextNomination: 'emptyField' });
             goNext = false;
         }
-        console.log(goNext);
+
         var division = '';
         for (var j = 0; j < nominationListForPayment.length; j++) {
             if(this.state.nomination===nominationListForPayment[j].nomination[0].id){
@@ -245,13 +265,14 @@ class NominationPayments extends React.Component {
 debugger;
         if (goNext) {
                 postNominationPayments(this.state, serialNo,division,this.state.party);
+                createAndDownloadPdf(this.state);
                 onCloseModal();
         }
     };
 
     render() {
         const { classes, depositor, NominationPayments, onCloseModal, partyList, serialNo, approveElections, nominationListForPayment, nominationData } = this.props;
-        const { numberformat } = this.state;
+        const { numberformat,errorTextPartyType } = this.state;
         debugger;
         const { errorTextItems } = this.props;
         const payPerCandidate = (nominationData.length) ? nominationData[0].payPerCandidate : '';
@@ -262,6 +283,7 @@ debugger;
             value: suggestion.team_id,
             label: suggestion.team_name + " (" + suggestion.team_abbrevation + ")",
         }));
+        
 
         const suggestionsElections = approveElections.map(suggestion => ({
             value: suggestion.id,
@@ -275,7 +297,7 @@ debugger;
 
         return (
             <form className={classes.container} onSubmit={this.handleSubmit} noValidate autoComplete="off">
-                <Grid container spacing={2} xs={12}>
+                <Grid container spacing={1} xs={12}>
                     <Grid container item lg={3}>
                         <CustomAutocompleteElection  errorTextElection={this.state.errorTextElection} className={classes.textField} approveElections={approveElections} value={this.state.election} suggestions={suggestionsElections} handleChangeAutocomplete={this.handleChangeAutocomplete} />
                     </Grid>
@@ -283,8 +305,39 @@ debugger;
                         <CustomAutocompleteParty errorTextParty={this.state.errorTextParty} className={classes.textField} value={this.state.party} suggestions={suggestions} handleChange={this.handleChangeAutocomplete} />
                     </Grid>
                     <Grid container item lg={3}>
-                        <CustomAutocompleteNomination errorTextNomination={this.state.errorTextNomination} errorTextNominationPaymentValidation={this.state.errorTextNominationPaymentValidation} className={classes.textField} nominationListForPayment={nominationListForPayment} value={this.state.nomination} suggestions={suggestionsNominations} handleChange={this.handleChangeAutocomplete} />
+                        <CustomAutocompleteNomination 
+                        errorTextNomination={this.state.errorTextNomination} 
+                        errorTextNominationPaymentValidation={this.state.errorTextNominationPaymentValidation} 
+                        className={classes.textField} 
+                        nominationListForPayment={nominationListForPayment} 
+                        value={this.state.nomination} 
+                        suggestions={suggestionsNominations} 
+                        handleChange={this.handleChangeAutocomplete} 
+                        />
                     </Grid>
+                    <Grid container item lg={3}>
+                    <FormControl error={(errorTextPartyType) ? true : false} className={classes.formControl}>
+                        <Select
+                            value={this.state.partyType}
+                            error={errorTextPartyType}
+                            onChange={this.handleChangeAutocomplete("partyType")}
+                            name="partyType"
+                            style={{marginTop:20,marginLeft:20,width:'88%'}}
+                            displayEmpty
+                            className={classes.textField}
+                            >
+                            <MenuItem value="" disabled>
+                                Slect party type
+                            </MenuItem>
+                            <MenuItem value={'candidate payment rpp'}>Registered Political Party ( RPP )</MenuItem>
+                            <MenuItem value={'candidate payment ig'}>Indipendent Group ( IG )</MenuItem>
+                        </Select>
+                        <FormHelperText style={{marginLeft:18}}>{(errorTextPartyType==='emptyField') ? 'This field is required!' : ''}</FormHelperText>
+                        </FormControl>
+                    </Grid>
+                <Grid container spacing={1} xs={12}>
+                    
+                </Grid>
                 </Grid>
                 <Divider variant="middle" className={classes.topBottomSpace} />
                 <Grid style={{ marginLeft: 12 }} container direction="row" justify="flex-start" alignItems="stretch" spacing={2}>
@@ -373,8 +426,12 @@ debugger;
                             <Button style={{ marginRight: '15px' }} variant="contained" onClick={onCloseModal} value="Submit&New" color="primary" className={classes.submit}>
                                 Cancel
                         </Button>
-                            <Button variant="contained" onClick={this.handleChangeButton} type="submit" value="Submit&Clouse" color="default" className={classes.submit}>
+                            <Button style={{marginRight:'15px'}} variant="contained" onClick={this.handleChangeButton} type="submit" value="Submit&Clouse" color="default" className={classes.submit}>
                                 Save
+                        </Button>
+                        <Button variant="contained"  style={{padding:7}}  size="small"    type="submit" value="Submit&DownloadPdf" color="secondary" className={classes.button}>
+                          <DownloadIcon className={clsx(classes.leftIcon, classes.iconSmall)} />
+                          Save & Download PDF
                         </Button>
                         </Grid>
                     </Grid>
