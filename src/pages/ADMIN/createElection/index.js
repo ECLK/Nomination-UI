@@ -20,7 +20,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import DateRangeIcon from '@material-ui/icons/DateRange';
-import {getApproveElectionModules, getPendingElectionModules,getRejectedElectionModules} from '../../../modules/election-model/state/ElectionAction';
+import {getAllElectionTemplates} from '../../../modules/election-model/state/ElectionAction';
 import {connect} from 'react-redux';
 import { Link } from 'react-router-dom'
 import moment from 'moment';
@@ -102,19 +102,18 @@ class Home extends React.Component {
         });
     };
     
-    componentDidMount() {
-        const {getApproveElectionModules, getPendingElectionModules,getRejectedElectionModules} = this.props;
+    componentWillMount() {
+        const {getAllElectionTemplates} = this.props;
 
-        getApproveElectionModules();
-        getPendingElectionModules();
-        getRejectedElectionModules();
+        getAllElectionTemplates();
       }
 
 
     render() {
-        const {classes,ApprovedElectionModules,PendingElectionModules,RejectedElectionModules} = this.props;
+        const {classes,AllElectionTemplates} = this.props;
         const { expandedPanelIndexApp, expandedPanelIndexPen, expandedPanelIndexRej } = this.state;
-        const ElectionModuleApproveElements = (ApprovedElectionModules) ? ApprovedElectionModules.map((election, i) => (
+        const ElectionModuleApproveElements = (AllElectionTemplates) ? AllElectionTemplates.map((election, i) => (
+            (election.status==='APPROVE') ?
             <ExpansionPanel expanded={expandedPanelIndexApp === i} onChange={this.togglePanelApp(i)}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Grid container classname={classes.panel_wrapper} spacing={16}>
@@ -150,8 +149,8 @@ class Home extends React.Component {
                                     </ListItem>
                                 </Grid>
                                 <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
-                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "create-election", state: { id: election.id } }} >
-                                        <Button  style={{ marginTop: 30 }} variant="contained" color="primary" size="small">Edit</Button>
+                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "create-election", state: { id: election.id,check:'approve' } }} >
+                                        <Button  style={{ marginTop: 30 }} variant="contained" color="primary" size="small">View</Button>
                                     </Link>
                                 </Grid>
                             </Grid>
@@ -159,9 +158,10 @@ class Home extends React.Component {
                     </Grid>
                     <br />
                 </ExpansionPanelDetails>
-            </ExpansionPanel>
+            </ExpansionPanel>  : ''
         )) : '';
-        const ElectionModulePendingElements = (PendingElectionModules) ? PendingElectionModules.map((election, i) => (
+        const ElectionModulePendingElements = (AllElectionTemplates) ? AllElectionTemplates.map((election, i) => (
+            (election.status==='PENDING') ?
             <ExpansionPanel expanded={expandedPanelIndexPen === i} onChange={this.togglePanelPen(i)}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Grid container classname={classes.panel_wrapper} spacing={16}>
@@ -197,18 +197,19 @@ class Home extends React.Component {
                                     </ListItem>
                                 </Grid>
                                 <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
-                                    {/* <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: election.id } }} > */}
+                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "create-election", state: { id: election.id,check:'pending' } }} >
                                         <Button  style={{ marginTop: 30 }} variant="contained" color="primary" size="small">Edit</Button>
-                                    {/* </Link> */}
+                                    </Link>
                                 </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
                     <br />
                 </ExpansionPanelDetails>
-            </ExpansionPanel>
+            </ExpansionPanel>   : ''
         )) : '';
-        const ElectionModuleRejectedElements = (RejectedElectionModules) ? RejectedElectionModules.map((election, i) => (
+        const ElectionModuleRejectedElements = (AllElectionTemplates) ? AllElectionTemplates.map((election, i) => (
+            (election.status==='REJECT') ?
             <ExpansionPanel expanded={expandedPanelIndexRej === i} onChange={this.togglePanelRej(i)}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Grid container classname={classes.panel_wrapper} spacing={16}>
@@ -244,16 +245,16 @@ class Home extends React.Component {
                                     </ListItem>
                                 </Grid>
                                 <Grid style={{ textAlign: 'right' }} item xs={6} sm={5}>
-                                    {/* <Link style={{ textDecoration: 'none' }} to={{ pathname: "election-process-review-detail", state: { id: election.id } }} > */}
+                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: "create-election", state: { id: election.id,check:'reject' } }} >
                                         <Button  style={{ marginTop: 30 }} variant="contained" color="primary" size="small">Edit</Button>
-                                    {/* </Link> */}
+                                    </Link>
                                 </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
                     <br />
                 </ExpansionPanelDetails>
-            </ExpansionPanel>
+            </ExpansionPanel> :  ''
         )) : '';
 
 
@@ -269,7 +270,7 @@ class Home extends React.Component {
                     <Grid container className={classes.root} spacing={32}>
 
                         <Grid item xs={5} >
-                            <CreateElection></CreateElection>
+                            <CreateElection check={(this.props.location.state) ? this.props.location.state.check : ''} ></CreateElection>
                         </Grid>
                         <Grid item xs={5} >
                             {/* <CallElection electionModules={electionModules}></CallElection> */}
@@ -333,19 +334,12 @@ Home.propTypes = {
 
 
 const mapStateToProps = ({ElectionModel}) => {
-    const { getApproveElectionModules, getPendingElectionModules,getRejectedElectionModules } = ElectionModel;
-
-    const ApprovedElectionModules = ElectionModel.ApprovedElectionModules;
-    const PendingElectionModules = ElectionModel.PendingElectionModules;
-    const RejectedElectionModules = ElectionModel.RejectedElectionModules;
-   
-    return {getApproveElectionModules,getPendingElectionModules,getRejectedElectionModules,ApprovedElectionModules,PendingElectionModules,RejectedElectionModules};
+    const AllElectionTemplates = ElectionModel.AllElectionTemplates;
+    return {AllElectionTemplates};
   };
   
   const mapActionsToProps = {
-    getApproveElectionModules, 
-    getPendingElectionModules,
-    getRejectedElectionModules
+    getAllElectionTemplates
   };
   
   export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Home));

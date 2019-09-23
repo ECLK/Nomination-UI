@@ -1,11 +1,9 @@
 import {
     ELECTION_LOAD_SUCCESS,
     ELECTIONS_LOADING,
-    POST_ACTIVE_ELECTION_DATA,
     POST_ELECTION,
     GET_ELECTION_MODULE,
     POST_CALL_ELECTION,
-    POST_CALL_ELECTION_DATA,
     SET_CALL_ELECTION_DATA,
     ELECTION_REVIEW_DATA,
     ON_ELECTION_APPROVAL_CHANGE,
@@ -16,7 +14,12 @@ import {
     GET_CALL_ELECTION_DATA,
     HANDLE_CHANGE_CALL_ELECTION,
     EDIT_CALL_ELECTION_DATA,
-    DELETE_CALL_ELECTION_DATA
+    DELETE_CALL_ELECTION_DATA,
+    GET_CALL_ELECTION_TIME_LINE_DATA,
+    GET_ACTIVE_ELECTIONS,
+    SET_ELECTORATES_DIVISIONS,
+    ELECTION_ELECTORATES_REVIEW_DATA,
+    ELECTION_ELIGIBILITY_REVIEW_DATA
 } from "./ElectionTypes";
 import { API_BASE_URL } from "../../../config.js";
 import axios from "axios";
@@ -116,6 +119,36 @@ export function getElectionModules() {
     };
 }
 
+//get future elections for party logins
+const activeElectionLoaded = (getActiveElections) => {
+    return {
+        type: GET_ACTIVE_ELECTIONS,
+        payload: getActiveElections,
+    };
+};
+
+export function getActiveElections() {
+    return function (dispatch) {
+
+        const response = axios
+            .get(
+                `${API_BASE_URL}/elections/forDemo/new`,
+            )
+            .then(response => {
+                const getActiveElections = response.data;
+                dispatch(
+                    activeElectionLoaded(getActiveElections)
+                );
+            }).catch(err => {
+                const getActiveElections = [];
+                dispatch(
+                    activeElectionLoaded(getActiveElections)
+                );
+                console.log(err)
+            });
+    };
+}
+
 //Get approve elections
 // change this name after completeing this function
 const allElectionLoaded = (getAllElections) => {
@@ -134,7 +167,6 @@ export function getAllElections() {
             )
             .then(response => {
                 const getAllElections = response.data;
-                debugger
                 dispatch(
                     allElectionLoaded(getAllElections)
                 );
@@ -279,7 +311,9 @@ export function postCallElectionData(CallElectionData, electionData) {
                 }
                 dispatch(setPostCallElectionData(response));
                 dispatch(receivePendingElection(allElectionDataNew));
+                dispatch(openSnackbar({ message: CallElectionData.name + ' has been submitted for approval' }));
             }).catch(err => {
+                dispatch(openSnackbar({ message: ' Something went wrong' }));
                 console.log(err)
             });
     };
@@ -324,7 +358,9 @@ export function editCallElectionData(CallElectionData, electionId) {
                 .then(response => {
                    const data={electionId:electionId,status:'PENDING'}
                     dispatch(setEditCallElectionData(data));
+                    dispatch(openSnackbar({ message: CallElectionData.name + ' has been updated ' }));
                 }).catch(err => {
+                    dispatch(openSnackbar({ message: ' Something went wrong' }));
                     console.log(err)
                 });
         };
@@ -341,7 +377,7 @@ export const setDeleteCallElectionData = (val) => {
     }
 }
 
-export function deleteCallElectionData(electionId) {
+export function deleteCallElectionData(electionId,electionName) {
        
         return function (dispatch) {
             const response = axios
@@ -350,7 +386,9 @@ export function deleteCallElectionData(electionId) {
                 )
                 .then(response => {
                     dispatch(setDeleteCallElectionData(electionId));
+                    dispatch(openSnackbar({ message: electionName + ' has been deleted ' }));
                 }).catch(err => {
+                    dispatch(openSnackbar({ message: ' Something went wrong' }));
                     console.log(err)
                 });
         };
@@ -405,6 +443,70 @@ export function getElectionReviewData(id) {
                 const getElectionReviewData = [];
                 dispatch(
                     electionReviewDataLoaded(getElectionReviewData)
+                );
+                console.log(err)
+            });
+    };
+}
+
+//Get electorates data for election approve detail page 
+
+export const electionElectoratesReviewDataLoaded = (val) => {
+    return {
+        type: ELECTION_ELECTORATES_REVIEW_DATA,
+        payload: val
+    }
+}
+export function getElectoratesData(id) {
+    return function (dispatch) {
+
+        const response = axios
+            .get(
+                `${API_BASE_URL}/activeElectionsData/${id}/electorates`,
+            )
+            .then(response => {
+                const getElectoratesData = response.data;
+                debugger;
+                dispatch(
+                    electionElectoratesReviewDataLoaded(getElectoratesData)
+                );
+            }).catch(err => {
+                const getElectoratesData = [];
+                debugger;
+                dispatch(
+                    electionElectoratesReviewDataLoaded(getElectoratesData)
+                );
+                console.log(err)
+            });
+    };
+}
+
+//Get eligibility config data for election approve detail page by election id
+
+export const electionEligibilityDataLoaded = (val) => {
+    return {
+        type: ELECTION_ELIGIBILITY_REVIEW_DATA,
+        payload: val
+    }
+}
+export function getEligibilityData(id) {
+    return function (dispatch) {
+
+        const response = axios
+            .get(
+                `${API_BASE_URL}/activeElectionsData/${id}/eligibility`,
+            )
+            .then(response => {
+                const getEligibilityData = response.data;
+                debugger;
+                dispatch(
+                    electionEligibilityDataLoaded(getEligibilityData)
+                );
+            }).catch(err => {
+                const getEligibilityData = [];
+                debugger;
+                dispatch(
+                    electionEligibilityDataLoaded(getEligibilityData)
                 );
                 console.log(err)
             });
@@ -476,25 +578,31 @@ export const onChangeApprovalData = (electionApprovals) => {
  };
 
  export const getFieldOptions = function getFieldOptions(moduleId) {
-    let promises = [];
-
-    promises.push(axios.get(`${API_BASE_URL}/field-options/electorates-divisions/${moduleId}`));
-    
-    return axios.all(promises)
-        .then(args =>{
-            return {
-                columnHeaders: args[0].data,
-            }
-        });
+    return function (dispatch) {
+        const response = axios
+            .get(
+                `${API_BASE_URL}/field-options/electorates-divisions/${moduleId}`
+            )
+            .then(response => {
+                dispatch(setElectoratesDivisions(response.data));
+            }).catch(err => {
+                console.log(err)
+            });
+    }
 }
+export const setElectoratesDivisions = (val) => {
+    return {
+        type: SET_ELECTORATES_DIVISIONS,
+        payload: val
+    }
+}
+
 export const asyncValidateElection = function asyncValidateElection(electionName) {
-    debugger;
     let promises = [];
     if(electionName){
         promises.push(axios.get(`${API_BASE_URL}/elections/validations/${electionName}`));
         return axios.all(promises)
             .then(args =>{
-                debugger;
                 return {
                     exist: args[0].data,
                 }
@@ -509,8 +617,7 @@ export const setGetCallElectionData = (val) => {
     }
 }
 
-export function getCallElectionData(electionId) {
-    debugger;
+export function getCallElectionData(electionId,electionName,moduleId) {
     //TODO: config ids should get from the front end and the array should be dynamic
     let newDate = new Date();
    
@@ -541,6 +648,24 @@ export function getCallElectionData(electionId) {
             .then(response => {
                 dispatch(setGetCallElectionData(response.data));
             }).catch(err => {
+                let  CallElectionData= {
+                    "name":electionName,
+                    "module_id":moduleId,
+                    "status":'',
+                    "created_by":"",
+                    "created_at":'',
+                    "updated_at":'',
+                    "timeLineData": 
+                        {
+                            nominationStart: '',
+                            nominationEnd: '',
+                            objectionStart: '',
+                            objectionEnd: '',
+                            electionId: '',
+                        },
+                    "rowData":[]
+                }
+                dispatch(setGetCallElectionData(CallElectionData));
                 console.log(err)
             });
     }
@@ -555,5 +680,28 @@ export const handleChangeElectionData = function handleChangeElectionData(electi
         })
     };
 }
+
+export const setGetElectionTimeLineData = (val) => {
+    return {
+        type: GET_CALL_ELECTION_TIME_LINE_DATA,
+        payload: val
+    }
+}
+
+export function getElectionTimeLine(electionId) {
+  
+    return function (dispatch) {
+        const response = axios
+            .get(
+                `${API_BASE_URL}/elections/${electionId}`
+            )
+            .then(response => {
+                dispatch(setGetElectionTimeLineData(response.data));
+            }).catch(err => {
+                console.log(err)
+            });
+    }
+}
+
 
   

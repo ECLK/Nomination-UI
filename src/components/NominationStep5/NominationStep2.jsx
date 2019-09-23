@@ -80,8 +80,8 @@ class CustomizedTable extends React.Component {
   };
 
   render() {
-      const { classes,CandidateList,NominationPayments,division,candidateCount,user_role } = this.props;
-      debugger;
+      const { classes,CandidateList,NominationPayments,division,candidateCount } = this.props;
+      const paymentStatus='';
       const rows = this.state.nominations;
       const CandidateRow = (props) => {
         const { classes, candidate } = props;
@@ -142,7 +142,7 @@ class CustomizedTable extends React.Component {
               </Table>
             </Grid>
           </Grid>
-          {user_role === 'ig_user' ? (
+          {paymentStatus === 'Ye' ? (
            <div>                
           <Grid container spacing={16}>
             <Grid item xs="6">

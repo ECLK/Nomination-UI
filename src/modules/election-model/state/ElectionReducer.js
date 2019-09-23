@@ -8,7 +8,12 @@ import {
     GET_PENDING_ELECTION_MODULE,
     GET_REJECTED_ELECTION_MODULE,
     GET_ELECTION_TEMPLATE_DATA,
-    GET_DELETED_ELECTION_MODULE
+    GET_DELETED_ELECTION_MODULE,
+    GET_ALL_ELECTION_TEMPLATES,
+    ELECTION_TEMPLATE_REVIEW_DATA,
+    ON_ELECTION_TEMPLATE_APPROVAL_CHANGE,
+    RECEIVE_APPROVED_ELECTION_TEMPLATES,
+    RECIVE_PENDING_ELECTION_MODULE
 } from "./ElectionTypes";
 
 const initialState = {
@@ -19,14 +24,21 @@ const initialState = {
     new_election_module: { 
         name: "" ,
         // nominationSubmission: [],
+        divisionCommonName:'',
+        approval_status:'',
         eligibilityCheckList: [],
         candidateFormConfiguration: [],
         supportingDocuments: [],
         divisionConfig:[],   
-        electionConfig:[]
-
-    }
+        electionConfig:[],
+        ElectionTemplateReviewData:[],
+    },
+    AllElectionTemplates:[]
 };
+
+function findApprovalIndex(AllElectionTemplates, id) {
+    return AllElectionTemplates.findIndex(x => x.id === id);
+  }
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
@@ -42,6 +54,14 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 new_election_module: action.payload
             };
+        case RECIVE_PENDING_ELECTION_MODULE:
+            return {
+                ...state,
+                AllElectionTemplates: [
+                    ...state.AllElectionTemplates,
+                    action.payload
+                ]
+            };   
         case GET_APPROVED_ELECTION_MODULE:
             return {
                 ...state,
@@ -63,13 +83,33 @@ export default function reducer(state = initialState, action) {
                 new_election_module: action.payload
             };  
         case GET_DELETED_ELECTION_MODULE:
-        //Change this to PendingElectionModules election after creaate pending list
-        const toDelete = state.ApprovedElectionModules.findIndex(x => x.id === action.payload);
+        const toDelete = state.AllElectionTemplates.findIndex(x => x.id === action.payload);
             return {
                 ...state,
-                PendingElectionModules: update(state.ApprovedElectionModules, { $splice: [[toDelete, 1]] } )
+                AllElectionTemplates: update(state.AllElectionTemplates, { $splice: [[toDelete, 1]] } )
             };
-           
+        case GET_ALL_ELECTION_TEMPLATES:
+            return {
+                ...state,
+                AllElectionTemplates: action.payload
+            };
+        case ELECTION_TEMPLATE_REVIEW_DATA://save timeline, electionConfig, allow nominaton
+            return {
+                ...state,
+                ElectionTemplateReviewData: action.payload
+            };
+        case ON_ELECTION_TEMPLATE_APPROVAL_CHANGE:
+            return {
+                ...state,
+                ElectionReviewData: action.payload
+            };
+        case RECEIVE_APPROVED_ELECTION_TEMPLATES:
+        const AllElectionTemplates = state.AllElectionTemplates;
+        const index = findApprovalIndex(AllElectionTemplates, action.payload.moduleId);
+            return {
+                ...state,
+                AllElectionTemplates: update(AllElectionTemplates, {[index]: {status: {$set: action.payload.status}}})
+            }; 
     }
     return state;
 }

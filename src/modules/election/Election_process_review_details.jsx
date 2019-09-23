@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AdminMenu from '../../components/AdminMenu/AdminMenu';
-import {APPROVAL_STATE} from  './state/ElectionTypes';
-import { getAllElectionReviews, getElectionReviewData,  onChangeApproval,openSnackbar} from "./state/ElectionAction.js";
+import { APPROVAL_STATE } from './state/ElectionTypes';
+import { getAllElectionReviews, getElectionReviewData, onChangeApproval, openSnackbar ,getFieldOptions,getElectoratesData,getEligibilityData} from "./state/ElectionAction.js";
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography'
 import { Link } from 'react-router-dom'
@@ -34,7 +34,9 @@ import Slide from '@material-ui/core/Slide';
 import classNames from 'classnames';
 import CommentIcon from '@material-ui/icons/InsertComment';
 import Block from '@material-ui/icons/Block';
+import AllowNomination from './AllowNominationView';
 import moment from 'moment';
+import { withRouter } from "react-router-dom";
 import { Redirect } from 'react-router-dom'
 
 
@@ -121,77 +123,79 @@ const styles = theme => ({
     },
     left_icon: {
         marginLeft: theme.spacing.unit,
-      },
-      button: {
+    },
+    button: {
         margin: theme.spacing.unit,
-      },
-      green_button: {
+    },
+    green_button: {
         color: "darkgreen",
-      },
-      red_button: {
+    },
+    red_button: {
         color: "firebrick",
-      },
+    },
 });
 
 function Transition(props) {
     return <Slide direction="up" {...props} />;
-  }
-  const DialogTitle = withStyles(theme => ({
+}
+const DialogTitle = withStyles(theme => ({
     root: {
-      borderBottom: `1px solid ${theme.palette.divider}`,
-      margin: 0,
-      padding: theme.spacing.unit * 2,
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        margin: 0,
+        padding: theme.spacing.unit * 2,
     },
     closeButton: {
-      position: 'absolute',
-      right: theme.spacing.unit,
-      top: theme.spacing.unit,
-      color: theme.palette.grey[500],
+        position: 'absolute',
+        right: theme.spacing.unit,
+        top: theme.spacing.unit,
+        color: theme.palette.grey[500],
     },
-  }))(props => {
+}))(props => {
     const { children, classes, onClose } = props;
     return (
-      <MuiDialogTitle disableTypography className={classes.root}>
-        <Typography variant="h6">{children}</Typography>
-        {onClose ? (
-          <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
-            <CloseIcon />
-          </IconButton>
-        ) : null}
-      </MuiDialogTitle>
+        <MuiDialogTitle disableTypography className={classes.root}>
+            <Typography variant="h6">{children}</Typography>
+            {onClose ? (
+                <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
+                    <CloseIcon />
+                </IconButton>
+            ) : null}
+        </MuiDialogTitle>
     );
-  });
-  const DialogContent = withStyles(theme => ({
+});
+const DialogContent = withStyles(theme => ({
     root: {
-      margin: 0,
-      padding: theme.spacing.unit * 2,
+        margin: 0,
+        padding: theme.spacing.unit * 2,
     },
-  }))(MuiDialogContent);
-  
-  const DialogActions = withStyles(theme => ({
+}))(MuiDialogContent);
+
+const DialogActions = withStyles(theme => ({
     root: {
-      borderTop: `1px solid ${theme.palette.divider}`,
-      margin: 0,
-      padding: theme.spacing.unit,
+        borderTop: `1px solid ${theme.palette.divider}`,
+        margin: 0,
+        padding: theme.spacing.unit,
     },
-  }))(MuiDialogActions);
+}))(MuiDialogActions);
 class Dashboard extends React.Component {
     state = {
         open: false,
         open2: false,
         nominations: [],
-        activeElections:[],
+        activeElections: [],
         goToConfig: false,
-        electionId:'',
-        status:'',
-        reviewNote:''
+        electionId: '',
+        status: '',
+        reviewNote: ''
     };
 
-
     componentDidMount() {
-        const { allElectionModules, getAllElectionReviews,getElectionReviewData } = this.props;
+        const { allElectionModules, getAllElectionReviews, getElectionReviewData ,getFieldOptions,getElectoratesData,getEligibilityData} = this.props;
         getAllElectionReviews();
-        getElectionReviewData(this.props.location.state.id);
+        getElectionReviewData(this.props.match.params.electionId);
+        getElectoratesData(this.props.match.params.electionId);
+        getEligibilityData(this.props.match.params.electionId);
+        getFieldOptions(this.props.match.params.moduleId);
     }
 
     handleDrawerOpen = () => {
@@ -203,130 +207,106 @@ class Dashboard extends React.Component {
     };
 
     changeElectionStatus = () => {
-        console.log(this.state);
-        debugger;
-        const {onChangeApproval,openSnackbar,ElectionReviewData} = this.props;
-        (this.state.status==='REJECT') ? 
-        openSnackbar({ message: ElectionReviewData.name + ' has not been approved ' }) : openSnackbar({ message: ElectionReviewData.name + ' has been approved ' });
+        const { onChangeApproval, openSnackbar, ElectionReviewData } = this.props;
+        (this.state.status === 'REJECT') ?
+            openSnackbar({ message: ElectionReviewData.name + ' has not been approved ' }) : openSnackbar({ message: ElectionReviewData.name + ' has been approved ' });
         onChangeApproval(this.state.electionId, this.state.status, this.state.reviewNote);
-        this.setState({goToConfig:true});
-      };
+        this.setState({ goToConfig: true });
+    };
 
     onOpenModal = (electionId, status) => {
-        
         this.setState({
-          open: true,
-          electionId: electionId,
-          status: status,
-          reviewNote:''
+            open: true,
+            electionId: electionId,
+            status: status,
+            reviewNote: ''
         });
-      };
+    };
 
-      onCloseModal = () => {
+    onCloseModal = () => {
         this.setState({ open: false });
-      };
+    };
 
-      handleChange = name => event => {
+    handleChange = name => event => {
         this.setState({
-          [name]: event.target.value,
+            [name]: event.target.value,
         });
-      };
+    };
 
-      onOpenModal2 = (electionId, status) => {
-        const {ElectionReviewData} = this.props;
-        
+    onOpenModal2 = (electionId, status) => {
+        const { ElectionReviewData } = this.props;
+
         this.setState({
-          open2: true,
-          nominationId: electionId,
-          status: status,
-          reviewNote: ElectionReviewData.reviewNote
+            open2: true,
+            nominationId: electionId,
+            status: status,
+            reviewNote: ElectionReviewData.reviewNote
         });
-      };
-      onCloseModal2 = () => {
+    };
+    onCloseModal2 = () => {
         this.setState({ open2: false });
-      };
+    };
     render() {
-        const { classes, allElectionModules,ElectionReviewData } = this.props;
+        const { classes, allElectionModules, ElectionReviewData,cols,electionEligibilities } = this.props;
         debugger;
         var Authjority = ' ';
         var CalculationType = ' ';
         var WeightageVote = ' ';
         var WeightagePref = ' ';
         var NominationSubmissionBy = '';
-        var CandidatePayment = '';
+        var CandidatePaymentRpp = '';
+        var CandidatePaymentIg = '';
+        var SecurityDepositIg = '';
+        var SecurityDepositRpp = '';
         (ElectionReviewData.electionConfig ? ElectionReviewData.electionConfig.map((record) => {
-        //     testing = {
-        //         Authjority : record.key==="2353453" ? record.value : " ",
-        //     CalculationType : record.key==="15990459-2ea4-413f-b1f7-29a138fd7a97" ? record.value : " ",
-        //     WeightageVote : record.key==="324324" ? record.value : " ",
-        //     WeightagePref : record.key==="234433" ? record.value : " "
-        // }
-        //       testing = {
-        //         Authjority : record.key==="2353453" ? record.value : " ",
-        //     CalculationType : record.key==="15990459-2ea4-413f-b1f7-29a138fd7a97" ? record.value : " ",
-        //     WeightageVote : record.key==="324324" ? record.value : " ",
-        //     WeightagePref : record.key==="234433" ? record.value : " "
-        // }
-        if(record.key=="2353453"){
-            Authjority = record.value
-        }
-        if(record.key=="15990459-2ea4-413f-b1f7-29a138fd7a97"){
-            CalculationType = record.value
-        }
-        if(record.key=="324324"){
-            WeightageVote = record.value
-        }
-        if(record.key=="234433"){
-            WeightagePref = record.value
-        }
-        if(record.key=="1243123"){
-            NominationSubmissionBy = record.value
-        }
-        if(record.key=="123213"){
-            CandidatePayment = record.value
-        }
-        
-        
-         
-           
-    }): 
-        setEmpty()
-    );
-    function setEmpty(string) {
+            if (record.key == "2353453") {
+                Authjority = record.value
+            }
+            if (record.key == "15990459-2ea4-413f-b1f7-29a138fd7a97") {
+                CalculationType = record.value
+            }
+            if (record.key == "324324") {
+                WeightageVote = record.value
+            }
+            if (record.key == "234433") {
+                WeightagePref = record.value
+            }
+            if (record.key == "1243123") {
+                NominationSubmissionBy = record.value
+            }
+            if (record.key == "123213") {
+                CandidatePaymentRpp = record.value
+            }
+            if (record.key == "1232132") {
+                CandidatePaymentIg = record.value
+            }
+            if (record.key == "fe2c2d7e-66de-406a-b887-1143023f8e54") {
+                SecurityDepositIg = record.value
+            }
+            if (record.key == "fe2c2d7e-66de-406a-b887-1143023f8e72") {
+                SecurityDepositRpp = record.value
+            }
+        }) :
+            setEmpty()
+        );
+        function setEmpty(string) {
             return {};
-          }
-    // setEmpty(){
-    //     return {}
-    // }
-
-        //   var outputObj = { //create a new object with one default value
-        //     time: {
-        //         Authjority: ""
-        //     }
-        //   };
-        //   ElectionReviewData.electionConfig.forEach(function(item) { //iterate the any array and then keep adding key and values to new Object
-        //     outputObj[item] = {
-        //         Authjority: capitalizeFirstLetter(item)
-        //     };
-        //   });
-          
-        //   function capitalizeFirstLetter(string) {
-        //     return string.key==="2353453" ? string.value : "a";
-        //   }
-
-        
-
-        // const test = ElectionReviewData.electionConfig ? ElectionReviewData.electionConfig.map((config) => (
-           
-            const test = (  <div>
+        }
+        const test = (<div>
             <Grid container spacing={24}>
-                <Grid item xs={6} sm={3}>
-                    <Typography className={classes.text_a} component="p">Authority: { Authjority }</Typography>
+                <Grid item xs={3} sm={1} justify="center">
+                    <Typography variant="subtitle2" className={classes.text_a} component="p">Authority : </Typography>
+                </Grid>
+                <Grid item xs={3} sm={2} justify="center">
+                    <Typography component="p">Election Commission</Typography>
                 </Grid>
             </Grid>
             <Grid container spacing={24}>
-                <Grid item xs={12} sm={6}>
-                    <Typography className={classes.text_b} component="p">Calculation Type : { CalculationType  }</Typography>
+                <Grid item xs={3} sm={2} justify="center">
+                    <Typography variant="subtitle2" className={classes.text_a} component="p">Calculation Type  : </Typography>
+                </Grid>
+                <Grid item xs={3} sm={2} justify="center">
+                    <Typography component="p">{(CalculationType === 'vote_and_prefrence') ? 'Vote & Prefrential Based' : (CalculationType === 'pure_prefrence_based') ? 'Pure preference-based' : (CalculationType === 'pure_vote_based') ? 'Pure vote-based' : ''}</Typography>
                 </Grid>
                 {/* <Grid item xs={12} sm={6}>
                     <Grid container spacing={24}>
@@ -347,43 +327,60 @@ class Dashboard extends React.Component {
                     </Grid>
                 </Grid> */}
             </Grid>
-            <Grid container spacing={24}>
-                <Grid item xs={12} sm={3}>
-                    <Typography className={classes.text_b} component="p">Nomination Submission by</Typography>
+            <Grid container spacing={24} >
+                <Grid item xs={3} sm={3} justify="center">
+                    <Typography variant="subtitle2" className={classes.text_a} component="p">Nomination Submission by  : </Typography>
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                    <Grid container spacing={24}>
-                        <Grid item xs={12} sm={12}>
-                            <Typography className={classes.text_b} component="p">{NominationSubmissionBy}</Typography>
-                        </Grid>
-                    </Grid>
+                <Grid item xs={3} sm={3} justify="center">
+                    <Typography component="p">{NominationSubmissionBy}</Typography>
                 </Grid>
             </Grid>
             <Grid container spacing={24}>
-                                    <Grid item xs={12} sm={3}>
-                                        <Typography className={classes.text_b} component="p">Security Deposit </Typography>
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <Grid container spacing={24}>
-                                            <Grid item xs={12} sm={6}>
-                                                <Typography className={classes.text_b} component="p">Amount per Candidate </Typography>
-                                            </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <Input id="common-name" value={'(Rs.) ' + CandidatePayment} />
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-            </div>);
+                <Grid item xs={3} sm={2} justify="center">
+                    <Typography variant="subtitle2" className={classes.text_a} component="p">Security Deposit (RPP) : </Typography>
+                </Grid>
+                <Grid item xs={3} sm={1} justify="center">
+                    <Typography component="p">{SecurityDepositRpp}</Typography>
+                </Grid>
+                {SecurityDepositIg === 'Yes' ?
+                    <Grid item xs={3} sm={2} justify="center">
+                        <Typography component="p">Amount per Candidate : </Typography>
+                    </Grid>
+                    : ''}
+                {SecurityDepositIg === 'Yes' ?
+                    <Grid item xs={3} sm={2}>
+                        <Typography component="p">{'(Rs.) ' + CandidatePaymentRpp} </Typography>
+                    </Grid>
+                    : ''}
+            </Grid>
+            <Grid container spacing={24}>
+                <Grid item xs={3} sm={2} justify="center">
+                    <Typography variant="subtitle2" className={classes.text_a} component="p">Security Deposit (IG) : </Typography>
+                </Grid>
+                <Grid item xs={3} sm={1} justify="center">
+                    <Typography component="p">{SecurityDepositIg}</Typography>
+                </Grid>
+                {SecurityDepositIg === 'Yes' ?
+                    <Grid item xs={3} sm={2} justify="center">
+                        <Typography component="p">Amount per Candidate : </Typography>
+                    </Grid>
+                    : ''}
+                {SecurityDepositIg === 'Yes' ?
+                    <Grid item xs={3} sm={2}>
+                        <Typography component="p">{'(Rs.) ' + CandidatePaymentIg} </Typography>
+                    </Grid>
+                    : ''}
+            </Grid>
+        </div>);
 
-            var check = this.props.location.state.check;
+        var check = this.props.match.params.check;
 
-            if (this.state.goToConfig) return <Redirect
+        if (this.state.goToConfig) return <Redirect
             to={{
-            pathname: '/admin/call-election'
+                pathname: '/election-process-review'
             }}
-            />;
-        
+        />;
+
         return (
             <div className={classes.root}>
                 <CssBaseline />
@@ -395,102 +392,73 @@ class Dashboard extends React.Component {
                         <Card className={classes.card}>
                             <CardContent>
                                 <Grid container spacing={24}>
-                                    <Grid item xs={6} sm={3}>
-                                        <Typography className={classes.text_a} component="p">Election Type: {ElectionReviewData.moduleName}</Typography>
+                                    <Grid item xs={3} sm={2}>
+                                        <Typography variant="subtitle2" component="p">Election Type :</Typography>
+                                    </Grid>
+                                    <Grid item xs={3} sm={2}>
+                                        <Typography style={{ marginLeft: -72 }} component="p">{ElectionReviewData.moduleName}</Typography>
                                     </Grid>
                                 </Grid>
-                                 {test}
-                                
-                                
+                                {test}
+
+
                                 <br />
                                 <hr />
                                 <br />
                                 <Typography className={classes.text_a} component="p"><b>Timeline</b></Typography>
                                 <br />
                                 <Grid container spacing={24}>
-                                    <Grid item xs={12} sm={6}>
+                                    <Grid item xs={3} sm={6}>
                                         <Grid container spacing={24}>
-                                            <Grid item xs={12} sm={6}>
-                                                <Typography className={classes.text_b} component="p">Nomination Start Date</Typography>
+                                            <Grid item xs={3} sm={4}>
+                                                <Typography variant="subtitle2" component="p">Nomination Start Date</Typography>
                                             </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <TextField
-                                                    id="date"
-                                                    // label="Birthday"
-                                                    value={moment(ElectionReviewData.nominationStart).format('YYYY-MM-DD')}
-                                                    type="date"
-                                                    defaultValue="2017-05-24"
-                                                    className={classes.textField}
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                />
+                                            <Grid item xs={3} sm={6}>
+                                                <Typography gutterBottom>{moment(ElectionReviewData.nominationStart).format('DD MMM YYYY hh:mm a')}</Typography>
                                             </Grid>
                                         </Grid>
                                     </Grid>
-                                    <Grid item xs={12} sm={6}>
+                                    <Grid item xs={3} sm={6}>
                                         <Grid container spacing={24}>
-                                            <Grid item xs={12} sm={6}>
-                                                <Typography className={classes.text_b} component="p">Objection Start Date</Typography>
+                                            <Grid item xs={3} sm={4}>
+                                                <Typography variant="subtitle2" component="p">Objection Start Date</Typography>
                                             </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <TextField
-                                                    id="date"
-                                                    // label="Birthday"
-                                                    type="date"
-                                                    value={moment(ElectionReviewData.objectionStart).format('YYYY-MM-DD')}
-                                                    defaultValue="2017-05-24"
-                                                    className={classes.textField}
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                />
+                                            <Grid item xs={3} sm={6}>
+                                                <Typography gutterBottom>{moment(ElectionReviewData.objectionStart).format('DD MMM YYYY hh:mm a')}</Typography>
                                             </Grid>
                                         </Grid>
                                     </Grid>
                                 </Grid>
                                 <Grid container spacing={24}>
-                                    <Grid item xs={12} sm={6}>
+                                    <Grid item xs={3} sm={6}>
                                         <Grid container spacing={24}>
-                                            <Grid item xs={12} sm={6}>
-                                                <Typography className={classes.text_b} component="p"> Nomination End Date</Typography>
+                                            <Grid item xs={3} sm={4}>
+                                                <Typography variant="subtitle2" className={classes.text_b} component="p"> Nomination End Date</Typography>
                                             </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <TextField
-                                                    id="date"
-                                                    // label="Birthday"
-                                                    value={moment(ElectionReviewData.nominationEnd).format('YYYY-MM-DD')}
-                                                    type="date"
-                                                    defaultValue="2017-05-24"
-                                                    className={classes.textField}
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                />
+                                            <Grid item xs={3} sm={6}>
+                                                <Typography gutterBottom>{moment(ElectionReviewData.nominationEnd).format('DD MMM YYYY hh:mm a')}</Typography>
                                             </Grid>
                                         </Grid>
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
                                         <Grid container spacing={24}>
-                                            <Grid item xs={12} sm={6}>
-                                                <Typography className={classes.text_b} component="p">Objection End Date </Typography>
+                                            <Grid item xs={3} sm={4}>
+                                                <Typography variant="subtitle2" className={classes.text_b} component="p">Objection End Date </Typography>
                                             </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <TextField
-                                                    id="date"
-                                                    // label="Birthday"
-                                                    type="date"
-                                                    defaultValue="2017-05-24"
-                                                    value={moment(ElectionReviewData.objectionEnd).format('YYYY-MM-DD')}
-                                                    className={classes.textField}
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                />
+                                            <Grid item xs={3} sm={6}>
+                                                <Typography gutterBottom>{moment(ElectionReviewData.objectionEnd).format('DD MMM YYYY hh:mm a')}</Typography>
                                             </Grid>
                                         </Grid>
                                     </Grid>
                                 </Grid>
+                                <br />
+                                <br />
+                                <hr />
+                                <br />
+                                <Typography className={classes.text_a} component="p"><b>Electoral Units</b> </Typography>
+                                <br />
+                                <br />
+                                <AllowNomination />
                                 <br />
                                 <br />
                                 <hr />
@@ -503,14 +471,16 @@ class Dashboard extends React.Component {
                                         <TableHead>
                                             <TableCell align="left">Eligibility Criteria Check List</TableCell>
 
-                                            <TableCell align="left">Select</TableCell>
+                                            <TableCell align="left"></TableCell>
                                         </TableHead>
                                         <TableBody>
+                                       { electionEligibilities.map((election) => (
                                             <TableRow >
-                                                <TableCell align="left">Above 35 years of age</TableCell>
-                                                <TableCell align="left"><Checkbox checked value={true} /></TableCell>
+                                                <TableCell align="left">{election.description}</TableCell>
+                                                <TableCell align="left"></TableCell>
                                             </TableRow>
-                                            <TableRow >
+                                       ))}
+                                            {/* <TableRow >
                                                 <TableCell align="left">Does not serve as a Judicial Officer</TableCell>
                                                 <TableCell align="left"><Checkbox value={true} /></TableCell>
                                             </TableRow>
@@ -518,7 +488,7 @@ class Dashboard extends React.Component {
                                                 <TableCell align="left">Does not serve as the Commissioner General of the Election Commission</TableCell>
                                                 <TableCell align="left"><Checkbox value={true} /></TableCell>
                                             </TableRow>
-                                            
+
                                             <TableRow >
                                                 <TableCell align="left">Does not serve as as the Commissioner-General</TableCell>
                                                 <TableCell align="left"><Checkbox checked value={true} /></TableCell>
@@ -534,135 +504,131 @@ class Dashboard extends React.Component {
                                             <TableRow >
                                                 <TableCell align="left">Is not standing nominated as a candidate for election by more than one recognized political party or independent group in respect of any electoral district</TableCell>
                                                 <TableCell align="left"><Checkbox value={true} /></TableCell>
-                                            </TableRow>
+                                            </TableRow> */}
                                         </TableBody>
                                     </Table>
 
                                 </Grid>
                                 <br />
-                                    
-                                    {(check==='test') ? 
+
+                                {(check === 'test') ?
                                     <Grid item xs={4} sm={1}>
-                                    <Link to="/admin/call-election" >
-                                        <Button size="medium">Back</Button>
-                                    </Link>
-                                </Grid>
+                                        <Link to="/admin/call-election" >
+                                            <Button size="medium">Back</Button>
+                                        </Link>
+                                    </Grid>
                                     : (
                                         <div>
-                                <Grid container spacing={24}>
-                                             <Grid item xs={4} sm={1}>
-                                    <Link to="/election-process-review" >
-                                        <Button size="medium">Back</Button>
-                                    </Link>
-                                </Grid>
-                                    <Grid style={{marginRight:15}} item xs={4} sm={1}>
-                                    <Button 
-                                        variant={ ElectionReviewData.approval_status==="APPROVE" ? "contained" : "outlined" }
-                                        disabled={ ElectionReviewData.approval_status==="APPROVE" }
-                                        // onClick={ () => { this.changeElectionStatus(ElectionReviewData.id, APPROVAL_STATE.APPROVE ) }}
-                                        onClick={() => { this.onOpenModal(ElectionReviewData.id, APPROVAL_STATE.APPROVE) }}
-                                        className={classNames(classes.button, classes.green_button)}>
-                                        {ElectionReviewData.approval_status==="APPROVE" ? "Approved" : "Approve"}
-                                        <Done className={classes.left_icon} />
-                                    </Button>
-                                    </Grid>
-                                    <Grid item xs={4} sm={1}>
-                                    <Button
-                                        variant={ ElectionReviewData.approval_status==="REJECT" ? "contained" : "outlined" }
-                                        disabled={ ElectionReviewData.approval_status==="REJECT" }
-                                        // onClick={ () => { this.changeElectionStatus(ElectionReviewData.id, APPROVAL_STATE.REJECT ) }}
-                                        onClick={() => { this.onOpenModal(ElectionReviewData.id, APPROVAL_STATE.REJECT) }}
-                                        className={classNames(classes.button, classes.red_button)}>
-                                        {ElectionReviewData.approval_status==="REJECT" ? "Rejected" : "Reject"}
-                                        <Block className={classes.left_icon} />
-                                    </Button>
-                                    </Grid>
-                                    <Grid item xs="3">
-                                    <CommentIcon style={{marginRight:10,marginTop:8,marginLeft:30}} onClick={() => { this.onOpenModal2(ElectionReviewData.id, APPROVAL_STATE.APPROVED) }} className={classes.left_icon} />
-                                </Grid>
-                                </Grid>
-                                   </div> )}
+                                            <Grid container spacing={2}>
+                                                <Grid item xs={4} sm={1}>
+                                                    <Link to="/election-process-review" >
+                                                        <Button size="medium">Back</Button>
+                                                    </Link>
+                                                </Grid>
+                                                <Grid item xs={2} sm={2}>
+                                                    <Button
+                                                        variant={ElectionReviewData.approval_status === "APPROVE" ? "contained" : "outlined"}
+                                                        disabled={ElectionReviewData.approval_status === "APPROVE"}
+                                                        // onClick={ () => { this.changeElectionStatus(ElectionReviewData.id, APPROVAL_STATE.APPROVE ) }}
+                                                        onClick={() => { this.onOpenModal(ElectionReviewData.id, APPROVAL_STATE.APPROVE) }}
+                                                        className={classNames(classes.button, classes.green_button)}>
+                                                        {ElectionReviewData.approval_status === "APPROVE" ? "Approved" : "Approve"}
+                                                        <Done className={classes.left_icon} />
+                                                    </Button>
+                                                </Grid>
+                                                <Grid style={{marginLeft:-43}} item xs={2} sm={2}>
+                                                    <Button
+                                                        variant={ElectionReviewData.approval_status === "REJECT" ? "contained" : "outlined"}
+                                                        disabled={ElectionReviewData.approval_status === "REJECT"}
+                                                        // onClick={ () => { this.changeElectionStatus(ElectionReviewData.id, APPROVAL_STATE.REJECT ) }}
+                                                        onClick={() => { this.onOpenModal(ElectionReviewData.id, APPROVAL_STATE.REJECT) }}
+                                                        className={classNames(classes.button, classes.red_button)}>
+                                                        {ElectionReviewData.approval_status === "REJECT" ? "Rejected" : "Reject"}
+                                                        <Block className={classes.left_icon} />
+                                                    </Button>
+                                                </Grid>
+                                                <Grid style={{marginLeft:-76}} item xs="3" sm={1}>
+                                                    <CommentIcon style={{ marginRight: 10, marginTop: 8, marginLeft: 30 }} onClick={() => { this.onOpenModal2(ElectionReviewData.id, APPROVAL_STATE.APPROVED) }} className={classes.left_icon} />
+                                                </Grid>
+                                            </Grid>
+                                        </div>)}
                             </CardContent>
                         </Card>
 
                     </div>
                 </div>
                 <div>
-            <Dialog
-              open={this.state.open}
-              TransitionComponent={Transition}
-              keepMounted
-              onClose={this.handleClose}
-              aria-labelledby="alert-dialog-slide-title"
-              aria-describedby="alert-dialog-slide-description"
-            >
-             
-              <DialogTitle id="alert-dialog-slide-title">
-              <Remark style={{marginBottom:-4,marginRight:5}} /> {"Remarks"}
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-slide-description">
-                  <TextField
-                    style={{ width: 400 }}
-                    id="outlined-multiline-flexible"
-                    label="Please enter your remarks here"
-                    multiline
-                    rowsMax="4"
-                    value={this.state.reviewNote}
-                    onChange={this.handleChange('reviewNote')}
-                    className={classes.textField}
-                    margin="normal"
-                    variant="outlined"
-                  />
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button value="OK" onClick={this.changeElectionStatus} color="primary">
-                  Save
-            </Button>
-                <Button onClick={this.onCloseModal} color="primary">
-                  Cancel
-            </Button>
-              </DialogActions>
-            </Dialog>
-            <Dialog
-              open={this.state.open2}
-              TransitionComponent={Transition}
-              keepMounted
-              onClose={this.handleClose}
-              aria-labelledby="alert-dialog-slide-title"
-              aria-describedby="alert-dialog-slide-description"
-            >
-             
-              <DialogTitle id="alert-dialog-slide-title">
-              <Remark style={{marginBottom:-4,marginRight:5}} /> {"Remarks"}
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-slide-description">
-                  <TextField
-                    style={{ width: 400 }}
-                    id="outlined-multiline-flexible"
-                    label=""
-                    multiline
-                    rowsMax="4"
-                    value={this.state.reviewNote}
-                    // onChange={this.handleChange('reviewNote')}
-                    className={classes.textField}
-                    margin="normal"
-                    variant="outlined"
-                  />
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                {/* <Button value="OK" onClick={this.changeNominationStatus} color="primary">
-                  Save
-            </Button> */}
-                <Button onClick={this.onCloseModal2} color="primary">
-                  Cancel
-            </Button>
-              </DialogActions>
-            </Dialog>
-          </div>
+                    <Dialog
+                        open={this.state.open}
+                        TransitionComponent={Transition}
+                        keepMounted
+                        onClose={this.handleClose}
+                        aria-labelledby="alert-dialog-slide-title"
+                        aria-describedby="alert-dialog-slide-description"
+                    >
+
+                        <DialogTitle id="alert-dialog-slide-title">
+                            <Remark style={{ marginBottom: -4, marginRight: 5 }} /> {"Remarks"}
+                        </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-slide-description">
+                                <TextField
+                                    style={{ width: 400 }}
+                                    id="outlined-multiline-flexible"
+                                    label="Please enter your remarks here"
+                                    multiline
+                                    rowsMax="4"
+                                    value={this.state.reviewNote}
+                                    onChange={this.handleChange('reviewNote')}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                />
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button value="OK" onClick={this.changeElectionStatus} color="primary">
+                                Save
+                            </Button>
+                            <Button onClick={this.onCloseModal} color="primary">
+                                Cancel
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                    <Dialog
+                        open={this.state.open2}
+                        TransitionComponent={Transition}
+                        keepMounted
+                        onClose={this.handleClose}
+                        aria-labelledby="alert-dialog-slide-title"
+                        aria-describedby="alert-dialog-slide-description"
+                    >
+                        <DialogTitle id="alert-dialog-slide-title">
+                            <Remark style={{ marginBottom: -4, marginRight: 5 }} /> {"Remarks"}
+                        </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-slide-description">
+                                <TextField
+                                    style={{ width: 400 }}
+                                    id="outlined-multiline-flexible"
+                                    label=""
+                                    multiline
+                                    rowsMax="4"
+                                    value={this.state.reviewNote}
+                                    // onChange={this.handleChange('reviewNote')}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                />
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.onCloseModal2} color="primary">
+                                Cancel
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </div>
             </div>
         );
     }
@@ -675,21 +641,24 @@ Dashboard.propTypes = {
 const mapStateToProps = ({ Election }) => {
     const { allElectionModules } = Election;
     const { getElectionReviewData } = Election;
-    const  ElectionReviewData  = Election.ElectionReviewData;
+    const ElectionReviewData = Election.ElectionReviewData;
+    const cols = Election.columnHeaders;
+    const electionEligibilities = Election.electionEligibilities;
 
-    
-
-    return { allElectionModules,getElectionReviewData ,ElectionReviewData}
+    return { allElectionModules, getElectionReviewData, ElectionReviewData,cols,electionEligibilities }
 };
 
 const mapActionsToProps = {
     getAllElectionReviews,
     getElectionReviewData,
     onChangeApproval,
-    openSnackbar
+    openSnackbar,
+    getFieldOptions,
+    getElectoratesData,
+    getEligibilityData
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Dashboard));
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(withRouter(Dashboard)));
 
 
 

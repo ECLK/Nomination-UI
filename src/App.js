@@ -16,7 +16,6 @@ import Login from "./pages/Login/Login";
 import store from "./state/store";
 import axios from "axios";
 
-
 function getCookie(name) {
   var value = "; " + document.cookie;
   var parts = value.split("; " + name + "=");
@@ -28,6 +27,8 @@ axios.interceptors.request.use(function (config) {
   config.headers.Authorization =  "Bearer " +getCookie('somekey');
   return config;
 });
+
+sessionStorage.setItem("party_id", getCookie('party_id'));
 
 
 const styles = theme => ({

@@ -18,7 +18,6 @@ const theme = createMuiTheme({
   palette: {
     primary: purple,
     secondary: deepPurple,
-    red: deepPurple,
     // red: {
     //   main: '#f44336',
     // },

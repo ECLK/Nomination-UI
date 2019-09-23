@@ -69,16 +69,16 @@ class Home extends React.Component {
                 <div className={classes.content}>
                     {/* all the content should go here.. */}
 
-                    {/* <InfoBanner election={this.state.election}></InfoBanner> */}
+                    <InfoBanner election={this.state.election}></InfoBanner>
                     <div className={classes.root}>
                         <Grid container spacing={24}>
-                            <Grid item xs={12} sm={6}>
+                            <Grid style={{marginTop:35}} item xs={12} sm={6}>
                             <Typography component="h2" variant="headline" gutterBottom style={{marginLeft:5}}>
-                                Create Nomination
+                                Create Nomination For {this.state.election.name}
                             </Typography>
-                            <Typography  variant="caption" gutterBottom style={{marginBottom:25,marginLeft:5}}>
+                            {/* <Typography  variant="caption" gutterBottom style={{marginBottom:25,marginLeft:5}}>
                             {this.state.election.name}
-                            </Typography>                                
+                            </Typography>                                 */}
                             <Divider variant="middle" className={classes.topBottomSpace} />
                                 <NominationPanel></NominationPanel>
                             </Grid>

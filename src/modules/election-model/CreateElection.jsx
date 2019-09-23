@@ -17,18 +17,14 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import ElectionConfig from './ElectionConfig';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from "@material-ui/core/IconButton";
-import TrashIcon from "@material-ui/icons/Delete";
 import Slide from '@material-ui/core/Slide';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import CloseIcon from '@material-ui/icons/Close';
-import WarningIcon from '@material-ui/icons/Warning';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import { createElection, updateElection, submitElection, editElection, getFieldOptions, getElectionTemplateData, deleteElectionModule } from './state/ElectionAction';
-import { openSnackbar } from '../election/state/ElectionAction';
 import { connect } from 'react-redux';
-
 
 const styles = theme => ({
     root: {
@@ -66,7 +62,6 @@ function getSteps() {
 function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
-
 
 const DialogTitle = withStyles(theme => ({
     root: {
@@ -126,17 +121,24 @@ class CreateElection extends React.Component {
         goToHome: false,
         candidateConfigs: [],
         candidateSupportingDocs: [],
+        nominationSupportingDocs: [],
+        objectionSupportingDocs: [],
+        paymentSupportingDocs: [],
         divisions: [],
         errorTextCandidateConfig: '',
         errorTextDivisionCommonName: '',
         errorTextDivisionConfig: '',
-        errorTextAuthority:'',
-        errorTextCalType:'',
-        errorTextSecurityDeposite:'',
-        errorTextObjection:'',
-        errorTextAlliance:'',
-        errorTextSubmisionBy:'',
-        errorTextEligibility:''
+        formStatus: {
+            errorTextCalType: '',
+            errorTextSecurityDepositeRpp: '',
+            errorTextSecurityDepositeAmountRpp: '',
+            errorTextSecurityDepositeIg: '',
+            errorTextSecurityDepositeAmountIg: '',
+            errorTextNominationSubmision: '',
+            errorTextObjection: '',
+            errorTextAlliance: '',
+            errorTextEligibility: '',
+        }
     };
 
     constructor() {
@@ -145,10 +147,7 @@ class CreateElection extends React.Component {
     }
 
     getStepContent(step) {
-        const {errorTextAuthority,errorTextCalType, errorTextSecurityDeposite,errorTextSecurityDepositeAmount, errorTextObjection,errorTextAlliance,errorTextNominationSubmision,errorTextEligibility} = this.state;
-        const errorTextItems = { errorTextAuthority, errorTextCalType, errorTextSecurityDeposite,errorTextSecurityDepositeAmount, errorTextObjection,errorTextAlliance,errorTextNominationSubmision,errorTextEligibility }
-
-
+        const errorTextItems = { ...this.state.formStatus }
         switch (step) {
             case 0:
                 return <CandidateForm
@@ -156,6 +155,9 @@ class CreateElection extends React.Component {
                     electionChanged={this.handleElectionChange}
                     candidateConfigs={this.state.candidateConfigs}
                     candidateSupportingDocs={this.state.candidateSupportingDocs}
+                    nominationSupportingDocs={this.state.nominationSupportingDocs}
+                    objectionSupportingDocs={this.state.objectionSupportingDocs}
+                    paymentSupportingDocs={this.state.paymentSupportingDocs}
                     errorTextCandidateConfig={this.state.errorTextCandidateConfig}
                 />;
             case 1:
@@ -178,52 +180,41 @@ class CreateElection extends React.Component {
     }
 
     handleElectionChange(electionModule) {
-        debugger;
+        const { formStatus } = this.state;
         for (let i = 0; i < electionModule.electionConfig.length; i++) {
-                if (electionModule.electionConfig[i].id ===  'authority' && electionModule.electionConfig[i].value !==  "1") {
-                    this.setState({errorTextAuthority:''});
-                    debugger
-                }
-        }
-        for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
-            if (this.props.new_election_module.electionConfig[i].value==='pure_vote_based' || this.props.new_election_module.electionConfig[i].value==='pure_prefrence_based' || this.props.new_election_module.electionConfig[i].value==='vote_and_prefrence') {
-                this.setState({errorTextCalType:''});
+            switch (electionModule.electionConfig[i].electionModuleConfigId) {
+                case 'fe2c2d7e-66de-406a-b887-1143023f8e72'://Security Deposit RPP
+                    formStatus.errorTextSecurityDepositeRpp = '';
+                    break;
+                case '123213'://Security Deposit Amount RPP
+                    formStatus.errorTextSecurityDepositeAmountRpp = '';
+                    break;
+                case 'fe2c2d7e-66de-406a-b887-1143023f8e54'://Security Deposit IG
+                    formStatus.errorTextSecurityDepositeIg = '';
+                    break;
+                case '1232132'://Security Deposit Amount IG
+                    formStatus.errorTextSecurityDepositeAmountIg = '';
+                    break;
+                case '1243123'://Nomination Submission
+                    formStatus.errorTextNominationSubmision = '';
+                    break;
+                case '253454355'://Objections
+                    formStatus.errorTextObjection = '';
+                    break;
+                case '142343242343'://Allience
+                    formStatus.errorTextAlliance = '';
+                    break;
+                case '15990459-2ea4-413f-b1f7-29a138fd7a97'://Calculation type
+                    formStatus.errorTextCalType = '';
+                    break;
+            }
+            if (this.props.new_election_module.eligibilityCheckList.length > 0) {
+                formStatus.errorTextEligibility = '';
+            } else {
+                formStatus.errorTextEligibility = 'emptyField';
             }
         }
-        for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
-        if (this.props.new_election_module.electionConfig[i].id==='securityDeposite') {
-            this.setState({errorTextSecurityDeposite:''});
-            }
-        }
-        for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
-            if (this.props.new_election_module.electionConfig[i].id==='securityDepositeAmount') {
-                this.setState({errorTextSecurityDepositeAmount:''});
-                }
-            }
-        for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
-            if (this.props.new_election_module.electionConfig[i].id==='nominationSubmision') {
-                this.setState({errorTextNominationSubmision:''});
-                }
-            }
-        for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
-            if (this.props.new_election_module.electionConfig[i].id==='Objections') {
-                this.setState({errorTextObjection:''});
-                }
-            }
-        for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
-            if (this.props.new_election_module.electionConfig[i].id==='Alliance') {
-                this.setState({errorTextAlliance:''});
-                }
-            } 
-        if (this.props.new_election_module.eligibilityCheckList.length>0) {
-            this.setState({errorTextEligibility:''});
-        }   
-        // this.setState({errorTextAuthority:''});
-        // this.setState({errorTextCalType:''});
-        // this.setState({errorTextSecurityDeposite:''});
-        // this.setState({errorTextObjection:''});
-        // this.setState({errorTextAlliance:''});
-        // this.setState({errorTextSubmisionBy:''});
+        this.setState({ formStatus });
         const { updateElection } = this.props;
         this.setState({ errorTextCandidateConfig: '' });
         this.setState({ errorTextDivisionCommonName: '' });
@@ -231,13 +222,6 @@ class CreateElection extends React.Component {
         updateElection(electionModule);
     }
 
-    // handleDelete(electionModule) {
-    //     const { deleteElectionModule } = this.props;
-    //     deleteElectionModule(electionModule);
-    //     this.setState({
-    //         goToHome: true
-    //     });
-    // }
     handleDelete = (electionModule, event) => {
         const { deleteElectionModule } = this.props;
         deleteElectionModule(electionModule.currentTarget.id);
@@ -249,8 +233,11 @@ class CreateElection extends React.Component {
 
     componentDidMount() {
         const { createElection, getElectionTemplateData } = this.props;
+        debugger;
         createElection(this.props.location.state.name);
-        getElectionTemplateData(this.props.location.state.id);
+        if (this.props.location.state.id) {
+            getElectionTemplateData(this.props.location.state.id);
+        }
         this.setState({
             moduleId: this.props.location.state.id
         });
@@ -282,109 +269,97 @@ class CreateElection extends React.Component {
             }
         }
         if (activeStep === 2) {
-
             if (this.props.new_election_module.electionConfig.length > 0 && this.props.new_election_module.electionConfig.length !== undefined) {
+
+                var formStatus = {
+                    errorTextCalType: 'emptyField',
+                    errorTextSecurityDepositeRpp: 'emptyField',
+                    errorTextSecurityDepositeAmountRpp: 'emptyField',
+                    errorTextSecurityDepositeIg: 'emptyField',
+                    errorTextSecurityDepositeAmountIg: 'emptyField',
+                    errorTextNominationSubmision: 'emptyField',
+                    errorTextObjection: 'emptyField',
+                    errorTextAlliance: 'emptyField',
+                    errorTextEligibility: 'emptyField',
+                }
+
                 for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
-                        if (this.props.new_election_module.electionConfig[i].id ===  "authority" && this.props.new_election_module.electionConfig[i].value !==  "1") {
-                            this.setState({errorTextAuthority:''});
-                            goNext = true;
+                    switch (this.props.new_election_module.electionConfig[i].electionModuleConfigId) {
+                        case 'fe2c2d7e-66de-406a-b887-1143023f8e72'://Security Deposit RPP
+                            for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+                                if (this.props.new_election_module.electionConfig[i].electionModuleConfigId === 'fe2c2d7e-66de-406a-b887-1143023f8e72' && this.props.new_election_module.electionConfig[i].value === 'No') {
+                                    formStatus.errorTextSecurityDepositeAmountRpp = '';
+                                }
+                            }
+                            formStatus.errorTextSecurityDepositeRpp = '';
                             break;
-                        }else{
-                            this.setState({errorTextAuthority:'emptyField'});
-                            goNext = false;
-                        }
-                }
-                for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
-                        if (this.props.new_election_module.electionConfig[i].value==='pure_vote_based' || this.props.new_election_module.electionConfig[i].value==='pure_prefrence_based' || this.props.new_election_module.electionConfig[i].value==='vote_and_prefrence') {
-                            this.setState({errorTextCalType:''});
-                            goNext = true;
+                        case '123213'://Security Deposit Amount RPP
+                            formStatus.errorTextSecurityDepositeAmountRpp = '';
                             break;
-                        }else{
-                            this.setState({errorTextCalType:'emptyField'});
-                            goNext = false;
-                        }
+                        case 'fe2c2d7e-66de-406a-b887-1143023f8e54'://Security Deposit IG
+                            for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
+                                if (this.props.new_election_module.electionConfig[i].electionModuleConfigId === 'fe2c2d7e-66de-406a-b887-1143023f8e54' && this.props.new_election_module.electionConfig[i].value === 'No') {
+                                    formStatus.errorTextSecurityDepositeAmountIg = '';
+                                }
+                            }
+                            formStatus.errorTextSecurityDepositeIg = '';
+                            break;
+                        case '1232132'://Security Deposit Amount IG
+                            formStatus.errorTextSecurityDepositeAmountIg = '';
+                            break;
+                        case '1243123'://Nomination Submission
+                            formStatus.errorTextNominationSubmision = '';
+                            break;
+                        case '253454355'://Objections
+                            formStatus.errorTextObjection = '';
+                            break;
+                        case '142343242343'://Allience
+                            formStatus.errorTextAlliance = '';
+                            break;
+                        case '15990459-2ea4-413f-b1f7-29a138fd7a97'://Calculation type
+                            formStatus.errorTextCalType = '';
+                            break;
+                    }
+                    if (this.props.new_election_module.eligibilityCheckList.length > 0) {
+                        formStatus.errorTextEligibility = '';
+                    } else {
+                        formStatus.errorTextEligibility = 'emptyField';
+                    }
                 }
-                for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
-                    debugger;
-                    if (this.props.new_election_module.electionConfig[i].id==='securityDeposite') {
-                        this.setState({errorTextSecurityDeposite:''});
-                        goNext = true;
-                        break;
-                        debugger;
-                    }else{
-                        debugger;
-                        this.setState({errorTextSecurityDeposite:'emptyField'});
+                this.setState({ formStatus });
+
+                Object.values(formStatus).map((item) => {
+                    console.log(item)
+                    if (item === 'emptyField') {
                         goNext = false;
                     }
                 }
-                for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
-                    if (this.props.new_election_module.electionConfig[i].id==='securityDepositeAmount') {
-                        this.setState({errorTextSecurityDepositeAmount:''});
-                        goNext = true;
-                        break;
-                    }else{
-                        this.setState({errorTextSecurityDepositeAmount:'emptyField'});
-                        goNext = false;
-                    }
-                }
-                for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
-                    if (this.props.new_election_module.electionConfig[i].id==='nominationSubmision') {
-                        this.setState({errorTextNominationSubmision:''});
-                        goNext = true;
-                        break;
-                    }else{
-                        this.setState({errorTextNominationSubmision:'emptyField'});
-                        goNext = false;
-                    }
-                }
-                for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
-                    if (this.props.new_election_module.electionConfig[i].id==='Objections') {
-                        this.setState({errorTextObjection:''});
-                        goNext = true;
-                        break;
-                    }else{
-                        this.setState({errorTextObjection:'emptyField'});
-                        goNext = false;
-                    }
-                }
-                for (let i = 0; i < this.props.new_election_module.electionConfig.length; i++) {
-                    if (this.props.new_election_module.electionConfig[i].id==='Alliance') {
-                        this.setState({errorTextAlliance:''});
-                        goNext = true;
-                        break;
-                    }else{
-                        this.setState({errorTextAlliance:'emptyField'});
-                        goNext = false;
-                    }
-                }
-                if (this.props.new_election_module.eligibilityCheckList.length>0) {
-                    this.setState({errorTextEligibility:''});
-                    goNext = true;
-                }else{
-                    this.setState({errorTextEligibility:'emptyField'});
-                    goNext = false;
-                }
+                )
 
                 if (goNext) {
-                    (this.state.moduleId) ? this.props.editElection(this.state.moduleId,this.props.new_election_module) : this.props.submitElection(this.props.new_election_module);                const { openSnackbar } = this.props;
-        
+                    this.state.moduleId ? this.props.editElection(this.state.moduleId, this.props.new_election_module) : this.props.submitElection(this.props.new_election_module);
                     this.setState({
                         goToHome: true
                     });
                     return;
                 }
-                
-            }else{
-                this.setState({errorTextAuthority:'emptyField'});
-                this.setState({errorTextCalType:'emptyField'});
-                this.setState({errorTextSecurityDeposite:'emptyField'});
-                this.setState({errorTextObjection:'emptyField'});
-                this.setState({errorTextAlliance:'emptyField'});
-                this.setState({errorTextNominationSubmision:'emptyField'});
-                this.setState({errorTextEligibility:'emptyField'});
+
+            } else {
+                var formStatus = {
+                    errorTextCalType: 'emptyField',
+                    errorTextSecurityDepositeRpp: 'emptyField',
+                    errorTextSecurityDepositeAmountRpp: 'emptyField',
+                    errorTextSecurityDepositeIg: 'emptyField',
+                    errorTextSecurityDepositeAmountIg: 'emptyField',
+                    errorTextNominationSubmision: 'emptyField',
+                    errorTextObjection: 'emptyField',
+                    errorTextAlliance: 'emptyField',
+                    errorTextEligibility: 'emptyField',
+                }
+                this.setState({ formStatus });
                 goNext = false;
             }
-            
+
         }
         if (goNext) {
             this.setState({
@@ -406,6 +381,11 @@ class CreateElection extends React.Component {
             activeStep: state.activeStep - 1,
         }));
     };
+    handleDone = () => {
+        this.setState({
+            goToHome: true
+        });
+    };
 
     render() {
         const { classes } = this.props;
@@ -425,7 +405,7 @@ class CreateElection extends React.Component {
                     <Grid item xs={12}>
                         <div>
                             {this.state.goToHome ? (
-                                <Redirect to="/admin/home" />
+                                <Redirect to="/admin/create-election-home" />
                             ) : (
                                     <Paper className={classes.pageContent} elevation={1}>
                                         <Stepper activeStep={activeStep}>
@@ -458,7 +438,9 @@ class CreateElection extends React.Component {
                                             >
                                                 Cancel
                                             </Button>
-                                            {(this.state.moduleId && activeStep === 2) ?
+                                            {/* {((this.props.electionId) && this.props.check !== 'approve' && this.props.check !== 'reject') ? */}
+
+                                            {(this.state.moduleId && activeStep === 2 && this.props.location.state.check !== 'approve' && this.props.location.state.check !== 'reject') ?
                                                 <Button
                                                     variant="contained"
                                                     color="default"
@@ -471,7 +453,7 @@ class CreateElection extends React.Component {
                                                 </Button> : ''
 
                                             }
-                                            {(this.state.moduleId) ?
+                                            {(this.state.moduleId && this.props.location.state.check !== 'approve' && this.props.location.state.check !== 'reject') ?
                                                 <Button
                                                     variant="contained"
                                                     color="primary"
@@ -480,15 +462,30 @@ class CreateElection extends React.Component {
                                                 >
                                                     {activeStep === steps.length - 1 ? 'Update' : 'Next'}
                                                 </Button>
-                                                :
-                                                <Button
-                                                    variant="contained"
-                                                    color="primary"
-                                                    onClick={this.handleNext}
-                                                    className={classes.button}
-                                                >
-                                                    {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
-                                                </Button>
+                                                : (this.props.location.state.check === 'approve' && activeStep === steps.length - 1) ?
+                                                    <Grid item xs="1">
+                                                        <Button style={{ marginLeft: 150, marginTop: -56 }} color="primary" onClick={this.handleDone} className={classes.button}>
+                                                            Done
+                                                    </Button>
+                                                    </Grid>
+                                                    : (this.props.location.state.check === 'reject') ?
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                            onClick={this.handleNext}
+                                                            className={classes.button}
+                                                        >
+                                                            {activeStep === steps.length - 1 ? 'Update' : 'Next'}
+                                                        </Button>
+                                                        :
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                            onClick={this.handleNext}
+                                                            className={classes.button}
+                                                        >
+                                                            {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
+                                                        </Button>
                                             }
                                         </div>
                                         <Dialog
@@ -533,10 +530,8 @@ CreateElection.propTypes = {
 
 
 const mapStateToProps = ({ ElectionModel, Election }) => {
-    const { openSnackbar } = Election;
-
     const { new_election_module, deleteElectionModule } = ElectionModel;
-    return { new_election_module, openSnackbar, deleteElectionModule };
+    return { new_election_module, deleteElectionModule };
 };
 
 const mapActionsToProps = {
@@ -544,7 +539,6 @@ const mapActionsToProps = {
     updateElection,
     submitElection,
     editElection,
-    openSnackbar,
     getElectionTemplateData,
     deleteElectionModule
 };

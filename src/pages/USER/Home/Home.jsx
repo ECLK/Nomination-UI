@@ -10,6 +10,8 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import ObjectionPanel from '../../../components/Objection/SubmittedObjectionList';
+import { connect } from 'react-redux';
+import { getElectionTimeLine } from '../../../modules/election/state/ElectionAction';
 
 //import ObjectionPanel from '../../../components/Objection/ObjectionList';
 
@@ -51,15 +53,16 @@ class Home extends React.Component {
 
     componentDidMount() {
         // get election details
-        Axios.get(`elections/${sessionStorage.getItem('election_id')}`)
-        .then(res => {
-            const election = res.data;
-            this.setState({ election });
-        });
+        this.props.getElectionTimeLine(sessionStorage.getItem('election_id'));
+        // Axios.get(`elections/${sessionStorage.getItem('election_id')}`)
+        // .then(res => {
+        //     const election = res.data;
+        //     this.setState({ election });
+        // });
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes,TimeLineData } = this.props;
 
         return (
             <div className={classes.root}>
@@ -69,7 +72,7 @@ class Home extends React.Component {
                 <div className={classes.content}>
                     {/* all the content should go here.. */}
 
-                    <InfoBanner election={this.state.election}></InfoBanner>
+                    <InfoBanner election={TimeLineData}></InfoBanner>
                     
                 </div>
 
@@ -83,4 +86,16 @@ Home.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Home);
+// export default withStyles(styles)(Home);
+
+
+const mapStateToProps = ({ Election }) => {
+    const TimeLineData = Election.ElectionTimeLineData;
+    return {TimeLineData}
+};
+
+const mapActionsToProps = {
+    getElectionTimeLine
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Home));

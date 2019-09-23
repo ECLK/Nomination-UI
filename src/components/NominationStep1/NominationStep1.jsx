@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import { getNominationCandidates } from '../../modules/nomination/state/NominationAction';
 import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
+import { de } from 'date-fns/locale';
 
 
 

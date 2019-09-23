@@ -109,15 +109,14 @@ class DivisionConfig extends React.Component {
             }
             this.props.electionChanged({ ...this.props.electionModule, [name]: event.target.value });
         };
-        console.log("sssss",this.state.errorTextDivisionCode);
-        debugger;
+        
         return (
             <div className={classes.root}>
 
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
                         <FormControl  error={(this.props.errorTextDivisionCommonName) ? true : false} className={classes.formControl}>
-                            <InputLabel className={classes.textField} htmlFor="common-name">Division Common Name</InputLabel>
+                            <InputLabel className={classes.textField} htmlFor="common-name">Unit Common Name</InputLabel>
                            <Input className={classes.textField} aria-describedby="component-error-text" id="common-name" value={this.props.electionModule['divisionCommonName']} onChange={handleChange('divisionCommonName')} />
                            <FormHelperText>{(this.props.errorTextDivisionCommonName) ? 'This field is required!' : '(e.g. Province)'}</FormHelperText>
                         </FormControl>
@@ -127,14 +126,14 @@ class DivisionConfig extends React.Component {
                     </Grid>
                     <Grid item xs={2}>
                         <FormControl error={(this.state.errorTextDivisionName==='emptyField') ? true : false} className={classes.formControl}>
-                            <InputLabel htmlFor="common-name">Division Name </InputLabel>
+                            <InputLabel htmlFor="common-name">Unit Name </InputLabel>
                             <Input id="common-name" value={this.state.divisionName} onChange={handleChange('divisionName')} />
                             <FormHelperText>{(this.state.errorTextDivisionName==='emptyField') ? 'This field is required!' : ''}</FormHelperText>
                         </FormControl>
                     </Grid>
                     <Grid item xs={2}>
                         <FormControl error={(this.state.errorTextDivisionCode==='emptyField') ? true : false} className={classes.formControl}>
-                            <InputLabel htmlFor="common-name">Division Code</InputLabel>
+                            <InputLabel htmlFor="common-name">Unit Code</InputLabel>
                             <Input id="common-name" value={this.state.divisionCode} onChange={handleChange('divisionCode')} />
                             <FormHelperText>{(this.state.errorTextDivisionCode==='emptyField') ? 'This field is required!' : ''}</FormHelperText>
                         </FormControl>
@@ -142,7 +141,7 @@ class DivisionConfig extends React.Component {
                     <Grid item xs={2}>
                         <FormControl error={(this.state.errorTextNoOfCandidates==='emptyField') ? true : false} className={classes.formControl}>
                             <InputLabel htmlFor="common-name">No of Candidates</InputLabel>
-                            <Input id="common-name" value={this.state.noOfCandidates} onChange={handleChange('noOfCandidates')} />
+                            <Input type="number" id="common-name" value={this.state.noOfCandidates} onChange={handleChange('noOfCandidates')} />
                             <FormHelperText>{(this.state.errorTextNoOfCandidates==='emptyField') ? 'This field is required!' : ''}</FormHelperText>
                         </FormControl>
                     </Grid>

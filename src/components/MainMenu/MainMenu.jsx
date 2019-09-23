@@ -74,43 +74,46 @@ class ResponsiveDrawer extends React.Component {
   };
 
   render() {
+    debugger;
     const { classes, theme } = this.props;
     if (this.state.goToLogin) return <Redirect to="/login" />;
+    var cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)scope\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    var scopes = decodeURIComponent(cookieValue).split(/ +/g)
+    var indexNomination = scopes.findIndex(x => x === 'nomination_edit');
 
+    if(scopes.length>1){
+      var tempNomination = scopes[indexNomination];
+      scopes[indexNomination] = scopes[0];
+      scopes[0] = tempNomination;
+    }
+console.log("ffffffffffffffffff",scopes);
     var user_role = sessionStorage.getItem('role');
 
+    const list = scopes.map((scope) => {
+      switch (scope) {
+        case "nomination_edit":
+          return <div>
+            <ListItem button key="Nomination" component={Link} to='/create-nomination' selected={this.props.location.pathname === "/create-nomination"} >
+              <ListItemIcon><HomeIcon /></ListItemIcon>
+              <ListItemText primary="Create Nomination" />
+            </ListItem>
+          </div>
+        case "objection_edit":
+          return <ListItem button key="Objection" component={Link} to='/objection' selected={this.props.location.pathname === "/objection"}>
+            <ListItemIcon><ObjectionIcon /></ListItemIcon>
+            <ListItemText primary="Create Objection" />
+          </ListItem>
+      }
+    });
 
     const drawer = (
       <div>
         <div className={classes.toolbar} />
-        <Divider />
-        <List>
-          <ListItem button key="Home" component={Link} to='/home' selected={this.props.location.pathname === "/home"} >
-            <ListItemIcon><HomeIcon /></ListItemIcon>
-            <ListItemText primary="Home" />
-          </ListItem>
-          <ListItem button key="Nomination" component={Link} to='/create-nomination' selected={this.props.location.pathname === "/create-nomination"} >
-            <ListItemIcon><HomeIcon /></ListItemIcon>
-            <ListItemText primary="Create Nomination" />
-          </ListItem>
-          {/* <ListItem button key="Nomination" component={Link} to='/nomination' selected={this.props.page === "Nomination"} >
-              <ListItemIcon><NominationIcon /></ListItemIcon>
-              <ListItemText primary="Nomination" />
-            </ListItem> */}
-          <ListItem button key="Objection" component={Link} to='/objection' selected={this.props.location.pathname === "/objection"}>
-            <ListItemIcon><ObjectionIcon /></ListItemIcon>
-            <ListItemText primary="Create Objection" />
-          </ListItem>
-
-        </List>
-        <Divider />
-        <List>
-          <ListItem button key="Profile" component={Link} to='/profile' selected={this.props.location.pathname === "/profile"}>
-            <ListItemIcon><ProfileIcon /></ListItemIcon>
-            <ListItemText primary="Profile" />
-          </ListItem>
-
-        </List>
+        <ListItem button key="Home" component={Link} to='/home' selected={this.props.location.pathname === "/home"} >
+          <ListItemIcon><HomeIcon /></ListItemIcon>
+          <ListItemText primary="Home" />
+        </ListItem>
+        {list}
       </div >
     );
 

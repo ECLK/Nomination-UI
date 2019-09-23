@@ -4,9 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AdminMenu from '../../components/AdminMenu/AdminMenu';
 import ActiveElectionForm from './ActiveElectionForm';
-import { API_BASE_URL } from "../../config.js";
-import axios from 'axios';
-
+import { handleChangeElectionData, getFieldOptions,getCallElectionData } from './state/ElectionAction';
+import { connect } from 'react-redux';
 
 const drawerWidth = 240;
 
@@ -88,18 +87,23 @@ class Dashboard extends React.Component {
     state = {
         open: true,
         nominations: [],
-        electionId:''
-
+        electionId: '',
     };
-    
-    
-      componentDidMount() {
-        axios.get(`${API_BASE_URL}/nominations/1/candidates`)
-          .then(res => {
-            const nominations = res.data;
-            this.setState({ nominations });
-          })
-      }
+
+    componentDidMount() {
+        const { handleChangeElectionData,getCallElectionData } = this.props;
+        if(this.props.location.state){
+            getCallElectionData(this.props.location.state.id,this.props.location.state.name,this.props.location.state.moduleId);
+        }
+
+        const newElectionModule = { ...this.props.CallElectionData };
+        if (this.props.location.state) {
+            newElectionModule["name"] = this.props.location.state.name;
+            newElectionModule["module_id"] = this.props.location.state.moduleId;
+        }
+        handleChangeElectionData(newElectionModule);
+        this.props.getFieldOptions(this.props.location.state.moduleId);
+    }
 
     handleDrawerOpen = () => {
         this.setState({ open: true });
@@ -111,13 +115,11 @@ class Dashboard extends React.Component {
 
     render() {
         const { classes } = this.props;
-
         return (
             <div className={classes.root}>
                 <CssBaseline />
                 <AdminMenu title="Election Commission of Sri Lanka"></AdminMenu>
-                <ActiveElectionForm moduleId={(this.props.location.state) ? this.props.location.state.moduleId : ''} electionId={(this.props.location.state) ? this.props.location.state.id : ''} check={(this.props.location.state) ? this.props.location.state.check : ''} className={classes.electionForm}  title="Election Commission of Sri Lanka"></ActiveElectionForm>
-
+                <ActiveElectionForm check={(this.props.location.state && this.props.location.state.check) ? this.props.location.state.check : ''} moduleId={(this.props.location.state) ? this.props.location.state.moduleId : ''} electionId={(this.props.location.state) ? this.props.location.state.id : ''} check={(this.props.location.state) ? this.props.location.state.check : ''} className={classes.electionForm} title="Election Commission of Sri Lanka"></ActiveElectionForm>
             </div>
         );
     }
@@ -127,9 +129,18 @@ Dashboard.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Dashboard);
+const mapStateToProps = ({ Election }) => {
+    const CallElectionData = Election.CallElectionData;
+    return { CallElectionData }
+};
 
+const mapActionsToProps = {
+    handleChangeElectionData,
+    getFieldOptions,
+    getCallElectionData
+};
 
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Dashboard));
 
 
 

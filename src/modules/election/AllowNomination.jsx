@@ -2,14 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import MainMenu from '../../components/MainMenu/MainMenu';
-import Axios from 'axios';
+import AdminMenu from '../../components/AdminMenu/AdminMenu';
 import CheckboxTable from '../../components/CheckboxTable/CheckboxTable';
-import { Button, FormGroup, Paper, Card, CardContent, CardActionArea, CardActions } from '@material-ui/core';
+import { CardContent } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
+import { getFieldOptions } from './state/ElectionAction';
 import { connect } from 'react-redux';
-
-
 
 const styles = theme => ({
     content: {
@@ -41,16 +39,12 @@ class AllowNomination extends React.Component {
         columnHeaders: [],
     };
 
-  
-
     handleSubmit = (e) => {
         e.preventDefault()
     }
 
-
     render() {
-        const { classes,electionData,values,errorTextElectorates } = this.props;
-        debugger;
+        const { classes,electionData,errorTextElectorates } = this.props;
         let rowHeaders = [{
             id: '1111',
             name: 'United National Party (UNP)'
@@ -88,26 +82,18 @@ class AllowNomination extends React.Component {
             },
         ]
 
-
         return (
 
             <div className={classes.root}>
                 <CssBaseline />
-                <MainMenu title="Election Commission of Sri Lanka" ></MainMenu>
+                <AdminMenu title="Election Commission of Sri Lanka" ></AdminMenu>
                 {(errorTextElectorates) ? <Typography style={{color:'red'}} variant="subtitle1" gutterBottom>Select electorates before finish</Typography> : ''}
                 <div className={classes.content}>
-                    {/* <Card> */}
                         <CardContent>
-                            {/* all the content should go here.. */}
                             <form ref="form" onSubmit={this.handleSubmit}>
-                                <CheckboxTable title="Select Electorates" data={nomination_setup} cols={values.columnHeaders} rows={rowHeaders}></CheckboxTable>
-                                {/* <div className={classes.buttons}>
-                                    <Button variant="contained" type="small" color="primary" className={classes.button} color="primary">Cancel</Button>
-                                    <Button variant="contained" type="submit" color="primary" className={classes.button} color="primary">Submit</Button>
-                                </div> */}
+                                <CheckboxTable title="Select Electorates" data={nomination_setup}  rows={rowHeaders}></CheckboxTable>
                             </form>
                         </CardContent>
-                    {/* </Card> */}
                 </div>
             </div >
         );
@@ -124,6 +110,10 @@ const mapStateToProps = ({ Election }) => {
 
     return {  electionData,CallElectionData }
   };
+
+const mapActionsToProps = {
+    getFieldOptions
+  };
   
   
-export default connect(mapStateToProps)(withStyles(styles)(AllowNomination));
+export default connect(mapStateToProps,mapActionsToProps)(withStyles(styles)(AllowNomination));

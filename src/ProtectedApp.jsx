@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Login from "./pages/Login/Login";
+import SelectElection from "./pages/SelectElection/SelectElection";
 import NotifierRedux from './components/NotifierRedux';
 
 // import NominationForm from 'pages/USER/NominationForm/NominationForm';
@@ -8,9 +9,11 @@ import NominationForm from "./modules/nomination/NominationForm";
 
 import Home from "./pages/USER/Home/Home";
 import CreateNomination from "./modules/nomination/CreateNomination";
+import NominationPayment from "./modules/nomination/NominationPayment";
+
 
 import Objection from "./pages/USER/Objection/Objection";
-import Profile from "./pages/USER/Profile/Profile";
+import Profile from "./modules/profile/Profile";
 
 import Admin_home from "./pages/ADMIN/Home/Home";
 import CreateElectionCard from "./pages/ADMIN/createElection";
@@ -25,89 +28,93 @@ import ActiveElectionForm from "./modules/election/ActiveElectionPage";
 // import NominationReview from 'pages/ADMIN/Nomination_review/Nomination_review';
 import NominationReview from "./modules/nomination/Nomination_review";
 import PaymentReview from "./modules/payment/Payment_review";
+import TemplateReview from "./modules/election-model/Template_review";
 import ObjectionReview from "./modules/objections/Objection_review";
 import ElectionReview from "./pages/ADMIN/Election_review/Election_review";
 
 import CreateElection from "./modules/election-model/CreateElection";
 import ElectionProcessReview from './modules/election/Election_process_review';
 import ElectionProcessReviewDetails from './modules/election/Election_process_review_details';
+import TemplateReviewData from './modules/election-model/Template_review_detail';
 
 
 export default class Protected extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      isLoggedIn: false
-    };
+    // this.state = {
+    //   isLoggedIn: false
+    // };
 
     // dummy login process just to determine the logged in user role as 'user' or 'admin'
-    if (sessionStorage.getItem("role") !== null) {
-      if (sessionStorage.getItem("role").includes("user")) {
-        this.state.isLoggedIn = true;
-      } else if (sessionStorage.getItem("role").includes("admin")) {
-        this.state.isLoggedIn = true;
-      } else if (sessionStorage.getItem("ig_role").includes("ig_role")) {
-        this.state.isLoggedIn = true;
-      } else if (sessionStorage.getItem("party_user").includes("party_user")) {
-        this.state.isLoggedIn = true;
-      } else if (sessionStorage.getItem("role").includes("cg_user")) {
-        this.state.isLoggedIn = true;
-      } else if (sessionStorage.getItem("role").includes("ac_user")) {
-        this.state.isLoggedIn = true;
-      }
-    }
+    // if (sessionStorage.getItem("role") !== null) {
+    //   if (sessionStorage.getItem("role").includes("user")) {
+    //     this.state.isLoggedIn = true;
+    //   } else if (sessionStorage.getItem("role").includes("admin")) {
+    //     this.state.isLoggedIn = true;
+    //   } else if (sessionStorage.getItem("ig_role").includes("ig_role")) {
+    //     this.state.isLoggedIn = true;
+    //   } else if (sessionStorage.getItem("party_user").includes("party_user")) {
+    //     this.state.isLoggedIn = true;
+    //   } else if (sessionStorage.getItem("role").includes("cg_user")) {
+    //     this.state.isLoggedIn = true;
+    //   } else if (sessionStorage.getItem("role").includes("ac_user")) {
+    //     this.state.isLoggedIn = true;
+    //   }
+    // }
   }
 
   render() {
+    var cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)scope\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    var scopes = decodeURIComponent(cookieValue).split(/ +/g)
+    var indexNomination = scopes.findIndex(x => x === 'nomination_edit');
+console.log("indexUserhome",indexNomination);
     return (
       /* app level routers needs to handle here*/
-
-      /* 
-            For user routes:- ["username": "user"]
-            For admin routes:- ["username": "admin"]
-            PS: anything on password field.
-            */
       <div>
         <NotifierRedux />
         <Switch>
-          <Redirect exact from="/" to="/home" />
+          <Redirect exact from="/" to="/login" />
           <Route
             path="/home"
-            component={this.state.isLoggedIn ? Home : Login}
+            component={Home}
           />
+          
+          <Route path="/select-election" component={SelectElection} />
           <Route path="/login" component={Login} />
           {/* <Route path='/nomination' component={Nomination} /> */}
           <Route
             path="/objection"
-            component={this.state.isLoggedIn ? Objection : Login}
+            component={Objection}
           />
           <Route
             path="/profile"
-            component={this.state.isLoggedIn ? Profile : Login}
+            component={Profile}
           />
           <Route
             path="/create-nomination"
-            component={this.state.isLoggedIn ? CreateNomination : Login}
+            component={CreateNomination}
           />
 
           <Route
             path="/nomination"
-            component={this.state.isLoggedIn ? NominationForm : Login}
+            component={NominationForm}
           />
-
-          <Redirect exact from="/admin" to="/admin/home" />
+          {
+            indexNomination!==-1 ? <Redirect exact from="/admin" to="/select-election" /> : <Redirect exact from="/admin" to="/admin/home" />
+          }
+          
           <Route
             path="/admin/home"
-            component={this.state.isLoggedIn ? Admin_home : Login}
+            component={Admin_home}
           />
           <Route
             path="/admin/create-election-home"
-            component={this.state.isLoggedIn ? CreateElectionCard : Login}
+            component={CreateElectionCard}
           />
           <Route
             path="/admin/call-election"
-            component={this.state.isLoggedIn ? CallElectionCard : Login}
+            component={CallElectionCard}
           />
           {/* <Route
             path="/admin/call-election"
@@ -115,46 +122,54 @@ export default class Protected extends Component {
           /> */}
           <Route
             path="/admin/candidate-config"
-            component={this.state.isLoggedIn ? Admin_CandidateConfig : Login}
+            component={Admin_CandidateConfig}
           />
 
           <Route
             path="/admin/create-election"
-            component={this.state.isLoggedIn ? CreateElection : Login}
+            component={CreateElection}
           />
 
           <Route
             path="/admin/nominationProcess-config"
-            component={
-              this.state.isLoggedIn ? Admin_NominationProcessConfig : Login
-            }
+            component={Admin_NominationProcessConfig}
           />
           <Route
             path="/admin/active-election"
-            component={this.state.isLoggedIn ? ActiveElectionForm : Login}
+            component={ActiveElectionForm}
           />
-
+          <Route
+            path="/admin/template-review-detail"
+            component={TemplateReviewData}
+          />
           <Route
             path="/admin/nomination-review"
-            component={this.state.isLoggedIn ? NominationReview : Login}
+            component={NominationReview}
           />
           <Route
             path="/admin/payment-review"
-            component={this.state.isLoggedIn ? PaymentReview : Login}
+            component={PaymentReview}
+          />
+          <Route
+            path="/admin/template-review"
+            component={TemplateReview}
           />
           <Route
             path="/admin/objection-review"
-            component={this.state.isLoggedIn ? ObjectionReview : Login}
+            component={ObjectionReview}
           />
           <Route
             path="/admin/election-review"
-            component={this.state.isLoggedIn ? ElectionReview : Login}
+            component={ElectionReview}
           />
           <Route path='/election-process-review'
-            exact component={(this.state.isLoggedIn) ? ElectionProcessReview : Login}
+            exact component={ElectionProcessReview}
           />
           <Route
-            path='/admin/election-process-review-detail' component={(this.state.isLoggedIn) ? ElectionProcessReviewDetails : Login}
+            path='/admin/election-process-review-detail/:electionId/:moduleId/:check' component={ElectionProcessReviewDetails}
+          />
+          <Route
+            path='/admin/nomination-payment-list' component={NominationPayment}
           />
 
           {/* <Route path='/nomination' component={(this.state.isLoggedIn) ? NominationForm : Login}/>
