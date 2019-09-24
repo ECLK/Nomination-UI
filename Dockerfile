@@ -4,7 +4,7 @@ ADD ./src /app/src
 COPY package*.json /app/
 COPY ./public /app/public
 WORKDIR /app
-RUN npm install
+RUN npm ci
 RUN npm run build
 
 FROM nginx:1.15
