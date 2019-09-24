@@ -28,6 +28,7 @@ import axios from "axios";
 import { openSnackbar } from '../../election/state/ElectionAction';
 import moment from "react-moment";
 import {saveAs} from 'file-saver';
+import { de } from "date-fns/locale";
 
 const nominationLoaded = (getNominations) => {
   return {
@@ -117,6 +118,7 @@ export function getTeams() {
       const partyList = response.data;
        dispatch(partyListLoaded(partyList));
     }).catch(err => {
+      debugger;
           console.log(err)
     });
   };
