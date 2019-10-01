@@ -74,6 +74,7 @@ console.log("indexUserhome",indexNomination);
       <div>
         <NotifierRedux />
         <Switch>
+          <Redirect exact from="/admin" to="/admin/home" />
           {/*<Redirect exact from="/" to="/login" />*/}
            {
             indexNomination!==-1 ? <Redirect exact from="/admin" to="/select-election" /> : <Redirect exact from="/admin" to="/admin/home" />
