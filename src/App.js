@@ -47,6 +47,10 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
+    
+    if (!getCookie('somekey')) {
+      window.location.href = "https://nominations.ecdev.opensource.lk/signin"
+    }
     this.state = {
       user: {}
     };
