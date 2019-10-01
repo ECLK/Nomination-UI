@@ -77,7 +77,7 @@ console.log("indexUserhome",indexNomination);
           <Redirect exact from="/" to="/admin/home" />
           {/*<Redirect exact from="/" to="/login" />*/}
            {
-            indexNomination!==-1 ? <Redirect exact from="/admin" to="/select-election" /> : <Redirect exact from="/admin" to="/admin/home" />
+            indexNomination!==-1 ? <Redirect exact from="/" to="/select-election" /> : <Redirect exact from="/" to="/admin/home" />
           }
           <Route
             path="/home"
