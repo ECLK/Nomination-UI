@@ -75,6 +75,9 @@ console.log("indexUserhome",indexNomination);
         <NotifierRedux />
         <Switch>
           {/*<Redirect exact from="/" to="/login" />*/}
+           {
+            indexNomination!==-1 ? <Redirect exact from="/admin" to="/select-election" /> : <Redirect exact from="/admin" to="/admin/home" />
+          }
           <Route
             path="/home"
             component={Home}
@@ -100,9 +103,7 @@ console.log("indexUserhome",indexNomination);
             path="/nomination"
             component={NominationForm}
           />
-          {
-            indexNomination!==-1 ? <Redirect exact from="/admin" to="/select-election" /> : <Redirect exact from="/admin" to="/admin/home" />
-          }
+         
           
           <Route
             path="/admin/home"
