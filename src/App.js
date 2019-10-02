@@ -47,6 +47,11 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
+
+    if (!getCookie('somekey')) {
+      window.location.href = "http://localhost:3000/signin"
+    }
+
     this.state = {
       user: {}
     };

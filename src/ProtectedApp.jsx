@@ -74,7 +74,7 @@ console.log("indexUserhome",indexNomination);
       <div>
         <NotifierRedux />
         <Switch>
-          <Redirect exact from="/" to="/login" />
+          {/* <Redirect exact from="/" to="/signin" /> */}
           <Route
             path="/home"
             component={Home}

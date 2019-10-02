@@ -1,4 +1,5 @@
 const proxy = require('http-proxy-middleware');
+// import {AUTH_APP_URL} from './config.js';
 
 module.exports = function(app) {
   app.use(proxy('/auth/callback', { target: 'http://localhost:3001/' }));
