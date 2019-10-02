@@ -659,7 +659,7 @@ export const createAndDownloadPdf = function createAndDownloadPdf(paymentData) {
     .then(()=> firstAPI.get('fetch-pdf', { responseType: 'blob'}))
     .then((res) => {
       const pdfBlob = new Blob([res.data], { type:'application/pdf' });
-      saveAs(pdfBlob,'newPdf.pdf');
+      saveAs(pdfBlob,'nomination_payslip.pdf');
     })
 }
 //--------------- End of genarate pdf ---------------------------
