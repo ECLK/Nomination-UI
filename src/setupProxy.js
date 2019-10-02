@@ -1,8 +1,8 @@
 const proxy = require('http-proxy-middleware');
-import {AUTH_BASE_URL} from "./config.js";
+const config = require("./config.js");
 
 module.exports = function(app) {
-  app.use(proxy('/auth/callback', { target: AUTH_BASE_URL , logLevel:'debug'}));
-  app.use(proxy('/signin', { target: AUTH_BASE_URL , logLevel:'debug'}));
-  app.use(proxy('/create-pdf', { target: 'http://localhost:5000/' , logLevel:'debug' }));
+  app.use(proxy('/auth/callback', { target: config.AUTH_BASE_URL }));
+  app.use(proxy('/signin', { target: config.AUTH_BASE_URL }));
+  app.use(proxy('/create-pdf', { target: config.PDF_GENARATION_SERVICE_URL }));
 };

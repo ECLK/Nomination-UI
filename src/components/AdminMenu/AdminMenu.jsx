@@ -85,11 +85,17 @@ class ResponsiveDrawer extends React.Component {
     var cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)scope\s*\=\s*([^;]*).*$)|^.*$/, "$1");
     var scopes = decodeURIComponent(cookieValue).split(/ +/g)
     var indexA = scopes.findIndex(x => x === 'election_template_edit');
+    var indexCall = scopes.findIndex(x => x === 'call_election_edit');
+
 
     if(scopes.length>1){
       var temp = scopes[indexA];
+      var temp2 = scopes[0];
+
       scopes[indexA] = scopes[scopes.length - 1];
       scopes[scopes.length - 1] = temp;
+      scopes[0] = scopes[indexCall];
+      scopes[indexCall] = temp2;
     }
     var user_role = sessionStorage.getItem('role');
 
@@ -122,18 +128,23 @@ class ResponsiveDrawer extends React.Component {
             <ListItemIcon><ObjectionIcon /></ListItemIcon>
             <ListItemText primary="Objection Approval" />
           </ListItem>
-        case "payment_approve_edit":
-          return <ListItem button key="Payment_review" component={Link} to='/admin/payment-review'
-            selected={this.props.location.pathname === "/admin/payment-review"}>
-            <ListItemIcon><MoneyIcon /></ListItemIcon>
-            <ListItemText primary="Payment Approval" />
-          </ListItem>
+        // case "payment_approve_edit":
+        //   return <ListItem button key="Payment_review" component={Link} to='/admin/payment-review'
+        //     selected={this.props.location.pathname === "/admin/payment-review"}>
+        //     <ListItemIcon><MoneyIcon /></ListItemIcon>
+        //     <ListItemText primary="Payment Approval" />
+        //   </ListItem>
         case "election_template_approval":
           return <ListItem button key="template_review" component={Link} to='/admin/template-review'
               selected={this.props.location.pathname === "/admin/template-review"}>
           <ListItemIcon><MoneyIcon/></ListItemIcon>
           <ListItemText primary="Election Template Approval"/>
           </ListItem>
+        case "nomination_payment":
+          return <ListItem button key="Payment" component={Link} to='/admin/nomination-payment-list' selected={this.props.location.pathname === "/admin/nomination-payment-list"}>
+          <ListItemIcon><MoneyIcon /></ListItemIcon>
+          <ListItemText primary="Nomination Payment" />
+        </ListItem>
       }
     });
 
@@ -147,14 +158,10 @@ class ResponsiveDrawer extends React.Component {
             <ListItemText primary="Home" />
           </ListItem>
           {list}
-          <ListItem button key="Profile" component={Link} to='/profile' selected={this.props.location.pathname === "/profile"}>
+          {/* <ListItem button key="Profile" component={Link} to='/profile' selected={this.props.location.pathname === "/profile"}>
             <ListItemIcon><ProfileIcon /></ListItemIcon>
             <ListItemText primary="Profile" />
-          </ListItem>
-          <ListItem button key="Payment" component={Link} to='/admin/nomination-payment-list' selected={this.props.location.pathname === "/admin/nomination-payment-list"}>
-            <ListItemIcon><MoneyIcon /></ListItemIcon>
-            <ListItemText primary="Nomination Payment" />
-          </ListItem>
+          </ListItem> */}
         </List>
       </div>
     );
