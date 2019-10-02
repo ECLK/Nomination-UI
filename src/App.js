@@ -49,7 +49,7 @@ class App extends React.Component {
     super(props);
     if (process.env.NODE_ENV === 'production'){
       if (!getCookie('somekey')) {
-        window.location.href = `${process.env.REACT_APP_API_BASE_URL}/signin`
+        window.location.href = `${process.env.REACT_APP_NOMINATION_URL}/signin`
       }
     }else{
       if (!getCookie('somekey')) {
