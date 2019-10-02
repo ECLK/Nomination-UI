@@ -47,10 +47,17 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    
-    if (!getCookie('somekey')) {
-      window.location.href = "https://nominations.ecdev.opensource.lk/signin"
+    if (process.env.NODE_ENV === 'production'){
+      if (!getCookie('somekey')) {
+        window.location.href = `${process.env.REACT_APP_API_BASE_URL}/signin`
+      }
+    }else{
+      if (!getCookie('somekey')) {
+        window.location.href = "http://localhost/signin"
+      }
     }
+
+    
     this.state = {
       user: {}
     };
