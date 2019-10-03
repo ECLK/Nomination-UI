@@ -5,7 +5,7 @@ COPY package*.json /app/
 COPY ./public /app/public
 WORKDIR /app
 RUN npm ci
-ENV REACT_APP_API_BASE_URL=https://apim-gateway.ecsdev.opensource.lk/nominations/0.9
+ENV REACT_APP_API_BASE_URL=https://apim-gateway.ecdev.opensource.lk/nominations/0.9
 ENV REACT_APP_PDF_GENARATION_SERVICE_URL=http://nominations-pdf-20keps.pxe-dev-platformer-1552477983757-1pdna.svc
 ENV REACT_APP_AUTH_BASE_URL=https://authnominations.ecdev.opensource.lk
 ENV REACT_APP_NOMINATION_URL=https://nominations.ecdev.opensource.lk
