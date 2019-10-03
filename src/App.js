@@ -53,7 +53,7 @@ class App extends React.Component {
       }
     }else{
       if (!getCookie('somekey')) {
-        window.location.href = "http://localhost/signin"
+        window.location.href = "http://localhost:3000/signin"
       }
     }
 
