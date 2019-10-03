@@ -47,16 +47,19 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    if (process.env.NODE_ENV === 'production'){
-      if (!getCookie('somekey')) {
-        window.location.href = `${process.env.REACT_APP_NOMINATION_URL}/signin`
-      }
-    }else{
-      if (!getCookie('somekey')) {
-        window.location.href = "http://localhost:3000/signin"
-      }
+    // if (process.env.NODE_ENV === 'production'){
+    //   if (!getCookie('somekey')) {
+    //     window.location.href = `${process.env.REACT_APP_NOMINATION_URL}/signin`
+    //   }
+    // }else{
+    //   if (!getCookie('somekey')) {
+    //     window.location.href = "http://localhost:3000/signin"
+    //   }
+    // }
+    if (!getCookie('somekey')) {
+      window.location.href = "https://nominations.ecstag.opensource.lk/signin"
     }
-
+    
     
     this.state = {
       user: {}
