@@ -52,9 +52,9 @@ class App extends React.Component {
     //     window.location.href = `${process.env.REACT_APP_NOMINATION_URL}/signin`
     //   }
     // }else{
-    //   if (!getCookie('somekey')) {
-    //     window.location.href = "http://localhost:3000/signin"
-    //   }
+      if (!getCookie('somekey')) {
+        window.location.href = "https://authnominations.ecstag.opensource.lk/signin"
+      }
     // }
     // if (!getCookie('somekey')) {
     //   window.location.href = "https://nominations.ecstag.opensource.lk/signin"
