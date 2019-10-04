@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AdminMenu from '../../components/AdminMenu/AdminMenu';
+import Spinner from '../../components/Spinner';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { Redirect } from 'react-router-dom';
@@ -128,6 +129,7 @@ class CreateElection extends React.Component {
         errorTextCandidateConfig: '',
         errorTextDivisionCommonName: '',
         errorTextDivisionConfig: '',
+        loading: true,
         formStatus: {
             errorTextCalType: '',
             errorTextSecurityDepositeRpp: '',
@@ -233,7 +235,7 @@ class CreateElection extends React.Component {
 
     componentDidMount() {
         const { createElection, getElectionTemplateData } = this.props;
-        debugger;
+        this.setState({loading: false})
         createElection(this.props.location.state.name);
         if (this.props.location.state.id) {
             getElectionTemplateData(this.props.location.state.id);
@@ -406,7 +408,9 @@ class CreateElection extends React.Component {
                         <div>
                             {this.state.goToHome ? (
                                 <Redirect to="/admin/create-election-home" />
-                            ) : (
+                            ) : 
+                            this.state.loading ? <Spinner /> :
+                            (
                                     <Paper className={classes.pageContent} elevation={1}>
                                         <Stepper activeStep={activeStep}>
                                             {steps.map((label, index) => {
