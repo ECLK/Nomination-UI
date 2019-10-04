@@ -140,7 +140,7 @@ class ResponsiveDrawer extends React.Component {
           <ListItemIcon><MoneyIcon/></ListItemIcon>
           <ListItemText primary="Election Template Approval"/>
           </ListItem>
-        case "nomination_payment":
+        case "payment_edit":
           return <ListItem button key="Payment" component={Link} to='/admin/nomination-payment-list' selected={this.props.location.pathname === "/admin/nomination-payment-list"}>
           <ListItemIcon><MoneyIcon /></ListItemIcon>
           <ListItemText primary="Nomination Payment" />
