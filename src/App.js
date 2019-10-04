@@ -53,7 +53,7 @@ class App extends React.Component {
     //   }
     // }else{
       if (!getCookie('somekey')) {
-        window.location.href = "https://authnominations.ecstag.opensource.lk/signin"
+        window.location.href = "https://nominations.ecstag.opensource.lk/signin"
       }
     // }
     // if (!getCookie('somekey')) {

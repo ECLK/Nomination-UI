@@ -9,13 +9,13 @@ if (process.env.NODE_ENV === 'production'){
     AUTH_BASE_URL = 'https://authnominations.ecstag.opensource.lk';
 }
 
-// module.exports = {
-//     API_BASE_URL,
-//     PDF_GENARATION_SERVICE_URL,
-//     AUTH_BASE_URL
-// }
-export {
+module.exports = {
     API_BASE_URL,
     PDF_GENARATION_SERVICE_URL,
     AUTH_BASE_URL
 }
+// export {
+//     API_BASE_URL,
+//     PDF_GENARATION_SERVICE_URL,
+//     AUTH_BASE_URL
+// }
