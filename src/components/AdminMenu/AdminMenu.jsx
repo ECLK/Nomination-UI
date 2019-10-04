@@ -84,21 +84,22 @@ class ResponsiveDrawer extends React.Component {
     if (this.state.goToLogin) return <Redirect to="/login" />;
     var cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)scope\s*\=\s*([^;]*).*$)|^.*$/, "$1");
     var scopes = decodeURIComponent(cookieValue).split(/ +/g)
-    var indexA = scopes.findIndex(x => x === 'election_template_edit');
-    var indexCall = scopes.findIndex(x => x === 'call_election_edit');
+    // var indexA = scopes.findIndex(x => x === 'election_template_edit');
+    // var indexCall = scopes.findIndex(x => x === 'call_election_edit');
 
 
-    if(scopes.length>1){
-      var temp = scopes[indexA];
-      var temp2 = scopes[0];
+    // if(scopes.length>1){
+    //   var temp = scopes[indexA];
+    //   var temp2 = scopes[0];
 
-      scopes[indexA] = scopes[scopes.length - 1];
-      scopes[scopes.length - 1] = temp;
-      scopes[0] = scopes[indexCall];
-      scopes[indexCall] = temp2;
-    }
+    //   scopes[indexA] = scopes[scopes.length - 1];
+    //   scopes[scopes.length - 1] = temp;
+    //   scopes[0] = scopes[indexCall];
+    //   scopes[indexCall] = temp2;
+    // }
     var user_role = sessionStorage.getItem('role');
-
+console.log("scopes",scopes);
+    
     //  var scopes = ['home','election_edit','nomination_approval','election_approval','objection_approval','payment_approval','template_edit','profile'];
     const list = scopes.map((scope) => {
       switch (scope) {
