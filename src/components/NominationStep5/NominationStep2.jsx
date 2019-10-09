@@ -19,7 +19,7 @@ import MoneyIcon from '@material-ui/icons/Payment';
 import Security from '@material-ui/icons/Security';
 import Chip from '@material-ui/core/Chip';
 import { connect } from 'react-redux';
-
+import SummeryView from '../SummeryView';
 
 
 import axios from 'axios';
@@ -51,6 +51,9 @@ const styles = theme => ({
   },
   panel_wrapper: {
     "width": '50%',
+  },
+  margin: {
+    marginTop: theme.spacing.unit * 2,
   },
 });
 
@@ -102,14 +105,33 @@ class CustomizedTable extends React.Component {
         );
       };
 
-      
+
+      // var summeryMessage = `You have added ${CandidateList.length} candidates out of ${candidateCount}` + '\n' +`f`; 
+      var summeryMessage = 'You have added ' + CandidateList.length + ' candidates out of ' + candidateCount + ' please add all the candidates before submit';
+      var variant = 'info';
+      if(candidateCount===CandidateList.length){
+        variant = 'success';
+        summeryMessage = 'You have successfully completed the candidate list';
+      }else if (candidateCount<CandidateList.length){
+        variant = 'warning';
+        summeryMessage = 'You have added ' + CandidateList.length + ' candidates out of ' + candidateCount + ' Please recheck candidate list again';
+      }
+      else{
+        variant = 'info';
+      }
       return (
         <div>
            <Grid container spacing={16}>
             <Grid item xs="6">
-            <Typography  component="h2" variant="headline" gutterBottom>
+            
+            <SummeryView
+              variant={variant}
+              className={classes.margin}
+              message={summeryMessage}
+            />
+            {/* <Typography  component="h2" variant="headline" gutterBottom>
              {division} Province
-           </Typography>
+           </Typography> */}
            <Typography  component="h2" variant="subheading" gutterBottom>
             No of Candidate Nominated :
             <Chip style={{paddingLeft: 5,paddingRight:5,fontSize:20}}

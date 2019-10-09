@@ -6,7 +6,13 @@ import FileUpload from "../common/FileUpload";
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import DownloadIcon from '@material-ui/icons/CloudDownload';
+import clsx from 'clsx';
+import TextField from '@material-ui/core/TextField';
+import { createAndDownloadPdfNominationForm } from '../../modules/nomination/state/NominationAction';
 
 const styles = theme => ({
     container: {
@@ -16,7 +22,33 @@ const styles = theme => ({
     divider: {
       marginBottom:30
     },
-
+    card: {
+      minWidth: 275,
+      marginBottom: 30,
+      backgroundColor:'#ebf5fa'
+    },
+    bullet: {
+      display: 'inline-block',
+      margin: '0 2px',
+      transform: 'scale(0.8)',
+    },
+    title: {
+      fontSize: 14,
+    },
+    pos: {
+      marginBottom: 12,
+    },
+    button: {
+      margin: theme.spacing.unit,
+      padding:7
+    },
+    textField: {
+      marginLeft: theme.spacing.unit,
+      marginRight: theme.spacing.unit,
+  },
+  menu: {
+    width: 200,
+},
 });
 
 
@@ -27,6 +59,8 @@ class TextFields extends React.Component {
        const {status} = this.props;
     this.state = {
       status: status,
+      errorTextNominationFormCategory:'',
+      nominationFormCategory:''
     }
  }
 
@@ -35,6 +69,15 @@ class TextFields extends React.Component {
           files: files
         });
   }
+
+  handleChangeElection = name => event => {
+    if (name === 'nominationFormCategory') {
+        this.setState({ errorTextNominationFormCategory: '' });
+    }
+    this.setState({
+        [name]: event.target.value,
+    });
+};
   
 
   handleUpload = (event) => {
@@ -42,6 +85,21 @@ class TextFields extends React.Component {
     const config = {headers: {'Content-Type': 'multipart/form-data'}};
     var filesArray = this.state.files;
   };
+
+  handlePdfGenarationButton = (e) => {
+        const { nominationListForPayment } = this.props;
+        var goNext = true;
+        debugger;
+        if (this.state.nominationFormCategory === null || this.state.nominationFormCategory === "") {
+            this.setState({ errorTextNominationFormCategory: 'emptyField' });
+            goNext = false;
+        }
+        if (goNext) {
+          if(this.state.nominationFormCategory==='presidential'){
+            createAndDownloadPdfNominationForm(this.state.nominationFormCategory,this.state);
+          }
+        }
+      }
 
     render() {
         const {classes,onSelectFiles,doneElement,supportdoc,closeElement} = this.props;
@@ -69,16 +127,16 @@ class TextFields extends React.Component {
           }           
           
             </Grid>
-            <Grid item lg={2}>
+            <Grid item lg={3}>
               <span>
               <Typography variant="subtitle1" >{docs.doc}</Typography>
             </span>
             </Grid>
-            <Grid item lg={1}>
+            <Grid item lg={2}>
               <span ><FileUpload  value={docs.id} doneElement={doneElement} onSelectFiles={onSelectFiles} /></span>
               
             </Grid>
-            <Grid item lg={1}>
+            <Grid style={{marginLeft:-44}} item lg={1}>
             {
              supportdoc.map(sdoc => (
               sdoc.id === docs.id ? 
@@ -100,6 +158,67 @@ class TextFields extends React.Component {
 
       return (
         <div>
+          <Card className={classes.card}>
+            <CardContent>
+              <Typography className={classes.title} color="textSecondary" gutterBottom>
+                Download content
+              </Typography>
+              {/* <Typography variant="h5" component="h2">
+                be
+                {bull}
+                nev
+                {bull}o{bull}
+                lent
+              </Typography> */}
+              {/* <Typography className={classes.pos} color="textSecondary">
+                adjective
+              </Typography> */}
+              <Typography variant="body2" component="p">
+                Please download the appropriate form of nomination for your election.
+                <br />
+                {'You can upload compleated and signed nomination form down below'}
+              </Typography>
+            </CardContent>
+            <CardActions>
+            <Grid container classname={classes.panel_wrapper} spacing={1}>
+                    <Grid item xs="3">
+                        <TextField
+                            id="filled-select-currency-native"
+                            select
+                            label="Election"
+
+                            className={classes.textField}
+                            onChange={this.handleChangeElection('nominationFormCategory')}
+                            error={this.state.errorTextNominationFormCategory === "emptyField"}
+                            helperText={this.state.errorTextNominationFormCategory === "emptyField" ? 'Please select your election' : 'Please select your election'}
+                            SelectProps={{
+                                native: true,
+                                MenuProps: {
+                                    className: classes.menu,
+                                },
+                            }}
+
+                            margin="normal"
+                            variant="filled"
+                        >
+                            <option >
+                                -- Select Election --
+                            </option>
+                            <option  value='presidential'>
+                                    Presidential Election
+                            </option>
+                            
+                        </TextField>
+                        </Grid>
+                        <Grid style={{marginTop:'2.4%',marginLeft:'-4%'}} item xs="3">
+                        <Button variant="contained" onClick = { this.handlePdfGenarationButton }  size="small"  value="Submit&DownloadPdf" color="secondary" className={classes.button}>
+                          <DownloadIcon className={clsx(classes.leftIcon, classes.iconSmall)} />
+                          Download PDF
+                        </Button>
+                        </Grid>
+                    </Grid>
+            </CardActions>
+          </Card>
         {supportingDocItems}
         </div>
         );
