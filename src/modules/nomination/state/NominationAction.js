@@ -663,3 +663,11 @@ export const createAndDownloadPdf = function createAndDownloadPdf(paymentData) {
     })
 }
 //--------------- End of genarate pdf ---------------------------
+export const createAndDownloadPdfNominationForm = function createAndDownloadPdfNominationForm(type,Data) {
+  firstAPI.post(`/create-pdf/${type}`,Data)
+    .then(()=> firstAPI.get('fetch-pdf-presidential', { responseType: 'blob'}))
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type:'application/pdf' });
+      saveAs(pdfBlob,'form_of_nomination.pdf');
+    })
+}

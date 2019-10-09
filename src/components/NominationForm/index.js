@@ -63,6 +63,7 @@ class NominationForm extends React.Component {
     this.state = {
       activeStep: 0,
       completed: {},
+      saveDraft:false,
       props:'',
       language:'',
       depositor:'',
@@ -89,7 +90,7 @@ class NominationForm extends React.Component {
   }
 
    getSteps() {
-      return ['Candidate Details', 'Review', 'Nomination Supporting Documents'];
+      return ['Candidate Details', 'Nomination Supporting Documents', 'Review'];
   }
 
   componentDidMount(){
@@ -214,7 +215,7 @@ class NominationForm extends React.Component {
     }
   };
 
-  componentDidUpdate (){
+  componentDidMount (){
       const { customProps } = this.props;
       axios.get(`${API_BASE_URL}/nominations/${customProps}/support-docs`)
         .then(res => {
@@ -251,9 +252,9 @@ class NominationForm extends React.Component {
         case 0:
           return <NominationStep1 customProps={customProps}/>;
         case 1:
-          return <NominationStep5 division={division} candidateCount={candidateCount} NominationPayments={this.state} />;
+          return <NominationStep3 customProps={customProps} supportdoc={this.state.supportdoc} closeElement={closeElement} doneElement={doneElement} onSelectFiles={this.onSelectFiles}  />;
         case 2:
-        return <NominationStep3 customProps={customProps} supportdoc={this.state.supportdoc} closeElement={closeElement} doneElement={doneElement} onSelectFiles={this.onSelectFiles}  />;
+        return <NominationStep5 division={division} candidateCount={candidateCount} NominationPayments={this.state} />;
         default:
           return 'Unknown step';
       }   
@@ -281,15 +282,18 @@ class NominationForm extends React.Component {
     this.setState({
       activeStep,
     });
-    
+    debugger;
+    if (activeStep === 2){
+      postNominationSupportDocs(this.state,divisionId);   
+    }
     if (activeStep === 0 ){
-       if(candidateCount!==NominationCandidates.length){
-         openSnackbar({ message: 
-         'Please complete the nomination form for all candidates before submission' });
+       if(candidateCount>NominationCandidates.length){
+         openSnackbar({ message: 'Please complete the nomination form for all candidates before submission' });
+        }else if(candidateCount<NominationCandidates.length){
+          openSnackbar({ message: 'You have been exceeded the maximum no of candidates for this nomination. Plese recheck candidate list' });
         }
         else{
             openSnackbar({ message: 'The nomination form has been submitted successfully' });
-           postNominationSupportDocs(this.state,divisionId);   
             this.setState({
               goToHome: true
           });
@@ -320,6 +324,13 @@ class NominationForm extends React.Component {
     this.handleNext();
   };
 
+  handleSaveDraft = () => {
+    const {divisionId,openSnackbar,postNominationSupportDocs}=this.props;
+    postNominationSupportDocs(this.state,divisionId);   
+    openSnackbar({ message: 'Saved as a draft' });
+
+  };
+  
   handleReset = () => {
     this.setState({
       activeStep: 0,
@@ -387,7 +398,12 @@ class NominationForm extends React.Component {
                                             </Grid>
                                         </Grid>
               {/* <Typography className={classes.instructions}>{this.getStepContent(activeStep,this.props)}</Typography> */}
-              <div>
+              
+              
+                
+                <Grid className={classes.paperContent} container spacing={24}>
+                {(activeStep === 0) ?
+                <Grid item xs={12}>
                 <Button
                   disabled={activeStep === 0}
                   onClick={this.handleBack}
@@ -395,7 +411,6 @@ class NominationForm extends React.Component {
                 >
                   Back
                 </Button>
-                {(activeStep !== 2) ?
                 <Button
                   variant="contained"
                   color="primary"
@@ -403,13 +418,48 @@ class NominationForm extends React.Component {
                   className={classes.button}
                 >
                   Next
-                </Button> : ' '
+                </Button></Grid> : (activeStep === 1) ?
+                
+                  <Grid item xs={12}>
+                  <Button
+                  disabled={activeStep === 0}
+                  onClick={this.handleBack}
+                  className={classes.button}
+                >
+                  Back
+                </Button>
+                  <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={this.handleSaveDraft}
+                  className={classes.button}
+                >
+                  Save Draft
+                  </Button>
+                  {/* </Grid>
+                  <Grid item xs={12}> */}
+                  <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={this.handleNext}
+                  className={classes.button}
+                >
+                  Next
+                </Button></Grid>: ''
                 }
               
                     {activeStep === 2 ? 
+                    <Grid item xs={12}>
+                    <Button
+                      disabled={activeStep === 0}
+                      onClick={this.handleBack}
+                      className={classes.button}
+                    >
+                      Back
+                    </Button>
                     <Button variant="contained" color="primary" onClick={this.handleComplete}>
                       Submit For Approval
-                    </Button> : ' '
+                    </Button></Grid> : ' '
                     }
                   
                    {/* {activeStep !== steps.length &&
@@ -422,7 +472,7 @@ class NominationForm extends React.Component {
                       {this.completedSteps() === this.totalSteps() - 1 ? 'Finish' : 'Complete Step'}
                     </Button>
                   ))} */}
-              </div>
+              </Grid>
             </div>
           )}
         </div>
