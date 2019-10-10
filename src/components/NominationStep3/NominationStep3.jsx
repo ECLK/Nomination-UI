@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import FileUpload from "../common/FileUpload";
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
@@ -9,10 +8,11 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import DownloadIcon from '@material-ui/icons/CloudDownload';
-import clsx from 'clsx';
 import TextField from '@material-ui/core/TextField';
 import { createAndDownloadPdfNominationForm } from '../../modules/nomination/state/NominationAction';
+import ProgressButton from "../ProgressButton";
+import DoneOutline from '@material-ui/icons/DoneOutline';
+import CloseIcon from '@material-ui/icons/Cancel';
 
 const styles = theme => ({
     container: {
@@ -49,6 +49,10 @@ const styles = theme => ({
   menu: {
     width: 200,
 },
+done: {
+  textAlign: 'right',
+  paddingRight: 8,
+},
 });
 
 
@@ -60,7 +64,9 @@ class TextFields extends React.Component {
     this.state = {
       status: status,
       errorTextNominationFormCategory:'',
-      nominationFormCategory:''
+      nominationFormCategory:'',
+      loading:false,
+      success:false
     }
  }
 
@@ -86,6 +92,8 @@ class TextFields extends React.Component {
     var filesArray = this.state.files;
   };
 
+  
+
   handlePdfGenarationButton = (e) => {
         const { nominationListForPayment } = this.props;
         var goNext = true;
@@ -94,13 +102,25 @@ class TextFields extends React.Component {
             this.setState({ errorTextNominationFormCategory: 'emptyField' });
             goNext = false;
         }
+        if(this.state.nominationFormCategory==='presidential'){
+        this.setState({
+          success: false,
+          loading:true
+      });
+    }
         if (goNext) {
           if(this.state.nominationFormCategory==='presidential'){
             createAndDownloadPdfNominationForm(this.state.nominationFormCategory,this.state);
+            setTimeout(() => {
+              this.setState({
+                success: true,
+                loading:false
+            });
+            }, 4000);
+            
           }
         }
       }
-
     render() {
         const {classes,onSelectFiles,doneElement,supportdoc,closeElement} = this.props;
         const supportingDocs = [{
@@ -122,7 +142,9 @@ class TextFields extends React.Component {
 
           {
              supportdoc.map(sdoc => (
-              sdoc.id === docs.id ? doneElement : ' '
+              sdoc.id === docs.id ? <div className={classes.done} >
+              <DoneOutline  color="secondary"/>
+              </div> : ' '
             ))
           }           
           
@@ -141,7 +163,9 @@ class TextFields extends React.Component {
              supportdoc.map(sdoc => (
               sdoc.id === docs.id ? 
               <Typography variant="caption" gutterBottom>
-            {sdoc.originalname}{closeElement}
+            {sdoc.originalname}<div  className={classes.done}>
+            <CloseIcon   color="red"/>
+            </div>
            </Typography>
                : ' '
             ))
@@ -210,11 +234,12 @@ class TextFields extends React.Component {
                             
                         </TextField>
                         </Grid>
-                        <Grid style={{marginTop:'2.4%',marginLeft:'-4%'}} item xs="3">
-                        <Button variant="contained" onClick = { this.handlePdfGenarationButton }  size="small"  value="Submit&DownloadPdf" color="secondary" className={classes.button}>
+                        <Grid style={{marginTop:'7.5px',marginLeft:'-4%'}} item xs="3">
+                        {/* <Button variant="contained" onClick = { this.handlePdfGenarationButton }  size="small"  value="Submit&DownloadPdf" color="secondary" className={classes.button}>
                           <DownloadIcon className={clsx(classes.leftIcon, classes.iconSmall)} />
                           Download PDF
-                        </Button>
+                        </Button> */}
+                        <ProgressButton success={this.state.success} loading={this.state.loading} handleButtonClick={(e) => this.handlePdfGenarationButton(e)} buttonName="Download PDF" />
                         </Grid>
                     </Grid>
             </CardActions>
