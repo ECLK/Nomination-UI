@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import NominationStep1 from '../NominationStep1/NominationStep1';
 import NominationStep3 from '../NominationStep3/NominationStep3';
 import NominationStep5 from '../NominationStep5/NominationStep2';
-import { postNominationSupportDocs } from '../../modules/nomination/state/NominationAction';
+import { postNominationSupportDocs,updateNominationStatus } from '../../modules/nomination/state/NominationAction';
 import { openSnackbar } from '../../modules/election/state/ElectionAction';
 import { connect } from 'react-redux';
 import Paper from '@material-ui/core/Paper';
@@ -245,16 +245,26 @@ class NominationForm extends React.Component {
       <CloseIcon ref={this.state.currentSdocId}  color="red"/>
       {/* <a download={"filename"} href={"ok"}>filename</a> */}
       </div>);
-    
+    const supportingDocs = [{
+      "id": "31232",
+      "doc": "Scan of Security Deposit Payment Slip",
+    }, {
+      "id": "b20dd58c-e5bb-469d-98c9-8711d6da1879",
+      "doc": "Completed & Signed Nomination Form",
+    }, {
+      "id": "3fac66f2-302c-4d27-b9ae-1d004037a9ba",
+      "doc": "Declaration of Female Representation",
+    }
+  ];
     const { customProps,division,candidateCount } = this.props;
 
       switch (step) {
         case 0:
           return <NominationStep1 customProps={customProps}/>;
         case 1:
-          return <NominationStep3 customProps={customProps} supportdoc={this.state.supportdoc} closeElement={closeElement} doneElement={doneElement} onSelectFiles={this.onSelectFiles}  />;
+          return <NominationStep3 supportingDocs={supportingDocs} customProps={customProps} supportdoc={this.state.supportdoc} closeElement={closeElement} doneElement={doneElement} onSelectFiles={this.onSelectFiles}  />;
         case 2:
-        return <NominationStep5 division={division} candidateCount={candidateCount} NominationPayments={this.state} />;
+        return <NominationStep5 supportingDocs={supportingDocs} supportdoc={this.state.supportdoc} division={division} candidateCount={candidateCount} NominationPayments={this.state} />;
         default:
           return 'Unknown step';
       }   
@@ -267,7 +277,7 @@ class NominationForm extends React.Component {
   
 
   handleNext = () => {
-    const {divisionId,openSnackbar,postNominationSupportDocs,candidateCount,NominationCandidates}=this.props;
+    const {divisionId,openSnackbar,postNominationSupportDocs,candidateCount,NominationCandidates,updateNominationStatus}=this.props;
     debugger;
     let activeStep;
 
@@ -294,6 +304,7 @@ class NominationForm extends React.Component {
         }
         else{
             openSnackbar({ message: 'The nomination form has been submitted successfully' });
+            updateNominationStatus(this.state,divisionId);
             this.setState({
               goToHome: true
           });
@@ -501,7 +512,8 @@ const mapStateToProps = ({Nomination,Election}) => {
 
 const mapActionsToProps = {
   postNominationSupportDocs,
-  openSnackbar
+  openSnackbar,
+  updateNominationStatus
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(NominationForm));

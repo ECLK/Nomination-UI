@@ -83,7 +83,7 @@ class CustomizedTable extends React.Component {
   };
 
   render() {
-      const { classes,CandidateList,NominationPayments,division,candidateCount } = this.props;
+      const { classes,CandidateList,NominationPayments,division,candidateCount,supportdoc,supportingDocs} = this.props;
       const paymentStatus='';
       const rows = this.state.nominations;
       const CandidateRow = (props) => {
@@ -107,14 +107,24 @@ class CustomizedTable extends React.Component {
 
 
       // var summeryMessage = `You have added ${CandidateList.length} candidates out of ${candidateCount}` + '\n' +`f`; 
+      var summeryMessageSuppertingDocs = 'You have attached ' + supportdoc.length + ' supporting documents out of ' + supportingDocs.length + ' please add all the supporting documents before submit';
+      var variantSupportindDocs = 'info';
+      if(supportingDocs.length===supportdoc.length){
+        variantSupportindDocs = 'success';
+        summeryMessageSuppertingDocs = 'You have successfully attached all the supporting documents';
+      }
+      else{
+        variantSupportindDocs = 'info';
+      }
+
       var summeryMessage = 'You have added ' + CandidateList.length + ' candidates out of ' + candidateCount + ' please add all the candidates before submit';
       var variant = 'info';
       if(candidateCount===CandidateList.length){
         variant = 'success';
-        summeryMessage = 'You have successfully completed the candidate list';
+        summeryMessageSuppertingDocs = 'You have successfully completed the candidate list';
       }else if (candidateCount<CandidateList.length){
         variant = 'warning';
-        summeryMessage = 'You have added ' + CandidateList.length + ' candidates out of ' + candidateCount + ' Please recheck candidate list again';
+        summeryMessageSuppertingDocs = 'You have added ' + CandidateList.length + ' candidates out of ' + candidateCount + ' Please recheck candidate list again';
       }
       else{
         variant = 'info';
@@ -128,16 +138,23 @@ class CustomizedTable extends React.Component {
               variant={variant}
               className={classes.margin}
               message={summeryMessage}
+              style={{marginBottom:'10px'}}
+            />
+            <SummeryView
+              variant={variantSupportindDocs}
+              className={classes.margin}
+              message={summeryMessageSuppertingDocs}
+              style={{marginBottom:'20px'}}
             />
             {/* <Typography  component="h2" variant="headline" gutterBottom>
              {division} Province
            </Typography> */}
-           <Typography  component="h2" variant="subheading" gutterBottom>
+           {/* <Typography  component="h2" variant="subheading" gutterBottom>
             No of Candidate Nominated :
             <Chip style={{paddingLeft: 5,paddingRight:5,fontSize:20}}
                 label={CandidateList.length+ " / " +candidateCount} 
               />  
-           </Typography>
+           </Typography> */}
             </Grid>
           </Grid>
           <Grid container spacing={16}>

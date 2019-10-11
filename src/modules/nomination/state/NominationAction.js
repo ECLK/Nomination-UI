@@ -272,7 +272,6 @@ export const setNominationStatus = (nominationSuppertDocs) => {
 
 
   export function postNominationSupportDocs(nominationSuppertDocs,divisionId) {
-   debugger;
     var nominationSuppertDocs = {
       nominationId:nominationSuppertDocs.nominationId,
       candidateSupportDocs:nominationSuppertDocs.supportdoc,
@@ -287,13 +286,32 @@ export const setNominationStatus = (nominationSuppertDocs) => {
       )
       .then(response => {
          dispatch(setSupportDocData(response.data));
-         dispatch(setNominationStatus(nominationSuppertDocs));
-        debugger;
       }).catch(err => {
             console.log(err)
       });
     };
   }
+
+  export function updateNominationStatus(nominationSuppertDocs,divisionId) {
+    var nominationSuppertDocs = {
+      nominationId:nominationSuppertDocs.nominationId,
+      candidateSupportDocs:nominationSuppertDocs.supportdoc,
+      divisionId:divisionId
+    }
+     return function (dispatch) {
+        
+       const response = axios
+       .put(
+         `${API_BASE_URL}/nominations/${nominationSuppertDocs.nominationId}/update-nomination-status`,
+       )
+       .then(response => {
+          dispatch(setNominationStatus(nominationSuppertDocs));
+         debugger;
+       }).catch(err => {
+             console.log(err)
+       });
+     };
+   }
 
   export const setCandidateSupportDocData = (val) => {
     return {
