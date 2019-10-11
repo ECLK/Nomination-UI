@@ -122,18 +122,8 @@ class TextFields extends React.Component {
         }
       }
     render() {
-        const {classes,onSelectFiles,doneElement,supportdoc,closeElement} = this.props;
-        const supportingDocs = [{
-          "id": "31232",
-          "doc": "Scan of Security Deposit Payment Slip",
-        }, {
-          "id": "b20dd58c-e5bb-469d-98c9-8711d6da1879",
-          "doc": "Completed & Signed Nomination Form",
-        }, {
-          "id": "3fac66f2-302c-4d27-b9ae-1d004037a9ba",
-          "doc": "Declaration of Female Representation",
-        }
-      ];
+        const {classes,onSelectFiles,doneElement,supportdoc,closeElement,supportingDocs} = this.props;
+        
 
         const supportingDocItems = supportingDocs.map(docs => (
           <div>
