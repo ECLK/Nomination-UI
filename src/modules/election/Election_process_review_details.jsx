@@ -5,6 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AdminMenu from '../../components/AdminMenu/AdminMenu';
 import { APPROVAL_STATE } from './state/ElectionTypes';
 import { getAllElectionReviews, getElectionReviewData, onChangeApproval, openSnackbar ,getFieldOptions,getElectoratesData,getEligibilityData} from "./state/ElectionAction.js";
+import { getTeams } from '../nomination/state/NominationAction';
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography'
 import { Link } from 'react-router-dom'
@@ -190,8 +191,9 @@ class Dashboard extends React.Component {
     };
 
     componentDidMount() {
-        const { allElectionModules, getAllElectionReviews, getElectionReviewData ,getFieldOptions,getElectoratesData,getEligibilityData} = this.props;
+        const { allElectionModules, getAllElectionReviews, getElectionReviewData ,getFieldOptions,getElectoratesData,getEligibilityData,getTeams} = this.props;
         getAllElectionReviews();
+        getTeams();
         getElectionReviewData(this.props.match.params.electionId);
         getElectoratesData(this.props.match.params.electionId);
         getEligibilityData(this.props.match.params.electionId);
@@ -655,7 +657,8 @@ const mapActionsToProps = {
     openSnackbar,
     getFieldOptions,
     getElectoratesData,
-    getEligibilityData
+    getEligibilityData,
+    getTeams
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(withRouter(Dashboard)));

@@ -51,20 +51,12 @@ class AllowNomination extends React.Component {
     }
 
     render() {
-        const { classes,electionData,errorTextElectorates ,rowData} = this.props;
-        let rowHeaders = [{
-            id: '1111',
-            name: 'United National Party (UNP)'
-        }, {
-            id: '2222',
-            name: 'United Peoples Freedom Alliance (UPFA)'
-        }, {
-            id: '3333',
-            name: 'Janatha Vimukthi Peramuna (JVP)'
-        }, {
-            id: '4444',
-            name: 'Jana Setha Peramuna (JSP)'
-        }];
+        const { classes,electionData,errorTextElectorates ,rowData,rowHeaders} = this.props;
+        const data = rowHeaders.map((record) => {
+            record.id = record.team_id;
+            record.name = record.team_name;
+            return record;
+          });
 
         let nomination_setup = [
             {
@@ -111,12 +103,13 @@ AllowNomination.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = ({ Election }) => {
+const mapStateToProps = ({ Election,Nomination }) => {
     const electionData = Election.electionData;
     const CallElectionData = Election.CallElectionData;
     const rowData = Election.electionElectorates;
+    const rowHeaders = Nomination.partyList;
 
-    return {  electionData,CallElectionData ,rowData}
+    return {  electionData,CallElectionData ,rowData,rowHeaders}
   };
 
 const mapActionsToProps = {
