@@ -109,7 +109,7 @@ console.log("scopes",scopes);
             <ListItemText primary="Call Election" />
           </ListItem>
         case "election_template_edit":
-          return <div><Divider /><ListItem button key="Create_election" component={Link} to='/admin/create-election-home' selected={this.props.location.pathname === "/admin/create-election-home"}>
+          return <div><ListItem button key="Create_election" component={Link} to='/admin/create-election-home' selected={this.props.location.pathname === "/admin/create-election-home"}>
             <ListItemIcon><NominationIcon /></ListItemIcon>
             <ListItemText primary="Create Election" />
           </ListItem></div>

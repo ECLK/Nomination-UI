@@ -17,6 +17,7 @@ const styles = theme => ({
             paddingLeft: theme.spacing.unit
 
         },
+        marginTop:-30
     },
     button: {
         marginRight: theme.spacing.unit,
@@ -42,22 +43,29 @@ class AllowNomination extends React.Component {
     handleSubmit = (e) => {
         e.preventDefault()
     }
+    
 
     render() {
-        const { classes,electionData,errorTextElectorates } = this.props;
-        let rowHeaders = [{
-            id: '1111',
-            name: 'United National Party (UNP)'
-        }, {
-            id: '2222',
-            name: 'United Peoples Freedom Alliance (UPFA)'
-        }, {
-            id: '3333',
-            name: 'Janatha Vimukthi Peramuna (JVP)'
-        }, {
-            id: '4444',
-            name: 'Jana Setha Peramuna (JSP)'
-        }];
+        const { classes,electionData,errorTextElectorates,rowHeaders } = this.props;
+        debugger;
+         const data = rowHeaders.map((record) => {
+            record.id = record.team_id;
+            record.name = record.team_name;
+            return record;
+          });
+        // let rowHeaders = [{
+        //     id: '1111',
+        //     name: 'United National Party (UNP)2'
+        // }, {
+        //     id: '2222',
+        //     name: 'United Peoples Freedom Alliance (UPFA)'
+        // }, {
+        //     id: '3333',
+        //     name: 'Janatha Vimukthi Peramuna (JVP)'
+        // }, {
+        //     id: '4444',
+        //     name: 'Jana Setha Peramuna (JSP)'
+        // }];
 
         let nomination_setup = [
             {
@@ -91,7 +99,7 @@ class AllowNomination extends React.Component {
                 <div className={classes.content}>
                         <CardContent>
                             <form ref="form" onSubmit={this.handleSubmit}>
-                                <CheckboxTable title="Select Electorates" data={nomination_setup}  rows={rowHeaders}></CheckboxTable>
+                                <CheckboxTable title="" data={nomination_setup}  rows={rowHeaders}></CheckboxTable>
                             </form>
                         </CardContent>
                 </div>
@@ -104,11 +112,11 @@ AllowNomination.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = ({ Election }) => {
+const mapStateToProps = ({ Election,Nomination }) => {
     const electionData = Election.electionData;
     const CallElectionData = Election.CallElectionData;
-
-    return {  electionData,CallElectionData }
+    const rowHeaders = Nomination.partyList;
+    return {  electionData,CallElectionData,rowHeaders }
   };
 
 const mapActionsToProps = {
