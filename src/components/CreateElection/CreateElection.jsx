@@ -120,7 +120,10 @@ class FilledTextFields extends React.Component {
                             error={this.state.errorTextTemplate}
                             helperText={this.state.errorTextTemplate === "emptyField2" ? 'This template name already used!' : 'Please type your template Name '}
                             onChange={this.handleChange('ModuleName')}
-                            onBlur={this.asyncValidation('ModuleName')}
+                            onChange={(evt) => {
+                                this.handleChange('ModuleName')(evt)
+                                this.asyncValidation('ModuleName')(evt)
+                            }}
                             margin="normal"
                             variant="filled"
                             style={{marginBottom:'28px'}}

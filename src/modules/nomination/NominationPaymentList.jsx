@@ -165,6 +165,9 @@ class CustomizedTable extends React.Component {
             
             return partyMap[id] ? partyMap[id].team_name : ""
         }
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
 
         let data = paymentList.map(obj=>{
             return [
@@ -173,7 +176,7 @@ class CustomizedTable extends React.Component {
                 obj.depositor, 
                 obj.serial,
                 obj.deposit_date,
-                obj.deposit_amount,
+                numberWithCommas(obj.deposit_amount),
                 getParty(obj.team_id),
                 obj.division,
                 obj.action
