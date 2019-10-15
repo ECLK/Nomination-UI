@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import NominationStep1 from '../NominationStep1/NominationStep1';
 import NominationStep3 from '../NominationStep3/NominationStep3';
 import NominationStep5 from '../NominationStep5/NominationStep2';
-import { postNominationSupportDocs,updateNominationStatus } from '../../modules/nomination/state/NominationAction';
+import { postNominationSupportDocs,updateNominationStatus,getTeams } from '../../modules/nomination/state/NominationAction';
 import { openSnackbar } from '../../modules/election/state/ElectionAction';
 import { connect } from 'react-redux';
 import Paper from '@material-ui/core/Paper';
@@ -94,6 +94,7 @@ class NominationForm extends React.Component {
   }
 
   componentDidMount(){
+    
     Axios.get(`elections/${sessionStorage.getItem('election_id')}`)
     .then(res => {
         const election = res.data;
@@ -228,6 +229,11 @@ class NominationForm extends React.Component {
            } });
           this.setState({ supportdoc:supportdoc });
         })
+        
+  }
+  componentWillMount(){
+    const {getTeams} = this.props;
+    getTeams();
   }
  
    showFlagToStyle = (flag) => (
@@ -256,13 +262,13 @@ class NominationForm extends React.Component {
       "doc": "Declaration of Female Representation",
     }
   ];
-    const { customProps,division,candidateCount } = this.props;
+    const { customProps,division,candidateCount,NominationCandidates,partyList } = this.props;
 
       switch (step) {
         case 0:
           return <NominationStep1 customProps={customProps}/>;
         case 1:
-          return <NominationStep3 supportingDocs={supportingDocs} customProps={customProps} supportdoc={this.state.supportdoc} closeElement={closeElement} doneElement={doneElement} onSelectFiles={this.onSelectFiles}  />;
+          return <NominationStep3 partyList={partyList} NominationCandidates={NominationCandidates} supportingDocs={supportingDocs} customProps={customProps} supportdoc={this.state.supportdoc} closeElement={closeElement} doneElement={doneElement} onSelectFiles={this.onSelectFiles}  />;
         case 2:
         return <NominationStep5 supportingDocs={supportingDocs} supportdoc={this.state.supportdoc} division={division} candidateCount={candidateCount} NominationPayments={this.state} />;
         default:
@@ -502,18 +508,20 @@ NominationForm.propTypes = {
 
 const mapStateToProps = ({Nomination,Election}) => {
   const NominationCandidates = Nomination.getNominationCandidates;
+  const partyList = Nomination.partyList;
   const {postNominationSupportDocs} = Nomination;
   const {openSnackbar} = Election;
 
   
   
-  return {postNominationSupportDocs,NominationCandidates,openSnackbar};
+  return {postNominationSupportDocs,NominationCandidates,openSnackbar,partyList};
 };
 
 const mapActionsToProps = {
   postNominationSupportDocs,
   openSnackbar,
-  updateNominationStatus
+  updateNominationStatus,
+  getTeams
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(NominationForm));

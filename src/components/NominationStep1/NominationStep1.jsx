@@ -11,11 +11,6 @@ import Grid from '@material-ui/core/Grid';
 import { de } from 'date-fns/locale';
 
 
-
-
-
-
-
 const styles = theme => ({
     root: {
         width: '100%',
