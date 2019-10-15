@@ -22,6 +22,7 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import CloseIcon from '@material-ui/icons/Close';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import { setCallElectionData, postCallElectionData, openSnackbar, getFieldOptions, getCallElectionData, handleChangeElectionData, editCallElectionData, deleteCallElectionData } from './state/ElectionAction';
+import { getTeams } from '../nomination/state/NominationAction';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
@@ -124,6 +125,10 @@ class ActiveElectionForm extends React.Component {
       errorTextElectorates: ''
     };
   }
+  componentWillMount(){
+    const {getTeams} = this.props;
+    getTeams();
+}
 
   handleNext = () => {
     let activeStep;
@@ -440,7 +445,8 @@ const mapActionsToProps = {
   handleChangeElectionData,
   editCallElectionData,
   deleteCallElectionData,
-  getFieldOptions
+  getFieldOptions,
+  getTeams
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(ActiveElectionForm));

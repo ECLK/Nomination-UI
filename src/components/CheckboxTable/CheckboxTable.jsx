@@ -62,7 +62,6 @@ class CheckboxTableGrid extends React.Component {
 
     componentWillMount() {
         const { rows, cols, CallElectionData } = this.props;
-        console.log("ddddddddddddddd");
         let rowHeaders = [''];
         this.props.rows.map((value) => {
             rowHeaders.push(value.name);

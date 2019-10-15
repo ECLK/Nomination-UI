@@ -135,6 +135,7 @@ class TextFields extends React.Component {
              supportdoc.map(sdoc => (
               sdoc.id === docs.id ? <div className={classes.done} >
               <DoneOutline  color="secondary"/>
+              {/* <img src={`http://localhost:9001/src/uploads/${sdoc.filename}`} style={{maxWidth: 60,margin:25}} className="img-fluid" alt="logo" /> */}
               </div> : ' '
             ))
           }           
