@@ -144,8 +144,11 @@ class CallElection extends React.Component {
                             value={this.state.electionName}
                             error={this.state.errorTextElection}
                             helperText={this.state.errorTextElection === "emptyField2" ? 'This election name already used!' : 'Please type your Election Name '}
-                            onChange={this.handleChange('electionName')}
-                            onBlur={this.asyncValidation('electionName')}
+                            onChange={(evt) => {
+                                this.handleChange('electionName')(evt)
+                                this.asyncValidation('electionName')(evt)
+                            }}
+                            // onBlur={this.asyncValidation('electionName')}
                             margin="normal"
                             variant="filled"
                         />

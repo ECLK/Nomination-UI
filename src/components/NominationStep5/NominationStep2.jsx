@@ -121,10 +121,10 @@ class CustomizedTable extends React.Component {
       var variant = 'info';
       if(candidateCount===CandidateList.length){
         variant = 'success';
-        summeryMessageSuppertingDocs = 'You have successfully completed the candidate list';
+        summeryMessage = 'You have successfully completed the candidate list';
       }else if (candidateCount<CandidateList.length){
         variant = 'warning';
-        summeryMessageSuppertingDocs = 'You have added ' + CandidateList.length + ' candidates out of ' + candidateCount + ' Please recheck candidate list again';
+        summeryMessage = 'You have added ' + CandidateList.length + ' candidates out of ' + candidateCount + ' Please recheck candidate list again';
       }
       else{
         variant = 'info';

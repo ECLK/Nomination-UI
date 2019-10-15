@@ -24,7 +24,7 @@ const styles = theme => ({
       marginBottom:30
     },
     label: {
-      marginLeft: theme.spacing.unit*15,
+      marginLeft: '50%',
   },
 });
 
@@ -59,8 +59,6 @@ class CandidateFileUpload extends React.Component {
 };
 
 componentDidMount() {
-  console.log(this.props.supportingDocsData);
-  debugger;
   this.setState({
     supportdoc: this.props.supportingDocsData
   });
@@ -95,13 +93,11 @@ componentDidMount() {
       }
     }
     
-debugger;
     this.setState({
       status: evt.type,
       supportdoc:array,
       supportDocId: evt.target.id
     });
-    console.log("oooooooooooooooo",this.state)
 
     // Fetch files
     const { files } = evt.target;
@@ -159,7 +155,6 @@ debugger;
           this.setState(
             {progress: percentCompleted}
           );
-          console.log(percentCompleted);
         }
 
 
@@ -230,7 +225,9 @@ debugger;
               <Grid item lg={2}>
                 {
                   this.state.supportdoc.map(sdoc => (
-                    sdoc.id === docs.id ? doneElement : ' '
+                    sdoc.id === docs.id ? <div className={classes.done}>
+                    <DoneOutline  color="secondary"/>
+                    </div> : ' '
                   ))
                 }   
               </Grid>
@@ -243,7 +240,9 @@ debugger;
                   this.state.supportdoc.map(sdoc => (
                     sdoc.id === docs.id ? 
                     <Typography variant="caption" gutterBottom>
-                  {sdoc.originalname}{closeElement}
+                  {sdoc.originalname}<div  className={classes.done}>
+                  <CloseIcon ref={this.state.currentSdocId} onClick={this.handleRese} color="red"/>
+                  </div>
                 </Typography>
                     : ' '
                   ))
@@ -266,7 +265,7 @@ debugger;
                         <Button variant="contained" type="submit" value="Submit&New" color="primary" className={classes.submit}>
                             Save & New
                         </Button>
-                        <Button  variant="contained" onClick = { this.handleChangeButton }  type="submit" value="Submit&Clouse" color="default" className={classes.submit}>
+                        <Button style={{marginLeft:'5px'}} variant="contained" onClick = { this.handleChangeButton }  type="submit" value="Submit&Clouse" color="default" className={classes.submit}>
                             Save & Close
                         </Button>
                     </Grid>

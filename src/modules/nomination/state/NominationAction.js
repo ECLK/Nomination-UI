@@ -681,8 +681,32 @@ export const createAndDownloadPdf = function createAndDownloadPdf(paymentData) {
     })
 }
 //--------------- End of genarate pdf ---------------------------
-export const createAndDownloadPdfNominationForm = function createAndDownloadPdfNominationForm(type,Data) {
-  firstAPI.post(`/create-pdf/${type}`,Data)
+export const createAndDownloadPdfNominationForm = function createAndDownloadPdfNominationForm(type,Data,partyList) {
+  var partyName="";
+  for (var j = 0; j < partyList.length; j++) {
+    if(sessionStorage.getItem("party_id")===partyList[j].team_id){
+      partyName=partyList[j].team_name;
+    }
+}
+  debugger;
+  var candidateName="";
+  var address="";
+  var occupation="";
+  if(type==="presidential"){
+    Data.map((data) => {
+      candidateName=data.fullName
+      address=data.address
+      occupation=data.occupation
+    });
+  }
+  const NominationData = {
+    candidateName:candidateName,
+    address:address,
+    occupation:occupation,
+    partyName:partyName
+  }
+debugger;
+  firstAPI.post(`/create-pdf/${type}`,NominationData)
     .then(()=> firstAPI.get('fetch-pdf-presidential', { responseType: 'blob'}))
     .then((res) => {
       const pdfBlob = new Blob([res.data], { type:'application/pdf' });

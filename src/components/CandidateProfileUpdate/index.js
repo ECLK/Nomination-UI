@@ -5,7 +5,8 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
-import Notifier, { openSnackbar } from '../Notifier';
+// import Notifier, { openSnackbar } from '../Notifier';
+import { openSnackbar } from '../../modules/election/state/ElectionAction';
 import { getNominationCandidates,getCandidateSupportingDocs } from '../../modules/nomination/state/NominationAction';
 import { connect } from 'react-redux';
 
@@ -173,7 +174,7 @@ class TextFields extends React.Component {
 
     handleSubmit = (e) => {
         
-        const { index,getNominationCandidates,customProps } = this.props;
+        const { index,getNominationCandidates,customProps,openSnackbar } = this.props;
             var postData = {
                         nic: this.state.nic,
                         fullName: this.state.fullName,
@@ -194,13 +195,15 @@ class TextFields extends React.Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            url: `candidates/${index}`,
+            url: `/nominations/${index}/candidates`,
             data: postData
         })
         .then(function (response) {
-            setTimeout(() => {
-                openSnackbar({ message: 'Candidate Updated Sccessfully...' });
-            }, 5000);
+            openSnackbar({ message: 'Candidate Updated Sccessfully...' });
+
+            // setTimeout(() => {
+            //     openSnackbar({ message: 'Candidate Updated Sccessfully...' });
+            // }, 5000);
             getNominationCandidates(customProps);
           })
           .catch(function (error) {
@@ -214,7 +217,7 @@ class TextFields extends React.Component {
             <form className={classes.container} onSubmit={this.handleSubmit} noValidate autoComplete="off">
 
                 <Grid container spacing={12}>
-                <Notifier />
+                {/* <Notifier /> */}
                     <Grid item lg={6}>
                         <TextField
 
@@ -431,7 +434,8 @@ const mapStateToProps = ({Nomination}) => {
 
   const mapActionsToProps = {
     getNominationCandidates,
-    getCandidateSupportingDocs
+    getCandidateSupportingDocs,
+    openSnackbar
   };
   
   export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(TextFields));

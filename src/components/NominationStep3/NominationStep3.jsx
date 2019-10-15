@@ -95,7 +95,8 @@ class TextFields extends React.Component {
   
 
   handlePdfGenarationButton = (e) => {
-        const { nominationListForPayment } = this.props;
+        const { nominationListForPayment,NominationCandidates,partyList } = this.props;
+
         var goNext = true;
         debugger;
         if (this.state.nominationFormCategory === null || this.state.nominationFormCategory === "") {
@@ -110,7 +111,7 @@ class TextFields extends React.Component {
     }
         if (goNext) {
           if(this.state.nominationFormCategory==='presidential'){
-            createAndDownloadPdfNominationForm(this.state.nominationFormCategory,this.state);
+            createAndDownloadPdfNominationForm(this.state.nominationFormCategory,NominationCandidates,partyList);
             setTimeout(() => {
               this.setState({
                 success: true,
