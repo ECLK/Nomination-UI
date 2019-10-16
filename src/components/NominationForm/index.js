@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import NominationStep1 from '../NominationStep1/NominationStep1';
 import NominationStep3 from '../NominationStep3/NominationStep3';
 import NominationStep5 from '../NominationStep5/NominationStep2';
-import { postNominationSupportDocs,updateNominationStatus,getTeams } from '../../modules/nomination/state/NominationAction';
+import { postNominationSupportDocs,updateNominationStatus,getTeams,getUploadPath } from '../../modules/nomination/state/NominationAction';
 import { openSnackbar } from '../../modules/election/state/ElectionAction';
 import { connect } from 'react-redux';
 import Paper from '@material-ui/core/Paper';
@@ -268,7 +268,7 @@ class NominationForm extends React.Component {
         case 0:
           return <NominationStep1 customProps={customProps}/>;
         case 1:
-          return <NominationStep3 partyList={partyList} NominationCandidates={NominationCandidates} supportingDocs={supportingDocs} customProps={customProps} supportdoc={this.state.supportdoc} closeElement={closeElement} doneElement={doneElement} onSelectFiles={this.onSelectFiles}  />;
+          return <NominationStep3 handleUploadView={this.handleUploadView} partyList={partyList} NominationCandidates={NominationCandidates} supportingDocs={supportingDocs} customProps={customProps} supportdoc={this.state.supportdoc} closeElement={closeElement} doneElement={doneElement} onSelectFiles={this.onSelectFiles}  />;
         case 2:
         return <NominationStep5 supportingDocs={supportingDocs} supportdoc={this.state.supportdoc} division={division} candidateCount={candidateCount} NominationPayments={this.state} />;
         default:
@@ -323,7 +323,10 @@ class NominationForm extends React.Component {
       activeStep: state.activeStep - 1,
     }));
   };
-
+  handleUploadView = sid => () => {
+    debugger;
+    this.props.getUploadPath(sid);
+  };
 
 
   handleStep = step => () => {
@@ -521,7 +524,8 @@ const mapActionsToProps = {
   postNominationSupportDocs,
   openSnackbar,
   updateNominationStatus,
-  getTeams
+  getTeams,
+  getUploadPath
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(NominationForm));
