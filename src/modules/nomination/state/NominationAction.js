@@ -21,7 +21,8 @@ import {
   PAYMENT_SERIAL_NO_LOADED,
   GET_NOMINATION_LIST_FOR_PAYMENT,
   GET_NOMINATION_DATA,
-  NOMINATION_PAYMENT_VALIDATION_LOADED
+  NOMINATION_PAYMENT_VALIDATION_LOADED,
+  ORIGINAL_UPLOAD_PATH_LOADED
 } from "./NominationTypes";
 import {API_BASE_URL,PDF_GENARATION_SERVICE_URL} from "../../../config.js";
 import axios from "axios";
@@ -712,4 +713,31 @@ debugger;
       const pdfBlob = new Blob([res.data], { type:'application/pdf' });
       saveAs(pdfBlob,'form_of_nomination.pdf');
     })
+}
+
+const uploadePathLoaded = (OriginalPath) => {
+  return {
+    type: ORIGINAL_UPLOAD_PATH_LOADED,
+    payload: OriginalPath,
+  };
+};
+
+export function getUploadPath(sid) {
+  return function (dispatch) {
+     
+    const response = axios
+    .get(
+      `${API_BASE_URL}/file-download/${sid}`,
+    )
+    .then(response => {
+      const OriginalPath = response.data;
+      debugger;
+       dispatch(uploadePathLoaded(OriginalPath));
+    }).catch(err => {
+      debugger;
+      const OriginalPath = '';
+      dispatch(uploadePathLoaded(OriginalPath));
+          console.log(err)
+    });
+  };
 }

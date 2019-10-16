@@ -92,7 +92,7 @@ class TextFields extends React.Component {
     var filesArray = this.state.files;
   };
 
-  
+ 
 
   handlePdfGenarationButton = (e) => {
         const { nominationListForPayment,NominationCandidates,partyList } = this.props;
@@ -123,7 +123,7 @@ class TextFields extends React.Component {
         }
       }
     render() {
-        const {classes,onSelectFiles,doneElement,supportdoc,closeElement,supportingDocs} = this.props;
+        const {classes,onSelectFiles,doneElement,supportdoc,closeElement,supportingDocs,handleUploadView} = this.props;
         
 
         const supportingDocItems = supportingDocs.map(docs => (
@@ -134,7 +134,7 @@ class TextFields extends React.Component {
           {
              supportdoc.map(sdoc => (
               sdoc.id === docs.id ? <div className={classes.done} >
-              <DoneOutline  color="secondary"/>
+              <DoneOutline onClick={handleUploadView(sdoc.filename)}  color="secondary"/>
               {/* <img src={`http://localhost:9001/src/uploads/${sdoc.filename}`} style={{maxWidth: 60,margin:25}} className="img-fluid" alt="logo" /> */}
               </div> : ' '
             ))

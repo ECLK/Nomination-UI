@@ -21,7 +21,8 @@ import {
   PAYMENT_SERIAL_NO_LOADED,
   GET_NOMINATION_LIST_FOR_PAYMENT,
   GET_NOMINATION_DATA,
-  NOMINATION_PAYMENT_VALIDATION_LOADED
+  NOMINATION_PAYMENT_VALIDATION_LOADED,
+  ORIGINAL_UPLOAD_PATH_LOADED
 } from "./NominationTypes";
 
 const initialState = {
@@ -45,6 +46,7 @@ const initialState = {
   nominationPaymentSerial:'',
   nominationData:[],
   nominationPaymentValidation:true,
+  originalUploadPath:''
 };
 
 const findIndex = (nominations, id) => {
@@ -194,6 +196,11 @@ export default function reducer(state = initialState, action) {
         ...state,
         nominationPaymentValidation: action.payload
       }; 
+    case ORIGINAL_UPLOAD_PATH_LOADED:
+        return {
+          ...state,
+          originalUploadPath: action.payload
+        }; 
       
   }
   return state;
