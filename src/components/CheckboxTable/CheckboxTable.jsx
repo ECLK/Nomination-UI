@@ -285,6 +285,7 @@ class CheckboxTableGrid extends React.Component {
             filterType: "dropdown",
             responsive: "scroll",
             selectableRows: false,
+            pagination: false
         };
 
         return (
